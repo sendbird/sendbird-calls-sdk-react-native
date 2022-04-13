@@ -6,8 +6,8 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo managed workflow\n';
 
-const CallsReactNative = NativeModules.CallsReactNative
-  ? NativeModules.CallsReactNative
+const RNSendbirdCalls = NativeModules.RNSendbirdCalls
+  ? NativeModules.RNSendbirdCalls
   : new Proxy(
       {},
       {
@@ -18,5 +18,5 @@ const CallsReactNative = NativeModules.CallsReactNative
     );
 
 export function multiply(a: number, b: number): Promise<number> {
-  return CallsReactNative.multiply(a, b);
+  return RNSendbirdCalls.multiply(a, b);
 }

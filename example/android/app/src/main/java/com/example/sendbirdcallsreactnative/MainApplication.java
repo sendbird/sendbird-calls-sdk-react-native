@@ -10,7 +10,7 @@ import com.facebook.react.ReactInstanceManager;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import com.sendbirdcallsreactnative.CallsReactNativePackage;
+import com.sendbird.calls.reactnative.RNSendbirdCallsPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -25,9 +25,9 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
-          // Packages that cannot be autolinked yet can be added manually here, for CallsReactNativeExample:
+          // Packages that cannot be autolinked yet can be added manually here, for RNSendbirdCallsExample:
           // packages.add(new MyReactNativePackage());
-          packages.add(new CallsReactNativePackage());
+          packages.add(new RNSendbirdCallsPackage());
           return packages;
         }
 
