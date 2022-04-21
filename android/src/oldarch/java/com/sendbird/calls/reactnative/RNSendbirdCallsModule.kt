@@ -9,9 +9,12 @@ class RNSendbirdCallsModule(reactContext: ReactApplicationContext) : ReactContex
     override fun getName(): String {
         return RNSendbirdCallsModuleImpl.NAME;
     }
+    override fun getConstants(): Map<String, Any> {
+        val constants: MutableMap<String, Any> = HashMap()
+        constants["number"] = 90
+        return constants
+    }
 
-    // Example method
-    // See https://reactnative.dev/docs/native-modules-android
     @ReactMethod
     fun multiply(a: Int, b: Int, promise: Promise) {
         RNSendbirdCallsModuleImpl.multiply(a, b, promise);

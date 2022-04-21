@@ -9,7 +9,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.2.1'
+    classpath("com.android.tools.build:gradle:7.0.4")
     // noinspection DifferentKotlinGradleVersion
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
@@ -21,9 +21,9 @@ def isNewArchitectureEnabled() {
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-if (isNewArchitectureEnabled()) {
-  apply plugin: 'com.facebook.react'
-}
+// if (isNewArchitectureEnabled()) {
+//   apply plugin: 'com.facebook.react'
+// }
 
 
 def getExtOrDefault(name) {
@@ -39,19 +39,21 @@ android {
   defaultConfig {
     minSdkVersion getExtOrIntegerDefault('minSdkVersion')
     targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
-    versionCode 1
-    versionName "1.0"
-    buildConfigField("boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString())
-
     sourceSets {
       main {
-        if (isNewArchitectureEnabled()) {
-          java.srcDirs += ['src/newarch']
-        } else {
-          java.srcDirs += ['src/oldarch']
-        }
+        java.srcDirs += ['src/oldarch']
       }
     }
+//     buildConfigField("boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString())
+//     sourceSets {
+//       main {
+//         if (isNewArchitectureEnabled()) {
+//           java.srcDirs += ['src/newarch']
+//         } else {
+//           java.srcDirs += ['src/oldarch']
+//         }
+//       }
+//     }
   }
 
   buildTypes {
@@ -143,16 +145,16 @@ def kotlin_version = getExtOrDefault('kotlinVersion')
 
 dependencies {
   // noinspection GradleDynamicVersion
-  api 'com.facebook.react:react-native:+'
+  implementation 'com.facebook.react:react-native:+'
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 
-if (isNewArchitectureEnabled()) {
+// if (isNewArchitectureEnabled()) {
 // https://reactnative.dev/docs/new-architecture-library-android#1-configure-codegen-in-your-gradle-file
-  react {
-    libraryName = "rnsendbirdcalls"
-    codegenJavaPackageName = "com.sendbird.calls.reactnative"
-    jsRootDir = file("../src/")
-  }
-}
+//   react {
+//     libraryName = "rnsendbirdcalls"
+//     codegenJavaPackageName = "com.sendbird.calls.reactnative"
+//     jsRootDir = file("../src/")
+//   }
+// }
