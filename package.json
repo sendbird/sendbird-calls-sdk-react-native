@@ -14,7 +14,7 @@
     "ios",
     "cpp",
     "sendbird-calls-react-native.podspec",
-    "!lib/typescript/example",
+    "!lib/typescript/sample",
     "!android/build",
     "!ios/build",
     "!**/__tests__",
@@ -26,9 +26,9 @@
     "typescript": "tsc --noEmit",
     "prepare": "bob build",
     "release": "release-it",
-    "example": "yarn --cwd example",
-    "pods": "cd example && pod-install --quiet",
-    "bootstrap": "yarn example && yarn && yarn pods",
+    "sample": "yarn --cwd sample",
+    "pods": "cd sample && pod-install --quiet",
+    "bootstrap": "yarn sample && yarn && yarn pods",
     "lint": "yarn lint:eslint && yarn lint:prettier",
     "fix": "yarn fix:eslint && yarn fix:prettier",
     "lint:eslint": "eslint src sample --ext ts,tsx -c ./.eslintrc.js",
@@ -36,7 +36,7 @@
     "fix:eslint": "eslint --fix src sample --ext ts,tsx -c ./.eslintrc.js",
     "fix:prettier": "prettier --write \"sample/**/*.{ts,tsx}\" \"src/**/*.{ts,tsx}\"",
     "adb:reverse": "adb start-server && adb reverse tcp:8081 tcp:8081",
-    "start:sample": "yarn --cwd=sample start"
+    "start:sample": "yar sample && yarn start"
   },
   "keywords": [
     "react-native",
@@ -83,7 +83,7 @@
   "jest": {
     "preset": "react-native",
     "modulePathIgnorePatterns": [
-      "<rootDir>/example/node_modules",
+      "<rootDir>/sample/node_modules",
       "<rootDir>/lib/"
     ]
   },

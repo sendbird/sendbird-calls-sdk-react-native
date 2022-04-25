@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0C80B921A6F3F58F76C31292 /* libPods-SendbirdCallsRNSample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-SendbirdCallsRNSample.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		1A22AC5BD4D73E684E2C8CF5 /* libPods-SendbirdCallsRNSample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DC002BF437A63542A56AF10 /* libPods-SendbirdCallsRNSample.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
@@ -21,14 +21,12 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = SendbirdCallsRNSample/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = SendbirdCallsRNSample/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = SendbirdCallsRNSample/main.m; sourceTree = "<group>"; };
-		19F6CBCC0A4E27FBF8BF4A61 /* libPods-SendbirdCallsRNSample-SendbirdCallsRNSampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SendbirdCallsRNSample-SendbirdCallsRNSampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3B4392A12AC88292D35C810B /* Pods-SendbirdCallsRNSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SendbirdCallsRNSample.debug.xcconfig"; path = "Target Support Files/Pods-SendbirdCallsRNSample/Pods-SendbirdCallsRNSample.debug.xcconfig"; sourceTree = "<group>"; };
-		5709B34CF0A7D63546082F79 /* Pods-SendbirdCallsRNSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SendbirdCallsRNSample.release.xcconfig"; path = "Target Support Files/Pods-SendbirdCallsRNSample/Pods-SendbirdCallsRNSample.release.xcconfig"; sourceTree = "<group>"; };
-		5B7EB9410499542E8C5724F5 /* Pods-SendbirdCallsRNSample-SendbirdCallsRNSampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SendbirdCallsRNSample-SendbirdCallsRNSampleTests.debug.xcconfig"; path = "Target Support Files/Pods-SendbirdCallsRNSample-SendbirdCallsRNSampleTests/Pods-SendbirdCallsRNSample-SendbirdCallsRNSampleTests.debug.xcconfig"; sourceTree = "<group>"; };
-		5DCACB8F33CDC322A6C60F78 /* libPods-SendbirdCallsRNSample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SendbirdCallsRNSample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = SendbirdCallsRNSample/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		89C6BE57DB24E9ADA2F236DE /* Pods-SendbirdCallsRNSample-SendbirdCallsRNSampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SendbirdCallsRNSample-SendbirdCallsRNSampleTests.release.xcconfig"; path = "Target Support Files/Pods-SendbirdCallsRNSample-SendbirdCallsRNSampleTests/Pods-SendbirdCallsRNSample-SendbirdCallsRNSampleTests.release.xcconfig"; sourceTree = "<group>"; };
+		9AA99F8446E211967F59F5B1 /* Pods-SendbirdCallsRNSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SendbirdCallsRNSample.release.xcconfig"; path = "Target Support Files/Pods-SendbirdCallsRNSample/Pods-SendbirdCallsRNSample.release.xcconfig"; sourceTree = "<group>"; };
+		9DC002BF437A63542A56AF10 /* libPods-SendbirdCallsRNSample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SendbirdCallsRNSample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D7E869E4B24C87892D35FEDF /* Pods-SendbirdCallsRNSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SendbirdCallsRNSample.debug.xcconfig"; path = "Target Support Files/Pods-SendbirdCallsRNSample/Pods-SendbirdCallsRNSample.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		EDF7F3CF28111ED9000E043F /* SendbirdCallsRNSample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SendbirdCallsRNSample-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,7 +34,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C80B921A6F3F58F76C31292 /* libPods-SendbirdCallsRNSample.a in Frameworks */,
+				1A22AC5BD4D73E684E2C8CF5 /* libPods-SendbirdCallsRNSample.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,6 +50,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				EDF7F3CF28111ED9000E043F /* SendbirdCallsRNSample-Bridging-Header.h */,
 			);
 			name = SendbirdCallsRNSample;
 			sourceTree = "<group>";
@@ -60,8 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				5DCACB8F33CDC322A6C60F78 /* libPods-SendbirdCallsRNSample.a */,
-				19F6CBCC0A4E27FBF8BF4A61 /* libPods-SendbirdCallsRNSample-SendbirdCallsRNSampleTests.a */,
+				9DC002BF437A63542A56AF10 /* libPods-SendbirdCallsRNSample.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -98,10 +96,8 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				3B4392A12AC88292D35C810B /* Pods-SendbirdCallsRNSample.debug.xcconfig */,
-				5709B34CF0A7D63546082F79 /* Pods-SendbirdCallsRNSample.release.xcconfig */,
-				5B7EB9410499542E8C5724F5 /* Pods-SendbirdCallsRNSample-SendbirdCallsRNSampleTests.debug.xcconfig */,
-				89C6BE57DB24E9ADA2F236DE /* Pods-SendbirdCallsRNSample-SendbirdCallsRNSampleTests.release.xcconfig */,
+				D7E869E4B24C87892D35FEDF /* Pods-SendbirdCallsRNSample.debug.xcconfig */,
+				9AA99F8446E211967F59F5B1 /* Pods-SendbirdCallsRNSample.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -113,14 +109,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "SendbirdCallsRNSample" */;
 			buildPhases = (
-				C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */,
+				857262617858DFF225768042 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */,
-				E235C05ADACE081382539298 /* [CP] Copy Pods Resources */,
+				79A7B49EF466B9B4D0E04929 /* [CP] Embed Pods Frameworks */,
+				1286359E5250B0DD45DC52CF /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -189,7 +185,24 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */ = {
+		1286359E5250B0DD45DC52CF /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SendbirdCallsRNSample/Pods-SendbirdCallsRNSample-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SendbirdCallsRNSample/Pods-SendbirdCallsRNSample-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SendbirdCallsRNSample/Pods-SendbirdCallsRNSample-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		79A7B49EF466B9B4D0E04929 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -206,7 +219,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SendbirdCallsRNSample/Pods-SendbirdCallsRNSample-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */ = {
+		857262617858DFF225768042 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -226,23 +239,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E235C05ADACE081382539298 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SendbirdCallsRNSample/Pods-SendbirdCallsRNSample-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SendbirdCallsRNSample/Pods-SendbirdCallsRNSample-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SendbirdCallsRNSample/Pods-SendbirdCallsRNSample-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -281,7 +277,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-SendbirdCallsRNSample.debug.xcconfig */;
+			baseConfigurationReference = D7E869E4B24C87892D35FEDF /* Pods-SendbirdCallsRNSample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -308,7 +304,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-SendbirdCallsRNSample.release.xcconfig */;
+			baseConfigurationReference = 9AA99F8446E211967F59F5B1 /* Pods-SendbirdCallsRNSample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
