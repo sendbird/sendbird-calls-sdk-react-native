@@ -349,6 +349,10 @@ PODS:
     - React-perflogger (= 0.68.0)
   - sendbird-calls-react-native (0.1.0):
     - React-Core
+    - SendBirdCalls (~> 1.9.3)
+  - SendBirdCalls (1.9.3):
+    - SendBirdWebRTC (~> 1.5.0)
+  - SendBirdWebRTC (1.5.0)
   - SocketRocket (0.6.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -427,6 +431,8 @@ SPEC REPOS:
     - fmt
     - libevent
     - OpenSSL-Universal
+    - SendBirdCalls
+    - SendBirdWebRTC
     - SocketRocket
     - YogaKit
 
@@ -540,7 +546,9 @@ SPEC CHECKSUMS:
   React-RCTVibration: 82fc52d3d96549b8c59a6c8c017d5a1a11457049
   React-runtimeexecutor: 9b1304f48e344c55bb3c36e13bf11461cb4da5d8
   ReactCommon: fab89a13b52f1ac42b59a0e4b4f76f21aea9eebe
-  sendbird-calls-react-native: 1febbabce546fa44e1c8b9e4f9c0d5594f17a727
+  sendbird-calls-react-native: 8f8f20ac87161b48913fc6b70c282144c728f879
+  SendBirdCalls: d7e3d6b28687dd34eb24af261c84c92f798e9af7
+  SendBirdWebRTC: 0ef66b6e6b2f73b307d1e4fe63ce36ab3f0b2518
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 6671cf077f614314c22fd09ddf87d7abeee64e96
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
