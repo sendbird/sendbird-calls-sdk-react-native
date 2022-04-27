@@ -1,5 +1,6 @@
-import type { TurboModule } from 'react-native';
 import { NativeModules, Platform } from 'react-native';
+
+import type { SendbirdCallsSpec } from './types';
 
 const LINKING_ERROR =
   "The package '@sendbird/calls-react-native' doesn't seem to be linked. Make sure: \n\n" +
@@ -8,19 +9,38 @@ const LINKING_ERROR =
   '- You are not using Expo managed workflow\n';
 
 const MODULE_NAME = 'RNSendbirdCalls';
-interface SendbirdCallsSpec extends TurboModule {
-  multiply(a: number, b: number): Promise<number>;
-}
+const NativeModule = NativeModules[MODULE_NAME] as SendbirdCallsSpec; //TurboModuleRegistry.get<SendbirdCallsSpec>(MODULE_NAME);
 
-const NativeCalls = NativeModules[MODULE_NAME]; //TurboModuleRegistry.get<SendbirdCallsSpec>(MODULE_NAME);
-const NoopProxy = new Proxy({} as SendbirdCallsSpec, {
+const NoopModuleProxy = new Proxy({} as SendbirdCallsSpec, {
   get() {
     throw new Error(LINKING_ERROR);
   },
 });
 
-const RNSendbirdCalls = NativeCalls ?? NoopProxy;
+const NativeSendbirdCalls = NativeModule ?? NoopModuleProxy;
+const SendbirdCalls: SendbirdCallsSpec = {
+  getConstants: NativeSendbirdCalls.getConstants,
+  multiply(a, b) {
+    return NativeSendbirdCalls.multiply(a, b);
+  },
+  init(appId: string) {
+    return NativeSendbirdCalls.init(appId);
+  },
+  authenticate(userId, accessToken = null) {
+    return NativeSendbirdCalls.authenticate(userId, accessToken);
+  },
+  deauthenticate() {
+    return NativeSendbirdCalls.deauthenticate();
+  },
+  registerPushToken(token, unique = true) {
+    return NativeSendbirdCalls.registerPushToken(token, unique);
+  },
+  unregisterPushToken(token) {
+    return NativeSendbirdCalls.unregisterPushToken(token);
+  },
+  todo() {
+    return;
+  },
+};
 
-export function multiply(a: number, b: number): Promise<number> {
-  return RNSendbirdCalls.multiply(a, b);
-}
+export default SendbirdCalls;

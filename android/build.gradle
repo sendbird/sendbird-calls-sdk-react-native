@@ -41,16 +41,16 @@ android {
     targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
     sourceSets {
       main {
-        java.srcDirs += ['src/oldarch']
+        java.srcDirs += ['src/oldarch/java']
       }
     }
 //     buildConfigField("boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString())
 //     sourceSets {
 //       main {
 //         if (isNewArchitectureEnabled()) {
-//           java.srcDirs += ['src/newarch']
+//           java.srcDirs += ['src/newarch/java']
 //         } else {
-//           java.srcDirs += ['src/oldarch']
+//           java.srcDirs += ['src/oldarch/java']
 //         }
 //       }
 //     }
