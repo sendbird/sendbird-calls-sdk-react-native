@@ -18,8 +18,8 @@ const NoopModuleProxy = new Proxy({} as SendbirdCallsSpec, {
 });
 
 const NativeSendbirdCalls = NativeModule ?? NoopModuleProxy;
-const SendbirdCalls: SendbirdCallsSpec = {
-  getConstants: NativeSendbirdCalls.getConstants,
+const SendbirdCalls: Omit<SendbirdCallsSpec, 'getConstants'> = {
+  // getConstants: NativeSendbirdCalls.getConstants,
   multiply(a, b) {
     return NativeSendbirdCalls.multiply(a, b);
   },

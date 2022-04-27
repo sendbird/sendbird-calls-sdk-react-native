@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { multiply } from '@sendbird/calls-react-native';
+import SendbirdCalls from '@sendbird/calls-react-native';
 
 export default function App() {
   const [result, setResult] = React.useState<number | undefined>();
 
   React.useEffect(() => {
-    multiply(3, 22).then(setResult);
+    SendbirdCalls.multiply(3, 22).then(setResult);
   }, []);
 
   return (
