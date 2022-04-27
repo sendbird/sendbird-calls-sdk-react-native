@@ -12,24 +12,24 @@ yarn
 
 > While it's possible to use [`npm`](https://github.com/npm/cli), the tooling is built around [`yarn`](https://classic.yarnpkg.com/), so you'll have an easier time if you use `yarn` for development.
 
-While developing, you can run the [example app](/example/) to test your changes. Any changes you make in your library's JavaScript code will be reflected in the example app without a rebuild. If you change any native code, then you'll need to rebuild the example app.
+While developing, you can run the [sample app](/sample/) to test your changes. Any changes you make in your library's JavaScript code will be reflected in the sample app without a rebuild. If you change any native code, then you'll need to rebuild the sample app.
 
 To start the packager:
 
 ```sh
-yarn example start
+yarn sample start
 ```
 
-To run the example app on Android:
+To run the sample app on Android:
 
 ```sh
-yarn example android
+yarn sample android
 ```
 
-To run the example app on iOS:
+To run the sample app on iOS:
 
 ```sh
-yarn example ios
+yarn sample ios
 ```
 
 Make sure your code passes TypeScript and ESLint. Run the following to verify:
@@ -51,9 +51,9 @@ Remember to add tests for your change if possible. Run the unit tests by:
 yarn test
 ```
 
-To edit the Objective-C files, open `example/ios/CallsReactNativeExample.xcworkspace` in XCode and find the source files at `Pods > Development Pods > @sendbird/calls-react-native`.
+To edit the Objective-C files, open `sample/ios/SendbirdCallsRNSample.xcworkspace` in XCode and find the source files at `Pods > Development Pods > @sendbird/calls-react-native`.
 
-To edit the Kotlin files, open `example/android` in Android studio and find the source files at `sendbirdcallsreactnative` under `Android`.
+To edit the Kotlin files, open `sample/android` in Android studio and find the source files at `sendbirdcallsrnsample` under `Android`.
 
 ### Commit message convention
 
@@ -62,7 +62,7 @@ We follow the [conventional commits specification](https://www.conventionalcommi
 - `fix`: bug fixes, e.g. fix crash due to deprecated method.
 - `feat`: new features, e.g. add new method to the module.
 - `refactor`: code refactor, e.g. migrate from class components to hooks.
-- `docs`: changes into documentation, e.g. add usage example for the module..
+- `docs`: changes into documentation, e.g. add usage sample for the module..
 - `test`: adding or updating tests, e.g. add integration tests using detox.
 - `chore`: tooling changes, e.g. change CI config.
 
@@ -94,9 +94,9 @@ The `package.json` file contains various scripts for common tasks:
 - `yarn typescript`: type-check files with TypeScript.
 - `yarn lint`: lint files with ESLint.
 - `yarn test`: run unit tests with Jest.
-- `yarn example start`: start the Metro server for the example app.
-- `yarn example android`: run the example app on Android.
-- `yarn example ios`: run the example app on iOS.
+- `yarn sample start`: start the Metro server for the sample app.
+- `yarn sample android`: run the sample app on Android.
+- `yarn sample ios`: run the sample app on iOS.
 
 ### Sending a pull request
 
