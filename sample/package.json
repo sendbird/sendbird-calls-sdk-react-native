@@ -11,7 +11,8 @@
   "dependencies": {
     "@sendbird/calls-react-native": "link:../",
     "react": "17.0.2",
-    "react-native": "0.68.0"
+    "react-native": "0.68.0",
+    "react-native-touch-reload": "sendbird/react-native-touch-reload"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

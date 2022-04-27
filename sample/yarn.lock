@@ -3478,6 +3478,10 @@ react-native-gradle-plugin@^0.0.5:
   dependencies:
     react-native-codegen "*"
 
+react-native-touch-reload@sendbird/react-native-touch-reload:
+  version "1.0.0"
+  resolved "https://codeload.github.com/sendbird/react-native-touch-reload/tar.gz/7be184878264619fc20723478ab0205a4d5733e9"
+
 react-native@0.68.0:
   version "0.68.0"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.68.0.tgz#00204818c7fa5a9802ee73f3905a6d9b1c945a31"
