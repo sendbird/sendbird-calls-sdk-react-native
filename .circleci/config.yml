@@ -37,6 +37,10 @@ jobs:
       - save_cache:
           key: dependencies-sample-{{ checksum "sample/package.json" }}
           paths: sample/node_modules
+      - run:
+          name: Inject env file
+          command: |
+            echo "export const APP_ID = 'app_id';" >> sample/src/env.ts
       - persist_to_workspace:
           root: .
           paths: .
