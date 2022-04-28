@@ -164,34 +164,34 @@ export type AudioDeviceChangedInfo =
 
 export interface DirectCallListener {
   /** Called when the callee has accepted the call, but not yet connected to media streams. **/
-  onEstablished: (call: DirectCall) => void;
+  onEstablished: (call: DirectCallProperties) => void;
 
   /** Called when media streams between the caller and callee are connected and audio/video is enabled. **/
-  onConnected: (call: DirectCall) => void;
+  onConnected: (call: DirectCallProperties) => void;
 
   /** Called when DirectCall begins attempting to reconnect to the server after losing connection. **/
-  onReconnecting: (call: DirectCall) => void;
+  onReconnecting: (call: DirectCallProperties) => void;
 
   /** Called when DirectCall successfully reconnects to the server. **/
-  onReconnected: (call: DirectCall) => void;
+  onReconnected: (call: DirectCallProperties) => void;
 
   /** Called when the call has ended. **/
-  onEnded: (call: DirectCall) => void;
+  onEnded: (call: DirectCallProperties) => void;
 
   /** Called when the remote user changes audio settings. **/
-  onRemoteAudioSettingsChanged: (call: DirectCall) => void;
+  onRemoteAudioSettingsChanged: (call: DirectCallProperties) => void;
 
   /** Called when the remote user changes video settings. **/
-  onRemoteVideoSettingsChanged: (call: DirectCall) => void;
+  onRemoteVideoSettingsChanged: (call: DirectCallProperties) => void;
 
   /** Android only **/
-  onLocalVideoSettingsChanged: (call: DirectCall) => void;
+  onLocalVideoSettingsChanged: (call: DirectCallProperties) => void;
 
   /**
    * Called when the other user’s recording status is changed.
    * You can check the recording status of the other user with `DirectCall.remoteRecordingStatus`
    * **/
-  onRemoteRecordingStatusChanged: (call: DirectCall) => void;
+  onRemoteRecordingStatusChanged: (call: DirectCallProperties) => void;
 
   /**
    * Called when the audio device has been changed.
@@ -200,13 +200,13 @@ export interface DirectCallListener {
    * See also: AVAudioSession.setPreferredInput {@link https://developer.apple.com/documentation/avfaudio/avaudiosession/1616491-setpreferredinput}
    * See also: AVRoutePickerView {@link https://developer.apple.com/documentation/avkit/avroutepickerview}
    * **/
-  onAudioDeviceChanged: (call: DirectCall, info: AudioDeviceChangedInfo) => void;
+  onAudioDeviceChanged: (call: DirectCallProperties, info: AudioDeviceChangedInfo) => void;
 
   /** Called when the custom items of the call are updated. **/
-  onCustomItemsUpdated: (call: DirectCall, updatedKeys: string[]) => void;
+  onCustomItemsUpdated: (call: DirectCallProperties, updatedKeys: string[]) => void;
 
   /** Called when the custom items of the call are deleted. **/
-  onCustomItemsDeleted: (call: DirectCall, deletedKeys: string[]) => void;
+  onCustomItemsDeleted: (call: DirectCallProperties, deletedKeys: string[]) => void;
 
   /**
    * The local or remote user has put a call on hold or removed a hold from a call and their hold status has changed.
@@ -214,10 +214,11 @@ export interface DirectCallListener {
    * @param {boolean} isLocalUser Returns true if the user whose hold status changed is local user
    * @param {boolean} isUserOnHold Returns true if the user's hold status is changed to on hold
    * */
-  onUserHoldStatusChanged: (call: DirectCall, isLocalUser: boolean, isUserOnHold: boolean) => void;
+  onUserHoldStatusChanged: (call: DirectCallProperties, isLocalUser: boolean, isUserOnHold: boolean) => void;
 }
 
-export interface DirectCall {
+export interface DirectCall extends DirectCallProperties, DirectCallMethods {}
+export interface DirectCallProperties {
   callId: string;
   callLog: DirectCallLog | null;
   callee: DirectCallUser | null;
@@ -233,11 +234,9 @@ export interface DirectCall {
 
   availableVideoDevices: VideoDevice[];
   currentVideoDevice: VideoDevice | null;
-  selectVideoDevice(device: VideoDevice): Promise<void>;
 
   android_availableAudioDevices: AudioDevice[];
   android_currentAudioDevice: AudioDevice | null;
-  android_selectAudioDevice(device: AudioDevice): Promise<void>;
 
   isEnded: boolean;
   isOnHold: boolean;
@@ -251,7 +250,10 @@ export interface DirectCall {
 
   localRecordingStatus: RecordingStatus;
   remoteRecordingStatus: RecordingStatus;
-
+}
+export interface DirectCallMethods {
+  selectVideoDevice(device: VideoDevice): Promise<void>;
+  android_selectAudioDevice(device: AudioDevice): Promise<void>;
   accept(options: CallOptions, holdActiveCall: boolean): Promise<void>;
   end(): Promise<void>;
 
