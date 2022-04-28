@@ -78,7 +78,7 @@ jobs:
       - run:
           name: Build package
           command: |
-            yarn prepare
+            yarn build
 
 workflows:
   build-and-test:

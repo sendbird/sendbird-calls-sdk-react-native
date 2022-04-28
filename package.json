@@ -24,7 +24,8 @@
   "scripts": {
     "test": "jest",
     "typescript": "tsc --noEmit",
-    "prepare": "bob build",
+    "build": "bob build",
+    "clean": "del lib",
     "release": "release-it",
     "sample": "yarn --cwd sample",
     "pods": "cd sample && pod-install --quiet",
@@ -64,6 +65,7 @@
     "@typescript-eslint/eslint-plugin": "^5.19.0",
     "@typescript-eslint/parser": "^5.19.0",
     "commitlint": "^11.0.0",
+    "del-cli": "^4.0.1",
     "eslint": "^7.2.0",
     "eslint-config-prettier": "^7.0.0",
     "eslint-plugin-prettier": "^3.1.3",

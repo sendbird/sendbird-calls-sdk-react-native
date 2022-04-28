@@ -67,9 +67,9 @@ class CallsUtils {
             val userMap = WritableNativeMap();
             insertMap(userMap, "userId", user.userId)
             insertMap(userMap, "isActive", user.isActive)
-            insertMap(userMap, "nickname", user.nickname)
-            insertMap(userMap, "metaData", user.metaData)
-            insertMap(userMap, "profileUrl", user.profileUrl)
+            insertMap(userMap, "nickname", user.nickname ?: "")
+            insertMap(userMap, "metaData", user.metaData ?: WritableNativeMap())
+            insertMap(userMap, "profileUrl", user.profileUrl ?: "")
             return userMap
         }
     }

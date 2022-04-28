@@ -3,16 +3,26 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import SendbirdCalls from '@sendbird/calls-react-native';
 
+import type { User } from '../../src/types';
+import { APP_ID } from './env';
+
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
+  const [user, setUser] = React.useState<User>();
 
   React.useEffect(() => {
-    SendbirdCalls.multiply(3, 22).then(setResult);
+    SendbirdCalls.init(APP_ID)
+      .then(async () => {
+        const user = await SendbirdCalls.authenticate('test-user');
+        setUser(user);
+      })
+      .catch((err) => {
+        console.log('error', err);
+      });
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Text>Result: {JSON.stringify(user, null, 2)}</Text>
     </View>
   );
 }

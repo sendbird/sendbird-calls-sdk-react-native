@@ -1,14 +1,21 @@
-package com.sendbird.calls.reactnative
+package com.sendbird.calls.reactnative.module
 
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.sendbird.calls.AuthenticateParams
 import com.sendbird.calls.SendBirdCall
+import com.sendbird.calls.reactnative.CallsUtils
 
-class CallsModuleCommon(private val reactContext: ReactApplicationContext): CommonModule {
+class CallsCommonModule(private val reactContext: ReactApplicationContext): CommonModule {
     override fun init(appId: String, promise: Promise) {
         val result = SendBirdCall.init(reactContext, appId)
         promise.resolve(result)
+    }
+
+    override fun getCurrentUser(promise: Promise) {
+        val user = SendBirdCall.currentUser
+        if(user == null) promise.resolve(null)
+        else promise.resolve(CallsUtils.convertUserToJavascriptMap(user))
     }
 
     override fun authenticate(userId: String, accessToken: String?, promise: Promise) {

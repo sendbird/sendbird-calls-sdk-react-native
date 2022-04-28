@@ -5,6 +5,10 @@
 
 @interface RCT_EXTERN_MODULE(RNSendbirdCalls, NSObject)
 
++ (BOOL)requiresMainQueueSetup {
+  return YES;
+}
+
 RCT_EXTERN_METHOD(multiply:
                  (float)a
                  b:(float)b

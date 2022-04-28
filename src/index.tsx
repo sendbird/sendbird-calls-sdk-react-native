@@ -1,46 +1,73 @@
-import { NativeModules, Platform } from 'react-native';
+import { NativeSendbirdCalls } from './libs/NativeModule';
+import type { DirectCall, SendbirdCallsExternalSpec, User } from './types';
 
-import type { SendbirdCallsSpec } from './types';
+class SendbirdCallsModule implements SendbirdCallsExternalSpec {
+  private static _instance: SendbirdCallsModule;
+  public static get instance() {
+    if (!SendbirdCallsModule._instance) SendbirdCallsModule._instance = new SendbirdCallsModule();
+    return SendbirdCallsModule._instance;
+  }
 
-const LINKING_ERROR =
-  "The package '@sendbird/calls-react-native' doesn't seem to be linked. Make sure: \n\n" +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
-  '- You rebuilt the app after installing the package\n' +
-  '- You are not using Expo managed workflow\n';
-
-const MODULE_NAME = 'RNSendbirdCalls';
-const NativeModule = NativeModules[MODULE_NAME] as SendbirdCallsSpec; //TurboModuleRegistry.get<SendbirdCallsSpec>(MODULE_NAME);
-
-const NoopModuleProxy = new Proxy({} as SendbirdCallsSpec, {
-  get() {
-    throw new Error(LINKING_ERROR);
-  },
-});
-
-const NativeSendbirdCalls = NativeModule ?? NoopModuleProxy;
-const SendbirdCalls: Omit<SendbirdCallsSpec, 'getConstants'> = {
-  // getConstants: NativeSendbirdCalls.getConstants,
-  multiply(a, b) {
+  // @ts-ignore
+  private getConstants = () => {
+    return NativeSendbirdCalls.getConstants?.() ?? {};
+  };
+  // @ts-ignore
+  private multiply = (a: number, b: number) => {
     return NativeSendbirdCalls.multiply(a, b);
-  },
-  init(appId: string) {
-    return NativeSendbirdCalls.init(appId);
-  },
-  authenticate(userId, accessToken = null) {
-    return NativeSendbirdCalls.authenticate(userId, accessToken);
-  },
-  deauthenticate() {
-    return NativeSendbirdCalls.deauthenticate();
-  },
-  registerPushToken(token, unique = true) {
-    return NativeSendbirdCalls.registerPushToken(token, unique);
-  },
-  unregisterPushToken(token) {
-    return NativeSendbirdCalls.unregisterPushToken(token);
-  },
-  todo() {
-    return;
-  },
-};
+  };
 
+  private _applicationId = '';
+  private _initialized = false;
+  private _currentUser: User | null = null;
+  private _ongoingCalls: Array<DirectCall> = [];
+
+  public get applicationId() {
+    return this._applicationId;
+  }
+  public get initialized() {
+    return this._initialized;
+  }
+  public get currentUser() {
+    return this._currentUser;
+  }
+  public get ongoingCallCount() {
+    return this._ongoingCalls.length;
+  }
+  public get ongoingCalls() {
+    return this._ongoingCalls;
+  }
+
+  public getCurrentUser = async () => {
+    this._currentUser = await NativeSendbirdCalls.getCurrentUser();
+    return this.currentUser;
+  };
+
+  public init = async (appId: string) => {
+    this._applicationId = appId;
+    this._initialized = await NativeSendbirdCalls.init(appId);
+    return this.initialized;
+  };
+  public authenticate = async (userId: string, accessToken: string | null = null) => {
+    this._currentUser = await NativeSendbirdCalls.authenticate(userId, accessToken);
+    return this.currentUser as User;
+  };
+  public deauthenticate = async () => {
+    await NativeSendbirdCalls.deauthenticate();
+    this._currentUser = null;
+  };
+  public registerPushToken = async (token: string, unique = true) => {
+    await NativeSendbirdCalls.registerPushToken(token, unique);
+  };
+  public unregisterPushToken = async (token: string) => {
+    await NativeSendbirdCalls.unregisterPushToken(token);
+  };
+
+  todo = () => {
+    return;
+  };
+}
+
+const SendbirdCalls = SendbirdCallsModule.instance;
 export default SendbirdCalls;
+export * from './types';
