@@ -15,7 +15,7 @@ export interface CommonModule {
 
   getCurrentUser(): Promise<User | null>;
 
-  init(appId: string): Promise<boolean>;
+  initialize(appId: string): Promise<boolean>;
   authenticate(userId: string, accessToken?: string | null): Promise<User>;
   deauthenticate(): Promise<void>;
   registerPushToken(token: string, unique?: boolean): Promise<void>;

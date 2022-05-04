@@ -7,7 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		ED5C6942282244D500E9904E /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED5C6941282244D500E9904E /* Promise.swift */; };
+		ED5C69472822680800E9904E /* Data+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED5C69462822680800E9904E /* Data+Extension.swift */; };
+		ED5C694928226FFA00E9904E /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED5C694828226FFA00E9904E /* String+Extension.swift */; };
 		ED895EC42806DBCF00980F59 /* RNSendbirdCalls.m in Sources */ = {isa = PBXBuildFile; fileRef = ED895EC32806DBCF00980F59 /* RNSendbirdCalls.m */; };
+		EDFE16892820F2C400D3E55C /* CallsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFE16882820F2C400D3E55C /* CallsModule.swift */; };
+		EDFE168D2820F64E00D3E55C /* CallsModule+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFE168C2820F64E00D3E55C /* CallsModule+Common.swift */; };
+		EDFE168F28212C2E00D3E55C /* CallsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFE168E28212C2E00D3E55C /* CallsUtils.swift */; };
 		F4FF95D7245B92E800C19C63 /* RNSendbirdCalls.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /* RNSendbirdCalls.swift */; };
 /* End PBXBuildFile section */
 
@@ -25,7 +31,13 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libRNSendbirdCalls.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNSendbirdCalls.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		ED5C6941282244D500E9904E /* Promise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
+		ED5C69462822680800E9904E /* Data+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extension.swift"; sourceTree = "<group>"; };
+		ED5C694828226FFA00E9904E /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		ED895EC32806DBCF00980F59 /* RNSendbirdCalls.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNSendbirdCalls.m; sourceTree = "<group>"; };
+		EDFE16882820F2C400D3E55C /* CallsModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallsModule.swift; sourceTree = "<group>"; };
+		EDFE168C2820F64E00D3E55C /* CallsModule+Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CallsModule+Common.swift"; sourceTree = "<group>"; };
+		EDFE168E28212C2E00D3E55C /* CallsUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallsUtils.swift; sourceTree = "<group>"; };
 		F4FF95D5245B92E700C19C63 /* RNSendbirdCalls-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNSendbirdCalls-Bridging-Header.h"; sourceTree = "<group>"; };
 		F4FF95D6245B92E800C19C63 /* RNSendbirdCalls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNSendbirdCalls.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -52,11 +64,41 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				ED5C6945282267F000E9904E /* Extensions */,
+				ED5C6940282244B700E9904E /* Helpers */,
+				EDFE16872820F2B100D3E55C /* Modules */,
 				F4FF95D6245B92E800C19C63 /* RNSendbirdCalls.swift */,
 				ED895EC32806DBCF00980F59 /* RNSendbirdCalls.m */,
 				F4FF95D5245B92E700C19C63 /* RNSendbirdCalls-Bridging-Header.h */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		ED5C6940282244B700E9904E /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				EDFE168E28212C2E00D3E55C /* CallsUtils.swift */,
+				ED5C6941282244D500E9904E /* Promise.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		ED5C6945282267F000E9904E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				ED5C69462822680800E9904E /* Data+Extension.swift */,
+				ED5C694828226FFA00E9904E /* String+Extension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		EDFE16872820F2B100D3E55C /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				EDFE16882820F2C400D3E55C /* CallsModule.swift */,
+				EDFE168C2820F64E00D3E55C /* CallsModule+Common.swift */,
+			);
+			path = Modules;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -116,8 +158,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED5C694928226FFA00E9904E /* String+Extension.swift in Sources */,
+				EDFE168D2820F64E00D3E55C /* CallsModule+Common.swift in Sources */,
 				ED895EC42806DBCF00980F59 /* RNSendbirdCalls.m in Sources */,
 				F4FF95D7245B92E800C19C63 /* RNSendbirdCalls.swift in Sources */,
+				ED5C69472822680800E9904E /* Data+Extension.swift in Sources */,
+				EDFE16892820F2C400D3E55C /* CallsModule.swift in Sources */,
+				EDFE168F28212C2E00D3E55C /* CallsUtils.swift in Sources */,
+				ED5C6942282244D500E9904E /* Promise.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

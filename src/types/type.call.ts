@@ -1,6 +1,5 @@
-import type { User } from '@sendbird/calls-react-native';
-
 import type { RouteChangeReason } from './type.platform';
+import type { User } from './type.user';
 
 export enum AudioDeviceType {
   EARPIECE = 'EARPIECE',

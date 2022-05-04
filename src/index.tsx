@@ -43,9 +43,9 @@ class SendbirdCallsModule implements SendbirdCallsExternalSpec {
     return this.currentUser;
   };
 
-  public init = async (appId: string) => {
+  public initialize = async (appId: string) => {
     this._applicationId = appId;
-    this._initialized = await NativeSendbirdCalls.init(appId);
+    this._initialized = await NativeSendbirdCalls.initialize(appId);
     return this.initialized;
   };
   public authenticate = async (userId: string, accessToken: string | null = null) => {
