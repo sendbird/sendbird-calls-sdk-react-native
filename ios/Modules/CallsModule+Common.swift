@@ -9,8 +9,21 @@
 import Foundation
 import SendBirdCalls
 
-// MARK: - Common module
-class CallsCommonModule {
+protocol CallsCommonModuleProtocol {
+    func initialize(_ appId: String, _ promise: Promise)
+    
+    func getCurrentUser(_ promise: Promise)
+    
+    func authenticate(_ userId: String, _ accessToken: String?, _ promise: Promise)
+    
+    func deauthenticate(_ promise: Promise)
+    
+    func registerPushToken(_ token: String, _ unique: Bool, _ promise: Promise)
+    
+    func unregisterPushToken(_ token: String, _ promise: Promise)
+}
+
+class CallsCommonModule: CallsCommonModuleProtocol {
     func initialize(_ appId: String, _ promise: Promise) {
         let result = SendBirdCall.configure(appId: appId)
         promise.resolve(result)
@@ -71,47 +84,5 @@ class CallsCommonModule {
         } catch {
             promise.reject(from: "common/unregisterPushToken", message: "Cannot parse token, check format of token")
         }
-    }
-}
-
-// MARK: - Common module protocol
-protocol CommonModuleProtocol {
-    func initialize(_ appId: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) -> Void
-
-    func getCurrentUser(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock)
-    
-    func authenticate(_ userId: String, _ accessToken: String?, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock)
-    
-    func deauthenticate(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock)
-
-    func registerPushToken(_ token: String, _ unique: Bool, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock)
-    
-    func unregisterPushToken(_ token: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock)
-}
-
-// MARK: - Common module extends
-extension CallsModule: CommonModuleProtocol {
-    func initialize(_ appId: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
-        commonModule.initialize(appId, Promise(resolve, reject))
-    }
-    
-    func getCurrentUser(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
-        commonModule.getCurrentUser(Promise(resolve, reject))
-    }
-    
-    func authenticate(_ userId: String, _ accessToken: String?, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
-        commonModule.authenticate(userId, accessToken, Promise(resolve, reject))
-    }
-    
-    func deauthenticate(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
-        commonModule.deauthenticate(Promise(resolve, reject))
-    }
-    
-    func registerPushToken(_ token: String, _ unique: Bool, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
-        commonModule.registerPushToken(token, unique, Promise(resolve, reject))
-    }
-    
-    func unregisterPushToken(_ token: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
-        commonModule.unregisterPushToken(token, Promise(resolve, reject))
     }
 }

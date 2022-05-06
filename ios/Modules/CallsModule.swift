@@ -9,33 +9,18 @@
 import Foundation
 import SendBirdCalls
 
-class CallsDirectCallModule: DirectCallDelegate {
-    func didConnect(_ call: DirectCall) {
-        <#code#>
-    }
-    
-    func didEnd(_ call: DirectCall) {
-        <#code#>
-    }
-}
-
 class CallsModule: SendBirdCallDelegate {
     internal let commonModule = CallsCommonModule()
     internal let directCallModule = CallsDirectCallModule()
-    
-    init() {
-        self.initialize()
-    }
     
     func initialize() {
         SendBirdCall.addDelegate(self, identifier: "CallsModule")
     }
     
-    func invalidate(completionHandler: SendBirdCalls.ErrorHandler?) {
-        SendBirdCall.deauthenticate(completionHandler: completionHandler)
+    func invalidate() {
+        SendBirdCall.deauthenticate(completionHandler: nil)
         SendBirdCall.removeAllDelegates()
         SendBirdCall.removeAllRecordingDelegates()
-        self.initialize()
     }
     
     func didStartRinging(_ call: DirectCall) {
@@ -43,14 +28,41 @@ class CallsModule: SendBirdCallDelegate {
     }
 }
 
-// MARK: - Test module protocol
-protocol TestModule {
-    func multiply(_ a: Float, _ b: Float, _ resolve: RCTPromiseResolveBlock, _ reject: RCTPromiseRejectBlock) -> Void
-}
-
-// MARK: - Test module extends
-extension CallsModule: TestModule {
+// MARK: - Test module extension
+extension CallsModule {
     func multiply(_ a: Float, _ b: Float, _ resolve: RCTPromiseResolveBlock, _ reject: RCTPromiseRejectBlock) {
         resolve(a * b)
     }
+}
+
+// MARK: - Common module extension
+extension CallsModule: CallsCommonModuleProtocol {
+    func initialize(_ appId: String, _ promise: Promise) {
+        commonModule.initialize(appId, promise)
+    }
+    
+    func getCurrentUser(_ promise: Promise) {
+        commonModule.getCurrentUser(promise)
+    }
+    
+    func authenticate(_ userId: String, _ accessToken: String?, _ promise: Promise) {
+        commonModule.authenticate(userId, accessToken, promise)
+    }
+    
+    func deauthenticate(_ promise: Promise) {
+        commonModule.deauthenticate(promise)
+    }
+    
+    func registerPushToken(_ token: String, _ unique: Bool, _ promise: Promise) {
+        commonModule.registerPushToken(token, unique, promise)
+    }
+    
+    func unregisterPushToken(_ token: String, _ promise: Promise) {
+        commonModule.unregisterPushToken(token, promise)
+    }
+}
+
+// MARK: - DirectCall module extension
+extension CallsModule: CallsDirectCallModuleProtocol {
+    
 }

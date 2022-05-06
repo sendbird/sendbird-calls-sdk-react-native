@@ -3,7 +3,7 @@
 //  RNSendbirdCalls
 //
 //  Created by Airen Kang on 2022/05/04.
-//  Copyright © 2022 Facebook. All rights reserved.
+//  Copyright © 2022 Sendbird. All rights reserved.
 //
 
 import Foundation
