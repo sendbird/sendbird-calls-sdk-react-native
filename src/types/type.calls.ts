@@ -1,5 +1,3 @@
-import type { User } from '@sendbird/calls-react-native';
-
 import type { RouteChangeReason } from './type.platform';
 
 export enum AudioDeviceType {
@@ -92,6 +90,14 @@ export type CustomItemUpdateResult = {
   updatedItems: Record<string, string>;
   affectedKeys: string[];
 };
+
+export interface User {
+  isActive: boolean;
+  userId: string;
+  metaData: Record<string, string>;
+  nickname: string;
+  profileUrl: string;
+}
 
 export interface DirectCallUser extends User {
   role: DirectCallUserRole;

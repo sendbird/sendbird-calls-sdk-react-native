@@ -26,6 +26,7 @@
 		9DC002BF437A63542A56AF10 /* libPods-SendbirdCallsRNSample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SendbirdCallsRNSample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7E869E4B24C87892D35FEDF /* Pods-SendbirdCallsRNSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SendbirdCallsRNSample.debug.xcconfig"; path = "Target Support Files/Pods-SendbirdCallsRNSample/Pods-SendbirdCallsRNSample.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		ED79CE222825258D007CC64F /* SendbirdCallsRNSample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = SendbirdCallsRNSample.entitlements; path = SendbirdCallsRNSample/SendbirdCallsRNSample.entitlements; sourceTree = "<group>"; };
 		EDF7F3CF28111ED9000E043F /* SendbirdCallsRNSample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SendbirdCallsRNSample-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -44,6 +45,7 @@
 		13B07FAE1A68108700A75B9A /* SendbirdCallsRNSample */ = {
 			isa = PBXGroup;
 			children = (
+				ED79CE222825258D007CC64F /* SendbirdCallsRNSample.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -281,6 +283,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = SendbirdCallsRNSample/SendbirdCallsRNSample.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -296,7 +299,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.sendbird.calls.reactnative.sample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sendbird.calls.reactnative.sample.app;
 				PRODUCT_NAME = SendbirdCallsRNSample;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -311,6 +314,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = SendbirdCallsRNSample/SendbirdCallsRNSample.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -325,7 +329,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.sendbird.calls.reactnative.sample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sendbird.calls.reactnative.sample.app;
 				PRODUCT_NAME = SendbirdCallsRNSample;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;

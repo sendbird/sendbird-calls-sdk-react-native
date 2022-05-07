@@ -9,7 +9,7 @@ interface TestModule {
 }
 
 interface CommonModule {
-    fun init(appId: String, promise: Promise)
+    fun initialize(appId: String, promise: Promise)
 
     fun getCurrentUser(promise: Promise)
     fun authenticate(userId: String, accessToken: String?, promise: Promise)

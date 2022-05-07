@@ -24,26 +24,19 @@ class RNSendbirdCallsModule(reactContext: ReactApplicationContext) : ReactContex
     @Deprecated("Deprecated in Java")
     override fun onCatalystInstanceDestroy() {
         super.onCatalystInstanceDestroy()
-        module.invalidate(null)
+        CallsModule.invalidate(null)
     }
     override fun invalidate() {
         super.invalidate()
-        module.invalidate(null)
+        CallsModule.invalidate(null)
     }
 
-    @ReactMethod
-    override fun multiply(a: Int, b: Int, promise: Promise) = module.multiply(a, b, promise)
+    @ReactMethod override fun multiply(a: Int, b: Int, promise: Promise) = module.multiply(a, b, promise)
 
-    @ReactMethod
-    override fun init(appId: String, promise: Promise) = module.init(appId, promise)
-    @ReactMethod
-    override fun getCurrentUser(promise: Promise) = module.getCurrentUser(promise)
-    @ReactMethod
-    override fun authenticate(userId: String, accessToken: String?, promise: Promise) = module.authenticate(userId, accessToken, promise)
-    @ReactMethod
-    override fun deauthenticate(promise: Promise) = module.deauthenticate(promise)
-    @ReactMethod
-    override fun registerPushToken(token: String, unique: Boolean, promise: Promise) = module.registerPushToken(token, unique, promise)
-    @ReactMethod
-    override fun unregisterPushToken(token: String, promise: Promise) = module.unregisterPushToken(token, promise)
+    @ReactMethod override fun initialize(appId: String, promise: Promise) = module.initialize(appId, promise)
+    @ReactMethod override fun getCurrentUser(promise: Promise) = module.getCurrentUser(promise)
+    @ReactMethod override fun authenticate(userId: String, accessToken: String?, promise: Promise) = module.authenticate(userId, accessToken, promise)
+    @ReactMethod override fun deauthenticate(promise: Promise) = module.deauthenticate(promise)
+    @ReactMethod override fun registerPushToken(token: String, unique: Boolean, promise: Promise) = module.registerPushToken(token, unique, promise)
+    @ReactMethod override fun unregisterPushToken(token: String, promise: Promise) = module.unregisterPushToken(token, promise)
 }
