@@ -1,5 +1,4 @@
 import type { RouteChangeReason } from './type.platform';
-import type { User } from './type.user';
 
 export enum AudioDeviceType {
   EARPIECE = 'EARPIECE',
@@ -91,6 +90,14 @@ export type CustomItemUpdateResult = {
   updatedItems: Record<string, string>;
   affectedKeys: string[];
 };
+
+export interface User {
+  isActive: boolean;
+  userId: string;
+  metaData: Record<string, string>;
+  nickname: string;
+  profileUrl: string;
+}
 
 export interface DirectCallUser extends User {
   role: DirectCallUserRole;

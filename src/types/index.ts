@@ -1,6 +1,5 @@
 export * from './type.module';
-export * from './type.call';
-export * from './type.user';
+export * from './type.calls';
 
 type PlatformPrefix = 'android' | 'ios';
 export type AsNativeInterface<T> = {

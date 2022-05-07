@@ -1,8 +1,16 @@
 import SendBirdCalls
 import React
+import CallKit
+import PushKit
+import Foundation
+import AVFoundation
+
+protocol RNBridgeModuleProtocol: RCTBridgeModule, RCTInvalidating { }
 
 @objc(RNSendbirdCalls)
-class RNSendbirdCalls: NSObject, RCTBridgeModule, RCTInvalidating {
+class RNSendbirdCalls: NSObject, RNBridgeModuleProtocol {
+    static let shared = RNSendbirdCalls()
+    
     internal var module = CallsModule()
     
     @objc static func moduleName() -> String! {
@@ -19,17 +27,17 @@ class RNSendbirdCalls: NSObject, RCTBridgeModule, RCTInvalidating {
         module = CallsModule()
         module.initialize()
     }
-    
 }
 
-// MARK: - Test module
+// MARK: - Test
 extension RNSendbirdCalls {
-    @objc func multiply(_ a: Float, _ b: Float, _ resolve: RCTPromiseResolveBlock, _ reject: RCTPromiseRejectBlock) -> Void {
-        module.multiply(a, b, resolve, reject)
+    @objc func multiply(_ a: Float, b: Float, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        resolve(a*b)
     }
 }
 
-// MARK: - Common module
+
+// MARK: - Common
 extension RNSendbirdCalls {
     @objc func initialize(_ appId: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
         module.initialize(appId, Promise(resolve, reject))
@@ -53,5 +61,17 @@ extension RNSendbirdCalls {
     
     @objc func unregisterPushToken(_ token: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
         module.unregisterPushToken(token, Promise(resolve, reject))
+    }
+    
+    @objc func voipRegistration(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.voipRegistration(Promise(resolve, reject))
+    }
+    
+    @objc func registerVoIPPushToken(_ token: String, _ unique: Bool, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.registerVoIPPushToken(token, unique, Promise(resolve, reject))
+    }
+    
+    @objc func unregisterVoIPPushToken(_ token: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.unregisterVoIPPushToken(token, Promise(resolve, reject))
     }
 }

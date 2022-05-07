@@ -8,22 +8,30 @@
 
 import Foundation
 import SendBirdCalls
+import CallKit
 
 protocol CallsDirectCallModuleProtocol {
+}
+
+class CallsDirectCallModule: NSObject, CallsDirectCallModuleProtocol {
     
 }
 
-class CallsDirectCallModule: CallsDirectCallModuleProtocol {
-    
-}
-
-// MARK: - DirectCallDelegate
+// MARK: DirectCallDelegate
 extension CallsDirectCallModule: DirectCallDelegate {
-    func didConnect(_ call: DirectCall) {
-        <#code#>
-    }
+    func didConnect(_ call: DirectCall) { }
     
     func didEnd(_ call: DirectCall) {
-        <#code#>
+        var callId: UUID = UUID()
+        if let callUUID = call.callUUID {
+            callId = callUUID
+        }
+        
+        CXCallManager.shared.endCall(for: callId, endedAt: Date(), reason: call.endResult)
+        
+        guard let callLog = call.callLog else { return }
+        //UserDefaults.standard.callHistories.insert(CallHistory(callLog: callLog), at: 0)
+        
+        //CallHistoryViewController.main?.updateCallHistories()
     }
 }

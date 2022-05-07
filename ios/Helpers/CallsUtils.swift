@@ -7,7 +7,16 @@
 //
 
 import Foundation
+import SendBirdCalls
 
 class CallsUtils {
-    
+    static func convertUserToDict(_ user: SendBirdCalls.User) -> [String: Any?] {
+        return [
+            "userId": user.userId,
+            "isActive": user.isActive,
+            "nickname": user.nickname ?? "",
+            "metaData": user.metadata ?? [:],
+            "profileUrl": user.profileURL ?? ""
+        ]
+    }
 }

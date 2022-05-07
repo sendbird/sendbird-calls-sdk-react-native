@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 import { NativeSendbirdCalls } from './libs/NativeModule';
 import type { DirectCall, SendbirdCallsExternalSpec, User } from './types';
 
@@ -7,15 +9,6 @@ class SendbirdCallsModule implements SendbirdCallsExternalSpec {
     if (!SendbirdCallsModule._instance) SendbirdCallsModule._instance = new SendbirdCallsModule();
     return SendbirdCallsModule._instance;
   }
-
-  // @ts-ignore
-  private getConstants = () => {
-    return NativeSendbirdCalls.getConstants?.() ?? {};
-  };
-  // @ts-ignore
-  private multiply = (a: number, b: number) => {
-    return NativeSendbirdCalls.multiply(a, b);
-  };
 
   private _applicationId = '';
   private _initialized = false;
@@ -37,6 +30,15 @@ class SendbirdCallsModule implements SendbirdCallsExternalSpec {
   public get ongoingCalls() {
     return this._ongoingCalls;
   }
+
+  protected getConstants = () => {
+    return NativeSendbirdCalls.getConstants?.() ?? {};
+  };
+
+  // TODO: remove test method
+  protected multiply = (a: number, b: number) => {
+    return NativeSendbirdCalls.multiply(a, b);
+  };
 
   public getCurrentUser = async () => {
     this._currentUser = await NativeSendbirdCalls.getCurrentUser();
@@ -61,6 +63,18 @@ class SendbirdCallsModule implements SendbirdCallsExternalSpec {
   };
   public unregisterPushToken = async (token: string) => {
     await NativeSendbirdCalls.unregisterPushToken(token);
+  };
+  public ios_voipRegistration = async () => {
+    if (Platform.OS !== 'ios') return '';
+    return NativeSendbirdCalls.voipRegistration();
+  };
+  public ios_registerVoIPPushToken = async (token: string, unique = true) => {
+    if (Platform.OS !== 'ios') return;
+    await NativeSendbirdCalls.registerVoIPPushToken(token, unique);
+  };
+  public ios_unregisterVoIPPushToken = async (token: string) => {
+    if (Platform.OS !== 'ios') return;
+    await NativeSendbirdCalls.unregisterVoIPPushToken(token);
   };
 
   todo = () => {

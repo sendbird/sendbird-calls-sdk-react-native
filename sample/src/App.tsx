@@ -13,6 +13,11 @@ export default function App() {
     SendbirdCalls.initialize(APP_ID)
       .then(async () => {
         const user = await SendbirdCalls.authenticate('test-user');
+        SendbirdCalls.ios_voipRegistration().then(async (token) => {
+          await SendbirdCalls.registerPushToken(token, false);
+          await SendbirdCalls.ios_registerVoIPPushToken(token, false);
+        });
+
         setUser(user);
       })
       .catch((err) => {
