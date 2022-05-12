@@ -14,7 +14,7 @@ class CallsModule: SendBirdCallDelegate {
     internal let commonModule = CallsCommonModule()
     internal let directCallModule = CallsDirectCallModule()
     
-    func initialize() {
+    init() {
         SendBirdCall.addDelegate(self, identifier: "CallsModule")
     }
     
@@ -22,6 +22,7 @@ class CallsModule: SendBirdCallDelegate {
         SendBirdCall.deauthenticate(completionHandler: nil)
         SendBirdCall.removeAllDelegates()
         SendBirdCall.removeAllRecordingDelegates()
+        SendBirdCall.getOngoingCalls().forEach { $0.end() }
     }
     
     func didStartRinging(_ call: DirectCall) {

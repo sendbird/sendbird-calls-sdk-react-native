@@ -1,172 +1,9 @@
-import type { RouteChangeReason } from './type.platform';
+import type { AudioDevice, AudioDeviceChangedInfo, RecordingStatus, VideoDevice } from './Media';
+import type { User } from './User';
 
-export enum AudioDeviceType {
-  EARPIECE = 'EARPIECE',
-  SPEAKERPHONE = 'SPEAKERPHONE',
-  WIRED_HEADSET = 'WIRED_HEADSET',
-  BLUETOOTH = 'BLUETOOTH',
+export interface SendbirdCallListener {
+  onRinging: (call: DirectCallProperties) => void;
 }
-
-export enum VideoDevicePosition {
-  FRONT = 'FRONT',
-  BACK = 'BACK',
-  UNSPECIFIED = 'UNSPECIFIED',
-}
-
-export enum DirectCallUserRole {
-  CALLER = 'CALLER',
-  CALLEE = 'CALLEE',
-}
-
-export enum DirectCallEndResult {
-  /** Default value of the EndResult. **/
-  NONE = 'NONE',
-
-  /** The call has ended by either the caller or callee after successful connection. **/
-  COMPLETED = 'COMPLETED',
-
-  /** The caller has canceled the call before the callee accepts or declines. **/
-  CANCELED = 'CANCELED',
-
-  /** The callee has declined the call. **/
-  DECLINED = 'DECLINED',
-
-  /** The call is accepted on one of the callee’s other devices. All the other devices will receive this call result. **/
-  OTHER_DEVICE_ACCEPTED = 'OTHER_DEVICE_ACCEPTED',
-
-  /** SendBird server failed to establish a media session between the caller and callee within a specific period of time. **/
-  TIMED_OUT = 'TIMED_OUT',
-
-  /** Data streaming from either the caller or the callee has stopped due to a WebRTC connection issue while calling. **/
-  CONNECTION_LOST = 'CONNECTION_LOST',
-
-  /** The callee has not either accepted or declined the call for a specific period of time. **/
-  NO_ANSWER = 'NO_ANSWER',
-
-  /** The 'dial()' method of the call has failed. **/
-  DIAL_FAILED = 'DIAL_FAILED',
-
-  /** The 'accept()' method of the call has failed. **/
-  ACCEPT_FAILED = 'ACCEPT_FAILED',
-
-  /** Unknown **/
-  UNKNOWN = 'UNKNOWN',
-}
-
-export enum RecordingStatus {
-  NONE = 'NONE',
-  RECORDING = 'RECORDING',
-}
-
-export enum RecordingType {
-  /** An option to record the video and audio of the remote user */
-  REMOTE_AUDIO_AND_VIDEO = 'REMOTE_AUDIO_AND_VIDEO',
-
-  /** An option to record the audio of the remote user. */
-  REMOTE_AUDIO_ONLY = 'REMOTE_AUDIO_ONLY',
-
-  /** An option to record both audios of the local and remote users. */
-  LOCAL_REMOTE_AUDIOS = 'LOCAL_REMOTE_AUDIOS',
-
-  /** An option to record both audios of the local and remote users, and the video of the remote user. */
-  LOCAL_AUDIO_REMOTE_AUDIO_AND_VIDEO = 'LOCAL_AUDIO_REMOTE_AUDIO_AND_VIDEO',
-
-  /** An option to record both audios of the local and remote users, and the video of the local user. */
-  LOCAL_AUDIO_AND_VIDEO_REMOTE_AUDIO = 'LOCAL_AUDIO_AND_VIDEO_REMOTE_AUDIO',
-}
-
-export type AudioDevice = AudioDeviceType;
-export interface VideoDevice {
-  /**
-   * device id
-   * @android deviceName
-   * @ios uniqueId
-   * */
-  deviceId: string;
-  position: VideoDevicePosition;
-}
-
-export type CustomItemUpdateResult = {
-  updatedItems: Record<string, string>;
-  affectedKeys: string[];
-};
-
-export interface User {
-  isActive: boolean;
-  userId: string;
-  metaData: Record<string, string>;
-  nickname: string;
-  profileUrl: string;
-}
-
-export interface DirectCallUser extends User {
-  role: DirectCallUserRole;
-}
-
-export interface DirectCallLog {
-  startedAt: number;
-  endedAt: number;
-  duration: number;
-
-  callId: string;
-  isFromServer: boolean;
-  isVideoCall: boolean;
-  customItems: Record<string, string>;
-  endResult: DirectCallEndResult;
-
-  myRole: DirectCallUser;
-  callee: DirectCallUser | null;
-  caller: DirectCallUser | null;
-  endedBy: DirectCallUser | null;
-
-  android_relayProtocol: string | null;
-  android_users: DirectCallUser[] | null;
-  android_endedUserId: string | null;
-}
-
-export type CallOptions = {
-  localVideoViewId: string;
-  remoteVideoViewId: string;
-
-  audioEnabled: boolean;
-  videoEnabled: boolean;
-  frontCamera: boolean;
-
-  android_videoFps: number;
-  android_videoHeight: number;
-  android_videoWidth: number;
-};
-
-export type RecordingOptions = {
-  recordingType: RecordingType;
-  /** Used to specify the base directory path of where the recorded file will be saved **/
-  directoryPath: string;
-  // TODO: implement default fileName generator for
-  /** Used to specify a name of the recorded file. If unspecified, it will be saved as `{type}_{callId}_{timestamp}`. **/
-  fileName?: string;
-};
-
-export type Port = {
-  inputNames: string[];
-  outputNames: string[];
-};
-
-export type AudioDeviceChangedInfo =
-  | {
-      platform: 'android';
-      data: {
-        currentAudioDevice: AudioDevice | null;
-        availableAudioDevices: AudioDevice[] | null;
-      };
-    }
-  | {
-      platform: 'ios';
-      data: {
-        reason: RouteChangeReason;
-        currentPort: Port;
-        prevPort: Port;
-      };
-    };
 
 export interface DirectCallListener {
   /** Called when the callee has accepted the call, but not yet connected to media streams. **/
@@ -224,6 +61,7 @@ export interface DirectCallListener {
 }
 
 export interface DirectCall extends DirectCallProperties, DirectCallMethods {}
+
 export interface DirectCallProperties {
   callId: string;
   callLog: DirectCallLog | null;
@@ -257,6 +95,7 @@ export interface DirectCallProperties {
   localRecordingStatus: RecordingStatus;
   remoteRecordingStatus: RecordingStatus;
 }
+
 export interface DirectCallMethods {
   selectVideoDevice(device: VideoDevice): Promise<void>;
   android_selectAudioDevice(device: AudioDevice): Promise<void>;
@@ -297,3 +136,86 @@ export interface DirectCallMethods {
   // startScreenShare(): Promise<void>;
   // stopScreenShare(): Promise<void>;
 }
+
+export interface DirectCallLog {
+  startedAt: number;
+  endedAt: number;
+  duration: number;
+
+  callId: string;
+  isFromServer: boolean;
+  isVideoCall: boolean;
+  customItems: Record<string, string>;
+  endResult: DirectCallEndResult;
+
+  myRole: DirectCallUser;
+  callee: DirectCallUser | null;
+  caller: DirectCallUser | null;
+  endedBy: DirectCallUser | null;
+
+  android_relayProtocol: string | null;
+  android_users: DirectCallUser[] | null;
+  android_endedUserId: string | null;
+}
+
+export interface DirectCallUser extends User {
+  role: DirectCallUserRole;
+}
+
+export enum DirectCallEndResult {
+  /** Default value of the EndResult. **/
+  NONE = 'NONE',
+
+  /** The call has ended by either the caller or callee after successful connection. **/
+  COMPLETED = 'COMPLETED',
+
+  /** The caller has canceled the call before the callee accepts or declines. **/
+  CANCELED = 'CANCELED',
+
+  /** The callee has declined the call. **/
+  DECLINED = 'DECLINED',
+
+  /** The call is accepted on one of the callee’s other devices. All the other devices will receive this call result. **/
+  OTHER_DEVICE_ACCEPTED = 'OTHER_DEVICE_ACCEPTED',
+
+  /** SendBird server failed to establish a media session between the caller and callee within a specific period of time. **/
+  TIMED_OUT = 'TIMED_OUT',
+
+  /** Data streaming from either the caller or the callee has stopped due to a WebRTC connection issue while calling. **/
+  CONNECTION_LOST = 'CONNECTION_LOST',
+
+  /** The callee has not either accepted or declined the call for a specific period of time. **/
+  NO_ANSWER = 'NO_ANSWER',
+
+  /** The 'dial()' method of the call has failed. **/
+  DIAL_FAILED = 'DIAL_FAILED',
+
+  /** The 'accept()' method of the call has failed. **/
+  ACCEPT_FAILED = 'ACCEPT_FAILED',
+
+  /** Unknown **/
+  UNKNOWN = 'UNKNOWN',
+}
+
+export enum DirectCallUserRole {
+  CALLER = 'CALLER',
+  CALLEE = 'CALLEE',
+}
+
+export type CustomItemUpdateResult = {
+  updatedItems: Record<string, string>;
+  affectedKeys: string[];
+};
+
+export type CallOptions = {
+  localVideoViewId: string;
+  remoteVideoViewId: string;
+
+  audioEnabled: boolean;
+  videoEnabled: boolean;
+  frontCamera: boolean;
+
+  android_videoFps: number;
+  android_videoHeight: number;
+  android_videoWidth: number;
+};

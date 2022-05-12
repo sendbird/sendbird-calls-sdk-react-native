@@ -1,14 +1,11 @@
 import { Platform } from 'react-native';
 
-import { NativeSendbirdCalls } from './libs/NativeModule';
+import pkg from '../package.json';
+import CallsNativeModule from './libs/CallsNativeModule';
 import type { DirectCall, SendbirdCallsExternalSpec, User } from './types';
 
-class SendbirdCallsModule implements SendbirdCallsExternalSpec {
-  private static _instance: SendbirdCallsModule;
-  public static get instance() {
-    if (!SendbirdCallsModule._instance) SendbirdCallsModule._instance = new SendbirdCallsModule();
-    return SendbirdCallsModule._instance;
-  }
+export default class SendbirdCallsModule extends CallsNativeModule implements SendbirdCallsExternalSpec {
+  static SDK_VERSION = pkg.version;
 
   private _applicationId = '';
   private _initialized = false;
@@ -32,56 +29,52 @@ class SendbirdCallsModule implements SendbirdCallsExternalSpec {
   }
 
   protected getConstants = () => {
-    return NativeSendbirdCalls.getConstants?.() ?? {};
+    return this.nativeModule.getConstants?.() ?? {};
   };
 
   // TODO: remove test method
   protected multiply = (a: number, b: number) => {
-    return NativeSendbirdCalls.multiply(a, b);
+    return this.nativeModule.multiply(a, b);
   };
 
   public getCurrentUser = async () => {
-    this._currentUser = await NativeSendbirdCalls.getCurrentUser();
+    this._currentUser = await this.nativeModule.getCurrentUser();
     return this.currentUser;
   };
 
   public initialize = async (appId: string) => {
     this._applicationId = appId;
-    this._initialized = await NativeSendbirdCalls.initialize(appId);
+    this._initialized = await this.nativeModule.initialize(appId);
     return this.initialized;
   };
   public authenticate = async (userId: string, accessToken: string | null = null) => {
-    this._currentUser = await NativeSendbirdCalls.authenticate(userId, accessToken);
+    this._currentUser = await this.nativeModule.authenticate(userId, accessToken);
     return this.currentUser as User;
   };
   public deauthenticate = async () => {
-    await NativeSendbirdCalls.deauthenticate();
+    await this.nativeModule.deauthenticate();
     this._currentUser = null;
   };
   public registerPushToken = async (token: string, unique = true) => {
-    await NativeSendbirdCalls.registerPushToken(token, unique);
+    await this.nativeModule.registerPushToken(token, unique);
   };
   public unregisterPushToken = async (token: string) => {
-    await NativeSendbirdCalls.unregisterPushToken(token);
+    await this.nativeModule.unregisterPushToken(token);
   };
   public ios_voipRegistration = async () => {
     if (Platform.OS !== 'ios') return '';
-    return NativeSendbirdCalls.voipRegistration();
+    return this.nativeModule.voipRegistration();
   };
   public ios_registerVoIPPushToken = async (token: string, unique = true) => {
     if (Platform.OS !== 'ios') return;
-    await NativeSendbirdCalls.registerVoIPPushToken(token, unique);
+    await this.nativeModule.registerVoIPPushToken(token, unique);
   };
   public ios_unregisterVoIPPushToken = async (token: string) => {
     if (Platform.OS !== 'ios') return;
-    await NativeSendbirdCalls.unregisterVoIPPushToken(token);
+    await this.nativeModule.unregisterVoIPPushToken(token);
   };
 
   todo = () => {
     return;
   };
 }
-
-const SendbirdCalls = SendbirdCallsModule.instance;
-export default SendbirdCalls;
-export * from './types';

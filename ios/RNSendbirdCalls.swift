@@ -23,9 +23,7 @@ class RNSendbirdCalls: NSObject, RNBridgeModuleProtocol {
     
     @objc func invalidate() {
         module.invalidate()
-        
         module = CallsModule()
-        module.initialize()
     }
 }
 

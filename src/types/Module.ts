@@ -1,12 +1,13 @@
-import type { TurboModule } from 'react-native';
+import type { NativeModule, TurboModule } from 'react-native';
 
+import type { DirectCall } from './DirectCall';
+import type { User } from './User';
 import type { AsNativeInterface } from './index';
-import type { DirectCall, User } from './type.calls';
 
-/** Module interfaces **/
 export interface TestModule {
   multiply(a: number, b: number): Promise<number>;
 }
+
 export interface CommonModule {
   applicationId: string;
   currentUser: User | null;
@@ -25,15 +26,20 @@ export interface CommonModule {
   ios_registerVoIPPushToken(token: string, unique?: boolean): Promise<void>;
   ios_unregisterVoIPPushToken(token: string): Promise<void>;
 }
+
 export interface DirectCallModule {
   todo(): void;
 }
+
 export interface GroupCallModule {
   todo(): void;
 }
 
-interface SendbirdCallsSpec extends TurboModule, TestModule, CommonModule, DirectCallModule, GroupCallModule {}
+type NativeModuleInterface = NativeModule & TurboModule;
+type CallsModuleInterface = TestModule & CommonModule & DirectCallModule & GroupCallModule;
+
+interface SendbirdCallsSpec extends NativeModuleInterface, CallsModuleInterface {}
 export type SendbirdInternalSpec = AsNativeInterface<SendbirdCallsSpec>;
 
-type InternalFields = Extract<keyof SendbirdCallsSpec, 'getConstants' | 'multiply'>;
+type InternalFields = Extract<keyof SendbirdCallsSpec, 'multiply' | keyof NativeModuleInterface>;
 export type SendbirdCallsExternalSpec = Omit<SendbirdCallsSpec, InternalFields>;
