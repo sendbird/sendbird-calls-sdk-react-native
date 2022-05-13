@@ -8,6 +8,7 @@ import com.sendbird.calls.SendBirdCall
 import com.sendbird.calls.handler.CompletionHandler
 import com.sendbird.calls.handler.SendBirdCallListener
 import com.sendbird.calls.reactnative.CallsEvents
+import com.sendbird.calls.reactnative.CallsUtils
 
 class CallsModule(private val reactContext: ReactApplicationContext) : CallsModuleStruct, SendBirdCallListener() {
     private val commonModule = CallsCommonModule(reactContext)
@@ -28,10 +29,8 @@ class CallsModule(private val reactContext: ReactApplicationContext) : CallsModu
         CallsEvents.sendEvent(
             reactContext,
             CallsEvents.EVENT_DIRECT_CALL,
-            CallsEvents.TYPE_DIRECT_CALL_ON_RINGING,
-            Arguments.createMap().apply {
-                putString()
-            }
+            CallsEvents.TYPE_DEFAULT_ON_RINGING,
+            CallsUtils.convertDirectCallToJsMap(call)
         )
         call.setListener(directCallModule)
     }

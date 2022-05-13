@@ -15,14 +15,14 @@ class CallsCommonModule(private val reactContext: ReactApplicationContext): Comm
     override fun getCurrentUser(promise: Promise) {
         val user = SendBirdCall.currentUser
         if(user == null) promise.resolve(null)
-        else promise.resolve(CallsUtils.convertUserToJavascriptMap(user))
+        else promise.resolve(CallsUtils.convertUserToJsMap(user))
     }
 
     override fun authenticate(userId: String, accessToken: String?, promise: Promise) {
         val authParams = AuthenticateParams(userId).setAccessToken(accessToken)
         SendBirdCall.authenticate(authParams) { user, e ->
             if (user == null || e !== null) promise.reject(e)
-            else promise.resolve(CallsUtils.convertUserToJavascriptMap(user))
+            else promise.resolve(CallsUtils.convertUserToJsMap(user))
         }
     }
 

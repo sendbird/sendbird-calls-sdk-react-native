@@ -148,7 +148,7 @@ export interface DirectCallLog {
   customItems: Record<string, string>;
   endResult: DirectCallEndResult;
 
-  myRole: DirectCallUser;
+  myRole: DirectCallUserRole;
   callee: DirectCallUser | null;
   caller: DirectCallUser | null;
   endedBy: DirectCallUser | null;

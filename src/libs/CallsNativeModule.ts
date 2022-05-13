@@ -1,6 +1,7 @@
 import { EventEmitter, NativeEventEmitter, NativeModules, Platform } from 'react-native';
 
-import type { DirectCallProperties, SendbirdInternalSpec } from '../types';
+import type { AsNativeInterface, DirectCallProperties, SendbirdInternalSpec } from '../types';
+import { convertDirectCallPropsNTJ } from '../utils/converter';
 
 const LINKING_ERROR =
   "The package '@sendbird/calls-react-native' doesn't seem to be linked. Make sure: \n\n" +
@@ -19,15 +20,16 @@ const NoopModuleProxy = new Proxy(
   },
 );
 
-enum CallsEvent {
+export enum CallsEvent {
   DEFAULT = 'sendbird.call',
   DIRECT_CALL = 'sendbird.call.direct',
 }
 
-enum DefaultEventType {
+export enum DefaultEventType {
   ON_RINGING = 'sendbird.call.onRinging',
 }
-enum DirectCallEventType {
+
+export enum DirectCallEventType {
   ON_ESTABLISHED = 'sendbird.call.direct.onEstablished',
   ON_CONNECTED = 'sendbird.call.direct.onConnected',
   ON_RECONNECTING = 'sendbird.call.direct.onReconnecting',
@@ -43,18 +45,18 @@ enum DirectCallEventType {
   ON_USER_HOLD_STATUS_CHANGED = 'sendbird.call.direct.onUserHoldStatusChanged',
 }
 
+type MakeEventUnionMember<Type, Data> = {
+  eventType: Type;
+  data: AsNativeInterface<Data>;
+  convertedData: Data;
+};
 type EventUnion =
-  | {
-      eventType: DefaultEventType; //Values<typeof DefaultEventType>;
-      data: DirectCallProperties;
-    }
-  | {
-      eventType: DirectCallEventType; //Values<typeof DirectCallEventType>;
-      data: DirectCallProperties;
-    };
+  | MakeEventUnionMember<DefaultEventType, DirectCallProperties>
+  | MakeEventUnionMember<DirectCallEventType, DirectCallProperties>;
 
-type ExtractData<T extends U['eventType'], U extends EventUnion = EventUnion> = U extends { eventType: T }
-  ? U['data']
+type EventType = EventUnion['eventType'];
+type ExtractData<T extends EventType, U extends EventUnion = EventUnion> = U extends { eventType: T }
+  ? U['convertedData']
   : never;
 
 export default class CallsNativeModule {
@@ -74,14 +76,16 @@ export default class CallsNativeModule {
     /* for reduce redundant native event listeners */
     this._supportedNativeEvents.forEach((event) => {
       // Native -> JS
-      this._nativeEmitter.addListener(event, ({ eventType, data }: EventUnion) => {
+      this._nativeEmitter.addListener(event, ({ eventType, data }: Omit<EventUnion, 'convertedData'>) => {
         // JS -> JS
-        this.jsEmitter.emit(eventType, data);
+        this.jsEmitter.emit(eventType, convertDirectCallPropsNTJ(data));
       });
     });
   }
 
-  addListener<T extends EventUnion['eventType']>(type: T, callback: (data: ExtractData<T>) => void) {
+  addListener(type: DefaultEventType, callback: (data: ExtractData<DefaultEventType>) => void): () => void;
+  addListener(type: DirectCallEventType, callback: (data: ExtractData<DirectCallEventType>) => void): () => void;
+  addListener(type: string, callback: (data: any) => void) {
     const subscription = this.jsEmitter.addListener(type, callback);
     return () => subscription.remove();
   }

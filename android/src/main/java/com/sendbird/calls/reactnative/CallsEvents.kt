@@ -18,8 +18,8 @@ class CallsEvents {
          * Event
          * EVENT_{EVENT}
          * */
-        val EVENT_DEFAULT = "sendbird.call"
-        val EVENT_DIRECT_CALL = "${EVENT_DEFAULT}.direct"
+        const val EVENT_DEFAULT = "sendbird.call"
+        const val EVENT_DIRECT_CALL = "${EVENT_DEFAULT}.direct"
 
         /**
          * Event Type
