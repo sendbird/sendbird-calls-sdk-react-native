@@ -1,17 +1,5 @@
-export * from './DirectCall';
-export * from './Media';
-export * from './Module';
-export * from './Platform';
-export * from './User';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-// type Enumerations =
-//   | AudioDeviceType
-//   | VideoDevicePosition
-//   | RecordingStatus
-//   | RecordingType
-//   | DirectCallEndResult
-//   | DirectCallUserRole
-//   | RouteChangeReason;
 type PlatformPrefix = 'android' | 'ios';
 
 export type AsNativeInterface<T> = T extends
@@ -33,3 +21,18 @@ export type AsNativeInterface<T> = T extends
     };
 
 export type Values<T extends { [key: string]: any }> = T[keyof T];
+
+export type AsJSInterface<T, Platform extends PlatformPrefix, Keys extends keyof T> = {
+  // @ts-ignore
+  [key in keyof T as key extends Keys ? `${Platform}_${key}` : key]: T[key];
+};
+
+export type AsJSDirectCall<T> = {
+  [key in keyof T]: T[key] extends (callId: string, ...args: infer Args) => infer R ? (...args: Args) => R : T[key];
+};
+
+export * from './Call';
+export * from './Media';
+export * from './NativeModule';
+export * from './Platform';
+export * from './User';

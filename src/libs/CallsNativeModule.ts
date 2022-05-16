@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { EventEmitter, NativeEventEmitter, NativeModules, Platform } from 'react-native';
 
-import type { AsNativeInterface, DirectCallProperties, SendbirdInternalSpec } from '../types';
+import type { AsNativeInterface, DirectCallProperties, SendbirdCallsInternalSpec } from '../types';
 import { convertDirectCallPropsNTJ } from '../utils/converter';
 
 const LINKING_ERROR =
@@ -21,12 +22,12 @@ const NoopModuleProxy = new Proxy(
 );
 
 export enum CallsEvent {
-  DEFAULT = 'sendbird.call',
+  DEFAULT = 'sendbird.call.default',
   DIRECT_CALL = 'sendbird.call.direct',
 }
 
 export enum DefaultEventType {
-  ON_RINGING = 'sendbird.call.onRinging',
+  ON_RINGING = 'sendbird.call.default.onRinging',
 }
 
 export enum DirectCallEventType {
@@ -49,6 +50,7 @@ type MakeEventUnionMember<Type, Data> = {
   eventType: Type;
   data: AsNativeInterface<Data>;
   convertedData: Data;
+  additionalData?: Record<string, any>;
 };
 type EventUnion =
   | MakeEventUnionMember<DefaultEventType, DirectCallProperties>
@@ -60,7 +62,7 @@ type ExtractData<T extends EventType, U extends EventUnion = EventUnion> = U ext
   : never;
 
 export default class CallsNativeModule {
-  private _nativeModule: SendbirdInternalSpec = NativeModule ?? NoopModuleProxy;
+  private _nativeModule: SendbirdCallsInternalSpec = NativeModule ?? NoopModuleProxy;
   private _nativeEmitter = new NativeEventEmitter(this._nativeModule);
   private _jsEmitter = new EventEmitter();
   private _supportedNativeEvents = [CallsEvent.DEFAULT, CallsEvent.DIRECT_CALL];
@@ -76,17 +78,30 @@ export default class CallsNativeModule {
     /* for reduce redundant native event listeners */
     this._supportedNativeEvents.forEach((event) => {
       // Native -> JS
-      this._nativeEmitter.addListener(event, ({ eventType, data }: Omit<EventUnion, 'convertedData'>) => {
-        // JS -> JS
-        this.jsEmitter.emit(eventType, convertDirectCallPropsNTJ(data));
-      });
+      this._nativeEmitter.addListener(
+        event,
+        ({ eventType, data, additionalData }: Omit<EventUnion, 'convertedData'>) => {
+          // JS -> JS
+          this.jsEmitter.emit(event, {
+            type: eventType,
+            data: convertDirectCallPropsNTJ(data),
+            additionalData,
+          });
+        },
+      );
     });
   }
 
-  addListener(type: DefaultEventType, callback: (data: ExtractData<DefaultEventType>) => void): () => void;
-  addListener(type: DirectCallEventType, callback: (data: ExtractData<DirectCallEventType>) => void): () => void;
-  addListener(type: string, callback: (data: any) => void) {
-    const subscription = this.jsEmitter.addListener(type, callback);
+  addListener(eventName: CallsEvent.DEFAULT, callback: EventCallback<DefaultEventType>): () => void;
+  addListener(eventName: CallsEvent.DIRECT_CALL, callback: EventCallback<DirectCallEventType>): () => void;
+  addListener(eventName: string, callback: (event: any) => void) {
+    const subscription = this.jsEmitter.addListener(eventName, callback);
     return () => subscription.remove();
   }
 }
+
+type EventCallback<T extends EventType> = (data: {
+  type: T;
+  data: ExtractData<T>;
+  additionalData?: Record<string, any>;
+}) => void;

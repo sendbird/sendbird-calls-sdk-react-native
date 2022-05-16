@@ -47,7 +47,7 @@ class Promise {
     }
     
     func reject(from: String?, error: RNCallsInternalError) {
-        rejectBlock(INTERNAL_ERROR_CODE, "[\(from ?? "unknown")] \(error.message)", nil)
+        rejectBlock(INTERNAL_ERROR_CODE, "[\(from ?? "unknown")] \(error.message)", error)
     }
     
     func reject(from: String?, message: String?) {

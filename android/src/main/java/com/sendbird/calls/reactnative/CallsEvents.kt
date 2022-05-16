@@ -18,8 +18,8 @@ class CallsEvents {
          * Event
          * EVENT_{EVENT}
          * */
-        const val EVENT_DEFAULT = "sendbird.call"
-        const val EVENT_DIRECT_CALL = "${EVENT_DEFAULT}.direct"
+        const val EVENT_DEFAULT = "sendbird.call.default"
+        const val EVENT_DIRECT_CALL = "sendbird.call.direct"
 
         /**
          * Event Type
@@ -40,16 +40,22 @@ class CallsEvents {
         val TYPE_DIRECT_CALL_ON_CUSTOM_ITEMS_DELETED = directCallType("onCustomItemsDeleted")
         val TYPE_DIRECT_CALL_ON_USER_HOLD_STATUS_CHANGED = directCallType("onUserHoldStatusChanged")
 
-
         fun sendEvent(reactContext: ReactContext, event: String, eventType: String, data: WritableMap) {
-            // val data = Arguments.createMap().apply {
-            //     putString("eventProperty", "someValue")
-            // }
             reactContext
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
                 .emit(event, Arguments.createMap().apply {
                     putString("eventType", eventType)
                     putMap("data", data)
+                })
+        }
+
+        fun sendEvent(reactContext: ReactContext, event: String, eventType: String, data: WritableMap, additionalData: Any) {
+            reactContext
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+                .emit(event, Arguments.createMap().apply {
+                    putString("eventType", eventType)
+                    putMap("data", data)
+                    CallsUtils.insertMap(this, "additionalData", additionalData)
                 })
         }
     }

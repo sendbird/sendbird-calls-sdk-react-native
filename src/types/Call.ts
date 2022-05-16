@@ -1,5 +1,7 @@
 import type { AudioDevice, AudioDeviceChangedInfo, RecordingStatus, VideoDevice } from './Media';
+import type { NativeDirectCallModule } from './NativeModule';
 import type { User } from './User';
+import type { AsJSDirectCall, AsJSInterface } from './index';
 
 export interface SendbirdCallListener {
   onRinging: (call: DirectCallProperties) => void;
@@ -60,8 +62,6 @@ export interface DirectCallListener {
   onUserHoldStatusChanged: (call: DirectCallProperties, isLocalUser: boolean, isUserOnHold: boolean) => void;
 }
 
-export interface DirectCall extends DirectCallProperties, DirectCallMethods {}
-
 export interface DirectCallProperties {
   callId: string;
   callLog: DirectCallLog | null;
@@ -96,45 +96,10 @@ export interface DirectCallProperties {
   remoteRecordingStatus: RecordingStatus;
 }
 
-export interface DirectCallMethods {
-  selectVideoDevice(device: VideoDevice): Promise<void>;
-  android_selectAudioDevice(device: AudioDevice): Promise<void>;
-  accept(options: CallOptions, holdActiveCall: boolean): Promise<void>;
-  end(): Promise<void>;
+type JSDirectCallModule = AsJSInterface<AsJSDirectCall<NativeDirectCallModule>, 'android', 'selectAudioDevice'>;
 
-  switchCamera(): Promise<void>;
-  startVideo(): void;
-  stopVideo(): void;
-  muteMicrophone(): void;
-  unmuteMicrophone(): void;
-  /**
-   * @android setLocalVideoView
-   * @ios updateLocalVideoView
-   * */
-  updateLocalVideoView(videoViewId: string): void;
-  /**
-   * @android setRemoteVideoView
-   * @ios updateRemoteVideoView
-   * */
-  updateRemoteVideoView(videoViewId: string): void;
-
+export interface DirectCallMethods extends JSDirectCallModule {
   setListener(listener: Partial<DirectCallListener>): void;
-
-  /** Not implemented yet belows **/
-  // hold(): Promise<void>;
-  // unhold(force: boolean): Promise<void>;
-  //
-  // captureLocalVideoView(): Promise<string>; // capture -> tmp file path
-  // captureRemoteVideoView(): Promise<string>;
-  // updateCustomItems(items: Record<string, string>): Promise<CustomItemUpdateResult>;
-  // deleteAllCustomItems(): Promise<void>;
-  // deleteCustomItems(key: string[]): Promise<CustomItemUpdateResult>;
-  //
-  // startRecording(options: RecordingOptions): Promise<{ recordingId: string }>;
-  // stopRecording(recordingId: string): void;
-  //
-  // startScreenShare(): Promise<void>;
-  // stopScreenShare(): Promise<void>;
 }
 
 export interface DirectCallLog {
@@ -208,14 +173,13 @@ export type CustomItemUpdateResult = {
 };
 
 export type CallOptions = {
-  localVideoViewId: string;
-  remoteVideoViewId: string;
+  localVideoViewId?: number;
+  remoteVideoViewId?: number;
 
-  audioEnabled: boolean;
-  videoEnabled: boolean;
-  frontCamera: boolean;
-
-  android_videoFps: number;
-  android_videoHeight: number;
-  android_videoWidth: number;
+  /** @default true */
+  audioEnabled?: boolean;
+  /** @default true */
+  videoEnabled?: boolean;
+  /** @default true */
+  frontCamera?: boolean;
 };

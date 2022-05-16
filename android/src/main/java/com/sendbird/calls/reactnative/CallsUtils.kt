@@ -6,8 +6,25 @@ import com.sendbird.calls.reactnative.extension.asString
 
 class CallsUtils {
     companion object {
-        /** Error utils **/
-        // TODO: convert sendbird exception to javascript readable error
+        fun safePromiseRejection(promise: Promise, from: String?, completion: () -> Any?) {
+            try {
+                val result = completion()
+                promise.resolve(result)
+            } catch (e: Throwable) {
+                when (e) {
+                    is SendBirdException -> promise.reject(e.code.toString(), e.message, e)
+                    is RNCallsInternalError -> promise.reject(e.code, e.message, e)
+                    else -> promise.reject(RNCallsInternalError(from, RNCallsInternalError.Type.UNKNOWN))
+                }
+            }
+        }
+
+        fun findDirectCall(callId: String, from: String?): DirectCall {
+            return SendBirdCall.getCall(callId) ?: throw RNCallsInternalError(from, RNCallsInternalError.Type.NOT_FOUND_DIRECT_CALL)
+        }
+        fun findVideoView(context: ReactContext, viewId: Int, from: String?): RNSendbirdCallsVideoView {
+            return context.currentActivity?.findViewById(viewId) ?: throw RNCallsInternalError(from, RNCallsInternalError.Type.NOT_FOUND_VIDEO_VIEW)
+        }
 
         /** Completion utils **/
         fun completionWithPromise(e: SendBirdException?, promise: Promise) {
