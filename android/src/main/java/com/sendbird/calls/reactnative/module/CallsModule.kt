@@ -1,5 +1,6 @@
 package com.sendbird.calls.reactnative.module
 
+import android.util.Log
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReadableNativeMap
@@ -12,18 +13,18 @@ import com.sendbird.calls.reactnative.CallsEvents
 import com.sendbird.calls.reactnative.CallsUtils
 
 class CallsModule(private val reactContext: ReactApplicationContext) : CallsModuleStruct, SendBirdCallListener() {
+    var initialized = false
     private val commonModule = CallsCommonModule(reactContext)
     private val directCallModule = CallsDirectCallModule(reactContext)
 
-    init {
-        SendBirdCall.addListener("CallsModule", this)
-    }
-
     fun invalidate(handler: CompletionHandler?) {
-        SendBirdCall.removeAllListeners()
-        SendBirdCall.removeAllRecordingListeners()
-        SendBirdCall.deauthenticate(handler)
-        SendBirdCall.ongoingCalls.forEach { it.end() }
+        if(initialized) {
+            log("invalidate module")
+            SendBirdCall.removeAllListeners()
+            SendBirdCall.removeAllRecordingListeners()
+            SendBirdCall.deauthenticate(handler)
+            SendBirdCall.ongoingCalls.forEach { it.end() }
+        }
     }
 
     override fun onRinging(call: DirectCall) {
@@ -38,7 +39,11 @@ class CallsModule(private val reactContext: ReactApplicationContext) : CallsModu
     }
 
     /** Common module interface **/
-    override fun initialize(appId: String, promise: Promise) = commonModule.initialize(appId, promise)
+    override fun initialize(appId: String): Boolean {
+        initialized = commonModule.initialize(appId)
+        return initialized
+    }
+
     override fun getCurrentUser(promise: Promise) = commonModule.getCurrentUser(promise)
     override fun authenticate(userId: String, accessToken: String?, promise: Promise) = commonModule.authenticate(userId, accessToken, promise)
     override fun deauthenticate(promise: Promise) = commonModule.deauthenticate(promise)
@@ -60,5 +65,8 @@ class CallsModule(private val reactContext: ReactApplicationContext) : CallsModu
 
     companion object {
         const val NAME = "RNSendbirdCalls"
+        fun log(msg: String) {
+            Log.d(NAME, msg)
+        }
     }
 }

@@ -1,17 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { EventEmitter, NativeEventEmitter, NativeModules, Platform } from 'react-native';
+/* eslint-disable */
+import { EventEmitter as EventEmitterInterface, NativeEventEmitter, NativeModules } from 'react-native';
+// @ts-ignore
+import EventEmitter from 'react-native/Libraries/vendor/emitter/EventEmitter';
 
 import type { AsNativeInterface, DirectCallProperties, SendbirdCallsInternalSpec } from '../types';
+import { LINKING_ERROR } from '../utils/constants';
 import { convertDirectCallPropsNTJ } from '../utils/converter';
-
-const LINKING_ERROR =
-  "The package '@sendbird/calls-react-native' doesn't seem to be linked. Make sure: \n\n" +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
-  '- You rebuilt the app after installing the package\n' +
-  '- You are not using Expo managed workflow\n';
 
 const MODULE_NAME = 'RNSendbirdCalls';
 const NativeModule = NativeModules[MODULE_NAME]; //TurboModuleRegistry.get<SendbirdCallsSpec>(MODULE_NAME);
+
 const NoopModuleProxy = new Proxy(
   {},
   {
@@ -61,10 +59,10 @@ type ExtractData<T extends EventType, U extends EventUnion = EventUnion> = U ext
   ? U['convertedData']
   : never;
 
-export default class CallsNativeModule {
+export default class NativeCallsModule {
   private _nativeModule: SendbirdCallsInternalSpec = NativeModule ?? NoopModuleProxy;
   private _nativeEmitter = new NativeEventEmitter(this._nativeModule);
-  private _jsEmitter = new EventEmitter();
+  private _jsEmitter: EventEmitterInterface = new EventEmitter();
   private _supportedNativeEvents = [CallsEvent.DEFAULT, CallsEvent.DIRECT_CALL];
 
   public get nativeModule() {

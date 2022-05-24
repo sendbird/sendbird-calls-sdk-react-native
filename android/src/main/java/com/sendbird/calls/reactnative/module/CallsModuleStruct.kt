@@ -6,7 +6,7 @@ import com.facebook.react.bridge.ReadableNativeMap
 interface CallsModuleStruct: CommonModule, DirectCallModule { }
 
 interface CommonModule {
-    fun initialize(appId: String, promise: Promise)
+    fun initialize(appId: String): Boolean
 
     fun getCurrentUser(promise: Promise)
     fun authenticate(userId: String, accessToken: String?, promise: Promise)

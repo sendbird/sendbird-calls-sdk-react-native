@@ -63,8 +63,8 @@ class CallsDirectCallModule(private val reactContext: ReactApplicationContext): 
             val acceptParams = AcceptParams().apply {
                 setHoldActiveCall(holdActiveCall)
                 setCallOptions(CallOptions().apply {
-                    if(localVideoViewId != null) setLocalVideoView(CallsUtils.findVideoView(reactContext, localVideoViewId, from).surface)
-                    if(remoteVideoViewId != null) setRemoteVideoView(CallsUtils.findVideoView(reactContext, remoteVideoViewId, from).surface)
+                    if(localVideoViewId != null) setLocalVideoView(CallsUtils.findVideoView(reactContext, localVideoViewId, from).getSurface())
+                    if(remoteVideoViewId != null) setRemoteVideoView(CallsUtils.findVideoView(reactContext, remoteVideoViewId, from).getSurface())
                     setAudioEnabled(audioEnabled)
                     setVideoEnabled(videoEnabled)
                     setFrontCameraAsDefault(frontCamera)
@@ -132,7 +132,7 @@ class CallsDirectCallModule(private val reactContext: ReactApplicationContext): 
         try {
             val call = CallsUtils.findDirectCall(callId, from)
             val view = CallsUtils.findVideoView(reactContext, videoViewId, from)
-            call.setLocalVideoView(view.surface)
+            call.setLocalVideoView(view.getSurface())
         } finally { }
     }
 
@@ -141,7 +141,7 @@ class CallsDirectCallModule(private val reactContext: ReactApplicationContext): 
         try {
             val call = CallsUtils.findDirectCall(callId, from)
             val view = CallsUtils.findVideoView(reactContext, videoViewId, from)
-            call.setRemoteVideoView(view.surface)
+            call.setRemoteVideoView(view.getSurface())
         } finally { }
     }
 

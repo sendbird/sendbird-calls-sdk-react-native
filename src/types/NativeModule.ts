@@ -16,7 +16,7 @@ export interface NativeCommonModule {
 
   getCurrentUser(): Promise<User | null>;
 
-  initialize(appId: string): Promise<boolean>;
+  initialize(appId: string): boolean;
   authenticate(userId: string, accessToken?: string | null): Promise<User>;
   deauthenticate(): Promise<void>;
   registerPushToken(token: string, unique?: boolean): Promise<void>;
@@ -65,5 +65,5 @@ export interface SendbirdCallsInternalSpec extends NativeModuleInterface, Native
 
 type IOSSpecificKeys = 'voipRegistration' | 'registerVoIPPushToken' | 'unregisterVoIPPushToken';
 export interface SendbirdCallsExternalSpec extends AsJSInterface<NativeCommonModule, 'ios', IOSSpecificKeys> {
-  createDirectCall(props: DirectCallProperties): DirectCall;
+  getDirectCall(props: DirectCallProperties): DirectCall;
 }

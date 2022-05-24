@@ -65,8 +65,8 @@ extension CallsModule {
 
 // MARK: - Common module extension
 extension CallsModule: CallsCommonModuleProtocol {
-    func initialize(_ appId: String, _ promise: Promise) {
-        commonModule.initialize(appId, promise)
+    func initialize(_ appId: String) -> Bool {
+        return commonModule.initialize(appId)
     }
     
     func getCurrentUser(_ promise: Promise) {

@@ -9,7 +9,7 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     private var module = CallsModule(reactContext)
 
     override fun getName(): String {
-        return CallsModule.NAME;
+        return CallsModule.NAME
     }
     override fun getConstants(): Map<String, Any> {
         val constants: MutableMap<String, Any> = HashMap()
@@ -29,8 +29,8 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     @ReactMethod
     fun removeListeners(count: Int) {}
 
-    @ReactMethod
-    override fun initialize(appId: String, promise: Promise) = module.initialize(appId, promise)
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    override fun initialize(appId: String) = module.initialize(appId)
     @ReactMethod
     override fun getCurrentUser(promise: Promise) = module.getCurrentUser(promise)
     @ReactMethod

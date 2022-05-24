@@ -7,9 +7,8 @@ import com.sendbird.calls.SendBirdCall
 import com.sendbird.calls.reactnative.CallsUtils
 
 class CallsCommonModule(private val reactContext: ReactApplicationContext): CommonModule {
-    override fun initialize(appId: String, promise: Promise) {
-        val result = SendBirdCall.init(reactContext, appId)
-        promise.resolve(result)
+    override fun initialize(appId: String): Boolean {
+        return SendBirdCall.init(reactContext, appId)
     }
 
     override fun getCurrentUser(promise: Promise) {

@@ -1,11 +1,13 @@
 import { Platform } from 'react-native';
 
-import pkg from '../package.json';
-import CallsNativeModule from './libs/CallsNativeModule';
-import { DirectCall } from './libs/DirectCall';
-import type { DirectCallProperties, SendbirdCallsExternalSpec, User } from './types';
+import pkg from '../../package.json';
+import type { DirectCallProperties, SendbirdCallsExternalSpec, User } from '../types';
+import { DirectCall } from './DirectCall';
+import NativeCallsModule from './NativeCallsModule';
 
-export default class SendbirdCallsModule extends CallsNativeModule implements SendbirdCallsExternalSpec {
+const _directCalls: Record<string, DirectCall> = {};
+
+export default class SendbirdCallsModule extends NativeCallsModule implements SendbirdCallsExternalSpec {
   static SDK_VERSION = pkg.version;
 
   private _applicationId = '';
@@ -38,9 +40,9 @@ export default class SendbirdCallsModule extends CallsNativeModule implements Se
     return this.currentUser;
   };
 
-  public initialize = async (appId: string) => {
+  public initialize = (appId: string) => {
     this._applicationId = appId;
-    this._initialized = await this.nativeModule.initialize(appId);
+    this._initialized = this.nativeModule.initialize(appId);
     return this.initialized;
   };
   public authenticate = async (userId: string, accessToken: string | null = null) => {
@@ -70,7 +72,8 @@ export default class SendbirdCallsModule extends CallsNativeModule implements Se
     await this.nativeModule.unregisterVoIPPushToken(token);
   };
 
-  public createDirectCall = (props: DirectCallProperties) => {
-    return new DirectCall(this, props);
+  public getDirectCall = (props: DirectCallProperties) => {
+    if (!_directCalls[props.callId]) _directCalls[props.callId] = new DirectCall(this, props);
+    return _directCalls[props.callId];
   };
 }

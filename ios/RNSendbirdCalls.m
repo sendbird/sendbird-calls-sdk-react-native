@@ -14,10 +14,8 @@ RCT_EXTERN_METHOD(multiply
                   : (RCTPromiseResolveBlock)resolve
                   : (RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(initialize
-                  : (NSString *)appId
-                  : (RCTPromiseResolveBlock)resolve
-                  : (RCTPromiseRejectBlock)reject)
+RCT_EXTERN__BLOCKING_SYNCHRONOUS_METHOD(initialize
+                  : (NSString *)appId)
 
 RCT_EXTERN_METHOD(getCurrentUser
                   : (RCTPromiseResolveBlock)resolve

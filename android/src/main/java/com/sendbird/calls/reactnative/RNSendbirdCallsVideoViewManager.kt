@@ -10,20 +10,14 @@ class RNSendbirdCallsVideoViewManager(private val reactContext: ReactContext) : 
     override fun getName() = NAME
     override fun createViewInstance(context: ThemedReactContext) = RNSendbirdCallsVideoView(context)
 
-    @ReactProp(name = "type")
-    public fun setType(view: RNSendbirdCallsVideoView, type: String) {
-        view.type = ViewType.valueOf(type.uppercase())
+    @ReactProp(name = "viewType")
+    public fun setViewType(view: RNSendbirdCallsVideoView, type: String) {
+        view.setViewType(ViewType.valueOf(type.uppercase()))
     }
 
     @ReactProp(name = "callId")
     public fun setCallId(view: RNSendbirdCallsVideoView, callId: String) {
-        try {
-            val call = CallsUtils.findDirectCall(callId, "viewManager/setCallId")
-            when (view.type) {
-                ViewType.LOCAL -> call.setLocalVideoView(view.surface)
-                ViewType.REMOTE -> call.setRemoteVideoView(view.surface)
-            }
-        } finally { }
+        view.setCallId(callId)
     }
 
     companion object {

@@ -1,46 +1,19 @@
-import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import React from 'react';
 
-import SendbirdCalls from '@sendbird/calls-react-native';
-import type { User } from '@sendbird/calls-react-native';
-
-import { APP_ID } from './env';
+import { AuthProvider } from './contexts/AuthContext';
+import { RootStack } from './libs/factory';
+import { Routes } from './libs/routes';
+import SignInScreen from './screens/SignInScreen';
 
 export default function App() {
-  const [user, setUser] = React.useState<User>();
-
-  React.useEffect(() => {
-    SendbirdCalls.initialize(APP_ID)
-      .then(async () => {
-        const user = await SendbirdCalls.authenticate('test-user');
-        SendbirdCalls.ios_voipRegistration().then(async (token) => {
-          await SendbirdCalls.registerPushToken(token, false);
-          await SendbirdCalls.ios_registerVoIPPushToken(token, false);
-        });
-
-        setUser(user);
-      })
-      .catch((err) => {
-        console.log('error', err);
-      });
-  }, []);
-
   return (
-    <View style={styles.container}>
-      <Text>Result: {JSON.stringify(user, null, 2)}</Text>
-    </View>
+    <AuthProvider>
+      <NavigationContainer>
+        <RootStack.Navigator>
+          <RootStack.Screen name={Routes.SIGN_IN} component={SignInScreen} />
+        </RootStack.Navigator>
+      </NavigationContainer>
+    </AuthProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
-  },
-});
