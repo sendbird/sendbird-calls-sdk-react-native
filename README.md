@@ -34,22 +34,6 @@ ReactNative Calls SDK
 npm install @sendbird/calls-react-native
 ```
 
-### Android
-open `project/android/build.gradle` and add maven repository
-```diff
-allprojects {
-    repositories {
-        maven {
-            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-            url("$rootDir/../node_modules/react-native/android")
-        }
-        ...
-        
-+       maven { url "https://repo.sendbird.com/public/maven" }
-    }
-}
-```
-
 ## Usage
 
 ```js
