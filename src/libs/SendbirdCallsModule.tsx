@@ -1,19 +1,23 @@
 import { Platform } from 'react-native';
 
 import pkg from '../../package.json';
-import type { DirectCallProperties, SendbirdCallsExternalSpec, User } from '../types';
+import type { DirectCallProperties, SendbirdCallsJavascriptSpec, User } from '../types';
+import { noop } from '../utils';
+import { Logger } from '../utils/logger';
 import { DirectCall } from './DirectCall';
-import NativeCallsModule from './NativeCallsModule';
+import NativeBinder, { CallsEvent, DefaultEventType } from './NativeBinder';
 
 const _directCalls: Record<string, DirectCall> = {};
 
-export default class SendbirdCallsModule extends NativeCallsModule implements SendbirdCallsExternalSpec {
-  static SDK_VERSION = pkg.version;
+export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec {
+  public SDK_VERSION = pkg.version;
+  public Logger = Logger;
 
   private _applicationId = '';
   private _initialized = false;
   private _currentUser: User | null = null;
   private _ongoingCalls: Array<DirectCallProperties> = [];
+  private _onRinging: (props: DirectCallProperties) => void = noop;
 
   public get applicationId() {
     return this._applicationId;
@@ -31,49 +35,74 @@ export default class SendbirdCallsModule extends NativeCallsModule implements Se
     return this._ongoingCalls;
   }
 
+  constructor(private binder: NativeBinder) {}
+
   protected getConstants = () => {
-    return this.nativeModule.getConstants?.() ?? {};
+    return this.binder.nativeModule.getConstants?.() ?? {};
   };
 
   public getCurrentUser = async () => {
-    this._currentUser = await this.nativeModule.getCurrentUser();
+    this._currentUser = await this.binder.nativeModule.getCurrentUser();
     return this.currentUser;
   };
 
   public initialize = (appId: string) => {
+    if (this.initialized) return this.initialized;
+    this.Logger.debug('[SendbirdCalls]', 'initialize()');
+
+    this.Logger.debug('[SendbirdCalls]', 'initialize()', 'add javascript listener');
+    this.binder.addListener(CallsEvent.DEFAULT, ({ type, data }) => {
+      if (type === DefaultEventType.ON_RINGING) {
+        this.Logger.debug('[SendbirdCalls]', 'onRinging', data.callId);
+        this._onRinging(data);
+      }
+    });
+
+    this.binder.nativeModule.initialize(appId);
     this._applicationId = appId;
-    this._initialized = this.nativeModule.initialize(appId);
+    this._initialized = true;
     return this.initialized;
   };
   public authenticate = async (userId: string, accessToken: string | null = null) => {
-    this._currentUser = await this.nativeModule.authenticate(userId, accessToken);
+    this._currentUser = await this.binder.nativeModule.authenticate(userId, accessToken);
     return this.currentUser as User;
   };
   public deauthenticate = async () => {
-    await this.nativeModule.deauthenticate();
+    await this.binder.nativeModule.deauthenticate();
     this._currentUser = null;
   };
   public registerPushToken = async (token: string, unique = true) => {
-    await this.nativeModule.registerPushToken(token, unique);
+    await this.binder.nativeModule.registerPushToken(token, unique);
   };
   public unregisterPushToken = async (token: string) => {
-    await this.nativeModule.unregisterPushToken(token);
+    await this.binder.nativeModule.unregisterPushToken(token);
   };
   public ios_voipRegistration = async () => {
     if (Platform.OS !== 'ios') return '';
-    return this.nativeModule.voipRegistration();
+    return this.binder.nativeModule.voipRegistration();
   };
   public ios_registerVoIPPushToken = async (token: string, unique = true) => {
     if (Platform.OS !== 'ios') return;
-    await this.nativeModule.registerVoIPPushToken(token, unique);
+    await this.binder.nativeModule.registerVoIPPushToken(token, unique);
   };
   public ios_unregisterVoIPPushToken = async (token: string) => {
     if (Platform.OS !== 'ios') return;
-    await this.nativeModule.unregisterVoIPPushToken(token);
+    await this.binder.nativeModule.unregisterVoIPPushToken(token);
   };
 
   public getDirectCall = (props: DirectCallProperties) => {
-    if (!_directCalls[props.callId]) _directCalls[props.callId] = new DirectCall(this, props);
+    if (!_directCalls[props.callId]) _directCalls[props.callId] = new DirectCall(this.binder, props);
     return _directCalls[props.callId];
   };
+  public onRinging(listener: (props: DirectCallProperties) => void) {
+    this._onRinging = listener;
+  }
+  public android_handleFirebaseMessageData(data?: Record<string, string>) {
+    if (Platform.OS !== 'android' || !data?.['sendbird_call']) {
+      return false;
+    } else {
+      this.binder.nativeModule.handleFirebaseMessageData(data);
+      return true;
+    }
+  }
 }

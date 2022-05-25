@@ -1,8 +1,12 @@
-import { createVideoView } from './libs/NativeCallsComponent';
+import NativeBinder from './libs/NativeBinder';
 import SendbirdCallsModule from './libs/SendbirdCallsModule';
+import { createVideoView } from './libs/VideoView';
 
+export * from './utils/logger';
 export * from './types';
-export { CallsEvent, DefaultEventType, DirectCallEventType } from './libs/NativeCallsModule';
+export { CallsEvent, DefaultEventType, DirectCallEventType } from './libs/NativeBinder';
+export { DirectCall } from './libs/DirectCall';
 
-export const SendbirdCalls = new SendbirdCallsModule();
-export const SendbirdCallsVideoView = createVideoView(SendbirdCalls);
+const nativeBinder = new NativeBinder();
+export const SendbirdCalls = new SendbirdCallsModule(nativeBinder);
+export const SendbirdCallsVideoView = createVideoView(SendbirdCalls, nativeBinder);

@@ -22,6 +22,9 @@ export interface NativeCommonModule {
   registerPushToken(token: string, unique?: boolean): Promise<void>;
   unregisterPushToken(token: string): Promise<void>;
 
+  // Android only
+  handleFirebaseMessageData(data: Record<string, string>): void;
+
   // iOS only
   voipRegistration(): Promise<string>;
   // iOS only
@@ -61,9 +64,16 @@ export interface NativeDirectCallModule {
   // stopScreenShare(callId:string): Promise<void>;
 }
 
-export interface SendbirdCallsInternalSpec extends NativeModuleInterface, NativeCommonModule, NativeDirectCallModule {}
+export interface SendbirdCallsNativeSpec extends NativeModuleInterface, NativeCommonModule, NativeDirectCallModule {}
 
+type AndroidSpecificKeys = 'handleFirebaseMessageData';
 type IOSSpecificKeys = 'voipRegistration' | 'registerVoIPPushToken' | 'unregisterVoIPPushToken';
-export interface SendbirdCallsExternalSpec extends AsJSInterface<NativeCommonModule, 'ios', IOSSpecificKeys> {
+type PlatformSpecificInterface = AsJSInterface<
+  AsJSInterface<NativeCommonModule, 'ios', IOSSpecificKeys>,
+  'android',
+  AndroidSpecificKeys
+>;
+export interface SendbirdCallsJavascriptSpec extends PlatformSpecificInterface {
   getDirectCall(props: DirectCallProperties): DirectCall;
+  onRinging(listener: (props: DirectCallProperties) => void): void;
 }

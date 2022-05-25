@@ -1,33 +1,34 @@
+import messaging from '@react-native-firebase/messaging';
 import React, { useReducer } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { Button, Platform, ScrollView, StyleSheet, TextInput } from 'react-native';
 
 import { SendbirdCalls } from '@sendbird/calls-react-native';
 
-import { APP_ID } from '../env';
+import { useAuthContext } from '../contexts/AuthContext';
+import { AppLogger } from '../libs/factory';
 
 type Input = { id: string; nickname: string };
 
-SendbirdCalls.initialize(APP_ID);
 const SignInScreen = () => {
-  React.useEffect(() => {
-    // SendbirdCalls.initialize(APP_ID)
-    //   .then(async () => {
-    //     const user = await SendbirdCalls.authenticate('test-user');
-    //     SendbirdCalls.ios_voipRegistration().then((token) => SendbirdCalls.ios_registerVoIPPushToken(token, false));
-    //
-    //     setUser(user);
-    //   })
-    //   .catch((err) => {
-    //     console.log('error', err);
-    //   });
-  }, []);
-
+  const { setCurrentUser } = useAuthContext();
   const [state, setState] = useReducer((prev: Input, next: Partial<Input>) => ({ ...prev, ...next }), {
-    id: '',
-    nickname: '',
+    id: 'testandroid',
+    nickname: 'android',
   });
+
+  const onSignIn = () => {
+    SendbirdCalls.authenticate(state.id).then(async (user) => {
+      AppLogger.log('sendbird user:', user);
+
+      setCurrentUser(user);
+      const token = Platform.OS === 'android' ? await messaging().getToken() : await messaging().getAPNSToken();
+      AppLogger.log('token:', token);
+      token && SendbirdCalls.registerPushToken(token, true);
+    });
+  };
+
   return (
-    <View style={{ flex: 1, paddingVertical: 12, paddingHorizontal: 16 }}>
+    <ScrollView contentContainerStyle={{ flex: 1, paddingVertical: 12, paddingHorizontal: 16 }}>
       <TextInput
         value={state.id}
         onChangeText={(id) => setState({ id })}
@@ -40,7 +41,8 @@ const SignInScreen = () => {
         placeholder={'nickname'}
         style={styles.input}
       />
-    </View>
+      <Button title={'Sign-in'} onPress={onSignIn} />
+    </ScrollView>
   );
 };
 

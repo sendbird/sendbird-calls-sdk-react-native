@@ -3,9 +3,10 @@ import { EventEmitter as EventEmitterInterface, NativeEventEmitter, NativeModule
 // @ts-ignore
 import EventEmitter from 'react-native/Libraries/vendor/emitter/EventEmitter';
 
-import type { AsNativeInterface, DirectCallProperties, SendbirdCallsInternalSpec } from '../types';
+import type { AsNativeInterface, DirectCallProperties, SendbirdCallsNativeSpec } from '../types';
 import { LINKING_ERROR } from '../utils/constants';
 import { convertDirectCallPropsNTJ } from '../utils/converter';
+import { Logger } from '../utils/logger';
 
 const MODULE_NAME = 'RNSendbirdCalls';
 const NativeModule = NativeModules[MODULE_NAME]; //TurboModuleRegistry.get<SendbirdCallsSpec>(MODULE_NAME);
@@ -59,8 +60,8 @@ type ExtractData<T extends EventType, U extends EventUnion = EventUnion> = U ext
   ? U['convertedData']
   : never;
 
-export default class NativeCallsModule {
-  private _nativeModule: SendbirdCallsInternalSpec = NativeModule ?? NoopModuleProxy;
+export default class NativeBinder {
+  private _nativeModule: SendbirdCallsNativeSpec = NativeModule ?? NoopModuleProxy;
   private _nativeEmitter = new NativeEventEmitter(this._nativeModule);
   private _jsEmitter: EventEmitterInterface = new EventEmitter();
   private _supportedNativeEvents = [CallsEvent.DEFAULT, CallsEvent.DIRECT_CALL];
@@ -75,11 +76,16 @@ export default class NativeCallsModule {
   constructor() {
     /* for reduce redundant native event listeners */
     this._supportedNativeEvents.forEach((event) => {
+      Logger.debug('[NativeBinder] Add native event listener:', event);
+
       // Native -> JS
       this._nativeEmitter.addListener(
         event,
         ({ eventType, data, additionalData }: Omit<EventUnion, 'convertedData'>) => {
-          // JS -> JS
+          Logger.debug(
+            '[NativeBinder] Receive event from native module:',
+            [event, eventType, data.callId, JSON.stringify(additionalData, null, 2)].join(' ++ '),
+          );
           this.jsEmitter.emit(event, {
             type: eventType,
             data: convertDirectCallPropsNTJ(data),
@@ -90,9 +96,10 @@ export default class NativeCallsModule {
     });
   }
 
-  addListener(eventName: CallsEvent.DEFAULT, callback: EventCallback<DefaultEventType>): () => void;
-  addListener(eventName: CallsEvent.DIRECT_CALL, callback: EventCallback<DirectCallEventType>): () => void;
-  addListener(eventName: string, callback: (event: any) => void) {
+  public addListener(eventName: CallsEvent.DEFAULT, callback: EventCallback<DefaultEventType>): () => void;
+  public addListener(eventName: CallsEvent.DIRECT_CALL, callback: EventCallback<DirectCallEventType>): () => void;
+  public addListener(eventName: string, callback: (event: any) => void) {
+    Logger.log('[NativeBinder] Add javascript event listener:', eventName);
     const subscription = this.jsEmitter.addListener(eventName, callback);
     return () => subscription.remove();
   }

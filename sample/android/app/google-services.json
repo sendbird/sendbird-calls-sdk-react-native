@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "28702742904",
+    "project_id": "sample-reactnative-calls",
+    "storage_bucket": "sample-reactnative-calls.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:28702742904:android:f0979302582053c0ee508d",
+        "android_client_info": {
+          "package_name": "com.sendbirdcallsrnsample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "28702742904-pa0bb4hpdjhure7ddi4v8p9qiuetphf0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqV072kG_4hwIdNpi31IxGcRy4TNRgE6w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "28702742904-pa0bb4hpdjhure7ddi4v8p9qiuetphf0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -14,11 +14,12 @@ import type {
 } from '../types';
 import { RouteChangeReason } from '../types';
 import { noopDirectCallListener } from '../utils';
-import type NativeCallsModule from './NativeCallsModule';
-import { CallsEvent, DirectCallEventType } from './NativeCallsModule';
+import { Logger } from '../utils/logger';
+import type NativeBinder from './NativeBinder';
+import { CallsEvent, DirectCallEventType } from './NativeBinder';
 
 export class DirectCall implements DirectCallProperties, DirectCallMethods {
-  constructor(private module: NativeCallsModule, props: DirectCallProperties) {
+  constructor(private binder: NativeBinder, props: DirectCallProperties) {
     this._android_availableAudioDevices = props.android_availableAudioDevices;
     this._android_currentAudioDevice = props.android_currentAudioDevice;
     this._availableVideoDevices = props.availableVideoDevices;
@@ -182,17 +183,13 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
     this._remoteUser = props.remoteUser;
   }
 
-  private _listenerReference?: () => void;
+  private _listenerRef?: () => void;
   private _listener: DirectCallListener = noopDirectCallListener;
-
   public setListener = (listener: Partial<DirectCallListener>) => {
-    if (this._listenerReference) {
-      this._listenerReference();
-      console.warn('[DirectCall] You should unsubscribe listener');
-    }
+    Logger.debug('[DirectCall]', 'setListener');
 
     this._listener = { ...noopDirectCallListener, ...listener };
-    const unsubscribe = this.module.addListener(CallsEvent.DIRECT_CALL, ({ type, data, additionalData }) => {
+    this._listenerRef = this.binder.addListener(CallsEvent.DIRECT_CALL, ({ type, data, additionalData }) => {
       if (data.callId === this.callId) {
         this.updateProperties(data);
         switch (type) {
@@ -274,47 +271,42 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
       }
     });
 
-    this._listenerReference = () => {
-      unsubscribe();
-      this._listenerReference = undefined;
-    };
-    return this._listenerReference;
+    return this._listenerRef;
   };
   public accept = async (
     options: CallOptions = { audioEnabled: true, frontCamera: true, videoEnabled: true },
     holdActiveCall = false,
   ) => {
-    await this.module.nativeModule.accept(this.callId, options, holdActiveCall);
+    await this.binder.nativeModule.accept(this.callId, options, holdActiveCall);
   };
   public end = async () => {
-    if (this._listenerReference) this._listenerReference();
-    await this.module.nativeModule.end(this.callId);
+    await this.binder.nativeModule.end(this.callId);
   };
   public selectVideoDevice = async (device: VideoDevice) => {
-    await this.module.nativeModule.selectVideoDevice(this.callId, device);
+    await this.binder.nativeModule.selectVideoDevice(this.callId, device);
   };
   public android_selectAudioDevice = async (device: AudioDevice) => {
-    await this.module.nativeModule.selectAudioDevice(this.callId, device);
+    await this.binder.nativeModule.selectAudioDevice(this.callId, device);
   };
   public muteMicrophone = () => {
-    this.module.nativeModule.muteMicrophone(this.callId);
+    this.binder.nativeModule.muteMicrophone(this.callId);
   };
   public unmuteMicrophone = () => {
-    this.module.nativeModule.unmuteMicrophone(this.callId);
+    this.binder.nativeModule.unmuteMicrophone(this.callId);
   };
   public startVideo = () => {
-    this.module.nativeModule.startVideo(this.callId);
+    this.binder.nativeModule.startVideo(this.callId);
   };
   public stopVideo = () => {
-    this.module.nativeModule.stopVideo(this.callId);
+    this.binder.nativeModule.stopVideo(this.callId);
   };
   public switchCamera = async () => {
-    await this.module.nativeModule.switchCamera(this.callId);
+    await this.binder.nativeModule.switchCamera(this.callId);
   };
   public updateLocalVideoView = (videoViewId: number) => {
-    this.module.nativeModule.updateLocalVideoView(this.callId, videoViewId);
+    this.binder.nativeModule.updateLocalVideoView(this.callId, videoViewId);
   };
   public updateRemoteVideoView = (videoViewId: number) => {
-    this.module.nativeModule.updateRemoteVideoView(this.callId, videoViewId);
+    this.binder.nativeModule.updateRemoteVideoView(this.callId, videoViewId);
   };
 }

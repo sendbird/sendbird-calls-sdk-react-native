@@ -3,14 +3,13 @@ package com.sendbird.calls.reactnative.module
 import android.util.Log
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReadableNativeMap
-import com.sendbird.calls.AcceptParams
+import com.facebook.react.bridge.ReadableMap
 import com.sendbird.calls.DirectCall
 import com.sendbird.calls.SendBirdCall
 import com.sendbird.calls.handler.CompletionHandler
 import com.sendbird.calls.handler.SendBirdCallListener
 import com.sendbird.calls.reactnative.CallsEvents
-import com.sendbird.calls.reactnative.CallsUtils
+import com.sendbird.calls.reactnative.utils.CallsUtils
 
 class CallsModule(private val reactContext: ReactApplicationContext) : CallsModuleStruct, SendBirdCallListener() {
     var initialized = false
@@ -19,28 +18,35 @@ class CallsModule(private val reactContext: ReactApplicationContext) : CallsModu
 
     fun invalidate(handler: CompletionHandler?) {
         if(initialized) {
-            log("invalidate module")
+            Log.d(NAME, "[CallsModule] invalidate()")
             SendBirdCall.removeAllListeners()
             SendBirdCall.removeAllRecordingListeners()
             SendBirdCall.deauthenticate(handler)
             SendBirdCall.ongoingCalls.forEach { it.end() }
+//            CallsEvents.invalidate()
         }
     }
 
     override fun onRinging(call: DirectCall) {
+        Log.d(NAME, "[CallsModule] onRinging() -> $call")
+        // foreground -> sendEvent
         CallsEvents.sendEvent(
             reactContext,
-            CallsEvents.EVENT_DIRECT_CALL,
+            CallsEvents.EVENT_DEFAULT,
             CallsEvents.TYPE_DEFAULT_ON_RINGING,
             CallsUtils.convertDirectCallToJsMap(call)
         )
+
+        // background -> startService (HeadlessJsTask)
         call.setListener(directCallModule)
-        call.accept(AcceptParams())
     }
 
     /** Common module interface **/
     override fun initialize(appId: String): Boolean {
+        Log.d(NAME, "[CallsModule] initialize() -> $appId")
         initialized = commonModule.initialize(appId)
+//        CallsEvents.setJSReady()
+        SendBirdCall.addListener("sendbird.call.listener", this)
         return initialized
     }
 
@@ -51,9 +57,9 @@ class CallsModule(private val reactContext: ReactApplicationContext) : CallsModu
     override fun unregisterPushToken(token: String, promise: Promise) = commonModule.unregisterPushToken(token, promise)
 
     /** DirectCall module interface**/
-    override fun selectVideoDevice(callId: String, device: ReadableNativeMap, promise: Promise)= directCallModule.selectVideoDevice(callId, device, promise)
+    override fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise)= directCallModule.selectVideoDevice(callId, device, promise)
     override fun selectAudioDevice(callId: String, device: String, promise: Promise)= directCallModule.selectAudioDevice(callId, device, promise)
-    override fun accept(callId: String, options: ReadableNativeMap, holdActiveCall: Boolean, promise: Promise) = directCallModule.accept(callId, options, holdActiveCall, promise)
+    override fun accept(callId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise) = directCallModule.accept(callId, options, holdActiveCall, promise)
     override fun end(callId: String, promise: Promise)= directCallModule.end(callId, promise)
     override fun switchCamera(callId: String, promise: Promise)= directCallModule.switchCamera(callId, promise)
     override fun startVideo(callId: String)= directCallModule.startVideo(callId)
@@ -65,8 +71,5 @@ class CallsModule(private val reactContext: ReactApplicationContext) : CallsModu
 
     companion object {
         const val NAME = "RNSendbirdCalls"
-        fun log(msg: String) {
-            Log.d(NAME, msg)
-        }
     }
 }

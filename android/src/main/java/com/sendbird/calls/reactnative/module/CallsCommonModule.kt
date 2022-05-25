@@ -4,7 +4,7 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.sendbird.calls.AuthenticateParams
 import com.sendbird.calls.SendBirdCall
-import com.sendbird.calls.reactnative.CallsUtils
+import com.sendbird.calls.reactnative.utils.CallsUtils
 
 class CallsCommonModule(private val reactContext: ReactApplicationContext): CommonModule {
     override fun initialize(appId: String): Boolean {

@@ -1,4 +1,6 @@
-export const noop = () => void 0;
+export const noop = () => {
+  void 0;
+};
 export const noopDirectCallListener = {
   onAudioDeviceChanged: noop,
   onConnected: noop,

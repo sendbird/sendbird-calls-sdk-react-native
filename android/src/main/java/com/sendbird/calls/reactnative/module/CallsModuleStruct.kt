@@ -1,7 +1,7 @@
 package com.sendbird.calls.reactnative.module
 
 import com.facebook.react.bridge.Promise
-import com.facebook.react.bridge.ReadableNativeMap
+import com.facebook.react.bridge.ReadableMap
 
 interface CallsModuleStruct: CommonModule, DirectCallModule { }
 
@@ -17,9 +17,9 @@ interface CommonModule {
 }
 
 interface DirectCallModule {
-    fun selectVideoDevice(callId: String, device: ReadableNativeMap, promise: Promise)
+    fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise)
     fun selectAudioDevice(callId: String, device: String, promise: Promise)
-    fun accept(callId: String, options: ReadableNativeMap, holdActiveCall: Boolean, promise: Promise)
+    fun accept(callId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise)
     fun end(callId: String, promise: Promise)
     fun switchCamera(callId: String, promise: Promise)
     fun startVideo(callId: String)

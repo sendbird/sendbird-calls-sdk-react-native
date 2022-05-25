@@ -1,6 +1,8 @@
 package com.sendbird.calls.reactnative
 
+import android.util.Log
 import com.facebook.react.bridge.*
+import com.sendbird.calls.SendBirdCall
 import com.sendbird.calls.reactnative.module.CallsModule
 import com.sendbird.calls.reactnative.module.CallsModuleStruct
 
@@ -23,13 +25,24 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
         this.module = CallsModule(reactContext)
     }
 
-    // JS -> Native
     @ReactMethod
-    fun addListener(eventName: String) {}
-    @ReactMethod
-    fun removeListeners(count: Int) {}
+    fun addListener(eventName: String) {
+        // Keep: Required for RN built in Event Emitter Calls.
+    }
 
-    @ReactMethod(isBlockingSynchronousMethod = true)
+    @ReactMethod
+    fun removeListeners(count: Int) {
+        // Keep: Required for RN built in Event Emitter Calls.
+    }
+
+    @ReactMethod
+    fun handleFirebaseMessageData(data: ReadableMap) {
+        val map = data.toHashMap() as Map<String, String>
+        Log.d(CallsModule.NAME, "[RNSendbirdCallsModule] handleFirebaseMessageData() -> ${map}")
+        SendBirdCall.handleFirebaseMessageData(map)
+    }
+
+    @ReactMethod
     override fun initialize(appId: String) = module.initialize(appId)
     @ReactMethod
     override fun getCurrentUser(promise: Promise) = module.getCurrentUser(promise)
@@ -43,11 +56,11 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     override fun unregisterPushToken(token: String, promise: Promise) = module.unregisterPushToken(token, promise)
 
     @ReactMethod
-    override fun selectVideoDevice(callId: String, device: ReadableNativeMap, promise: Promise) = module.selectVideoDevice(callId, device, promise)
+    override fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise) = module.selectVideoDevice(callId, device, promise)
     @ReactMethod
     override fun selectAudioDevice(callId: String, device: String, promise: Promise) = module.selectAudioDevice(callId, device, promise)
     @ReactMethod
-    override fun accept(callId: String, options: ReadableNativeMap, holdActiveCall: Boolean, promise: Promise) = module.accept(callId, options, holdActiveCall, promise)
+    override fun accept(callId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise) = module.accept(callId, options, holdActiveCall, promise)
     @ReactMethod
     override fun end(callId: String, promise: Promise) = module.end(callId, promise)
     @ReactMethod

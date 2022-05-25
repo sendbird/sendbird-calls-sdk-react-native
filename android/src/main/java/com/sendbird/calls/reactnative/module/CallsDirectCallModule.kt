@@ -1,23 +1,24 @@
 package com.sendbird.calls.reactnative.module
 
+import android.util.Log
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReadableNativeMap
+import com.facebook.react.bridge.ReadableMap
 import com.sendbird.calls.AcceptParams
 import com.sendbird.calls.AudioDevice
 import com.sendbird.calls.CallOptions
 import com.sendbird.calls.DirectCall
 import com.sendbird.calls.handler.DirectCallListener
 import com.sendbird.calls.reactnative.CallsEvents
-import com.sendbird.calls.reactnative.CallsUtils
 import com.sendbird.calls.reactnative.RNCallsInternalError
 import com.sendbird.calls.reactnative.extension.asString
+import com.sendbird.calls.reactnative.utils.CallsUtils
 
 class CallsDirectCallModule(private val reactContext: ReactApplicationContext): DirectCallModule,
     DirectCallListener() {
     /** DirectCallMethods **/
-    override fun selectVideoDevice(callId: String, device: ReadableNativeMap, promise: Promise)  {
+    override fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise)  {
         val from = "directCall/selectVideoDevice"
         CallsUtils.safePromiseRejection(promise, from) {
             val call = CallsUtils.findDirectCall(callId, from)
@@ -49,13 +50,25 @@ class CallsDirectCallModule(private val reactContext: ReactApplicationContext): 
         }
     }
 
-    override fun accept(callId: String, options: ReadableNativeMap, holdActiveCall: Boolean, promise: Promise) {
+    override fun accept(callId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise) {
+        Log.d(CallsModule.NAME, "[DirectCallModule] accept() -> $callId")
         val from = "directCall/accept"
         CallsUtils.safePromiseRejection(promise, from) {
             val call = CallsUtils.findDirectCall(callId, from)
 
-            val localVideoViewId = options.getInt("localVideoViewId") ?: null
-            val remoteVideoViewId = options.getInt("remoteVideoViewId") ?: null
+            Log.d(CallsModule.NAME, "[DirectCallModule] acceptParams -> ${options.toHashMap()}")
+
+
+            val localVideoViewId = try {
+                options.getInt("localVideoViewId")
+            } catch(e:Throwable) {
+                null
+            }
+            val remoteVideoViewId = try {
+                options.getInt("remoteVideoViewId")
+            } catch(e:Throwable) {
+                null
+            }
             val audioEnabled = options.getBoolean("audioEnabled") ?: true
             val videoEnabled = options.getBoolean("videoEnabled") ?: true
             val frontCamera = options.getBoolean("frontCamera") ?: true

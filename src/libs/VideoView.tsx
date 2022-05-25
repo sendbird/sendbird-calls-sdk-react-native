@@ -3,6 +3,7 @@ import React, { createRef } from 'react';
 import { NativeMethods, ViewProps, findNodeHandle, requireNativeComponent } from 'react-native';
 
 import { LINKING_ERROR } from '../utils/constants';
+import type NativeBinder from './NativeBinder';
 import type SendbirdCallsModule from './SendbirdCallsModule';
 
 const MODULE_NAME = 'RNSendbirdCallsVideoView';
@@ -16,12 +17,11 @@ interface NativeProps extends ViewProps {
 
 type RefType = React.Component<NativeProps> & Readonly<NativeMethods>;
 
-export const createVideoView = (CallsModule: SendbirdCallsModule) => {
+export const createVideoView = (module: SendbirdCallsModule, binder: NativeBinder) => {
   return class SendbirdCallsVideoView extends React.PureComponent<NativeProps> {
     private ref = createRef<RefType>();
-    private get module() {
-      return CallsModule;
-    }
+    private binder = binder;
+    private module = module;
     private get handle() {
       const nodeHandle = findNodeHandle(this.ref.current as any);
       if (nodeHandle == null || nodeHandle === -1) {
@@ -43,10 +43,10 @@ export const createVideoView = (CallsModule: SendbirdCallsModule) => {
     public setCallId(callId: string) {
       switch (this.props.viewType) {
         case 'local': {
-          return this.module.nativeModule.updateLocalVideoView(callId, this.videoViewId);
+          return this.binder.nativeModule.updateLocalVideoView(callId, this.videoViewId);
         }
         case 'remote': {
-          return this.module.nativeModule.updateRemoteVideoView(callId, this.videoViewId);
+          return this.binder.nativeModule.updateRemoteVideoView(callId, this.videoViewId);
         }
       }
     }
