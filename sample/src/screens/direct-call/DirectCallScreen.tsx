@@ -7,7 +7,6 @@ import { DirectCall, SendbirdCalls, SendbirdCallsVideoView } from '@sendbird/cal
 import { useAuthContext } from '../../contexts/AuthContext';
 import { AppLogger } from '../../libs/factory';
 
-
 const DirectCallScreen = () => {
   const { currentUser } = useAuthContext();
 
