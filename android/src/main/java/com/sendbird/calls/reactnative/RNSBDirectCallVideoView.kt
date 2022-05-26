@@ -1,39 +1,37 @@
 package com.sendbird.calls.reactnative
 
 import android.content.Context
-import android.widget.FrameLayout
 import com.sendbird.calls.DirectCall
 import com.sendbird.calls.SendBirdCall
-import com.sendbird.calls.SendBirdVideoView
+import com.sendbird.calls.reactnative.view.BaseVideoView
 
 enum class ViewType {
     LOCAL, REMOTE
 }
 
-class RNSendbirdCallsVideoView(context: Context) : FrameLayout(context) {
-    private var mSurface: SendBirdVideoView
+class RNSBDirectCallVideoView(context: Context) : BaseVideoView(context) {
     private var mViewType = ViewType.LOCAL
     private var mCallId: String? = null
-
-    init {
-        mSurface = SendBirdVideoView(context)
-        mSurface.layout(0, 0, width, height)
-        mSurface.setPadding(4,4,4,4)
-        mSurface.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-        addView(mSurface)
-    }
 
     private fun getCall(id: String?): DirectCall? {
         val callId = id ?: mCallId ?: return null
         return SendBirdCall.getCall(callId)
     }
 
-    fun getSurface(): SendBirdVideoView {
-        return mSurface
-    }
-
     fun setViewType(viewType: ViewType) {
+        val prevType = mViewType
+        val nextType = viewType
         mViewType = viewType
+
+        val call = getCall(mCallId)
+        if (call != null && prevType != nextType && mCallId != null) {
+            if(prevType === ViewType.LOCAL && nextType === ViewType.REMOTE) {
+                call.setRemoteVideoView(mSurface)
+            }
+            if(prevType === ViewType.REMOTE && nextType === ViewType.LOCAL) {
+                call.setLocalVideoView(mSurface)
+            }
+        }
     }
 
     fun setCallId(callId: String) {

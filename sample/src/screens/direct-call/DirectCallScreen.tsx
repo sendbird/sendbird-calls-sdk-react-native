@@ -1,8 +1,8 @@
 import messaging from '@react-native-firebase/messaging';
 import React, { useRef, useState } from 'react';
-import { Button, ScrollView, Text } from 'react-native';
+import { Button, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 
-import { DirectCall, SendbirdCalls, SendbirdCallsVideoView } from '@sendbird/calls-react-native';
+import { DirectCall, DirectCallVideoView, SendbirdCalls } from '@sendbird/calls-react-native';
 
 import { useAuthContext } from '../../contexts/AuthContext';
 import { AppLogger } from '../../libs/factory';
@@ -45,20 +45,42 @@ const DirectCallScreen = () => {
     return () => subscriber.current?.();
   }, []);
 
+  const { width, height } = useWindowDimensions();
+
   return (
     <ScrollView>
-      <Text>{JSON.stringify(currentUser, null, 2)}</Text>
-
-      {call && callState === 'ringing' && <Button title={'Accept'} onPress={() => call.accept()} />}
-      {call && callState === 'ringing' && <Button title={'Decline'} onPress={() => call.end()} />}
-      {call && callState === 'connected' && <Button title={'Disconnect'} onPress={() => call.end()} />}
-      {call && callState === 'connected' && <Button title={'StartVideo'} onPress={() => call.startVideo()} />}
       {call && callState === 'connected' && (
-        <>
-          <SendbirdCallsVideoView viewType={'remote'} callId={call.callId} style={{ width: '100%', height: 250 }} />
-          <SendbirdCallsVideoView viewType={'local'} callId={call.callId} style={{ width: 250, height: 250 }} />
-        </>
+        <View style={{ width, height }}>
+          <View style={{ flex: 1 }}>
+            <DirectCallVideoView viewType={'remote'} callId={call.callId} style={StyleSheet.absoluteFill} />
+            <DirectCallVideoView
+              viewType={'local'}
+              callId={call.callId}
+              style={{
+                position: 'absolute',
+                left: 12,
+                top: 12,
+                width: width * 0.4,
+                height: width * 0.4 * (4 / 3),
+                borderWidth: 1,
+                borderRadius: 8,
+                overflow: 'hidden',
+                backgroundColor: 'black',
+              }}
+            />
+          </View>
+        </View>
       )}
+
+      <View style={{ width, height }}>
+        <Text>{callState}</Text>
+        <Text>{JSON.stringify(currentUser, null, 2)}</Text>
+
+        {call && callState === 'ringing' && <Button title={'Accept'} onPress={() => call.accept()} />}
+        {call && callState === 'ringing' && <Button title={'Decline'} onPress={() => call.end()} />}
+        {call && callState === 'connected' && <Button title={'Disconnect'} onPress={() => call.end()} />}
+        {call && callState === 'connected' && <Button title={'StartVideo'} onPress={() => call.startVideo()} />}
+      </View>
     </ScrollView>
   );
 };

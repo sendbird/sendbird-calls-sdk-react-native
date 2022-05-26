@@ -8,9 +8,10 @@ import com.facebook.react.bridge.*
 import com.facebook.react.common.LifecycleState
 import com.sendbird.calls.*
 import com.sendbird.calls.reactnative.RNCallsInternalError
-import com.sendbird.calls.reactnative.RNSendbirdCallsVideoView
+import com.sendbird.calls.reactnative.RNSBDirectCallVideoView
 import com.sendbird.calls.reactnative.extension.asString
 import com.sendbird.calls.reactnative.module.CallsModule
+import com.sendbird.calls.reactnative.view.BaseVideoView
 
 
 object CallsUtils {
@@ -31,7 +32,7 @@ object CallsUtils {
     fun findDirectCall(callId: String, from: String?): DirectCall {
         return SendBirdCall.getCall(callId) ?: throw RNCallsInternalError(from, RNCallsInternalError.Type.NOT_FOUND_DIRECT_CALL)
     }
-    fun findVideoView(context: ReactContext, viewId: Int, from: String?): RNSendbirdCallsVideoView {
+    fun findVideoView(context: ReactContext, viewId: Int, from: String?): BaseVideoView {
         return context.currentActivity?.findViewById(viewId) ?: throw RNCallsInternalError(from, RNCallsInternalError.Type.NOT_FOUND_VIDEO_VIEW)
     }
 
