@@ -23,7 +23,6 @@ class CallsModule(private val reactContext: ReactApplicationContext) : CallsModu
             SendBirdCall.removeAllRecordingListeners()
             SendBirdCall.deauthenticate(handler)
             SendBirdCall.ongoingCalls.forEach { it.end() }
-//            CallsEvents.invalidate()
         }
     }
 
@@ -37,7 +36,9 @@ class CallsModule(private val reactContext: ReactApplicationContext) : CallsModu
             CallsUtils.convertDirectCallToJsMap(call)
         )
 
-        // background -> startService (HeadlessJsTask)
+        // TODO: background -> startService
+        //  run headless js task
+
         call.setListener(directCallModule)
     }
 
@@ -45,7 +46,6 @@ class CallsModule(private val reactContext: ReactApplicationContext) : CallsModu
     override fun initialize(appId: String): Boolean {
         Log.d(NAME, "[CallsModule] initialize() -> $appId")
         initialized = commonModule.initialize(appId)
-//        CallsEvents.setJSReady()
         SendBirdCall.addListener("sendbird.call.listener", this)
         return initialized
     }
