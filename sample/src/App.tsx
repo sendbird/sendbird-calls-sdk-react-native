@@ -3,6 +3,7 @@ import React from 'react';
 
 import { AuthProvider, useAuthContext } from './contexts/AuthContext';
 import { INITIAL_ROUTE } from './env';
+import { CALL_PERMISSIONS, usePermissions } from './hooks/usePermissions';
 import { RootStack } from './libs/factory';
 import { Routes } from './libs/routes';
 import SignInScreen from './screens/SignInScreen';
@@ -21,6 +22,8 @@ const Navigations = () => {
   const { currentUser } = useAuthContext();
   const Direct = <RootStack.Screen name={Routes.DIRECT_CALL} component={DirectCallScreen} />;
   const Group = <RootStack.Screen name={Routes.GROUP_CALL} component={GroupCallScreen} />;
+
+  usePermissions(CALL_PERMISSIONS);
 
   return (
     <NavigationContainer>

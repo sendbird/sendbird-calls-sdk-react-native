@@ -43,5 +43,8 @@ allprojects {
         }
         google()
         maven { url 'https://www.jitpack.io' }
+
+        // notifee, remove after https://github.com/invertase/notifee/pull/414 merged
+        maven { url "$rootDir/../node_modules/@notifee/react-native/android/libs" }
     }
 }

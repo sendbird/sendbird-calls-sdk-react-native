@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { createRef } from 'react';
-import { NativeMethods, StyleSheet, View, ViewProps, findNodeHandle, requireNativeComponent } from 'react-native';
+import { NativeMethods, View, ViewProps, findNodeHandle, requireNativeComponent } from 'react-native';
 
 import { LINKING_ERROR } from '../utils/constants';
 
@@ -33,7 +33,7 @@ export default class DirectCallVideoView extends React.PureComponent<Props> {
   render() {
     const nativeProps = {
       ...this.validProps,
-      style: {width:'100%', height:'100%'},
+      style: { width: '100%', height: '100%' },
     };
     return (
       <View style={this.props.style}>

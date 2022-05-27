@@ -21,8 +21,10 @@ buildscript {
 // if (isNewArchitectureEnabled()) {
 //   apply plugin: "com.facebook.react"
 // }
-plugins { id "kotlin-android" }
-plugins { id "io.invertase.gradle.build" version "1.5" }
+plugins {
+  id ("kotlin-android")
+  id ("io.invertase.gradle.build") version "1.5"
+}
 
 def rnFirebaseProject
 if (findProject(":@react-native-firebase_app")) {
@@ -106,6 +108,7 @@ dependencies {
 
   implementation platform("com.google.firebase:firebase-bom:${ReactNative.ext.getVersion("firebase", "bom")}")
   implementation "com.google.firebase:firebase-messaging"
+  implementation("com.sendbird.sdk:sendbird-calls:1.9.0")
 }
 
 
@@ -122,17 +125,10 @@ ReactNative.shared.applyPackageVersion()
 ReactNative.shared.applyDefaultExcludes()
 ReactNative.module.applyAndroidVersions()
 ReactNative.module.applyReactNativeDependency("api")
-applySendbirdDependency()
-
-def applySendbirdDependency() {
-  def repository = project.repositories.maven {
-    url "https://repo.sendbird.com/public/maven"
-    name "SendbirdMaven"
-  }
-  rootProject.allprojects {
-    repositories {
-      add(repository)
+rootProject.allprojects {
+  repositories {
+    maven {
+      url "https://repo.sendbird.com/public/maven"
     }
   }
-  project.dependencies.add("implementation", "com.sendbird.sdk:sendbird-calls:1.9.0")
 }
