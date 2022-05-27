@@ -1,7 +1,38 @@
-export * from './type.module';
-export * from './type.calls';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 type PlatformPrefix = 'android' | 'ios';
-export type AsNativeInterface<T> = {
-  [key in keyof T as key extends `${PlatformPrefix}_${infer T}` ? T : key]: T[key];
+
+export type AsNativeInterface<T> = T extends
+  | boolean
+  | number
+  | string
+  | null
+  | undefined
+  | ((...p: any[]) => any)
+  | unknown[]
+  ? T
+  : {
+      [key in keyof T as key extends `${PlatformPrefix}_${infer Rest}` ? Rest : key]: AsNativeInterface<T[key]>;
+      // T[key] extends
+      //     | Enumerations
+      //     | Array<Enumerations>
+      //     ? T[key]
+      //     : AsNativeInterface<T[key]>;
+    };
+
+export type Values<T extends { [key: string]: any }> = T[keyof T];
+
+export type AsJSInterface<T, Platform extends PlatformPrefix, Keys extends keyof T> = {
+  // @ts-ignore
+  [key in keyof T as key extends Keys ? `${Platform}_${key}` : key]: T[key];
 };
+
+export type AsJSDirectCall<T> = {
+  [key in keyof T]: T[key] extends (callId: string, ...args: infer Args) => infer R ? (...args: Args) => R : T[key];
+};
+
+export * from './Call';
+export * from './Media';
+export * from './NativeModule';
+export * from './Platform';
+export * from './User';

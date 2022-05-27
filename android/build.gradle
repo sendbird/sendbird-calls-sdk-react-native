@@ -1,12 +1,8 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-// if (isNewArchitectureEnabled()) {
-//   apply plugin: 'com.facebook.react'
-// }
+import io.invertase.gradle.common.PackageJson
 
 buildscript {
-  // Buildscript is evaluated before everything else so we can't use getExtOrDefault
-  def kotlin_version = rootProject.ext.has('kotlinVersion') ? rootProject.ext.get('kotlinVersion') : project.properties['RNSendbirdCalls_kotlinVersion']
+  // Buildscript is evaluated before everything else so we can"t use getExtOrDefault
+  def kotlin_version = rootProject.ext.has("kotlinVersion") ? rootProject.ext.get("kotlinVersion") : project.properties["RNSendbirdCalls_kotlinVersion"]
 
   if (project == rootProject) {
     repositories {
@@ -22,35 +18,60 @@ buildscript {
   }
 }
 
-def isNewArchitectureEnabled() {
-  return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
+// if (isNewArchitectureEnabled()) {
+//   apply plugin: "com.facebook.react"
+// }
+plugins {
+  id ("kotlin-android")
+  id ("io.invertase.gradle.build") version "1.5"
 }
-def getExtOrDefault(name) {
-  return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties['RNSendbirdCalls_' + name]
-}
-def getExtOrIntegerDefault(name) {
-  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties['RNSendbirdCalls_' + name]).toInteger()
-}
-def kotlin_version = getExtOrDefault('kotlinVersion')
 
+def rnFirebaseProject
+if (findProject(":@react-native-firebase_app")) {
+  rnFirebaseProject = project(":@react-native-firebase_app")
+} else if (findProject(":react-native-firebase_app")) {
+  rnFirebaseProject = project(":react-native-firebase_app")
+}
+
+def getDefaultProperty(name, asInteger) {
+  def value = project.properties["RNSendbirdCalls_" + name]
+  return asInteger ? value.toInteger() : value
+}
+
+//def isNewArchitectureEnabled() {
+//  return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
+//}
+
+project.ext {
+  set("react-native", [
+    versions: [
+      android: [
+        minSdk    : getDefaultProperty("minSdkVersion", true),
+        targetSdk : getDefaultProperty("targetSdkVersion", true),
+        compileSdk: getDefaultProperty("compileSdkVersion", true),
+        kotlin: getDefaultProperty("kotlinVersion", false)
+      ],
+      firebase: [
+        bom: rnFirebaseProject ? PackageJson.getForProject(rnFirebaseProject)["sdkVersions"]["android"]["firebase"] : getDefaultProperty("firebaseBomVersion", false),
+      ],
+    ],
+  ])
+}
 
 android {
-  compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
   defaultConfig {
-    minSdkVersion getExtOrIntegerDefault('minSdkVersion')
-    targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
     sourceSets {
       main {
-        java.srcDirs += ['src/oldarch/java']
+        java.srcDirs += ["src/oldarch/java"]
       }
     }
 //     buildConfigField("boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString())
 //     sourceSets {
 //       main {
 //         if (isNewArchitectureEnabled()) {
-//           java.srcDirs += ['src/newarch/java']
+//           java.srcDirs += ["src/newarch/java"]
 //         } else {
-//           java.srcDirs += ['src/oldarch/java']
+//           java.srcDirs += ["src/oldarch/java"]
 //         }
 //       }
 //     }
@@ -62,7 +83,7 @@ android {
     }
   }
   lintOptions {
-    disable 'GradleCompatible'
+    disable "GradleCompatible"
   }
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
@@ -77,9 +98,17 @@ repositories {
 
 dependencies {
   // noinspection GradleDynamicVersion
-  implementation 'com.facebook.react:react-native:+'
-  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  implementation 'com.sendbird.sdk:sendbird-calls:1.9.0'
+  implementation "com.facebook.react:react-native:+"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:${ReactNative.ext.getVersion("android", "kotlin")}"
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1"
+
+  if (rnFirebaseProject) {
+    api rnFirebaseProject
+  }
+
+  implementation platform("com.google.firebase:firebase-bom:${ReactNative.ext.getVersion("firebase", "bom")}")
+  implementation "com.google.firebase:firebase-messaging"
+  implementation("com.sendbird.sdk:sendbird-calls:1.9.0")
 }
 
 
@@ -91,3 +120,15 @@ dependencies {
 //     jsRootDir = file("../src/")
 //   }
 // }
+
+ReactNative.shared.applyPackageVersion()
+ReactNative.shared.applyDefaultExcludes()
+ReactNative.module.applyAndroidVersions()
+ReactNative.module.applyReactNativeDependency("api")
+rootProject.allprojects {
+  repositories {
+    maven {
+      url "https://repo.sendbird.com/public/maven"
+    }
+  }
+}

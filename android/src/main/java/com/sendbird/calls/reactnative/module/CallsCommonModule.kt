@@ -4,25 +4,24 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.sendbird.calls.AuthenticateParams
 import com.sendbird.calls.SendBirdCall
-import com.sendbird.calls.reactnative.CallsUtils
+import com.sendbird.calls.reactnative.utils.CallsUtils
 
 class CallsCommonModule(private val reactContext: ReactApplicationContext): CommonModule {
-    override fun initialize(appId: String, promise: Promise) {
-        val result = SendBirdCall.init(reactContext, appId)
-        promise.resolve(result)
+    override fun initialize(appId: String): Boolean {
+        return SendBirdCall.init(reactContext, appId)
     }
 
     override fun getCurrentUser(promise: Promise) {
         val user = SendBirdCall.currentUser
         if(user == null) promise.resolve(null)
-        else promise.resolve(CallsUtils.convertUserToJavascriptMap(user))
+        else promise.resolve(CallsUtils.convertUserToJsMap(user))
     }
 
     override fun authenticate(userId: String, accessToken: String?, promise: Promise) {
         val authParams = AuthenticateParams(userId).setAccessToken(accessToken)
         SendBirdCall.authenticate(authParams) { user, e ->
             if (user == null || e !== null) promise.reject(e)
-            else promise.resolve(CallsUtils.convertUserToJavascriptMap(user))
+            else promise.resolve(CallsUtils.convertUserToJsMap(user))
         }
     }
 

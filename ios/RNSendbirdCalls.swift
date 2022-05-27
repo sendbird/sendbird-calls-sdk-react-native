@@ -23,9 +23,7 @@ class RNSendbirdCalls: NSObject, RNBridgeModuleProtocol {
     
     @objc func invalidate() {
         module.invalidate()
-        
         module = CallsModule()
-        module.initialize()
     }
 }
 
@@ -39,8 +37,8 @@ extension RNSendbirdCalls {
 
 // MARK: - Common
 extension RNSendbirdCalls {
-    @objc func initialize(_ appId: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
-        module.initialize(appId, Promise(resolve, reject))
+    @objc func initialize(_ appId: String) -> Bool {
+        return module.initialize(appId)
     }
     
     @objc func getCurrentUser(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {

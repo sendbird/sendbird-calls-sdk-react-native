@@ -1,42 +1,80 @@
 package com.sendbird.calls.reactnative
 
-import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactContextBaseJavaModule
-import com.facebook.react.bridge.ReactMethod
-import com.facebook.react.bridge.Promise
+import android.util.Log
+import com.facebook.react.bridge.*
+import com.sendbird.calls.SendBirdCall
 import com.sendbird.calls.reactnative.module.CallsModule
 import com.sendbird.calls.reactnative.module.CallsModuleStruct
 
-class RNSendbirdCallsModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext),
+class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext),
     CallsModuleStruct {
-
-    private val module = CallsModule(reactContext)
+    private var module = CallsModule(reactContext)
 
     override fun getName(): String {
-        return CallsModule.NAME;
+        return CallsModule.NAME
     }
     override fun getConstants(): Map<String, Any> {
         val constants: MutableMap<String, Any> = HashMap()
         constants["number"] = 90
         return constants
     }
-    // Backward compat
+    // For backward compat instead of invalidate
     @Deprecated("Deprecated in Java")
     override fun onCatalystInstanceDestroy() {
-        super.onCatalystInstanceDestroy()
-        CallsModule.invalidate(null)
-    }
-    override fun invalidate() {
-        super.invalidate()
-        CallsModule.invalidate(null)
+        this.module.invalidate(null)
+        this.module = CallsModule(reactContext)
     }
 
-    @ReactMethod override fun multiply(a: Int, b: Int, promise: Promise) = module.multiply(a, b, promise)
+    @ReactMethod
+    fun addListener(eventName: String) {
+        // Keep: Required for RN built in Event Emitter Calls.
+    }
 
-    @ReactMethod override fun initialize(appId: String, promise: Promise) = module.initialize(appId, promise)
-    @ReactMethod override fun getCurrentUser(promise: Promise) = module.getCurrentUser(promise)
-    @ReactMethod override fun authenticate(userId: String, accessToken: String?, promise: Promise) = module.authenticate(userId, accessToken, promise)
-    @ReactMethod override fun deauthenticate(promise: Promise) = module.deauthenticate(promise)
-    @ReactMethod override fun registerPushToken(token: String, unique: Boolean, promise: Promise) = module.registerPushToken(token, unique, promise)
-    @ReactMethod override fun unregisterPushToken(token: String, promise: Promise) = module.unregisterPushToken(token, promise)
+    @ReactMethod
+    fun removeListeners(count: Int) {
+        // Keep: Required for RN built in Event Emitter Calls.
+    }
+
+    @ReactMethod
+    fun handleFirebaseMessageData(data: ReadableMap) {
+        val map = data.toHashMap() as Map<String, String>
+        Log.d(CallsModule.NAME, "[RNSendbirdCallsModule] handleFirebaseMessageData() -> ${map}")
+        SendBirdCall.handleFirebaseMessageData(map)
+    }
+
+    @ReactMethod
+    override fun initialize(appId: String) = module.initialize(appId)
+    @ReactMethod
+    override fun getCurrentUser(promise: Promise) = module.getCurrentUser(promise)
+    @ReactMethod
+    override fun authenticate(userId: String, accessToken: String?, promise: Promise) = module.authenticate(userId, accessToken, promise)
+    @ReactMethod
+    override fun deauthenticate(promise: Promise) = module.deauthenticate(promise)
+    @ReactMethod
+    override fun registerPushToken(token: String, unique: Boolean, promise: Promise) = module.registerPushToken(token, unique, promise)
+    @ReactMethod
+    override fun unregisterPushToken(token: String, promise: Promise) = module.unregisterPushToken(token, promise)
+
+    @ReactMethod
+    override fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise) = module.selectVideoDevice(callId, device, promise)
+    @ReactMethod
+    override fun selectAudioDevice(callId: String, device: String, promise: Promise) = module.selectAudioDevice(callId, device, promise)
+    @ReactMethod
+    override fun accept(callId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise) = module.accept(callId, options, holdActiveCall, promise)
+    @ReactMethod
+    override fun end(callId: String, promise: Promise) = module.end(callId, promise)
+    @ReactMethod
+    override fun switchCamera(callId: String, promise: Promise) = module.switchCamera(callId, promise)
+    @ReactMethod
+    override fun startVideo(callId: String) = module.startVideo(callId)
+    @ReactMethod
+    override fun stopVideo(callId: String) = module.stopVideo(callId)
+    @ReactMethod
+    override fun muteMicrophone(callId: String) = module.muteMicrophone(callId)
+    @ReactMethod
+    override fun unmuteMicrophone(callId: String) = module.unmuteMicrophone(callId)
+    @ReactMethod
+    override fun updateLocalVideoView(callId: String, videoViewId: Int) = module.updateLocalVideoView(callId, videoViewId)
+    @ReactMethod
+    override fun updateRemoteVideoView(callId: String, videoViewId: Int) = module.updateRemoteVideoView(callId, videoViewId)
 }

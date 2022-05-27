@@ -11,7 +11,7 @@ import SendBirdCalls
 import PushKit
 
 protocol CallsCommonModuleProtocol {
-    func initialize(_ appId: String, _ promise: Promise)
+    func initialize(_ appId: String) -> Bool
     
     func getCurrentUser(_ promise: Promise)
     
@@ -38,9 +38,8 @@ class CallsCommonModule: NSObject, CallsCommonModuleProtocol {
         return voipToken != nil && voipRegistry != nil
     }
     
-    func initialize(_ appId: String, _ promise: Promise) {
-        let result = SendBirdCall.configure(appId: appId)
-        promise.resolve(result)
+    func initialize(_ appId: String) -> Bool {
+        return SendBirdCall.configure(appId: appId)
     }
     
     func getCurrentUser(_ promise: Promise) {

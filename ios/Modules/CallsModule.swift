@@ -14,7 +14,7 @@ class CallsModule: SendBirdCallDelegate {
     internal let commonModule = CallsCommonModule()
     internal let directCallModule = CallsDirectCallModule()
     
-    func initialize() {
+    init() {
         SendBirdCall.addDelegate(self, identifier: "CallsModule")
     }
     
@@ -22,6 +22,7 @@ class CallsModule: SendBirdCallDelegate {
         SendBirdCall.deauthenticate(completionHandler: nil)
         SendBirdCall.removeAllDelegates()
         SendBirdCall.removeAllRecordingDelegates()
+        SendBirdCall.getOngoingCalls().forEach { $0.end() }
     }
     
     func didStartRinging(_ call: DirectCall) {
@@ -64,8 +65,8 @@ extension CallsModule {
 
 // MARK: - Common module extension
 extension CallsModule: CallsCommonModuleProtocol {
-    func initialize(_ appId: String, _ promise: Promise) {
-        commonModule.initialize(appId, promise)
+    func initialize(_ appId: String) -> Bool {
+        return commonModule.initialize(appId)
     }
     
     func getCurrentUser(_ promise: Promise) {

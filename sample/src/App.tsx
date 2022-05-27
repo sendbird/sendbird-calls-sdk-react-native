@@ -1,46 +1,42 @@
-import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import React from 'react';
 
-import SendbirdCalls from '@sendbird/calls-react-native';
-import type { User } from '@sendbird/calls-react-native';
-
-import { APP_ID } from './env';
+import { AuthProvider, useAuthContext } from './contexts/AuthContext';
+import { INITIAL_ROUTE } from './env';
+import { CALL_PERMISSIONS, usePermissions } from './hooks/usePermissions';
+import { RootStack } from './libs/factory';
+import { Routes } from './libs/routes';
+import SignInScreen from './screens/SignInScreen';
+import DirectCallScreen from './screens/direct-call/DirectCallScreen';
+import GroupCallScreen from './screens/group-call/GroupCallScreen';
 
 export default function App() {
-  const [user, setUser] = React.useState<User>();
-
-  React.useEffect(() => {
-    SendbirdCalls.initialize(APP_ID)
-      .then(async () => {
-        const user = await SendbirdCalls.authenticate('test-user');
-        SendbirdCalls.ios_voipRegistration().then(async (token) => {
-          await SendbirdCalls.registerPushToken(token, false);
-          await SendbirdCalls.ios_registerVoIPPushToken(token, false);
-        });
-
-        setUser(user);
-      })
-      .catch((err) => {
-        console.log('error', err);
-      });
-  }, []);
-
   return (
-    <View style={styles.container}>
-      <Text>Result: {JSON.stringify(user, null, 2)}</Text>
-    </View>
+    <AuthProvider>
+      <Navigations />
+    </AuthProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
-  },
-});
+const Navigations = () => {
+  const { currentUser } = useAuthContext();
+  const Direct = <RootStack.Screen name={Routes.DIRECT_CALL} component={DirectCallScreen} />;
+  const Group = <RootStack.Screen name={Routes.GROUP_CALL} component={GroupCallScreen} />;
+
+  usePermissions(CALL_PERMISSIONS);
+
+  return (
+    <NavigationContainer>
+      <RootStack.Navigator>
+        {!currentUser ? (
+          <RootStack.Screen name={Routes.SIGN_IN} component={SignInScreen} />
+        ) : (
+          <>
+            {INITIAL_ROUTE === Routes.DIRECT_CALL ? Direct : Group}
+            {INITIAL_ROUTE === Routes.DIRECT_CALL ? Group : Direct}
+          </>
+        )}
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+};
