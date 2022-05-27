@@ -40,9 +40,8 @@ jobs:
       - run:
           name: Inject env file
           command: |
-            echo "import { Routes } from './libs/routes';\n" >> sample/src/env.ts
             echo "export const APP_ID = 'app_id';" >> sample/src/env.ts
-            echo "export const INITIAL_ROUTE = Routes.DIRECT_CALL;" >> sample/src/env.ts
+            echo "export const INITIAL_ROUTE = 'route';" >> sample/src/env.ts
       - persist_to_workspace:
           root: .
           paths: .
