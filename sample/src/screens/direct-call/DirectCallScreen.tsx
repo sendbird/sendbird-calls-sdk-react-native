@@ -80,6 +80,10 @@ const DirectCallScreen = () => {
         {call && callState === 'ringing' && <Button title={'Decline'} onPress={() => call.end()} />}
         {call && callState === 'connected' && <Button title={'Disconnect'} onPress={() => call.end()} />}
         {call && callState === 'connected' && <Button title={'StartVideo'} onPress={() => call.startVideo()} />}
+        {call && callState === 'connected' && <Button title={'StopVideo'} onPress={() => call.stopVideo()} />}
+        {call && callState === 'connected' && <Button title={'Mute'} onPress={() => call?.muteMicrophone()} />}
+        {call && callState === 'connected' && <Button title={'Unmute'} onPress={() => call?.unmuteMicrophone()} />}
+        {call && callState === 'connected' && <Button title={'Switch'} onPress={() => call?.switchCamera()} />}
       </View>
     </ScrollView>
   );
