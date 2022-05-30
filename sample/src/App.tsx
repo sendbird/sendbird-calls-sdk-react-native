@@ -8,7 +8,7 @@ import { RootStack } from './libs/factory';
 import { Routes } from './libs/routes';
 import SignInScreen from './screens/SignInScreen';
 import DirectCallScreen from './screens/direct-call/DirectCallScreen';
-import GroupCallScreen from './screens/group-call/GroupCallScreen';
+import GroupCallMainStack from './screens/group-call/MainStack';
 
 export default function App() {
   return (
@@ -21,13 +21,13 @@ export default function App() {
 const Navigations = () => {
   const { currentUser } = useAuthContext();
   const Direct = <RootStack.Screen name={Routes.DIRECT_CALL} component={DirectCallScreen} />;
-  const Group = <RootStack.Screen name={Routes.GROUP_CALL} component={GroupCallScreen} />;
+  const Group = <RootStack.Screen name={Routes.GROUP_CALL} component={GroupCallMainStack} />;
 
   usePermissions(CALL_PERMISSIONS);
 
   return (
     <NavigationContainer>
-      <RootStack.Navigator>
+      <RootStack.Navigator screenOptions={{ headerShown: false }}>
         {!currentUser ? (
           <RootStack.Screen name={Routes.SIGN_IN} component={SignInScreen} />
         ) : (
