@@ -1,11 +1,16 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NativeStackNavigationProp, createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
 import Header, { HeaderLeftTypes } from '../../components/Header';
-import { GroupSettingStackParamList } from '../../libs/navigatorTypes';
+import type { GroupSettingStackParamList } from '../../libs/navigatorTypes';
 import { GroupRoutes } from '../../libs/routes';
 import AppInfoScreen from './AppInfoScreen';
 import SettingsScreen from './SettingsScreen';
+
+type SettingScreenNavigationProps = NativeStackNavigationProp<GroupSettingStackParamList>;
+export type SettingStackScreenProps = {
+  navigation: SettingScreenNavigationProps;
+};
 
 const Stack = createNativeStackNavigator<GroupSettingStackParamList>();
 

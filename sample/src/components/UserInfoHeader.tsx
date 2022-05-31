@@ -1,12 +1,11 @@
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { useAuthContext } from '../contexts/AuthContext';
 
 const UserInfoHeader = () => {
-  const {
-    currentUser: { profileUrl, nickname, userId },
-  } = useAuthContext();
+  const { currentUser } = useAuthContext();
+  const { profileUrl, nickname, userId } = currentUser ?? {};
 
   return (
     <View style={styles.container}>
