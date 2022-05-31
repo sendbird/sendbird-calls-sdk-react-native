@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -13,6 +14,8 @@ interface IHeaderLeftProps {
 }
 
 const Header = ({ title, headerLeftType = HeaderLeftTypes.NONE }: IHeaderLeftProps) => {
+  const { goBack, canGoBack } = useNavigation();
+
   return (
     <View style={styles.container}>
       <View style={[styles.headerTitle, headerLeftType !== HeaderLeftTypes.NONE && { alignItems: 'center' }]}>
@@ -22,9 +25,11 @@ const Header = ({ title, headerLeftType = HeaderLeftTypes.NONE }: IHeaderLeftPro
         switch (headerLeftType) {
           case HeaderLeftTypes.BACK:
             return (
-              <Pressable>
-                <Text>back</Text>
-              </Pressable>
+              canGoBack() && (
+                <Pressable onPress={goBack}>
+                  <Text>back</Text>
+                </Pressable>
+              )
             );
           case HeaderLeftTypes.CANCEL:
             return (
