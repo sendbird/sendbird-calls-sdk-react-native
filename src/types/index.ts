@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/** @internal **/
 type PlatformPrefix = 'android' | 'ios';
 
+/** @internal **/
 export type AsNativeInterface<T> = T extends
   | boolean
   | number
@@ -20,13 +22,16 @@ export type AsNativeInterface<T> = T extends
       //     : AsNativeInterface<T[key]>;
     };
 
+/** @internal **/
 export type Values<T extends { [key: string]: any }> = T[keyof T];
 
+/** @internal **/
 export type AsJSInterface<T, Platform extends PlatformPrefix, Keys extends keyof T> = {
   // @ts-ignore
   [key in keyof T as key extends Keys ? `${Platform}_${key}` : key]: T[key];
 };
 
+/** @internal **/
 export type AsJSDirectCall<T> = {
   [key in keyof T]: T[key] extends (callId: string, ...args: infer Args) => infer R ? (...args: Args) => R : T[key];
 };

@@ -8,4 +8,5 @@ export { DirectCall } from './libs/DirectCall';
 
 const nativeBinder = new NativeBinder();
 export const SendbirdCalls = new SendbirdCallsModule(nativeBinder);
-export { default as DirectCallVideoView } from './libs/DirectCallVideoView';
+export { default as DirectCallVideoView, DirectCallVideoViewProps } from './libs/DirectCallVideoView';
+export { default as InternalSendbirdCallsModule } from './libs/SendbirdCallsModule';

@@ -89,14 +89,6 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
     if (Platform.OS !== 'ios') return;
     await this.binder.nativeModule.unregisterVoIPPushToken(token);
   };
-
-  public getDirectCall = (props: DirectCallProperties) => {
-    if (!_directCalls[props.callId]) _directCalls[props.callId] = new DirectCall(this.binder, props);
-    return _directCalls[props.callId];
-  };
-  public onRinging(listener: (props: DirectCallProperties) => void) {
-    this._onRinging = listener;
-  }
   public android_handleFirebaseMessageData(data?: Record<string, string>) {
     if (Platform.OS !== 'android' || !data?.['sendbird_call']) {
       return false;
@@ -104,5 +96,12 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
       this.binder.nativeModule.handleFirebaseMessageData(data);
       return true;
     }
+  }
+  public getDirectCall = (props: DirectCallProperties) => {
+    if (!_directCalls[props.callId]) _directCalls[props.callId] = new DirectCall(this.binder, props);
+    return _directCalls[props.callId];
+  };
+  public onRinging(listener: (props: DirectCallProperties) => void) {
+    this._onRinging = listener;
   }
 }
