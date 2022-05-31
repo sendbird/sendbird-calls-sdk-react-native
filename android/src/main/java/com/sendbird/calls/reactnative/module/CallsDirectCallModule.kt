@@ -59,19 +59,12 @@ class CallsDirectCallModule(private val reactContext: ReactApplicationContext): 
             Log.d(CallsModule.NAME, "[DirectCallModule] accept options -> ${options.toHashMap()}")
 
 
-            val localVideoViewId = try {
-                options.getInt("localVideoViewId")
-            } catch(e:Throwable) {
-                null
-            }
-            val remoteVideoViewId = try {
-                options.getInt("remoteVideoViewId")
-            } catch(e:Throwable) {
-                null
-            }
-            val audioEnabled = options.getBoolean("audioEnabled") ?: true
-            val videoEnabled = options.getBoolean("videoEnabled") ?: true
-            val frontCamera = options.getBoolean("frontCamera") ?: true
+            val localVideoViewId = CallsUtils.safeGet { options.getInt("localVideoViewId") }
+            val remoteVideoViewId = CallsUtils.safeGet { options.getInt("remoteVideoViewId") }
+
+            val audioEnabled = options.getBoolean("audioEnabled")
+            val videoEnabled = options.getBoolean("videoEnabled")
+            val frontCamera = options.getBoolean("frontCamera")
 
             val acceptParams = AcceptParams().apply {
                 setHoldActiveCall(holdActiveCall)

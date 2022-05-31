@@ -43,9 +43,11 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    override fun initialize(appId: String) = module.initialize(appId)
+    override fun getOngoingCalls(promise: Promise) = module.getOngoingCalls(promise)
     @ReactMethod
     override fun getCurrentUser(promise: Promise) = module.getCurrentUser(promise)
+    @ReactMethod
+    override fun initialize(appId: String) = module.initialize(appId)
     @ReactMethod
     override fun authenticate(userId: String, accessToken: String?, promise: Promise) = module.authenticate(userId, accessToken, promise)
     @ReactMethod
@@ -55,9 +57,7 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     @ReactMethod
     override fun unregisterPushToken(token: String, promise: Promise) = module.unregisterPushToken(token, promise)
     @ReactMethod
-    override fun dial(calleeId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise) = module.dial(calleeId, options, holdActiveCall, promise)
-    @ReactMethod
-    override fun getOngoingCalls(promise: Promise) = module.getOngoingCalls(promise)
+    override fun dial(calleeId: String, isVideoCall: Boolean, options: ReadableMap, promise: Promise) = module.dial(calleeId, isVideoCall, options, promise)
 
     @ReactMethod
     override fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise) = module.selectVideoDevice(callId, device, promise)

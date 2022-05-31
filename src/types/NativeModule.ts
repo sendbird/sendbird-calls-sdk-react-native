@@ -20,7 +20,7 @@ export interface NativeCommonModule {
   deauthenticate(): Promise<void>;
   registerPushToken(token: string, unique?: boolean): Promise<void>;
   unregisterPushToken(token: string): Promise<void>;
-  dial(calleeUserId: string, options: CallOptions, holdActiveCall: boolean): Promise<DirectCallProperties>;
+  dial(calleeUserId: string, isVideoCall: boolean, options: CallOptions): Promise<DirectCallProperties>;
 
   /** @platform Android **/
   handleFirebaseMessageData(data: Record<string, string>): void;

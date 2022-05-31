@@ -176,6 +176,9 @@ export type CallOptions = {
   localVideoViewId?: number;
   remoteVideoViewId?: number;
 
+  /** For SendbirdChat integration **/
+  channelUrl?: string;
+
   /** @default true */
   audioEnabled?: boolean;
   /** @default true */

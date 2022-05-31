@@ -17,7 +17,7 @@ interface CommonModule {
     fun registerPushToken(token: String, unique: Boolean, promise: Promise)
     fun unregisterPushToken(token: String, promise: Promise)
 
-    fun dial(calleeId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise)
+    fun dial(calleeId: String, isVideoCall: Boolean, options: ReadableMap, promise: Promise)
 }
 
 interface DirectCallModule {

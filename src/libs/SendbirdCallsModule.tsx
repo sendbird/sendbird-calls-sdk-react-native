@@ -75,10 +75,10 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   };
   public dial(
     calleeUserId: string,
+    isVideoCall: boolean,
     options: CallOptions = { audioEnabled: true, frontCamera: true, videoEnabled: true },
-    holdActiveCall = false,
   ): Promise<DirectCallProperties> {
-    return this.binder.nativeModule.dial(calleeUserId, options, holdActiveCall);
+    return this.binder.nativeModule.dial(calleeUserId, isVideoCall, options);
   }
 
   /** Platform specific **/

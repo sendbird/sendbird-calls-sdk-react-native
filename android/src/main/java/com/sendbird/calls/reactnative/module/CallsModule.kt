@@ -55,7 +55,7 @@ class CallsModule(private val reactContext: ReactApplicationContext) : CallsModu
     override fun deauthenticate(promise: Promise) = commonModule.deauthenticate(promise)
     override fun registerPushToken(token: String, unique: Boolean, promise: Promise) = commonModule.registerPushToken(token, unique, promise)
     override fun unregisterPushToken(token: String, promise: Promise) = commonModule.unregisterPushToken(token, promise)
-    override fun dial(calleeId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise) = commonModule.dial(calleeId, options, holdActiveCall, promise)
+    override fun dial(calleeId: String, isVideoCall: Boolean, options: ReadableMap, promise: Promise) = commonModule.dial(calleeId, isVideoCall, options, promise)
 
     /** DirectCall module interface**/
     override fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise)= directCallModule.selectVideoDevice(callId, device, promise)

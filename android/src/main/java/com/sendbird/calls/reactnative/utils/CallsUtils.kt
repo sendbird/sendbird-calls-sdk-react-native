@@ -15,6 +15,13 @@ import com.sendbird.calls.reactnative.view.BaseVideoView
 
 
 object CallsUtils {
+    fun <T> safeGet(fn: () -> T): T? {
+        return try {
+            fn()
+        } catch (e: Throwable){
+            null
+        }
+    }
     fun safePromiseRejection(promise: Promise, from: String?, completion: () -> Any?) {
         try {
             completion()
