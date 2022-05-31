@@ -15,7 +15,7 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     }
     override fun getConstants(): Map<String, Any> {
         val constants: MutableMap<String, Any> = HashMap()
-        constants["number"] = 90
+        constants["NATIVE_SDK_VERSION"] = SendBirdCall.getSdkVersion()
         return constants
     }
     // For backward compat instead of invalidate
@@ -54,6 +54,10 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     override fun registerPushToken(token: String, unique: Boolean, promise: Promise) = module.registerPushToken(token, unique, promise)
     @ReactMethod
     override fun unregisterPushToken(token: String, promise: Promise) = module.unregisterPushToken(token, promise)
+    @ReactMethod
+    override fun dial(calleeId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise) = module.dial(calleeId, options, holdActiveCall, promise)
+    @ReactMethod
+    override fun getOngoingCalls(promise: Promise) = module.getOngoingCalls(promise)
 
     @ReactMethod
     override fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise) = module.selectVideoDevice(callId, device, promise)

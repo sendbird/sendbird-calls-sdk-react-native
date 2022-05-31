@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 
 import pkg from '../../package.json';
-import type { DirectCallProperties, SendbirdCallsJavascriptSpec, User } from '../types';
+import type { CallOptions, DirectCallProperties, SendbirdCallsJavascriptSpec, User } from '../types';
 import { noop } from '../utils';
 import { Logger } from '../utils/logger';
 import { DirectCall } from './DirectCall';
@@ -16,7 +16,6 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   private _applicationId = '';
   private _initialized = false;
   private _currentUser: User | null = null;
-  private _ongoingCalls: Array<DirectCallProperties> = [];
   private _onRinging: (props: DirectCallProperties) => void = noop;
 
   public get applicationId() {
@@ -28,12 +27,6 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   public get currentUser() {
     return this._currentUser;
   }
-  public get ongoingCallCount() {
-    return this._ongoingCalls.length;
-  }
-  public get ongoingCalls() {
-    return this._ongoingCalls;
-  }
 
   constructor(private binder: NativeBinder) {}
 
@@ -41,11 +34,14 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
     return this.binder.nativeModule.getConstants?.() ?? {};
   };
 
+  /** Common **/
   public getCurrentUser = async () => {
     this._currentUser = await this.binder.nativeModule.getCurrentUser();
     return this.currentUser;
   };
-
+  public getOngoingCalls(): Promise<DirectCallProperties[]> {
+    return this.binder.nativeModule.getOngoingCalls();
+  }
   public initialize = (appId: string) => {
     if (this.initialized) return this.initialized;
     this.Logger.debug('[SendbirdCalls]', 'initialize()');
@@ -77,6 +73,15 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   public unregisterPushToken = async (token: string) => {
     await this.binder.nativeModule.unregisterPushToken(token);
   };
+  public dial(
+    calleeUserId: string,
+    options: CallOptions = { audioEnabled: true, frontCamera: true, videoEnabled: true },
+    holdActiveCall = false,
+  ): Promise<DirectCallProperties> {
+    return this.binder.nativeModule.dial(calleeUserId, options, holdActiveCall);
+  }
+
+  /** Platform specific **/
   public ios_voipRegistration = async () => {
     if (Platform.OS !== 'ios') return '';
     return this.binder.nativeModule.voipRegistration();
@@ -97,6 +102,8 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
       return true;
     }
   }
+
+  /** Additional **/
   public getDirectCall = (props: DirectCallProperties) => {
     if (!_directCalls[props.callId]) _directCalls[props.callId] = new DirectCall(this.binder, props);
     return _directCalls[props.callId];

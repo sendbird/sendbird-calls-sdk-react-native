@@ -56,7 +56,7 @@ class CallsDirectCallModule(private val reactContext: ReactApplicationContext): 
         CallsUtils.safePromiseRejection(promise, from) {
             val call = CallsUtils.findDirectCall(callId, from)
 
-            Log.d(CallsModule.NAME, "[DirectCallModule] acceptParams -> ${options.toHashMap()}")
+            Log.d(CallsModule.NAME, "[DirectCallModule] accept options -> ${options.toHashMap()}")
 
 
             val localVideoViewId = try {

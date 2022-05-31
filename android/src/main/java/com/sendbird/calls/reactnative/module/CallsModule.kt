@@ -43,18 +43,19 @@ class CallsModule(private val reactContext: ReactApplicationContext) : CallsModu
     }
 
     /** Common module interface **/
+    override fun getCurrentUser(promise: Promise) = commonModule.getCurrentUser(promise)
+    override fun getOngoingCalls(promise: Promise) = commonModule.getOngoingCalls(promise)
     override fun initialize(appId: String): Boolean {
         Log.d(NAME, "[CallsModule] initialize() -> $appId")
         initialized = commonModule.initialize(appId)
         SendBirdCall.addListener("sendbird.call.listener", this)
         return initialized
     }
-
-    override fun getCurrentUser(promise: Promise) = commonModule.getCurrentUser(promise)
     override fun authenticate(userId: String, accessToken: String?, promise: Promise) = commonModule.authenticate(userId, accessToken, promise)
     override fun deauthenticate(promise: Promise) = commonModule.deauthenticate(promise)
     override fun registerPushToken(token: String, unique: Boolean, promise: Promise) = commonModule.registerPushToken(token, unique, promise)
     override fun unregisterPushToken(token: String, promise: Promise) = commonModule.unregisterPushToken(token, promise)
+    override fun dial(calleeId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise) = commonModule.dial(calleeId, options, holdActiveCall, promise)
 
     /** DirectCall module interface**/
     override fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise)= directCallModule.selectVideoDevice(callId, device, promise)

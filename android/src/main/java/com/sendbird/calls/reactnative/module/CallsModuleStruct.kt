@@ -6,14 +6,18 @@ import com.facebook.react.bridge.ReadableMap
 interface CallsModuleStruct: CommonModule, DirectCallModule { }
 
 interface CommonModule {
+    fun getCurrentUser(promise: Promise)
+    fun getOngoingCalls(promise: Promise)
+
     fun initialize(appId: String): Boolean
 
-    fun getCurrentUser(promise: Promise)
     fun authenticate(userId: String, accessToken: String?, promise: Promise)
     fun deauthenticate(promise: Promise)
 
     fun registerPushToken(token: String, unique: Boolean, promise: Promise)
     fun unregisterPushToken(token: String, promise: Promise)
+
+    fun dial(calleeId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise)
 }
 
 interface DirectCallModule {
