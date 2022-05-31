@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
-import Header from '../../components/Header';
+import Header, { HeaderLeftTypes } from '../../components/Header';
 import { GroupSettingStackParamList } from '../../libs/navigatorTypes';
 import { GroupRoutes } from '../../libs/routes';
 import AppInfoScreen from './AppInfoScreen';
@@ -20,7 +20,7 @@ const SettingStack = () => {
       <Stack.Screen
         name={GroupRoutes.APP_INFO}
         component={AppInfoScreen}
-        options={{ header: () => <Header title="Application information" /> }}
+        options={{ header: () => <Header title="Application information" headerLeftType={HeaderLeftTypes.BACK} /> }}
       />
     </Stack.Navigator>
   );

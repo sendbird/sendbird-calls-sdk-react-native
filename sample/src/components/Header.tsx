@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-export enum HeaderLeftType {
+export enum HeaderLeftTypes {
   NONE = 'NONE',
   BACK = 'BACK',
   CANCEL = 'CANCEL',
@@ -9,30 +9,30 @@ export enum HeaderLeftType {
 
 interface IHeaderLeftProps {
   title: string;
-  headerLeftType?: HeaderLeftType;
+  headerLeftType?: HeaderLeftTypes;
 }
 
-const Header = ({ title, headerLeftType = HeaderLeftType.NONE }: IHeaderLeftProps) => {
+const Header = ({ title, headerLeftType = HeaderLeftTypes.NONE }: IHeaderLeftProps) => {
   return (
     <View style={styles.container}>
-      <View style={[styles.headerTitle, headerLeftType !== HeaderLeftType.NONE && { alignItems: 'center' }]}>
+      <View style={[styles.headerTitle, headerLeftType !== HeaderLeftTypes.NONE && { alignItems: 'center' }]}>
         <Text style={styles.title}>{title}</Text>
       </View>
       {(() => {
         switch (headerLeftType) {
-          case HeaderLeftType.BACK:
+          case HeaderLeftTypes.BACK:
             return (
               <Pressable>
                 <Text>back</Text>
               </Pressable>
             );
-          case HeaderLeftType.CANCEL:
+          case HeaderLeftTypes.CANCEL:
             return (
               <Pressable>
                 <Text>cancel</Text>
               </Pressable>
             );
-          default: // HeaderLeftType.NONE
+          default: // HeaderLeftTypes.NONE
             return null;
         }
       })()}
