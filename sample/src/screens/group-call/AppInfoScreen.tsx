@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { SendbirdCalls } from '@sendbird/calls-react-native';
+
 const AppInfoScreen = () => {
   return (
     <View style={styles.container}>
@@ -11,7 +13,7 @@ const AppInfoScreen = () => {
 
       <View style={styles.info}>
         <Text style={styles.title}>ID</Text>
-        <Text style={styles.desc}>9B449C30-7D87-4C79-B572-CBD4D52BAE23</Text>
+        <Text style={styles.desc}>{SendbirdCalls.applicationId}</Text>
       </View>
     </View>
   );
