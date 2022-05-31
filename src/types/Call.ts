@@ -118,7 +118,6 @@ export interface DirectCallLog {
   caller: DirectCallUser | null;
   endedBy: DirectCallUser | null;
 
-  android_relayProtocol: string | null;
   android_users: DirectCallUser[] | null;
   android_endedUserId: string | null;
 }
