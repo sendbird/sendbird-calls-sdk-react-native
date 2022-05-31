@@ -2,8 +2,9 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useAuthContext } from '../../contexts/AuthContext';
+import { GroupRoutes } from '../../libs/routes';
 
-const SettingsScreen = () => {
+const SettingsScreen = ({ navigation: { navigate } }) => {
   const {
     currentUser: { profileUrl, nickname, userId },
   } = useAuthContext();
@@ -17,7 +18,7 @@ const SettingsScreen = () => {
       </View>
 
       <View style={styles.list}>
-        <Pressable style={styles.item}>
+        <Pressable style={styles.item} onPress={() => navigate(GroupRoutes.APP_INFO)}>
           <View style={styles.itemContent}>
             <Text style={styles.leftIcon}>Icon</Text>
             <Text style={styles.itemName}>Application information</Text>
@@ -37,6 +38,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    paddingHorizontal: 20,
   },
   profile: {
     justifyContent: 'center',
@@ -50,7 +52,6 @@ const styles = StyleSheet.create({
   list: {
     borderTopWidth: 1,
     borderTopColor: '#eee',
-    marginHorizontal: 20,
   },
   item: {
     flexDirection: 'row',

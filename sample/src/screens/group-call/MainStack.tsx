@@ -9,7 +9,7 @@ const Stack = createNativeStackNavigator();
 const MainStack = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name={GroupRoutes.TAB} component={HomeTab} options={{ headerShown: false }} />
+      <Stack.Screen name={GroupRoutes.HOME_TAB} component={HomeTab} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };

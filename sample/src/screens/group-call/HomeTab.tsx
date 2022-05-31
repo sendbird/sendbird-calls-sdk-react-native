@@ -1,11 +1,10 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 
-import Header from '../../components/Header';
 import UserInfoHeader from '../../components/UserInfoHeader';
 import { GroupRoutes } from '../../libs/routes';
 import DialScreen from './DialScreen';
-import SettingsScreen from './SettingsScreen';
+import SettingStack from './SettingStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -20,9 +19,11 @@ const HomeTab = () => {
         }}
       />
       <Tab.Screen
-        name={GroupRoutes.SETTINGS}
-        component={SettingsScreen}
-        options={{ header: () => <Header title="Settings" />, headerStyle: {} }}
+        name={GroupRoutes.SETTING_STACK}
+        component={SettingStack}
+        options={{
+          headerShown: false,
+        }}
       />
     </Tab.Navigator>
   );

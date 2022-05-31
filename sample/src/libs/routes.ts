@@ -5,12 +5,13 @@ export const Routes = {
 };
 
 export const GroupRoutes = {
-  TAB: 'tab', // main tab nav - Main Stack
-  DIAL: 'dial', // dial tab sc - Tab
-  SETTINGS: 'settings', // settings tab sc - Tab
-  ROOM: 'room', // call room sc - Main Stack
-  JOIN: 'join', // enter room sc - Stack
+  HOME_TAB: 'home_tab',
+  DIAL: 'dial',
+  SETTING_STACK: 'setting_stack',
+  SETTINGS: 'settings' as const,
+  APP_INFO: 'app_info' as const,
+  ROOM: 'room',
+  JOIN: 'join',
   PARTICIPANTS: 'participants',
   ROOM_INFO: 'room_info',
-  APP_INFO: 'app_info',
 };
