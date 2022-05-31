@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 
+import Header from '../../components/Header';
 import UserInfoHeader from '../../components/UserInfoHeader';
 import { GroupRoutes } from '../../libs/routes';
 import DialScreen from './DialScreen';
@@ -18,7 +19,11 @@ const HomeTab = () => {
           header: UserInfoHeader,
         }}
       />
-      <Tab.Screen name={GroupRoutes.SETTINGS} component={SettingsScreen} options={{ headerTitle: 'Settings' }} />
+      <Tab.Screen
+        name={GroupRoutes.SETTINGS}
+        component={SettingsScreen}
+        options={{ header: () => <Header title="Settings" />, headerStyle: {} }}
+      />
     </Tab.Navigator>
   );
 };

@@ -15,7 +15,7 @@ const UserInfoHeader = () => {
 
       <View style={styles.info}>
         <Text style={styles.nickname}>{nickname || '-'}</Text>
-        <Text style={styles.userId}>{userId}</Text>
+        <Text style={styles.userId}>User ID: {userId}</Text>
       </View>
     </View>
   );
@@ -23,10 +23,13 @@ const UserInfoHeader = () => {
 
 const styles = StyleSheet.create({
   container: {
+    height: 60,
     flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#fff',
-    paddingVertical: 10,
     paddingHorizontal: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
   },
   info: {
     paddingHorizontal: 10,
