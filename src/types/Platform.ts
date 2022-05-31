@@ -2,7 +2,7 @@
 
 /**
  * @platform iOS
- * AVAudioSession.RouteChangeReason {@link https://developer.apple.com/documentation/avfaudio/avaudiosession/routechangereason}
+ * @description AVAudioSession.RouteChangeReason {@link https://developer.apple.com/documentation/avfaudio/avaudiosession/routechangereason}
  * */
 export enum RouteChangeReason {
   /// The reason is unknown.

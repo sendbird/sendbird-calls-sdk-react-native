@@ -22,21 +22,20 @@ export interface NativeCommonModule {
   registerPushToken(token: string, unique?: boolean): Promise<void>;
   unregisterPushToken(token: string): Promise<void>;
 
-  // Android only
+  /** @platform Android **/
   handleFirebaseMessageData(data: Record<string, string>): void;
 
-  // iOS only
+  /** @platform iOS **/
   voipRegistration(): Promise<string>;
-  // iOS only
+  /** @platform iOS **/
   registerVoIPPushToken(token: string, unique?: boolean): Promise<void>;
-  // iOS only
+  /** @platform iOS **/
   unregisterVoIPPushToken(token: string): Promise<void>;
 }
 
 export interface NativeDirectCallModule {
   selectVideoDevice(callId: string, device: VideoDevice): Promise<void>;
-  // Android only
-  selectAudioDevice(callId: string, device: AudioDevice): Promise<void>;
+
   accept(callId: string, options: CallOptions, holdActiveCall: boolean): Promise<void>;
   end(callId: string): Promise<void>;
   switchCamera(callId: string): Promise<void>;
@@ -46,6 +45,9 @@ export interface NativeDirectCallModule {
   unmuteMicrophone(callId: string): void;
   updateLocalVideoView(callId: string, videoViewId: number): void;
   updateRemoteVideoView(callId: string, videoViewId: number): void;
+
+  /** @platform Android **/
+  selectAudioDevice(callId: string, device: AudioDevice): Promise<void>;
 
   /** Not implemented yet belows **/
   // hold(callId:string): Promise<void>;
