@@ -89,4 +89,17 @@ class CallsCommonModule(private val reactContext: ReactApplicationContext): Comm
             }
         }
     }
+
+    override fun createRoom(roomType: String, promise: Promise) {
+        Log.d(CallsModule.NAME, "[CommonModule] createRoom($roomType)")
+        val from = "common/createRoom"
+        CallsUtils.safePromiseRejection(promise, from) {
+            val params = RoomParams(RoomType.valueOf(roomType.uppercase()))
+            SendBirdCall.createRoom(params) { room: Room?, error: SendBirdException? ->
+                if(error != null) throw error
+                if(room != null) promise.resolve(CallsUtils.convertRoomToJsMap(room))
+            }
+        }
+    }
+
 }

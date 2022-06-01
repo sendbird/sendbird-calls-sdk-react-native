@@ -41,3 +41,5 @@ export * from './Media';
 export * from './NativeModule';
 export * from './Platform';
 export * from './User';
+export * from './Room';
+export * from './Participant';

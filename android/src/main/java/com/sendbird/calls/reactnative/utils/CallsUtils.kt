@@ -13,7 +13,6 @@ import com.sendbird.calls.reactnative.extension.asString
 import com.sendbird.calls.reactnative.module.CallsModule
 import com.sendbird.calls.reactnative.view.BaseVideoView
 
-
 object CallsUtils {
     fun <T> safeGet(fn: () -> T): T? {
         return try {
@@ -216,4 +215,55 @@ object CallsUtils {
         }
         return false
     }
+
+    fun convertParticipantToJsMap(participant: Participant) {convertToJsMap(mapOf(
+            "participantId" to participant.participantId,
+            "user" to convertUserToJsMap(participant.user),
+            "state" to participant.state.asString(),
+
+            "enteredAt" to participant.enteredAt,
+            "exitedAt" to (participant.exitedAt ?: 0),
+            "duration" to (participant.duration ?: 0),
+
+            "isAudioEnabled" to participant.isAudioEnabled,
+            "isVideoEnabled" to participant.isVideoEnabled,
+
+            "updatedAt" to participant.updatedAt,
+//        "videoView" to participant.videoView, // TODO: SendBirdVideoView
+        ))
+    }
+    fun convertLocalParticipantToJsMap(localParticipant: LocalParticipant?) = when(localParticipant) {
+        null -> null
+        else -> convertToJsMap(mapOf(
+        "participantId" to localParticipant.participantId,
+        "user" to convertUserToJsMap(localParticipant.user),
+        "state" to localParticipant.state.asString(),
+
+        "enteredAt" to localParticipant.enteredAt,
+        "exitedAt" to (localParticipant.exitedAt ?: 0),
+        "duration" to (localParticipant.duration ?: 0),
+
+        "isAudioEnabled" to localParticipant.isAudioEnabled,
+        "isVideoEnabled" to localParticipant.isVideoEnabled,
+
+        "updatedAt" to localParticipant.updatedAt,
+//        "videoView" to participant.videoView, // TODO: SendBirdVideoView
+    ))
+    }
+    fun convertRoomToJsMap(room: Room) = convertToJsMap(mapOf(
+        "roomId" to room.roomId,
+        "state" to room.state.asString(),
+        "type" to room.type.asString(),
+        "customItems" to room.customItems,
+
+        "participants" to room.participants.map{ convertParticipantToJsMap(it) },
+        "localParticipant" to convertLocalParticipantToJsMap(room.localParticipant),
+        "remoteParticipants" to room.remoteParticipants.map { convertParticipantToJsMap(it) },
+
+        "availableAudioDevices" to room.availableAudioDevices.map { it.asString() },
+        "currentAudioDevice" to room.currentAudioDevice?.asString(),
+
+        "createdAt" to room.createdAt,
+        "createdBy" to room.createdBy,
+    ))
 }

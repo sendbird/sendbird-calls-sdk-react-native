@@ -3,6 +3,7 @@ import type { NativeModule, TurboModule } from 'react-native';
 import type { DirectCall } from '../libs/DirectCall';
 import type { CallOptions, DirectCallProperties } from './Call';
 import type { AudioDevice, VideoDevice } from './Media';
+import type { RoomProperties, RoomType } from './Room';
 import type { User } from './User';
 import type { AsJSInterface } from './index';
 
@@ -21,6 +22,7 @@ export interface NativeCommonModule {
   registerPushToken(token: string, unique?: boolean): Promise<void>;
   unregisterPushToken(token: string): Promise<void>;
   dial(calleeUserId: string, isVideoCall: boolean, options: CallOptions): Promise<DirectCallProperties>;
+  createRoom(roomType: RoomType): Promise<RoomProperties>;
 
   /** @platform Android **/
   handleFirebaseMessageData(data: Record<string, string>): void;

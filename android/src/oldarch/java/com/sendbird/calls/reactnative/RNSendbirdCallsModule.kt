@@ -58,6 +58,8 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     override fun unregisterPushToken(token: String, promise: Promise) = module.unregisterPushToken(token, promise)
     @ReactMethod
     override fun dial(calleeId: String, isVideoCall: Boolean, options: ReadableMap, promise: Promise) = module.dial(calleeId, isVideoCall, options, promise)
+    @ReactMethod
+    override fun createRoom(roomType: String, promise: Promise) = module.createRoom(roomType, promise)
 
     @ReactMethod
     override fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise) = module.selectVideoDevice(callId, device, promise)

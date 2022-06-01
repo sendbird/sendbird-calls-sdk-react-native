@@ -18,6 +18,8 @@ interface CommonModule {
     fun unregisterPushToken(token: String, promise: Promise)
 
     fun dial(calleeId: String, isVideoCall: Boolean, options: ReadableMap, promise: Promise)
+
+    fun createRoom(roomType: String, promise: Promise)
 }
 
 interface DirectCallModule {

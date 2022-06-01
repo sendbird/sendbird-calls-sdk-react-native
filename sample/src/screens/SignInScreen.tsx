@@ -5,7 +5,9 @@ import { Button, Platform, ScrollView, StyleSheet, TextInput } from 'react-nativ
 import { SendbirdCalls } from '@sendbird/calls-react-native';
 
 import { useAuthContext } from '../contexts/AuthContext';
+import { INITIAL_ROUTE } from '../env';
 import { AppLogger } from '../libs/factory';
+import { Routes } from '../libs/routes';
 
 type Input = { id: string; nickname: string };
 
@@ -21,9 +23,12 @@ const SignInScreen = () => {
       AppLogger.log('sendbird user:', user);
 
       setCurrentUser(user);
-      const token = Platform.OS === 'android' ? await messaging().getToken() : await messaging().getAPNSToken();
-      AppLogger.log('token:', token);
-      token && SendbirdCalls.registerPushToken(token, true);
+
+      if (INITIAL_ROUTE === Routes.DIRECT_CALL) {
+        const token = Platform.OS === 'android' ? await messaging().getToken() : await messaging().getAPNSToken();
+        AppLogger.log('token:', token);
+        token && SendbirdCalls.registerPushToken(token, true);
+      }
     });
   };
 

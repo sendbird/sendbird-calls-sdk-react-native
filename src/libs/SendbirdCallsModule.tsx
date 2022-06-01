@@ -1,7 +1,8 @@
 import { Platform } from 'react-native';
 
 import pkg from '../../package.json';
-import type { CallOptions, DirectCallProperties, SendbirdCallsJavascriptSpec, User } from '../types';
+import type { CallOptions, DirectCallProperties, RoomProperties, SendbirdCallsJavascriptSpec, User } from '../types';
+import { RoomType } from '../types';
 import { noop } from '../utils';
 import { Logger } from '../utils/logger';
 import { DirectCall } from './DirectCall';
@@ -26,6 +27,10 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   }
   public get currentUser() {
     return this._currentUser;
+  }
+
+  public get RoomType() {
+    return RoomType;
   }
 
   constructor(private binder: NativeBinder) {}
@@ -79,6 +84,9 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
     options: CallOptions = { audioEnabled: true, frontCamera: true, videoEnabled: true },
   ): Promise<DirectCallProperties> {
     return this.binder.nativeModule.dial(calleeUserId, isVideoCall, options);
+  }
+  public createRoom(roomType: RoomType): Promise<RoomProperties> {
+    return this.binder.nativeModule.createRoom(roomType);
   }
 
   /** Platform specific **/
