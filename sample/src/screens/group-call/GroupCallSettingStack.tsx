@@ -2,19 +2,19 @@ import { NativeStackNavigationProp, createNativeStackNavigator } from '@react-na
 import React from 'react';
 
 import Header, { HeaderLeftTypes } from '../../components/Header';
-import type { GroupSettingStackParamList } from '../../libs/navigatorTypes';
+import type { GroupCallSettingStackParamList } from '../../libs/navigatorTypes';
 import { GroupRoutes } from '../../libs/routes';
 import AppInfoScreen from './AppInfoScreen';
 import SettingsScreen from './SettingsScreen';
 
-type SettingScreenNavigationProps = NativeStackNavigationProp<GroupSettingStackParamList>;
-export type SettingStackScreenProps = {
+type SettingScreenNavigationProps = NativeStackNavigationProp<GroupCallSettingStackParamList>;
+export type GroupCallSettingStackProps = {
   navigation: SettingScreenNavigationProps;
 };
 
-const Stack = createNativeStackNavigator<GroupSettingStackParamList>();
+const Stack = createNativeStackNavigator<GroupCallSettingStackParamList>();
 
-const SettingStack = () => {
+const GroupCallSettingStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -31,4 +31,4 @@ const SettingStack = () => {
   );
 };
 
-export default SettingStack;
+export default GroupCallSettingStack;

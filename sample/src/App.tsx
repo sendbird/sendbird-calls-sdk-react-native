@@ -8,7 +8,7 @@ import { RootStack } from './libs/factory';
 import { Routes } from './libs/routes';
 import SignInScreen from './screens/SignInScreen';
 import DirectCallScreen from './screens/direct-call/DirectCallScreen';
-import GroupCallMainStack from './screens/group-call/MainStack';
+import GroupCallMainStack from './screens/group-call/GroupCallMainStack';
 
 export default function App() {
   return (

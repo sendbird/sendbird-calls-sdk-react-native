@@ -2,16 +2,16 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
 import { GroupRoutes } from '../../libs/routes';
-import HomeTab from './HomeTab';
+import GroupCallHomeTab from './GroupCallHomeTab';
 
 const Stack = createNativeStackNavigator();
 
-const MainStack = () => {
+const GroupCallMainStack = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name={GroupRoutes.HOME_TAB} component={HomeTab} options={{ headerShown: false }} />
+      <Stack.Screen name={GroupRoutes.HOME_TAB} component={GroupCallHomeTab} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };
 
-export default MainStack;
+export default GroupCallMainStack;

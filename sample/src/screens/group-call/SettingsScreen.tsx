@@ -3,9 +3,9 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useAuthContext } from '../../contexts/AuthContext';
 import { GroupRoutes } from '../../libs/routes';
-import type { SettingStackScreenProps } from './SettingStack';
+import type { GroupCallSettingStackProps } from './GroupCallSettingStack';
 
-const SettingsScreen = ({ navigation: { navigate } }: SettingStackScreenProps) => {
+const SettingsScreen = ({ navigation: { navigate } }: GroupCallSettingStackProps) => {
   const { currentUser } = useAuthContext();
   const { profileUrl, nickname, userId } = currentUser ?? {};
 

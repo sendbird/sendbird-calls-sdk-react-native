@@ -1,6 +1,6 @@
 import { GroupRoutes } from './routes';
 
-export type GroupSettingStackParamList = {
+export type GroupCallSettingStackParamList = {
   [GroupRoutes.SETTINGS]: undefined;
   [GroupRoutes.APP_INFO]: undefined;
 };

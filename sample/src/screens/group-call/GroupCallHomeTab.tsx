@@ -8,7 +8,7 @@ import SettingStack from './SettingStack';
 
 const Tab = createBottomTabNavigator();
 
-const HomeTab = () => {
+const GroupCallHomeTab = () => {
   return (
     <Tab.Navigator screenOptions={{ tabBarShowLabel: false, tabBarHideOnKeyboard: true }}>
       <Tab.Screen
@@ -29,4 +29,4 @@ const HomeTab = () => {
   );
 };
 
-export default HomeTab;
+export default GroupCallHomeTab;
