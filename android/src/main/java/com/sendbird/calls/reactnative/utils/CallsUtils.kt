@@ -222,8 +222,8 @@ object CallsUtils {
         "state" to participant.state.asString(),
 
         "enteredAt" to participant.enteredAt,
-        "exitedAt" to participant.exitedAt,
-        "duration" to participant.duration,
+        "exitedAt" to (participant.exitedAt ?: 0),
+        "duration" to (participant.duration ?: 0),
 
         "isAudioEnabled" to participant.isAudioEnabled,
         "isVideoEnabled" to participant.isVideoEnabled,
@@ -235,7 +235,7 @@ object CallsUtils {
     fun convertRoomToJsMap(room: Room) = convertToJsMap(mapOf(
         "roomId" to room.roomId,
         "state" to room.state.asString(),
-        "type" to room.type,
+        "type" to room.type.asString(),
         "customItems" to room.customItems,
 
         "participants" to room.participants.map{ convertParticipantToJsMap(it) },

@@ -185,10 +185,3 @@ export type CallOptions = {
   /** @default true */
   frontCamera?: boolean;
 };
-
-export enum RoomType {
-  SMALL_ROOM_FOR_VIDEO = 'small_room_for_video',
-  LARGE_ROOM_FOR_VIDEO = 'large_room_for_video',
-  SMALL_ROOM_FOR_AUDIO_ONLY = 'small_room_for_audio_only',
-  LARGE_ROOM_FOR_AUDIO_ONLY = 'large_room_for_audio_only',
-}
