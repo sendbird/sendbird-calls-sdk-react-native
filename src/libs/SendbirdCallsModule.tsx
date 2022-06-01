@@ -2,6 +2,7 @@ import { Platform } from 'react-native';
 
 import pkg from '../../package.json';
 import type { CallOptions, DirectCallProperties, SendbirdCallsJavascriptSpec, User } from '../types';
+import { RoomType } from '../types';
 import { noop } from '../utils';
 import { Logger } from '../utils/logger';
 import { DirectCall } from './DirectCall';
@@ -26,6 +27,10 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   }
   public get currentUser() {
     return this._currentUser;
+  }
+
+  public get RoomType() {
+    return RoomType;
   }
 
   constructor(private binder: NativeBinder) {}
