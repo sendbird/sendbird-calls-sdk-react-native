@@ -4,7 +4,7 @@ import React from 'react';
 import UserInfoHeader from '../../components/UserInfoHeader';
 import { GroupRoutes } from '../../libs/routes';
 import DialScreen from './DialScreen';
-import SettingStack from './SettingStack';
+import GroupCallSettingStack from './GroupCallSettingStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -20,7 +20,7 @@ const GroupCallHomeTab = () => {
       />
       <Tab.Screen
         name={GroupRoutes.SETTING_STACK}
-        component={SettingStack}
+        component={GroupCallSettingStack}
         options={{
           headerShown: false,
         }}

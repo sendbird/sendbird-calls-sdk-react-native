@@ -96,7 +96,7 @@ class CallsCommonModule(private val reactContext: ReactApplicationContext): Comm
         CallsUtils.safePromiseRejection(promise, from) {
             val params = RoomParams(RoomType.valueOf(roomType.uppercase()))
             SendBirdCall.createRoom(params) { room: Room?, error: SendBirdException? ->
-                if(error != null) promise.reject(error)
+                if(error != null) throw error
                 if(room != null) promise.resolve(CallsUtils.convertRoomToJsMap(room))
             }
         }
