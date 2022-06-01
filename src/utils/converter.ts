@@ -9,7 +9,6 @@ export function convertDirectCallPropsNTJ(data: AsNativeInterface<DirectCallProp
     callLog: data.callLog && {
       ...data.callLog,
       android_endedUserId: data.callLog.endedUserId,
-      android_relayProtocol: data.callLog.relayProtocol,
       android_users: data.callLog.users,
     },
     android_availableAudioDevices: data.availableAudioDevices,

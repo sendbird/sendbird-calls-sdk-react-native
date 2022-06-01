@@ -11,16 +11,16 @@ type NativeModuleInterface = NativeModule & TurboModule;
 export interface NativeCommonModule {
   applicationId: string;
   currentUser: User | null;
-  ongoingCallCount: number;
-  ongoingCalls: Array<DirectCallProperties>;
 
   getCurrentUser(): Promise<User | null>;
+  getOngoingCalls(): Promise<DirectCallProperties[]>;
 
   initialize(appId: string): boolean;
   authenticate(userId: string, accessToken?: string | null): Promise<User>;
   deauthenticate(): Promise<void>;
   registerPushToken(token: string, unique?: boolean): Promise<void>;
   unregisterPushToken(token: string): Promise<void>;
+  dial(calleeUserId: string, isVideoCall: boolean, options: CallOptions): Promise<DirectCallProperties>;
 
   /** @platform Android **/
   handleFirebaseMessageData(data: Record<string, string>): void;
