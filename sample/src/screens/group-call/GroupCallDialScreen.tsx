@@ -15,7 +15,7 @@ const createRoom = () => {
     });
 };
 
-const DialScreen = () => {
+const GroupCallDialScreen = () => {
   const [roomID, setRoomID] = useState<string>('');
 
   return (
@@ -58,4 +58,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DialScreen;
+export default GroupCallDialScreen;

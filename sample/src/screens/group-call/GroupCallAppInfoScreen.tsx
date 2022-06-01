@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { SendbirdCalls } from '@sendbird/calls-react-native';
 
-const AppInfoScreen = () => {
+const GroupCallAppInfoScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.info}>
@@ -36,4 +36,4 @@ const styles = StyleSheet.create({
   desc: {},
 });
 
-export default AppInfoScreen;
+export default GroupCallAppInfoScreen;

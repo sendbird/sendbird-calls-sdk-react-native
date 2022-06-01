@@ -5,7 +5,7 @@ import { useAuthContext } from '../../contexts/AuthContext';
 import { GroupRoutes } from '../../libs/routes';
 import type { GroupCallSettingStackProps } from './GroupCallSettingStack';
 
-const SettingsScreen = ({ navigation: { navigate } }: GroupCallSettingStackProps) => {
+const GroupCallSettingsScreen = ({ navigation: { navigate } }: GroupCallSettingStackProps) => {
   const { currentUser } = useAuthContext();
   const { profileUrl, nickname, userId } = currentUser ?? {};
 
@@ -73,4 +73,4 @@ const styles = StyleSheet.create({
   rightIcon: {},
 });
 
-export default SettingsScreen;
+export default GroupCallSettingsScreen;

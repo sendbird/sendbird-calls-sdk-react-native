@@ -4,8 +4,8 @@ import React from 'react';
 import Header, { HeaderLeftTypes } from '../../components/Header';
 import type { GroupCallSettingStackParamList } from '../../libs/navigatorTypes';
 import { GroupRoutes } from '../../libs/routes';
-import AppInfoScreen from './AppInfoScreen';
-import SettingsScreen from './SettingsScreen';
+import GroupCallAppInfoScreen from './GroupCallAppInfoScreen';
+import GroupCallSettingsScreen from './GroupCallSettingsScreen';
 
 type SettingScreenNavigationProps = NativeStackNavigationProp<GroupCallSettingStackParamList>;
 export type GroupCallSettingStackProps = {
@@ -19,12 +19,12 @@ const GroupCallSettingStack = () => {
     <Stack.Navigator>
       <Stack.Screen
         name={GroupRoutes.SETTINGS}
-        component={SettingsScreen}
+        component={GroupCallSettingsScreen}
         options={{ header: () => <Header title="Settings" /> }}
       />
       <Stack.Screen
         name={GroupRoutes.APP_INFO}
-        component={AppInfoScreen}
+        component={GroupCallAppInfoScreen}
         options={{ header: () => <Header title="Application information" headerLeftType={HeaderLeftTypes.BACK} /> }}
       />
     </Stack.Navigator>

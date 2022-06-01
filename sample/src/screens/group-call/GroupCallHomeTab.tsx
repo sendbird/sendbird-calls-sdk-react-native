@@ -3,7 +3,7 @@ import React from 'react';
 
 import UserInfoHeader from '../../components/UserInfoHeader';
 import { GroupRoutes } from '../../libs/routes';
-import DialScreen from './DialScreen';
+import GroupCallDialScreen from './GroupCallDialScreen';
 import GroupCallSettingStack from './GroupCallSettingStack';
 
 const Tab = createBottomTabNavigator();
@@ -13,7 +13,7 @@ const GroupCallHomeTab = () => {
     <Tab.Navigator screenOptions={{ tabBarShowLabel: false, tabBarHideOnKeyboard: true }}>
       <Tab.Screen
         name={GroupRoutes.DIAL}
-        component={DialScreen}
+        component={GroupCallDialScreen}
         options={{
           header: UserInfoHeader,
         }}
