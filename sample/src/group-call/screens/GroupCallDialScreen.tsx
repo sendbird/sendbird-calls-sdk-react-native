@@ -5,14 +5,41 @@ import { SendbirdCalls } from '@sendbird/calls-react-native';
 
 import InputSafeView from '../../shared/components/InputSafeView';
 
-const createRoom = () => {
-  SendbirdCalls.createRoom(SendbirdCalls.RoomType.SMALL_ROOM_FOR_VIDEO)
+const getCachedRoomById = (roomId) => {
+  return SendbirdCalls.getCachedRoomById(roomId);
+};
+
+const fetchRoomById = (roomId) => {
+  SendbirdCalls.fetchRoomById(roomId)
     .then(async (room) => {
-      console.log('createRoom: ', room);
+      console.log('fetchRoomById: ', room);
+
+      const cachedRoom = getCachedRoomById(room.roomId);
+      console.log('getCachedRoomById2: ', cachedRoom);
     })
     .catch((e) => {
-      console.log('e: ', e);
+      console.log('fetchRoomById e: ', e);
     });
+};
+
+const createRoom = () => {
+  const roomID = '124902db-3c13-4b70-8feb-0d718635461c';
+  const cachedRoom = getCachedRoomById(roomID);
+  console.log('getCachedRoomById: ', cachedRoom);
+
+  fetchRoomById('124902db-3c13-4b70-8feb-0d718635461c');
+  // SendbirdCalls.createRoom(SendbirdCalls.RoomType.SMALL_ROOM_FOR_VIDEO)
+  //   .then(async (room) => {
+  //     console.log('createRoom: ', room);
+
+  //     const cachedRoom = getCachedRoomById(room.roomId);
+  //     console.log('getCachedRoomById: ', cachedRoom);
+
+  //     fetchRoomById(room.roomId);
+  //   })
+  //   .catch((e) => {
+  //     console.log('createRoom e: ', e);
+  //   });
 };
 
 const GroupCallDialScreen = () => {

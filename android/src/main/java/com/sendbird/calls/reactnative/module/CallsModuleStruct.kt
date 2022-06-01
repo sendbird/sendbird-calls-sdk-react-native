@@ -2,6 +2,7 @@ package com.sendbird.calls.reactnative.module
 
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.bridge.WritableNativeMap
 
 interface CallsModuleStruct: CommonModule, DirectCallModule { }
 
@@ -20,6 +21,8 @@ interface CommonModule {
     fun dial(calleeId: String, isVideoCall: Boolean, options: ReadableMap, promise: Promise)
 
     fun createRoom(roomType: String, promise: Promise)
+    fun fetchRoomById(roomId: String, promise: Promise)
+    fun getCachedRoomById(roomId: String, promise: Promise)
 }
 
 interface DirectCallModule {

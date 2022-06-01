@@ -60,6 +60,10 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     override fun dial(calleeId: String, isVideoCall: Boolean, options: ReadableMap, promise: Promise) = module.dial(calleeId, isVideoCall, options, promise)
     @ReactMethod
     override fun createRoom(roomType: String, promise: Promise) = module.createRoom(roomType, promise)
+    @ReactMethod
+    override fun fetchRoomById(roomId: String, promise: Promise) = module.fetchRoomById(roomId, promise)
+    @ReactMethod
+    override fun getCachedRoomById(roomId: String, promise: Promise) = module.getCachedRoomById(roomId, promise)
 
     @ReactMethod
     override fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise) = module.selectVideoDevice(callId, device, promise)

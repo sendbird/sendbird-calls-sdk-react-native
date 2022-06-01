@@ -4,6 +4,7 @@ import android.util.Log
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.bridge.WritableNativeMap
 import com.sendbird.calls.DirectCall
 import com.sendbird.calls.SendBirdCall
 import com.sendbird.calls.handler.CompletionHandler
@@ -57,6 +58,8 @@ class CallsModule(private val reactContext: ReactApplicationContext) : CallsModu
     override fun unregisterPushToken(token: String, promise: Promise) = commonModule.unregisterPushToken(token, promise)
     override fun dial(calleeId: String, isVideoCall: Boolean, options: ReadableMap, promise: Promise) = commonModule.dial(calleeId, isVideoCall, options, promise)
     override fun createRoom(roomType: String, promise: Promise) = commonModule.createRoom(roomType, promise)
+    override fun fetchRoomById(roomId: String, promise: Promise) = commonModule.fetchRoomById(roomId, promise)
+    override fun getCachedRoomById(roomId: String, promise: Promise) = commonModule.getCachedRoomById(roomId, promise)
 
     /** DirectCall module interface**/
     override fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise)= directCallModule.selectVideoDevice(callId, device, promise)

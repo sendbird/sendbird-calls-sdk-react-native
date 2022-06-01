@@ -23,6 +23,8 @@ export interface NativeCommonModule {
   unregisterPushToken(token: string): Promise<void>;
   dial(calleeUserId: string, isVideoCall: boolean, options: CallOptions): Promise<DirectCallProperties>;
   createRoom(roomType: RoomType): Promise<RoomProperties>;
+  fetchRoomById(roomId: string): Promise<RoomProperties>;
+  getCachedRoomById(roomId: string): Promise<RoomProperties>;
 
   /** @platform Android **/
   handleFirebaseMessageData(data: Record<string, string>): void;

@@ -88,6 +88,12 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   public createRoom(roomType: RoomType): Promise<RoomProperties> {
     return this.binder.nativeModule.createRoom(roomType);
   }
+  public fetchRoomById(roomId: string): Promise<RoomProperties> {
+    return this.binder.nativeModule.fetchRoomById(roomId);
+  }
+  public getCachedRoomById(roomId: string): Promise<RoomProperties> {
+    return this.binder.nativeModule.getCachedRoomById(roomId);
+  }
 
   /** Platform specific **/
   public ios_voipRegistration = async () => {

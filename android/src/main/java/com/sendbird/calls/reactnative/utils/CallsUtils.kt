@@ -255,20 +255,23 @@ object CallsUtils {
         ))
     }
 
-    fun convertRoomToJsMap(room: Room) = convertToJsMap(mapOf(
-        "roomId" to room.roomId,
-        "state" to room.state.asString(),
-        "type" to room.type.asString(),
-        "customItems" to room.customItems,
+    fun convertRoomToJsMap(room: Room?) = when(room) {
+        null -> null
+        else -> convertToJsMap(mapOf(
+            "roomId" to room.roomId,
+            "state" to room.state.asString(),
+            "type" to room.type.asString(),
+            "customItems" to room.customItems,
 
-        "participants" to room.participants.map{ convertParticipantToJsMap(it) },
-        "localParticipant" to convertLocalParticipantToJsMap(room.localParticipant),
-        "remoteParticipants" to room.remoteParticipants.map { convertParticipantToJsMap(it) },
+            "participants" to room.participants.map{ convertParticipantToJsMap(it) },
+            "localParticipant" to convertLocalParticipantToJsMap(room.localParticipant),
+            "remoteParticipants" to room.remoteParticipants.map { convertParticipantToJsMap(it) },
 
-        "availableAudioDevices" to room.availableAudioDevices.map { it.asString() },
-        "currentAudioDevice" to room.currentAudioDevice?.asString(),
+            "availableAudioDevices" to room.availableAudioDevices.map { it.asString() },
+            "currentAudioDevice" to room.currentAudioDevice?.asString(),
 
-        "createdAt" to room.createdAt,
-        "createdBy" to room.createdBy,
-    ))
+            "createdAt" to room.createdAt,
+            "createdBy" to room.createdBy,
+        ))
+    }
 }
