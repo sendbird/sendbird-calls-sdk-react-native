@@ -85,6 +85,9 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   ): Promise<DirectCallProperties> {
     return this.binder.nativeModule.dial(calleeUserId, isVideoCall, options);
   }
+  public createRoom(roomType: string): Promise<void> {
+    return this.binder.nativeModule.createRoom(roomType);
+  }
 
   /** Platform specific **/
   public ios_voipRegistration = async () => {

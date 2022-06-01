@@ -21,6 +21,7 @@ export interface NativeCommonModule {
   registerPushToken(token: string, unique?: boolean): Promise<void>;
   unregisterPushToken(token: string): Promise<void>;
   dial(calleeUserId: string, isVideoCall: boolean, options: CallOptions): Promise<DirectCallProperties>;
+  createRoom(roomType: string): Promise<void>;
 
   /** @platform Android **/
   handleFirebaseMessageData(data: Record<string, string>): void;
