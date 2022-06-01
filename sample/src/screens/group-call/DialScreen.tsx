@@ -1,7 +1,19 @@
 import React, { useState } from 'react';
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { SendbirdCalls } from '@sendbird/calls-react-native';
+
 import InputSafeView from '../../components/InputSafeView';
+
+const createRoom = () => {
+  SendbirdCalls.createRoom(SendbirdCalls.RoomType.SMALL_ROOM_FOR_VIDEO)
+    .then(async (room) => {
+      console.log('createRoom: ', room);
+    })
+    .catch((e) => {
+      console.log('e: ', e);
+    });
+};
 
 const DialScreen = () => {
   const [roomID, setRoomID] = useState<string>('');
@@ -13,7 +25,7 @@ const DialScreen = () => {
           <Text>Icon</Text>
           <Text style={styles.title}>Create a room</Text>
           <Text style={styles.desc}>Start a group call in a room and share the room ID with others.</Text>
-          <Button title="Create" onPress={() => console.log('press create btn')} />
+          <Button title="Create" onPress={createRoom} />
         </View>
 
         <View style={[styles.card, { marginTop: 20 }]}>

@@ -216,22 +216,40 @@ object CallsUtils {
         return false
     }
 
-    fun convertParticipantToJsMap(participant: Participant) = convertToJsMap(mapOf(
-        "participantId" to participant.participantId,
-        "user" to convertUserToJsMap(participant.user),
-        "state" to participant.state.asString(),
+    fun convertParticipantToJsMap(participant: Participant) {convertToJsMap(mapOf(
+            "participantId" to participant.participantId,
+            "user" to convertUserToJsMap(participant.user),
+            "state" to participant.state.asString(),
 
-        "enteredAt" to participant.enteredAt,
-        "exitedAt" to (participant.exitedAt ?: 0),
-        "duration" to (participant.duration ?: 0),
+            "enteredAt" to participant.enteredAt,
+            "exitedAt" to (participant.exitedAt ?: 0),
+            "duration" to (participant.duration ?: 0),
 
-        "isAudioEnabled" to participant.isAudioEnabled,
-        "isVideoEnabled" to participant.isVideoEnabled,
+            "isAudioEnabled" to participant.isAudioEnabled,
+            "isVideoEnabled" to participant.isVideoEnabled,
 
-        "updatedAt" to participant.updatedAt,
+            "updatedAt" to participant.updatedAt,
 //        "videoView" to participant.videoView, // TODO: SendBirdVideoView
+        ))
+    }
+    fun convertLocalParticipantToJsMap(localParticipant: LocalParticipant?) = when(localParticipant) {
+        null -> null
+        else -> convertToJsMap(mapOf(
+        "participantId" to localParticipant.participantId,
+        "user" to convertUserToJsMap(localParticipant.user),
+        "state" to localParticipant.state.asString(),
 
+        "enteredAt" to localParticipant.enteredAt,
+        "exitedAt" to (localParticipant.exitedAt ?: 0),
+        "duration" to (localParticipant.duration ?: 0),
+
+        "isAudioEnabled" to localParticipant.isAudioEnabled,
+        "isVideoEnabled" to localParticipant.isVideoEnabled,
+
+        "updatedAt" to localParticipant.updatedAt,
+//        "videoView" to participant.videoView, // TODO: SendBirdVideoView
     ))
+    }
     fun convertRoomToJsMap(room: Room) = convertToJsMap(mapOf(
         "roomId" to room.roomId,
         "state" to room.state.asString(),
@@ -239,7 +257,7 @@ object CallsUtils {
         "customItems" to room.customItems,
 
         "participants" to room.participants.map{ convertParticipantToJsMap(it) },
-        "localParticipant" to convertParticipantToJsMap(room.localParticipant as Participant),
+        "localParticipant" to convertLocalParticipantToJsMap(room.localParticipant),
         "remoteParticipants" to room.remoteParticipants.map { convertParticipantToJsMap(it) },
 
         "availableAudioDevices" to room.availableAudioDevices.map { it.asString() },
