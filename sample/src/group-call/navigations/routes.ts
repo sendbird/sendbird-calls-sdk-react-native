@@ -1,10 +1,5 @@
-export const Routes = {
-  SIGN_IN: 'sign-in',
-  DIRECT_CALL: 'direct-call',
-  GROUP_CALL: 'group-call',
-};
-
 export const GroupRoutes = {
+  SIGN_IN: 'sign_in',
   HOME_TAB: 'home_tab',
   DIAL: 'dial',
   SETTING_STACK: 'setting_stack',
