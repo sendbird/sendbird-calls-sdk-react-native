@@ -3,7 +3,7 @@ import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { SendbirdCalls } from '@sendbird/calls-react-native';
 
-import InputSafeView from '../../components/InputSafeView';
+import InputSafeView from '../../shared/components/InputSafeView';
 
 const createRoom = () => {
   SendbirdCalls.createRoom(SendbirdCalls.RoomType.SMALL_ROOM_FOR_VIDEO)

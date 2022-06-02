@@ -1,9 +1,9 @@
 import { NativeStackNavigationProp, createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
-import Header, { HeaderLeftTypes } from '../../components/Header';
-import type { GroupCallSettingStackParamList } from '../../libs/navigatorTypes';
-import { GroupRoutes } from '../../libs/routes';
+import Header, { HeaderLeftTypes } from '../../shared/components/Header';
+import type { GroupCallSettingStackParamList } from '../navigations/navigatorTypes';
+import { GroupRoutes } from '../navigations/routes';
 import GroupCallAppInfoScreen from './GroupCallAppInfoScreen';
 import GroupCallSettingsScreen from './GroupCallSettingsScreen';
 

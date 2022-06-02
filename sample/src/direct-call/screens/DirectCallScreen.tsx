@@ -4,8 +4,8 @@ import { Button, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 
 
 import { DirectCall, DirectCallVideoView, SendbirdCalls } from '@sendbird/calls-react-native';
 
-import { useAuthContext } from '../../contexts/AuthContext';
-import { AppLogger } from '../../libs/factory';
+import { useAuthContext } from '../../shared/contexts/AuthContext';
+import { AppLogger } from '../../shared/utils/logger';
 
 const DirectCallScreen = () => {
   const { currentUser } = useAuthContext();

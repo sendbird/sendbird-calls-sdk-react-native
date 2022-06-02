@@ -61,7 +61,7 @@
     "@release-it/conventional-changelog": "^2.0.0",
     "@trivago/prettier-plugin-sort-imports": "^3.2.0",
     "@types/jest": "^26.0.0",
-    "@types/react": "^16.9.19",
+    "@types/react": "^17.x",
     "@types/react-native": "^0.67.4",
     "@typescript-eslint/eslint-plugin": "^5.19.0",
     "@typescript-eslint/parser": "^5.19.0",

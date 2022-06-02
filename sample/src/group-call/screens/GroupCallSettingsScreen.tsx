@@ -1,8 +1,8 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { useAuthContext } from '../../contexts/AuthContext';
-import { GroupRoutes } from '../../libs/routes';
+import { useAuthContext } from '../../shared/contexts/AuthContext';
+import { GroupRoutes } from '../navigations/routes';
 import type { GroupCallSettingStackProps } from './GroupCallSettingStack';
 
 const GroupCallSettingsScreen = ({ navigation: { navigate } }: GroupCallSettingStackProps) => {

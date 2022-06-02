@@ -1,8 +1,8 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 
-import UserInfoHeader from '../../components/UserInfoHeader';
-import { GroupRoutes } from '../../libs/routes';
+import UserInfoHeader from '../../shared/components/UserInfoHeader';
+import { GroupRoutes } from '../navigations/routes';
 import GroupCallDialScreen from './GroupCallDialScreen';
 import GroupCallSettingStack from './GroupCallSettingStack';
 

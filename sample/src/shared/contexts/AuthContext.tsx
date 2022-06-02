@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, createContext, useContext, useState } 
 
 import type { User } from '@sendbird/calls-react-native';
 
-import { noop } from '../../../src/utils';
+import { noop } from '../../../../src/utils';
 
 const AuthContext = createContext<{ currentUser?: User; setCurrentUser: Dispatch<SetStateAction<User | undefined>> }>({
   setCurrentUser: noop,

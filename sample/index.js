@@ -1,63 +1,33 @@
-import Notifee, { AndroidImportance } from '@notifee/react-native';
-import messaging from '@react-native-firebase/messaging';
+import { NavigationContainer } from '@react-navigation/native';
+import React from 'react';
 import { AppRegistry } from 'react-native';
 import { withTouchReload } from 'react-native-touch-reload';
 
 import { SendbirdCalls } from '@sendbird/calls-react-native';
 
 import { name as appName } from './app.json';
-import App from './src/App';
-import { APP_ID } from './src/env';
+import DirectCallApp from './src/direct-call/App';
+import { APP_ID, INITIAL_ROUTE } from './src/env';
+import GroupCallApp from './src/group-call/App';
+import { AuthProvider } from './src/shared/contexts/AuthContext';
+import { CALL_PERMISSIONS, usePermissions } from './src/shared/hooks/usePermissions';
 
 SendbirdCalls.Logger.setLogLevel('debug');
 SendbirdCalls.initialize(APP_ID);
 
-messaging().setBackgroundMessageHandler(async (message) => {
-  const isSendbirdCalls = SendbirdCalls.android_handleFirebaseMessageData(message.data);
-  if (isSendbirdCalls) {
-    SendbirdCalls.onRinging(async (call) => {
-      const channelId = await Notifee.createChannel({
-        name: 'Ringing',
-        id: 'sendbird.calls.rn.ringing',
-        importance: AndroidImportance.HIGH,
-      });
-      await Notifee.displayNotification({
-        id: call.callId,
-        title: message.data?.message ?? `Call from ${call.remoteUser?.nickname ?? 'Unknown'}`,
-        data: message.data,
-        android: {
-          asForegroundService: true,
-          channelId,
-          actions: [
-            {
-              title: 'Accept',
-              pressAction: {
-                id: 'accept',
-                launchActivity: 'default',
-              },
-            },
-            {
-              title: 'Decline',
-              pressAction: {
-                id: 'decline',
-                launchActivity: 'default',
-              },
-            },
-          ],
-        },
-      });
-    });
-  }
-});
+const isGroupCall = INITIAL_ROUTE === 'group-call';
+const InitialApp = isGroupCall ? GroupCallApp : DirectCallApp;
 
-Notifee.onBackgroundEvent(async ({ detail }) => {
-  if (detail.pressAction?.id === 'accept') {
-    //
-  }
+function App() {
+  usePermissions(CALL_PERMISSIONS);
 
-  if (detail.pressAction?.id === 'decline') {
-    //
-  }
-});
+  return (
+    <AuthProvider>
+      <NavigationContainer>
+        <InitialApp />
+      </NavigationContainer>
+    </AuthProvider>
+  );
+}
 
 AppRegistry.registerComponent(appName, () => withTouchReload(App));
