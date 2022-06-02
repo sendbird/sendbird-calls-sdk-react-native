@@ -6,7 +6,7 @@ import React from 'react';
 import { SendbirdCalls } from '@sendbird/calls-react-native';
 
 import { useAuthContext } from '../shared/contexts/AuthContext';
-import { DirectRoutes } from './navigations/directRoutes';
+import { DirectRoutes } from './navigations/routes';
 import DirectCallScreen from './screens/DirectCallScreen';
 import DirectCallSignInScreen from './screens/DirectCallSignInScreen';
 

@@ -8,7 +8,7 @@ import { APP_ID, INITIAL_ROUTE } from '../../env';
 import SignInForm from '../../shared/components/SignInForm';
 import { useAuthContext } from '../../shared/contexts/AuthContext';
 import { AppLogger } from '../../shared/utils/logger';
-import { DirectRoutes } from '../navigations/directRoutes';
+import { DirectRoutes } from '../navigations/routes';
 
 type Input = {
   applicationId: string;
