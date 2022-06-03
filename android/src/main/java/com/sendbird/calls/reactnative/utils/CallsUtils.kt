@@ -220,7 +220,9 @@ object CallsUtils {
         return false
     }
 
-    fun convertParticipantToJsMap(participant: Participant) = convertToJsMap(mapOf(
+    fun convertParticipantToJsMap(participant: Participant?) = when(participant) {
+        null -> null
+        else -> convertToJsMap(mapOf(
         "participantId" to participant.participantId,
         "user" to convertUserToJsMap(participant.user),
         "state" to participant.state.asString(),
@@ -233,26 +235,8 @@ object CallsUtils {
         "isVideoEnabled" to participant.isVideoEnabled,
 
         "updatedAt" to participant.updatedAt,
-         // "videoView" to participant.videoView, // TODO: SendBirdVideoView
+//        "videoView" to participant.videoView, // TODO: SendBirdVideoView
     ))
-
-    fun convertLocalParticipantToJsMap(localParticipant: LocalParticipant?) = when(localParticipant) {
-        null -> null
-        else -> convertToJsMap(mapOf(
-            "participantId" to localParticipant.participantId,
-            "user" to convertUserToJsMap(localParticipant.user),
-            "state" to localParticipant.state.asString(),
-
-            "enteredAt" to localParticipant.enteredAt,
-            "exitedAt" to (localParticipant.exitedAt ?: 0),
-            "duration" to (localParticipant.duration ?: 0),
-
-            "isAudioEnabled" to localParticipant.isAudioEnabled,
-            "isVideoEnabled" to localParticipant.isVideoEnabled,
-
-            "updatedAt" to localParticipant.updatedAt,
-            // "videoView" to participant.videoView, // TODO: SendBirdVideoView
-        ))
     }
 
     fun convertRoomToJsMap(room: Room?) = when(room) {
@@ -264,7 +248,7 @@ object CallsUtils {
             "customItems" to room.customItems,
 
             "participants" to room.participants.map{ convertParticipantToJsMap(it) },
-            "localParticipant" to convertLocalParticipantToJsMap(room.localParticipant),
+            "localParticipant" to convertParticipantToJsMap(room.localParticipant),
             "remoteParticipants" to room.remoteParticipants.map { convertParticipantToJsMap(it) },
 
             "availableAudioDevices" to room.availableAudioDevices.map { it.asString() },
