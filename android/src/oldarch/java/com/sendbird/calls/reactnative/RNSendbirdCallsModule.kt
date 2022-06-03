@@ -65,6 +65,7 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     @ReactMethod
     override fun getCachedRoomById(roomId: String, promise: Promise) = module.getCachedRoomById(roomId, promise)
 
+    /** DirectCall **/
     @ReactMethod
     override fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise) = module.selectVideoDevice(callId, device, promise)
     @ReactMethod
@@ -87,4 +88,8 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     override fun updateLocalVideoView(callId: String, videoViewId: Int) = module.updateLocalVideoView(callId, videoViewId)
     @ReactMethod
     override fun updateRemoteVideoView(callId: String, videoViewId: Int) = module.updateRemoteVideoView(callId, videoViewId)
+
+    /** GroupCall **/
+    @ReactMethod
+    override fun enter(roomId: String, promise: Promise) = module.enter(roomId, promise)
 }

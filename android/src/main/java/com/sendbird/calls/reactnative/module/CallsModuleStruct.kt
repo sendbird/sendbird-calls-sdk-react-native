@@ -4,7 +4,7 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableNativeMap
 
-interface CallsModuleStruct: CommonModule, DirectCallModule { }
+interface CallsModuleStruct: CommonModule, DirectCallModule, GroupCallModule { }
 
 interface CommonModule {
     fun getCurrentUser(promise: Promise)
@@ -37,4 +37,8 @@ interface DirectCallModule {
     fun unmuteMicrophone(callId: String)
     fun updateLocalVideoView(callId: String, videoViewId: Int)
     fun updateRemoteVideoView(callId: String, videoViewId: Int)
+}
+
+interface GroupCallModule {
+    fun enter(roomId: String, promise: Promise)
 }

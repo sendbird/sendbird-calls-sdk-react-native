@@ -16,6 +16,7 @@ class CallsModule(private val reactContext: ReactApplicationContext) : CallsModu
     var initialized = false
     private val commonModule = CallsCommonModule(reactContext)
     private val directCallModule = CallsDirectCallModule(reactContext)
+    private val groupCallModule = CallsGroupCallModule(reactContext)
 
     fun invalidate(handler: CompletionHandler?) {
         if(initialized) {
@@ -73,6 +74,9 @@ class CallsModule(private val reactContext: ReactApplicationContext) : CallsModu
     override fun unmuteMicrophone(callId: String)= directCallModule.unmuteMicrophone(callId)
     override fun updateLocalVideoView(callId: String, videoViewId: Int)= directCallModule.updateLocalVideoView(callId, videoViewId)
     override fun updateRemoteVideoView(callId: String, videoViewId: Int)= directCallModule.updateRemoteVideoView(callId, videoViewId)
+
+    /** DirectCall module interface**/
+    override fun enter(roomId: String, promise: Promise) = groupCallModule.enter(roomId, promise)
 
     companion object {
         const val NAME = "RNSendbirdCalls"
