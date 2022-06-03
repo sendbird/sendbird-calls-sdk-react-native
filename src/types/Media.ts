@@ -43,7 +43,7 @@ export interface VideoDevice {
    * @ios uniqueId
    * */
   deviceId: string;
-  // position: VideoDevicePosition;
+  position: VideoDevicePosition;
 }
 
 export type RecordingOptions = {

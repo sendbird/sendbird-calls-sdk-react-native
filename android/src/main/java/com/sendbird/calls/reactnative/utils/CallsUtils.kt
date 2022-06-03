@@ -8,7 +8,6 @@ import com.facebook.react.bridge.*
 import com.facebook.react.common.LifecycleState
 import com.sendbird.calls.*
 import com.sendbird.calls.reactnative.RNCallsInternalError
-import com.sendbird.calls.reactnative.RNSBDirectCallVideoView
 import com.sendbird.calls.reactnative.extension.asString
 import com.sendbird.calls.reactnative.module.CallsModule
 import com.sendbird.calls.reactnative.view.BaseVideoView
@@ -142,8 +141,8 @@ object CallsUtils {
         "localUser" to convertDirectCallUserToJsMap(call.localUser),
         "remoteUser" to convertDirectCallUserToJsMap(call.remoteUser),
         "myRole" to call.myRole!!.asString(),
-        "availableVideoDevices" to call.availableVideoDevices.map { getVideoDevice(it) },
-        "currentVideoDevice" to getVideoDevice(call.currentVideoDevice),
+        "availableVideoDevices" to call.availableVideoDevices.map { convertVideoDeviceToJsMap(it) },
+        "currentVideoDevice" to convertVideoDeviceToJsMap(call.currentVideoDevice),
         "availableAudioDevices" to call.availableAudioDevices.map { it.asString() },
         "currentAudioDevice" to call.currentAudioDevice?.asString(),
         "isEnded" to call.isEnded,
@@ -172,8 +171,6 @@ object CallsUtils {
         "callee" to convertDirectCallUserToJsMap(callLog.callee),
         "caller" to convertDirectCallUserToJsMap(callLog.caller),
         "endedBy" to convertDirectCallUserToJsMap(callLog.endedBy),
-        "users" to callLog.users.map{ convertUserToJsMap(it) },
-        "endedUserId" to callLog.endedUserId,
     ))
 
     fun convertDirectCallUserToJsMap(callUser: DirectCallUser?) = when (callUser) {
@@ -185,7 +182,7 @@ object CallsUtils {
         }
     }
 
-    fun getVideoDevice(device: VideoDevice?) = when(device) {
+    fun convertVideoDeviceToJsMap(device: VideoDevice?) = when(device) {
         null -> null
         else -> convertToJsMap(mapOf(
             "deviceId" to device.deviceName,

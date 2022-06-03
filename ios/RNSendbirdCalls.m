@@ -8,13 +8,7 @@
 
 @interface RCT_EXTERN_MODULE(RNSendbirdCalls, NSObject)
 
-RCT_EXTERN_METHOD(multiply
-                  : (float)a
-                  : (float)b
-                  : (RCTPromiseResolveBlock)resolve
-                  : (RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN__BLOCKING_SYNCHRONOUS_METHOD(initialize
+RCT_EXTERN_METHOD(initialize
                   : (NSString *)appId)
 
 RCT_EXTERN_METHOD(getCurrentUser
@@ -54,6 +48,13 @@ RCT_EXTERN_METHOD(registerVoIPPushToken
 
 RCT_EXTERN_METHOD(unregisterVoIPPushToken
                   : (NSString *)token
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(dial
+                  : (NSString *)calleeId
+                  : (BOOL *)isVideoCall
+                  : (NSDictionary *)options
                   : (RCTPromiseResolveBlock)resolve
                   : (RCTPromiseRejectBlock)reject)
 

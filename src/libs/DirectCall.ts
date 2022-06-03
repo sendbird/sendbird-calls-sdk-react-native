@@ -75,6 +75,35 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
   private _remoteRecordingStatus: RecordingStatus;
   private _remoteUser: DirectCallUser | null;
 
+  private _updateInternal(props: DirectCallProperties) {
+    this._android_availableAudioDevices = props.android_availableAudioDevices;
+    this._android_currentAudioDevice = props.android_currentAudioDevice;
+    this._availableVideoDevices = props.availableVideoDevices;
+    this._callId = props.callId;
+    this._callLog = props.callLog;
+    this._callee = props.callee;
+    this._caller = props.caller;
+    this._currentVideoDevice = props.currentVideoDevice;
+    this._customItems = props.customItems;
+    this._duration = props.duration;
+    this._endResult = props.endResult;
+    this._endedBy = props.endedBy;
+    this._isEnded = props.isEnded;
+    this._isLocalAudioEnabled = props.isLocalAudioEnabled;
+    this._isLocalScreenShareEnabled = props.isLocalScreenShareEnabled;
+    this._isLocalVideoEnabled = props.isLocalVideoEnabled;
+    this._isOnHold = props.isOnHold;
+    this._isOngoing = props.isOngoing;
+    this._isRemoteAudioEnabled = props.isRemoteAudioEnabled;
+    this._isRemoteVideoEnabled = props.isRemoteVideoEnabled;
+    this._isVideoCall = props.isVideoCall;
+    this._localRecordingStatus = props.localRecordingStatus;
+    this._localUser = props.localUser;
+    this._myRole = props.myRole;
+    this._remoteRecordingStatus = props.remoteRecordingStatus;
+    this._remoteUser = props.remoteUser;
+  }
+
   public get android_availableAudioDevices() {
     return this._android_availableAudioDevices;
   }
@@ -154,35 +183,6 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
     return this._endResult;
   }
 
-  private updateProperties(props: DirectCallProperties) {
-    this._android_availableAudioDevices = props.android_availableAudioDevices;
-    this._android_currentAudioDevice = props.android_currentAudioDevice;
-    this._availableVideoDevices = props.availableVideoDevices;
-    this._callId = props.callId;
-    this._callLog = props.callLog;
-    this._callee = props.callee;
-    this._caller = props.caller;
-    this._currentVideoDevice = props.currentVideoDevice;
-    this._customItems = props.customItems;
-    this._duration = props.duration;
-    this._endResult = props.endResult;
-    this._endedBy = props.endedBy;
-    this._isEnded = props.isEnded;
-    this._isLocalAudioEnabled = props.isLocalAudioEnabled;
-    this._isLocalScreenShareEnabled = props.isLocalScreenShareEnabled;
-    this._isLocalVideoEnabled = props.isLocalVideoEnabled;
-    this._isOnHold = props.isOnHold;
-    this._isOngoing = props.isOngoing;
-    this._isRemoteAudioEnabled = props.isRemoteAudioEnabled;
-    this._isRemoteVideoEnabled = props.isRemoteVideoEnabled;
-    this._isVideoCall = props.isVideoCall;
-    this._localRecordingStatus = props.localRecordingStatus;
-    this._localUser = props.localUser;
-    this._myRole = props.myRole;
-    this._remoteRecordingStatus = props.remoteRecordingStatus;
-    this._remoteUser = props.remoteUser;
-  }
-
   private _listenerRef?: () => void;
   private _listener: DirectCallListener = noopDirectCallListener;
   public setListener = (listener: Partial<DirectCallListener>) => {
@@ -191,7 +191,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
     this._listener = { ...noopDirectCallListener, ...listener };
     this._listenerRef = this.binder.addListener(CallsEvent.DIRECT_CALL, ({ type, data, additionalData }) => {
       if (data.callId === this.callId) {
-        this.updateProperties(data);
+        this._updateInternal(data);
         switch (type) {
           case DirectCallEventType.ON_ESTABLISHED: {
             this._listener.onEstablished(data);

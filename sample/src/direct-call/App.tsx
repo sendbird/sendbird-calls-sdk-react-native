@@ -64,9 +64,16 @@ const DirectCallApp = () => {
   const { currentUser } = useAuthContext();
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator>
       {!currentUser ? (
-        <Stack.Screen name={DirectRoutes.SIGN_IN} component={DirectCallSignInScreen} />
+        <Stack.Screen
+          name={DirectRoutes.SIGN_IN}
+          component={DirectCallSignInScreen}
+          options={{
+            headerTitleAlign: 'center',
+            headerTitle: 'Sign in',
+          }}
+        />
       ) : (
         <>
           <Stack.Screen name={DirectRoutes.DIRECT_CALL} component={DirectCallScreen} />
