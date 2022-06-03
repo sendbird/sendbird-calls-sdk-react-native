@@ -8,20 +8,29 @@
 
 import Foundation
 
-static let INTERNAL_ERROR_CODE = "RNCALLS_INTERNAL"
+let INTERNAL_ERROR_CODE = "RNCALLS_INTERNAL"
 enum RNCallsInternalError: Error {
-    case noResponse
-    case tokenParseFailure
-    case unknown
+    case notFoundVideoDevice(_ from: String)
+    case notFoundVideoView(_ from: String)
+    case notFoundDirectCall(_ from: String)
+    case noResponse(_ from: String)
+    case tokenParseFailure(_ from: String)
+    case unknown(_ from: String)
     
     var message: String {
-        switch(self) {
-        case .noResponse:
-            return "There is no response"
-        case .tokenParseFailure:
-            return "Failed to parse token, check token format"
-        case .unknown:
-            return "Unexpected error"
+        switch self {
+        case let .notFoundVideoDevice(from: from):
+            return "[\(from) Cannot found device with specific id]"
+        case let .notFoundVideoView(from: from):
+            return "[\(from)] Cannot found video view"
+        case let .notFoundDirectCall(from: from):
+            return "[\(from)] There is no DirectCall"
+        case let .noResponse(from: from):
+            return "[\(from)] There is no response"
+        case let .tokenParseFailure(from: from):
+            return "[\(from)] Failed to parse token, check token format"
+        case let .unknown(from: from):
+            return "[\(from)] Unexpected error"
         }
     }
 }

@@ -76,7 +76,7 @@ extension RNSendbirdCalls {
         module.unregisterVoIPPushToken(token, Promise(resolve, reject))
     }
     
-    @objc func dial(_ calleeId: String, _ isVideoCall: Bool, _ options: [String: Any?], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+    @objc func dial(_ calleeId: String, _ isVideoCall: Bool, _ options: Dictionary<String, Any>, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
         module.dial(calleeId, isVideoCall, options, Promise(resolve, reject))
     }
 }

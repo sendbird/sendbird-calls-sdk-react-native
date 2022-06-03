@@ -260,8 +260,8 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
                 platform: 'ios',
                 data: {
                   reason: additionalData?.reason ?? RouteChangeReason.unknown,
-                  currentPort: additionalData?.currentPort ?? { inputNames: [], outputNames: [] },
-                  prevPort: additionalData?.prevPort ?? { inputNames: [], outputNames: [] },
+                  currentRoute: additionalData?.currentPort ?? { inputs: [], outputs: [] },
+                  previousRoute: additionalData?.previousPort ?? { inputs: [], outputs: [] },
                 },
               });
             }

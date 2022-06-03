@@ -13,10 +13,9 @@ class BaseVideoView: UIView {
     var surface: SendBirdVideoView
     
     override init(frame: CGRect) {
-        super.init(frame: frame)
         surface = SendBirdVideoView()
         surface.frame = frame
-//        surface.videoContentMode = .scaleAspectFill
+        super.init(frame: frame)
     }
     
     @available(*, unavailable)

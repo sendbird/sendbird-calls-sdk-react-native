@@ -11,7 +11,7 @@ import Foundation
 extension String {
     func toDataFromHexString() throws -> Data {
         if (!self.count.isMultiple(of: 2)) {
-            throw RNCallsInternalError.tokenParseFailure
+            throw RNCallsInternalError.tokenParseFailure("toDataFromHexString")
         }
 
         let chars = self.map({ String($0) })
@@ -21,7 +21,7 @@ extension String {
             if let byte = UInt8(hex, radix:16) {
                 data.append(byte)
             } else {
-                throw RNCallsInternalError.tokenParseFailure
+                throw RNCallsInternalError.tokenParseFailure("toDataFromHexString/castingByte")
             }
         }
         return data;

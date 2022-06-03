@@ -55,55 +55,53 @@ class CallsCommonModule: NSObject, CallsCommonModuleProtocol {
     
     func authenticate(_ userId: String, _ accessToken: String?, _ promise: Promise) {
         let authParams = AuthenticateParams(userId: userId, accessToken: accessToken)
-        SendBirdCall.authenticate(with: authParams) { _user, _error in
-            if let error = _error {
+        SendBirdCall.authenticate(with: authParams) { user, error in
+            if let error = error {
                 UserDefaults.standard.clearRNCalls()
                 promise.reject(error)
-            } else if let user = _user {
+            } else if let user = user {
                 UserDefaults.standard.credential = RNCallsCredential(userId: userId, accessToken: accessToken)
                 promise.resolve(CallsUtils.convertUserToDict(user))
-            } else {
-                UserDefaults.standard.clearRNCalls()
-                promise.reject(from: "common/authenticate", error: .noResponse)
             }
         }
     }
     
     func deauthenticate(_ promise: Promise) {
-        SendBirdCall.deauthenticate { _error in
-            guard let error = _error else {
+        SendBirdCall.deauthenticate { error in
+            if let error = error {
+                promise.reject(error)
+            } else {
                 UserDefaults.standard.clearRNCalls()
-                return promise.resolve()
+                promise.resolve()
             }
-            promise.reject(error)
         }
     }
     
     func registerPushToken(_ token: String, _ unique: Bool, _ promise: Promise) {
-        do {
-            let dataToken = try token.toDataFromHexString()
-            SendBirdCall.registerRemotePush(token: dataToken, unique: unique) { _error in
-                guard let error = _error else {
-                    return promise.resolve()
+        if let dataToken = try? token.toDataFromHexString() {
+            SendBirdCall.registerRemotePush(token: dataToken, unique: unique) { error in
+                if let error = error {
+                    promise.reject(error)
+                } else {
+                    promise.resolve()
                 }
-                promise.reject(error)
             }
-        } catch {
-            promise.reject(from: "common/registerPushToken", message: "Cannot parse token, check format of token")
+        } else {
+            promise.reject(RNCallsInternalError.tokenParseFailure("common/registerPushToken"))
         }
     }
     
     func unregisterPushToken(_ token: String, _ promise: Promise) {
-        do {
-            let dataToken = try token.toDataFromHexString()
-            SendBirdCall.unregisterRemotePush(token: dataToken) { _error in
-                guard let error = _error else {
-                    return promise.resolve()
+        if let dataToken = try? token.toDataFromHexString() {
+            SendBirdCall.unregisterRemotePush(token: dataToken) { error in
+                if let error = error {
+                    promise.reject(error)
+                } else {
+                    promise.resolve()
                 }
-                promise.reject(error)
             }
-        } catch {
-            promise.reject(from: "common/unregisterPushToken", message: "Cannot parse token, check format of token")
+        } else {
+            promise.reject(RNCallsInternalError.tokenParseFailure("common/unregisterPushToken"))
         }
     }
     
@@ -119,50 +117,35 @@ class CallsCommonModule: NSObject, CallsCommonModuleProtocol {
     }
     
     func registerVoIPPushToken(_ token: String, _ unique: Bool, _ promise: Promise) {
-        do {
-            let dataToken = try token.toDataFromHexString()
-            SendBirdCall.registerVoIPPush(token: dataToken, unique: unique) { _error in
-                guard let error = _error else {
-                    return promise.resolve()
+        if let dataToken = try? token.toDataFromHexString() {
+            SendBirdCall.registerVoIPPush(token: dataToken, unique: unique) { error in
+                if let error = error {
+                    promise.reject(error)
+                } else {
+                    promise.resolve()
                 }
-                promise.reject(error)
             }
-        } catch {
-            promise.reject(from: "common/registerVoIPPushToken", message: "Cannot parse token, check format of token")
+        } else {
+            promise.reject(RNCallsInternalError.tokenParseFailure("common/registerVoIPPushToken"))
         }
     }
     
     func unregisterVoIPPushToken(_ token: String, _ promise: Promise) {
-        do {
-            let dataToken = try token.toDataFromHexString()
-            SendBirdCall.unregisterVoIPPush(token: dataToken) { _error in
-                guard let error = _error else {
-                    return promise.resolve()
+        if let dataToken = try? token.toDataFromHexString() {
+            SendBirdCall.unregisterVoIPPush(token: dataToken) { error in
+                if let error = error {
+                    promise.reject(error)
+                } else {
+                    promise.resolve()
                 }
-                promise.reject(error)
             }
-        } catch {
-            promise.reject(from: "common/unregisterVoIPPushToken", message: "Cannot parse token, check format of token")
+        } else {
+            promise.reject(RNCallsInternalError.tokenParseFailure("common/unregisterVoIPPushToken"))
         }
     }
     
     func dial(_ calleeId: String, _ isVideoCall: Bool, _ options: [String : Any?], _ promise: Promise) {
-        let callOptions = CallOptions()
-        if let audioEnabled = options["audioEnabled"] as? Bool {
-            callOptions.isAudioEnabled = audioEnabled
-        }
-        if let videoEnabled = options["videoEnabled"] as? Bool {
-            callOptions.isVideoEnabled = videoEnabled
-        }
-        if let frontCamera = options["frontCamera"] as? Bool {
-            callOptions.useFrontCamera = frontCamera
-        }
-        if let localVideoViewId = options["localVideoViewId"] as? NSNumber {
-            callOptions.localVideoView = CallsUtils.findViewBy(RNSendbirdCalls.shared.bridge, localVideoViewId).surface
-        }
-        if let remoteVideoViewId = options["remoteVideoViewId"] as? NSNumber {
-            callOptions.remoteVideoView = CallsUtils.findViewBy(RNSendbirdCalls.shared.bridge, remoteVideoViewId).surface
-        }
+        let callOptions = CallsUtils.convertDictToCallOptions(options)
         
         let dialParams = DialParams(calleeId: calleeId, isVideoCall: isVideoCall, callOptions: callOptions)
         if let channelUrl = options["channelUrl"] as? String {

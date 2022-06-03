@@ -27,20 +27,15 @@ class Promise {
         resolveBlock(value)
     }
     
-    func reject(from: String?, error: RNCallsInternalError) {
-        rejectBlock(INTERNAL_ERROR_CODE, "[\(from ?? "unknown")] \(error.message)", error)
-    }
-    
-    func reject(from: String?, message: String?) {
-        rejectBlock(INTERNAL_ERROR_CODE, "[\(from ?? "unknown")] \(message ?? "Unexpected error")", nil)
+    func reject(_ error: RNCallsInternalError) {
+        rejectBlock(INTERNAL_ERROR_CODE, error.message, error)
     }
     
     func reject(_ error: SBCError) {
-        let code = String(error.errorCode.rawValue)
-        rejectBlock(code, error.localizedDescription, error)
+        rejectBlock(String(error.errorCode.rawValue), error.localizedDescription, error)
     }
     
-    func reject(_ code: String, _ message: String, _ error: NSError) {
-        rejectBlock(code, message, error)
+    func reject(_ error: NSError) {
+        rejectBlock(INTERNAL_ERROR_CODE, error.localizedDescription, error)
     }
 }

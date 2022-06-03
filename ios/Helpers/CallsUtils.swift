@@ -9,7 +9,9 @@
 import Foundation
 import SendBirdCalls
 import React
+import AVFoundation
 
+// MARK: Converter
 class CallsUtils {
     static func convertUserToDict(_ user: SendBirdCalls.User) -> [String: Any?] {
         return [
@@ -93,7 +95,82 @@ class CallsUtils {
         ]
     }
     
-    static func findViewBy(_ bridge: RCTBridge, _ tag: NSNumber) -> BaseVideoView {
-        return bridge.uiManager.view(forReactTag: tag) as! BaseVideoView
+    static func convertDictToCallOptions(_ options: [String: Any?]) -> CallOptions {
+        let callOptions = CallOptions()
+        
+        if let audioEnabled = options["audioEnabled"] as? Bool {
+            callOptions.isAudioEnabled = audioEnabled
+        }
+        if let videoEnabled = options["videoEnabled"] as? Bool {
+            callOptions.isVideoEnabled = videoEnabled
+        }
+        if let frontCamera = options["frontCamera"] as? Bool {
+            callOptions.useFrontCamera = frontCamera
+        }
+        if let localVideoViewId = options["localVideoViewId"] as? NSNumber {
+            callOptions.localVideoView = safeGet {
+                try CallsUtils.findViewBy(RNSendbirdCalls.shared.bridge, localVideoViewId).surface
+            }
+        }
+        if let remoteVideoViewId = options["remoteVideoViewId"] as? NSNumber {
+            callOptions.remoteVideoView = safeGet {
+                try CallsUtils.findViewBy(RNSendbirdCalls.shared.bridge, remoteVideoViewId).surface
+            }
+        }
+        
+        return callOptions
+    }
+    
+    static func convertAVRouteToDict(_ route: AVAudioSessionRouteDescription) -> [String: [[String: String]]] {
+        return [
+            "inputs": route.inputs.map {
+                [
+                    "portName": $0.portName,
+                    "portType": $0.portType.rawValue
+                ]
+            },
+            "outputs": route.outputs.map {
+                [
+                    "portName": $0.portName,
+                    "portType": $0.portType.rawValue
+                ]
+            }
+        ]
+    }
+}
+
+// MARK: Safe runner block
+extension CallsUtils {
+    static func safeRun(completion: () throws -> Void) {
+        do {
+            try completion()
+        } catch { }
+    }
+    
+    static func safeGet<T>(_ completion: () throws -> T) -> T? {
+        do {
+            return try completion()
+        } catch {
+            return nil
+        }
+    }
+}
+
+// MARK: Finder
+extension CallsUtils {
+    static func findDirectCallBy(_ callIdOrUUID: String) throws -> DirectCall {
+        if let callFromId = SendBirdCall.getCall(forCallId: callIdOrUUID) {
+            return callFromId
+        } else if let callFromUUID = SendBirdCall.getCall(forUUID: UUID(uuidString: callIdOrUUID)!) {
+            return callFromUUID
+        }
+        throw RNCallsInternalError.notFoundDirectCall("findDirectCallBy")
+    }
+    
+    static func findViewBy(_ bridge: RCTBridge, _ tag: NSNumber) throws -> BaseVideoView {
+        if let view = bridge.uiManager.view(forReactTag: tag) as? BaseVideoView {
+            return view
+        }
+        throw RNCallsInternalError.notFoundVideoView("findViewBy")
     }
 }

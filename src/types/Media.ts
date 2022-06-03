@@ -56,8 +56,12 @@ export type RecordingOptions = {
 };
 
 export type Port = {
-  inputNames: string[];
-  outputNames: string[];
+  portName: string;
+  portType: string;
+};
+export type Route = {
+  inputs: Port[];
+  outputs: Port[];
 };
 
 export type AudioDeviceChangedInfo =
@@ -72,7 +76,7 @@ export type AudioDeviceChangedInfo =
       platform: 'ios';
       data: {
         reason: RouteChangeReason;
-        currentPort: Port;
-        prevPort: Port;
+        currentRoute: Route;
+        previousRoute: Route;
       };
     };

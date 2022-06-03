@@ -57,11 +57,6 @@ class CallsEvents: RCTEventEmitter {
     
     var hasListeners = false
     var pendingEvents: [Dictionary<String, Any?>] = []
-    var getBridge {
-        get {
-            return self.bridge
-        }
-    }
     
     override class func requiresMainQueueSetup() -> Bool {
         return true

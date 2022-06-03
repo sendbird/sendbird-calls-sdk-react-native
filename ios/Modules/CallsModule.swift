@@ -94,7 +94,7 @@ extension CallsModule: CallsCommonModuleProtocol {
     func voipRegistration(_ promise: Promise) {
         commonModule.voipRegistration(promise)
     }
-
+    
     func registerVoIPPushToken(_ token: String, _ unique: Bool, _ promise: Promise) {
         commonModule.registerVoIPPushToken(token, unique, promise)
     }
@@ -110,5 +110,43 @@ extension CallsModule: CallsCommonModuleProtocol {
 
 // MARK: - DirectCall module extension
 extension CallsModule: CallsDirectCallModuleProtocol {
+    func selectVideoDevice(callId: String, device: String, promise: Promise) {
+        directCallModule.selectVideoDevice(callId: callId, device: device, promise: promise)
+    }
     
+    func accept(callId: String, options: [String : Any?], holdActiveCall: Bool, promise: Promise) {
+        directCallModule.accept(callId: callId, options: options, holdActiveCall: holdActiveCall, promise: promise)
+    }
+    
+    func end(callId: String, promise: Promise) {
+        directCallModule.end(callId: callId, promise: promise)
+    }
+    
+    func switchCamera(callId: String, promise: Promise) {
+        directCallModule.switchCamera(callId: callId, promise: promise)
+    }
+    
+    func startVideo(callId: String) {
+        directCallModule.startVideo(callId: callId)
+    }
+    
+    func stopVideo(callId: String) {
+        directCallModule.stopVideo(callId: callId)
+    }
+    
+    func muteMicrophone(callId: String) {
+        directCallModule.muteMicrophone(callId: callId)
+    }
+    
+    func unmuteMicrophone(callId: String) {
+        directCallModule.unmuteMicrophone(callId: callId)
+    }
+    
+    func updateLocalVideoView(callId: String, videoViewId: NSNumber) {
+        directCallModule.updateLocalVideoView(callId: callId, videoViewId: videoViewId)
+    }
+    
+    func updateRemoteVideoView(callId: String, videoViewId: NSNumber) {
+        directCallModule.updateRemoteVideoView(callId: callId, videoViewId: videoViewId)
+    }
 }
