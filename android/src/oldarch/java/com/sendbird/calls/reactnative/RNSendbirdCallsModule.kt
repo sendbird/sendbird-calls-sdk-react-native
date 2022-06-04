@@ -2,6 +2,7 @@ package com.sendbird.calls.reactnative
 
 import android.util.Log
 import com.facebook.react.bridge.*
+import com.sendbird.calls.RoomListener
 import com.sendbird.calls.SendBirdCall
 import com.sendbird.calls.reactnative.module.CallsModule
 import com.sendbird.calls.reactnative.module.CallsModuleStruct
@@ -89,7 +90,9 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     @ReactMethod
     override fun updateRemoteVideoView(callId: String, videoViewId: Int) = module.updateRemoteVideoView(callId, videoViewId)
 
-    /** GroupCall **/
+    /** GroupCall - Room **/
     @ReactMethod
-    override fun enter(roomId: String, promise: Promise) = module.enter(roomId, promise)
+    override fun enter(roomId: String, options: ReadableMap, promise: Promise) = module.enter(roomId, options, promise)
+    @ReactMethod
+    override fun exit(roomId: String) = module.exit(roomId)
 }

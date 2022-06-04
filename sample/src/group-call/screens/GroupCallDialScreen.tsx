@@ -5,17 +5,24 @@ import { SendbirdCalls } from '@sendbird/calls-react-native';
 
 import InputSafeView from '../../shared/components/InputSafeView';
 
-const getCachedRoomById = (roomId) => {
+const getCachedRoomById = (roomId: string) => {
   return SendbirdCalls.getCachedRoomById(roomId);
 };
 
-const fetchRoomById = (roomId) => {
+const fetchRoomById = (roomId: string) => {
   SendbirdCalls.fetchRoomById(roomId)
     .then(async (room) => {
       console.log('fetchRoomById: ', room);
 
-      const cachedRoom = getCachedRoomById(room.roomId);
-      console.log('getCachedRoomById2: ', cachedRoom);
+      const cachedRoom = await getCachedRoomById(roomId);
+      console.log('getCachedRoomById: ', cachedRoom);
+
+      cachedRoom
+        .enter()
+        .then(() => {
+          cachedRoom.exit();
+        })
+        .catch((e) => console.log('enter e: ', e));
     })
     .catch((e) => {
       console.log('fetchRoomById e: ', e);
@@ -23,10 +30,6 @@ const fetchRoomById = (roomId) => {
 };
 
 const createRoom = () => {
-  const roomID = '124902db-3c13-4b70-8feb-0d718635461c';
-  const cachedRoom = getCachedRoomById(roomID);
-  console.log('getCachedRoomById: ', cachedRoom);
-
   fetchRoomById('124902db-3c13-4b70-8feb-0d718635461c');
   // SendbirdCalls.createRoom(SendbirdCalls.RoomType.SMALL_ROOM_FOR_VIDEO)
   //   .then(async (room) => {

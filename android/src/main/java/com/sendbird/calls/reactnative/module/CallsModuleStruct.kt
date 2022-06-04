@@ -2,7 +2,6 @@ package com.sendbird.calls.reactnative.module
 
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReadableMap
-import com.facebook.react.bridge.WritableNativeMap
 
 interface CallsModuleStruct: CommonModule, DirectCallModule, GroupCallModule { }
 
@@ -40,5 +39,6 @@ interface DirectCallModule {
 }
 
 interface GroupCallModule {
-    fun enter(roomId: String, promise: Promise)
+    fun enter(roomId: String, options: ReadableMap, promise: Promise)
+    fun exit(roomId: String)
 }

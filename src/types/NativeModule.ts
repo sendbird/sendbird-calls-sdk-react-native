@@ -3,7 +3,7 @@ import type { NativeModule, TurboModule } from 'react-native';
 import type { DirectCall } from '../libs/DirectCall';
 import type { CallOptions, DirectCallProperties } from './Call';
 import type { AudioDevice, VideoDevice } from './Media';
-import type { RoomProperties, RoomType } from './Room';
+import type { EnterParams, RoomProperties, RoomType } from './Room';
 import type { User } from './User';
 import type { AsJSInterface } from './index';
 
@@ -72,7 +72,16 @@ export interface NativeDirectCallModule {
   // stopScreenShare(callId:string): Promise<void>;
 }
 
-export interface SendbirdCallsNativeSpec extends NativeModuleInterface, NativeCommonModule, NativeDirectCallModule {}
+export interface NativeGroupCallModule {
+  enter(roomId: string, options: EnterParams): Promise<void>;
+  exit(roomId: string): void;
+}
+
+export interface SendbirdCallsNativeSpec
+  extends NativeModuleInterface,
+    NativeCommonModule,
+    NativeDirectCallModule,
+    NativeGroupCallModule {}
 
 type AndroidSpecificKeys = 'handleFirebaseMessageData';
 type IOSSpecificKeys =

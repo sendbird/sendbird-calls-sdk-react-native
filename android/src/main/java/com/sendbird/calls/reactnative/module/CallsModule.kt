@@ -4,7 +4,6 @@ import android.util.Log
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReadableMap
-import com.facebook.react.bridge.WritableNativeMap
 import com.sendbird.calls.DirectCall
 import com.sendbird.calls.SendBirdCall
 import com.sendbird.calls.handler.CompletionHandler
@@ -76,7 +75,8 @@ class CallsModule(private val reactContext: ReactApplicationContext) : CallsModu
     override fun updateRemoteVideoView(callId: String, videoViewId: Int)= directCallModule.updateRemoteVideoView(callId, videoViewId)
 
     /** DirectCall module interface**/
-    override fun enter(roomId: String, promise: Promise) = groupCallModule.enter(roomId, promise)
+    override fun enter(roomId: String, options: ReadableMap, promise: Promise) = groupCallModule.enter(roomId, options, promise)
+    override fun exit(roomId: String) = groupCallModule.exit(roomId)
 
     companion object {
         const val NAME = "RNSendbirdCalls"

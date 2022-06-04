@@ -7,6 +7,7 @@ import { noop } from '../utils';
 import { Logger } from '../utils/logger';
 import { DirectCall } from './DirectCall';
 import NativeBinder, { CallsEvent, DefaultEventType } from './NativeBinder';
+import { Room } from './Room';
 
 const _directCalls: Record<string, DirectCall> = {};
 
@@ -85,14 +86,35 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   ): Promise<DirectCallProperties> {
     return this.binder.nativeModule.dial(calleeUserId, isVideoCall, options);
   }
-  public createRoom(roomType: RoomType): Promise<RoomProperties> {
-    return this.binder.nativeModule.createRoom(roomType);
+  public createRoom(roomType: RoomType): Promise<Room> {
+    return new Promise((resolve, reject) => {
+      this.binder.nativeModule
+        .createRoom(roomType)
+        .then((roomProps: RoomProperties) => {
+          resolve(new Room(this.binder, roomProps));
+        })
+        .catch((e) => reject(e));
+    });
   }
-  public fetchRoomById(roomId: string): Promise<RoomProperties> {
-    return this.binder.nativeModule.fetchRoomById(roomId);
+  public fetchRoomById(roomId: string): Promise<Room> {
+    return new Promise((resolve, reject) => {
+      this.binder.nativeModule
+        .fetchRoomById(roomId)
+        .then((roomProps: RoomProperties) => {
+          resolve(new Room(this.binder, roomProps));
+        })
+        .catch((e) => reject(e));
+    });
   }
-  public getCachedRoomById(roomId: string): Promise<RoomProperties> {
-    return this.binder.nativeModule.getCachedRoomById(roomId);
+  public getCachedRoomById(roomId: string): Promise<Room> {
+    return new Promise((resolve, reject) => {
+      this.binder.nativeModule
+        .getCachedRoomById(roomId)
+        .then((roomProps: RoomProperties) => {
+          resolve(new Room(this.binder, roomProps));
+        })
+        .catch((e) => reject(e));
+    });
   }
 
   /** Platform specific **/

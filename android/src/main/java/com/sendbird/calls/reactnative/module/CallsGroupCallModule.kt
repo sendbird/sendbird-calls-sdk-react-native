@@ -1,13 +1,48 @@
 package com.sendbird.calls.reactnative.module
 
+import android.util.Log
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReadableMap
 import com.sendbird.calls.*
+import com.sendbird.calls.reactnative.CallsEvents
+import com.sendbird.calls.reactnative.RNCallsInternalError
+import com.sendbird.calls.reactnative.utils.CallsUtils
 
 class CallsGroupCallModule(private val reactContext: ReactApplicationContext): GroupCallModule, RoomListener {
     /** GroupCallMethods **/
-    override fun enter(roomId: String, promise: Promise) {
-        TODO("Not yet implemented")
+    override fun enter(roomId: String, options: ReadableMap, promise: Promise) {
+        Log.d(CallsModule.NAME, "[GroupCallModule] enter($roomId)")
+        val from = "groupCall/enter"
+        CallsUtils.safePromiseRejection(promise, from) {
+            val room = SendBirdCall.getCachedRoomById(roomId)
+
+            Log.d(CallsModule.NAME, "[GroupCallModule] enter options -> ${options.toHashMap()}")
+
+            if (room == null) throw RNCallsInternalError(from, RNCallsInternalError.Type.NOT_FOUND_ROOM)
+            else {
+                val audioEnabled = options.getBoolean("audioEnabled")
+                val videoEnabled = options.getBoolean("videoEnabled")
+
+                val enterParams = EnterParams().apply {
+                    setAudioEnabled(audioEnabled)
+                    setVideoEnabled(videoEnabled)
+                }
+                room.enter(enterParams) { error: SendBirdException? ->
+                    if (error != null) throw error
+                    else promise.resolve(null)
+                }
+            }
+        }
+    }
+
+    override fun exit(roomId: String) {
+        Log.d(CallsModule.NAME, "[GroupCallModule] exit($roomId)")
+        val from = "groupCall/exit"
+        try {
+            val room = CallsUtils.findRoom(roomId, from)
+            room.exit()
+        } finally { }
     }
 
     /** RoomListeners **/
@@ -20,11 +55,37 @@ class CallsGroupCallModule(private val reactContext: ReactApplicationContext): G
     }
 
     override fun onRemoteParticipantEntered(participant: RemoteParticipant) {
-        TODO("Not yet implemented")
+        val from = "groupCall/onRemoteParticipantEntered"
+        Log.d(CallsModule.NAME, "[GroupCallModule] $from")
+        try {
+            val participantJsMap = CallsUtils.convertParticipantToJsMap(participant)
+            if (participantJsMap == null) throw RNCallsInternalError(from, RNCallsInternalError.Type.NOT_FOUND_PARTICIPANT)
+            else {
+                CallsEvents.sendEvent(
+                    reactContext,
+                    CallsEvents.EVENT_GROUP_CALL,
+                    CallsEvents.TYPE_GROUP_CALL_ON_REMOTE_PARTICIPANT_ENTERED,
+                    participantJsMap,
+                )
+            }
+        } finally { }
     }
 
     override fun onRemoteParticipantExited(participant: RemoteParticipant) {
-        TODO("Not yet implemented")
+        val from = "groupCall/onRemoteParticipantExited"
+        Log.d(CallsModule.NAME, "[GroupCallModule] $from")
+        try {
+            val participantJsMap = CallsUtils.convertParticipantToJsMap(participant)
+            if (participantJsMap == null) throw RNCallsInternalError(from, RNCallsInternalError.Type.NOT_FOUND_PARTICIPANT)
+            else {
+                CallsEvents.sendEvent(
+                    reactContext,
+                    CallsEvents.EVENT_GROUP_CALL,
+                    CallsEvents.TYPE_GROUP_CALL_ON_REMOTE_PARTICIPANT_EXITED,
+                    participantJsMap,
+                )
+            }
+        } finally { }
     }
 
     override fun onRemoteParticipantStreamStarted(participant: RemoteParticipant) {

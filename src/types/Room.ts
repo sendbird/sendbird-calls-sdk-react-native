@@ -1,5 +1,39 @@
 import type { AudioDevice } from './Media';
+import type { NativeGroupCallModule } from './NativeModule';
 import type { Participant } from './Participant';
+import type { AsJSGroupCall, AsJSInterface } from './index';
+
+export interface RoomListener {
+  /** Called when the room is deleted **/
+  onDeleted: () => void;
+
+  /** Called when ... **/
+  onError: (e: Error, participant?: Participant) => void;
+
+  /** Called when a participant is entered the room **/
+  onRemoteParticipantEntered: (participant: Participant) => void; // TODO: update to RemoteParticipant
+
+  /** Called when a participant is exited the room **/
+  onRemoteParticipantExited: (participant: Participant) => void; // TODO: update to RemoteParticipant
+
+  /** Called when ... **/
+  onRemoteParticipantStreamStarted: (participant: Participant) => void; // TODO: update to RemoteParticipant
+
+  /** Called when the audio device is changed **/
+  onAudioDeviceChanged: (availableAudioDevices: AudioDevice[], currentAudioDevice?: AudioDevice) => void;
+
+  /** Called when video settings of the remote participant are changed **/
+  onRemoteVideoSettingsChanged: (participant: Participant) => void; // TODO: update to RemoteParticipant
+
+  /** Called when audio settings of the remote participant are changed **/
+  onRemoteAudioSettingsChanged: (participant: Participant) => void; // TODO: update to RemoteParticipant
+
+  /** Called when the custom items of the call are updated. **/
+  onCustomItemsUpdated: (updatedKeys: string[]) => void;
+
+  /** Called when the custom items of the call are deleted. **/
+  onCustomItemsDeleted: (deletedKeys: string[]) => void;
+}
 
 export interface RoomProperties {
   roomId: string;
@@ -11,11 +45,17 @@ export interface RoomProperties {
   localParticipant: Participant;
   remoteParticipants: Participant[];
 
-  android_availableAudioDevices: AudioDevice[];
-  android_currentAudioDevice: AudioDevice | null;
+  availableAudioDevices: AudioDevice[];
+  currentAudioDevice: AudioDevice | null;
 
   createdAt: number;
   createdBy: number;
+}
+
+type JSGroupCallModule = AsJSGroupCall<NativeGroupCallModule>; // TODO: check platform specific func
+
+export interface GroupCallMethods extends JSGroupCallModule {
+  removeAllEventListeners(): void;
 }
 
 export enum RoomType {
@@ -27,3 +67,10 @@ export enum RoomState {
   OPEN = 'OPEN',
   DELETED = 'DELETED',
 }
+
+export type EnterParams = {
+  /** @default true */
+  audioEnabled?: boolean;
+  /** @default true */
+  videoEnabled?: boolean;
+};

@@ -258,4 +258,9 @@ object CallsUtils {
             "createdBy" to room.createdBy,
         ))
     }
+
+    fun findRoom(roomId: String, from: String?): Room {
+        return SendBirdCall.getCachedRoomById(roomId) ?: throw RNCallsInternalError(from, RNCallsInternalError.Type.NOT_FOUND_ROOM)
+    }
+
 }
