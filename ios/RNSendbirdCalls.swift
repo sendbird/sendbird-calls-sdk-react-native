@@ -11,7 +11,13 @@ protocol RNBridgeModuleProtocol: RCTBridgeModule, RCTInvalidating { }
 class RNSendbirdCalls: NSObject, RNBridgeModuleProtocol {
     static let shared = RNSendbirdCalls()
     
-    internal var module = CallsModule()
+    var module = CallsModule()
+    
+    @objc var bridge: RCTBridge!
+    
+    @objc func setBridge(bridge: RCTBridge) {
+        self.bridge = bridge
+    }
     
     @objc static func moduleName() -> String! {
         return "RNSendbirdCalls"
@@ -21,19 +27,16 @@ class RNSendbirdCalls: NSObject, RNBridgeModuleProtocol {
         return true
     }
     
+    
+    override init() {
+        super.init()
+    }
+    
     @objc func invalidate() {
         module.invalidate()
         module = CallsModule()
     }
 }
-
-// MARK: - Test
-extension RNSendbirdCalls {
-    @objc func multiply(_ a: Float, b: Float, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(a*b)
-    }
-}
-
 
 // MARK: - Common
 extension RNSendbirdCalls {
@@ -71,5 +74,9 @@ extension RNSendbirdCalls {
     
     @objc func unregisterVoIPPushToken(_ token: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
         module.unregisterVoIPPushToken(token, Promise(resolve, reject))
+    }
+    
+    @objc func dial(_ calleeId: String, _ isVideoCall: Bool, _ options: Dictionary<String, Any>, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.dial(calleeId, isVideoCall, options, Promise(resolve, reject))
     }
 }

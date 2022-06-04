@@ -38,7 +38,9 @@ const DirectCallSignInScreen = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={{ flex: 1, paddingVertical: 12, paddingHorizontal: 16 }}>
+    <ScrollView
+      contentContainerStyle={{ backgroundColor: 'white', flex: 1, paddingVertical: 12, paddingHorizontal: 16 }}
+    >
       <SignInForm {...state} onChange={setState} onSubmit={onSignIn} />
     </ScrollView>
   );

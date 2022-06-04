@@ -8,12 +8,18 @@ import com.facebook.react.bridge.*
 import com.facebook.react.common.LifecycleState
 import com.sendbird.calls.*
 import com.sendbird.calls.reactnative.RNCallsInternalError
-import com.sendbird.calls.reactnative.RNSBDirectCallVideoView
 import com.sendbird.calls.reactnative.extension.asString
 import com.sendbird.calls.reactnative.module.CallsModule
 import com.sendbird.calls.reactnative.view.BaseVideoView
 
 object CallsUtils {
+    fun safeRun(fn: () -> Unit) {
+        try {
+            fn()
+        } catch (e: Throwable) {
+            Log.e(CallsModule.NAME, "[CallsUtils.safeRun] Catch error -> $e")
+        }
+    }
     fun <T> safeGet(fn: () -> T): T? {
         return try {
             fn()
@@ -25,7 +31,7 @@ object CallsUtils {
         try {
             completion()
         } catch (e: Throwable) {
-            Log.e(CallsModule.NAME, "safePromiseRejection error -> $e")
+            Log.e(CallsModule.NAME, "[CallsUtils.safePromiseRejection] Catch error -> $e")
             when (e) {
                 is SendBirdException -> promise.reject(e.code.toString(), e.message, e)
                 is RNCallsInternalError -> promise.reject(e.code, e.message, e)
@@ -142,8 +148,8 @@ object CallsUtils {
         "localUser" to convertDirectCallUserToJsMap(call.localUser),
         "remoteUser" to convertDirectCallUserToJsMap(call.remoteUser),
         "myRole" to call.myRole!!.asString(),
-        "availableVideoDevices" to call.availableVideoDevices.map { getVideoDevice(it) },
-        "currentVideoDevice" to getVideoDevice(call.currentVideoDevice),
+        "availableVideoDevices" to call.availableVideoDevices.map { convertVideoDeviceToJsMap(it) },
+        "currentVideoDevice" to convertVideoDeviceToJsMap(call.currentVideoDevice),
         "availableAudioDevices" to call.availableAudioDevices.map { it.asString() },
         "currentAudioDevice" to call.currentAudioDevice?.asString(),
         "isEnded" to call.isEnded,
@@ -172,8 +178,6 @@ object CallsUtils {
         "callee" to convertDirectCallUserToJsMap(callLog.callee),
         "caller" to convertDirectCallUserToJsMap(callLog.caller),
         "endedBy" to convertDirectCallUserToJsMap(callLog.endedBy),
-        "users" to callLog.users.map{ convertUserToJsMap(it) },
-        "endedUserId" to callLog.endedUserId,
     ))
 
     fun convertDirectCallUserToJsMap(callUser: DirectCallUser?) = when (callUser) {
@@ -185,7 +189,7 @@ object CallsUtils {
         }
     }
 
-    fun getVideoDevice(device: VideoDevice?) = when(device) {
+    fun convertVideoDeviceToJsMap(device: VideoDevice?) = when(device) {
         null -> null
         else -> convertToJsMap(mapOf(
             "deviceId" to device.deviceName,
@@ -216,40 +220,41 @@ object CallsUtils {
         return false
     }
 
-    fun convertParticipantToJsMap(participant: Participant) {convertToJsMap(mapOf(
-            "participantId" to participant.participantId,
-            "user" to convertUserToJsMap(participant.user),
-            "state" to participant.state.asString(),
+    fun convertParticipantToJsMap(participant: Participant) = convertToJsMap(mapOf(
+        "participantId" to participant.participantId,
+        "user" to convertUserToJsMap(participant.user),
+        "state" to participant.state.asString(),
 
-            "enteredAt" to participant.enteredAt,
-            "exitedAt" to (participant.exitedAt ?: 0),
-            "duration" to (participant.duration ?: 0),
+        "enteredAt" to participant.enteredAt,
+        "exitedAt" to (participant.exitedAt ?: 0),
+        "duration" to (participant.duration ?: 0),
 
-            "isAudioEnabled" to participant.isAudioEnabled,
-            "isVideoEnabled" to participant.isVideoEnabled,
+        "isAudioEnabled" to participant.isAudioEnabled,
+        "isVideoEnabled" to participant.isVideoEnabled,
 
-            "updatedAt" to participant.updatedAt,
-//        "videoView" to participant.videoView, // TODO: SendBirdVideoView
-        ))
-    }
+        "updatedAt" to participant.updatedAt,
+         // "videoView" to participant.videoView, // TODO: SendBirdVideoView
+    ))
+
     fun convertLocalParticipantToJsMap(localParticipant: LocalParticipant?) = when(localParticipant) {
         null -> null
         else -> convertToJsMap(mapOf(
-        "participantId" to localParticipant.participantId,
-        "user" to convertUserToJsMap(localParticipant.user),
-        "state" to localParticipant.state.asString(),
+            "participantId" to localParticipant.participantId,
+            "user" to convertUserToJsMap(localParticipant.user),
+            "state" to localParticipant.state.asString(),
 
-        "enteredAt" to localParticipant.enteredAt,
-        "exitedAt" to (localParticipant.exitedAt ?: 0),
-        "duration" to (localParticipant.duration ?: 0),
+            "enteredAt" to localParticipant.enteredAt,
+            "exitedAt" to (localParticipant.exitedAt ?: 0),
+            "duration" to (localParticipant.duration ?: 0),
 
-        "isAudioEnabled" to localParticipant.isAudioEnabled,
-        "isVideoEnabled" to localParticipant.isVideoEnabled,
+            "isAudioEnabled" to localParticipant.isAudioEnabled,
+            "isVideoEnabled" to localParticipant.isVideoEnabled,
 
-        "updatedAt" to localParticipant.updatedAt,
-//        "videoView" to participant.videoView, // TODO: SendBirdVideoView
-    ))
+            "updatedAt" to localParticipant.updatedAt,
+            // "videoView" to participant.videoView, // TODO: SendBirdVideoView
+        ))
     }
+
     fun convertRoomToJsMap(room: Room) = convertToJsMap(mapOf(
         "roomId" to room.roomId,
         "state" to room.state.asString(),

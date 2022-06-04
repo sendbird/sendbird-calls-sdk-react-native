@@ -11,23 +11,22 @@ import SendBirdCalls
 import PushKit
 
 protocol CallsCommonModuleProtocol {
+    func getCurrentUser(_ promise: Promise)
+    func getOngoingCalls(_ promise: Promise)
+    
     func initialize(_ appId: String) -> Bool
     
-    func getCurrentUser(_ promise: Promise)
-    
     func authenticate(_ userId: String, _ accessToken: String?, _ promise: Promise)
-    
     func deauthenticate(_ promise: Promise)
     
     func registerPushToken(_ token: String, _ unique: Bool, _ promise: Promise)
-    
     func unregisterPushToken(_ token: String, _ promise: Promise)
     
+    func registerVoIPPushToken(_ token: String, _ unique: Bool, _ promise: Promise)
+    func unregisterVoIPPushToken(_ token: String, _ promise: Promise)
     func voipRegistration(_ promise: Promise)
     
-    func registerVoIPPushToken(_ token: String, _ unique: Bool, _ promise: Promise)
-    
-    func unregisterVoIPPushToken(_ token: String, _ promise: Promise)
+    func dial(_ calleeId: String, _ isVideoCall: Bool, _ options: [String: Any?], _ promise: Promise)
 }
 
 class CallsCommonModule: NSObject, CallsCommonModuleProtocol {
@@ -38,10 +37,6 @@ class CallsCommonModule: NSObject, CallsCommonModuleProtocol {
         return voipToken != nil && voipRegistry != nil
     }
     
-    func initialize(_ appId: String) -> Bool {
-        return SendBirdCall.configure(appId: appId)
-    }
-    
     func getCurrentUser(_ promise: Promise) {
         guard let user = SendBirdCall.currentUser else {
             return promise.resolve()
@@ -49,57 +44,64 @@ class CallsCommonModule: NSObject, CallsCommonModuleProtocol {
         promise.resolve(CallsUtils.convertUserToDict(user))
     }
     
+    func getOngoingCalls(_ promise: Promise) {
+        let list = SendBirdCall.getOngoingCalls().map{ CallsUtils.convertDirectCallToDict($0) }
+        promise.resolve(list)
+    }
+    
+    func initialize(_ appId: String) -> Bool {
+        return SendBirdCall.configure(appId: appId)
+    }
+    
     func authenticate(_ userId: String, _ accessToken: String?, _ promise: Promise) {
         let authParams = AuthenticateParams(userId: userId, accessToken: accessToken)
-        SendBirdCall.authenticate(with: authParams) { _user, _error in
-            if let error = _error {
+        SendBirdCall.authenticate(with: authParams) { user, error in
+            if let error = error {
                 UserDefaults.standard.clearRNCalls()
                 promise.reject(error)
-            } else if let user = _user {
+            } else if let user = user {
                 UserDefaults.standard.credential = RNCallsCredential(userId: userId, accessToken: accessToken)
                 promise.resolve(CallsUtils.convertUserToDict(user))
-            } else {
-                UserDefaults.standard.clearRNCalls()
-                promise.reject(from: "common/authenticate", error: .noResponse)
             }
         }
     }
     
     func deauthenticate(_ promise: Promise) {
-        SendBirdCall.deauthenticate { _error in
-            guard let error = _error else {
+        SendBirdCall.deauthenticate { error in
+            if let error = error {
+                promise.reject(error)
+            } else {
                 UserDefaults.standard.clearRNCalls()
-                return promise.resolve()
+                promise.resolve()
             }
-            promise.reject(error)
         }
     }
     
     func registerPushToken(_ token: String, _ unique: Bool, _ promise: Promise) {
-        do {
-            let dataToken = try token.toDataFromHexString()
-            SendBirdCall.registerRemotePush(token: dataToken, unique: unique) { _error in
-                guard let error = _error else {
-                    return promise.resolve()
+        if let dataToken = try? token.toDataFromHexString() {
+            SendBirdCall.registerRemotePush(token: dataToken, unique: unique) { error in
+                if let error = error {
+                    promise.reject(error)
+                } else {
+                    promise.resolve()
                 }
-                promise.reject(error)
             }
-        } catch {
-            promise.reject(from: "common/registerPushToken", message: "Cannot parse token, check format of token")
+        } else {
+            promise.reject(RNCallsInternalError.tokenParseFailure("common/registerPushToken"))
         }
     }
     
     func unregisterPushToken(_ token: String, _ promise: Promise) {
-        do {
-            let dataToken = try token.toDataFromHexString()
-            SendBirdCall.unregisterRemotePush(token: dataToken) { _error in
-                guard let error = _error else {
-                    return promise.resolve()
+        if let dataToken = try? token.toDataFromHexString() {
+            SendBirdCall.unregisterRemotePush(token: dataToken) { error in
+                if let error = error {
+                    promise.reject(error)
+                } else {
+                    promise.resolve()
                 }
-                promise.reject(error)
             }
-        } catch {
-            promise.reject(from: "common/unregisterPushToken", message: "Cannot parse token, check format of token")
+        } else {
+            promise.reject(RNCallsInternalError.tokenParseFailure("common/unregisterPushToken"))
         }
     }
     
@@ -115,36 +117,53 @@ class CallsCommonModule: NSObject, CallsCommonModuleProtocol {
     }
     
     func registerVoIPPushToken(_ token: String, _ unique: Bool, _ promise: Promise) {
-        do {
-            let dataToken = try token.toDataFromHexString()
-            SendBirdCall.registerVoIPPush(token: dataToken, unique: unique) { _error in
-                guard let error = _error else {
-                    return promise.resolve()
+        if let dataToken = try? token.toDataFromHexString() {
+            SendBirdCall.registerVoIPPush(token: dataToken, unique: unique) { error in
+                if let error = error {
+                    promise.reject(error)
+                } else {
+                    promise.resolve()
                 }
-                promise.reject(error)
             }
-        } catch {
-            promise.reject(from: "common/registerVoIPPushToken", message: "Cannot parse token, check format of token")
+        } else {
+            promise.reject(RNCallsInternalError.tokenParseFailure("common/registerVoIPPushToken"))
         }
     }
     
     func unregisterVoIPPushToken(_ token: String, _ promise: Promise) {
-        do {
-            let dataToken = try token.toDataFromHexString()
-            SendBirdCall.unregisterVoIPPush(token: dataToken) { _error in
-                guard let error = _error else {
-                    return promise.resolve()
+        if let dataToken = try? token.toDataFromHexString() {
+            SendBirdCall.unregisterVoIPPush(token: dataToken) { error in
+                if let error = error {
+                    promise.reject(error)
+                } else {
+                    promise.resolve()
                 }
-                promise.reject(error)
             }
-        } catch {
-            promise.reject(from: "common/unregisterVoIPPushToken", message: "Cannot parse token, check format of token")
+        } else {
+            promise.reject(RNCallsInternalError.tokenParseFailure("common/unregisterVoIPPushToken"))
+        }
+    }
+    
+    func dial(_ calleeId: String, _ isVideoCall: Bool, _ options: [String : Any?], _ promise: Promise) {
+        let callOptions = CallsUtils.convertDictToCallOptions(options)
+        
+        let dialParams = DialParams(calleeId: calleeId, isVideoCall: isVideoCall, callOptions: callOptions)
+        if let channelUrl = options["channelUrl"] as? String {
+            dialParams.sendbirdChatOptions = SendBirdChatOptions(channelURL: channelUrl)
+        }
+        
+        SendBirdCall.dial(with: dialParams) { directCall, error in
+            if let error = error {
+                promise.reject(error)
+            } else if let directCall = directCall {
+                promise.resolve(CallsUtils.convertDirectCallToDict(directCall))
+            }
         }
     }
 }
 
 
-// MARK: - PKPushRegistryDelegate
+// MARK: PKPushRegistryDelegate
 extension CallsCommonModule: PKPushRegistryDelegate {
     func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
         if let promise = self.voipPromise {

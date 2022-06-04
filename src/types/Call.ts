@@ -117,9 +117,6 @@ export interface DirectCallLog {
   callee: DirectCallUser | null;
   caller: DirectCallUser | null;
   endedBy: DirectCallUser | null;
-
-  android_users: DirectCallUser[] | null;
-  android_endedUserId: string | null;
 }
 
 export interface DirectCallUser extends User {
