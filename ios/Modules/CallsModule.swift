@@ -31,8 +31,6 @@ class CallsModule: SendBirdCallDelegate {
     }
     
     func didStartRinging(_ call: DirectCall) {
-        call.delegate = directCallModule
-        
         // TODO: Extaract to @sendbird/calls-react-native-voip
         if commonModule.voipEnabled {
             guard let uuid = call.callUUID else { return }
@@ -57,6 +55,12 @@ class CallsModule: SendBirdCallDelegate {
                 CXCallManager.shared.reportIncomingCall(with: uuid, update: update)
             }
         }
+        
+        CallsEvents.shared.sendEvent(.default(.onRinging), CallsUtils.convertDirectCallToDict(call))
+        
+        // TODO: background service
+        
+        call.delegate = directCallModule
     }
 }
 
@@ -110,43 +114,43 @@ extension CallsModule: CallsCommonModuleProtocol {
 
 // MARK: - DirectCall module extension
 extension CallsModule: CallsDirectCallModuleProtocol {
-    func selectVideoDevice(callId: String, device: String, promise: Promise) {
-        directCallModule.selectVideoDevice(callId: callId, device: device, promise: promise)
+    func selectVideoDevice(_ callId: String, _ device: [String: String], _ promise: Promise) {
+        directCallModule.selectVideoDevice(callId, device, promise)
     }
     
-    func accept(callId: String, options: [String : Any?], holdActiveCall: Bool, promise: Promise) {
-        directCallModule.accept(callId: callId, options: options, holdActiveCall: holdActiveCall, promise: promise)
+    func accept(_ callId: String, _ options: [String : Any?], _ holdActiveCall: Bool, _ promise: Promise) {
+        directCallModule.accept(callId, options, holdActiveCall, promise)
     }
     
-    func end(callId: String, promise: Promise) {
-        directCallModule.end(callId: callId, promise: promise)
+    func end(_ callId: String, _ promise: Promise) {
+        directCallModule.end(callId, promise)
     }
     
-    func switchCamera(callId: String, promise: Promise) {
-        directCallModule.switchCamera(callId: callId, promise: promise)
+    func switchCamera(_ callId: String, _ promise: Promise) {
+        directCallModule.switchCamera(callId, promise)
     }
     
-    func startVideo(callId: String) {
-        directCallModule.startVideo(callId: callId)
+    func startVideo(_ callId: String) {
+        directCallModule.startVideo(callId)
     }
     
-    func stopVideo(callId: String) {
-        directCallModule.stopVideo(callId: callId)
+    func stopVideo(_ callId: String) {
+        directCallModule.stopVideo(callId)
     }
     
-    func muteMicrophone(callId: String) {
-        directCallModule.muteMicrophone(callId: callId)
+    func muteMicrophone(_ callId: String) {
+        directCallModule.muteMicrophone(callId)
     }
     
-    func unmuteMicrophone(callId: String) {
-        directCallModule.unmuteMicrophone(callId: callId)
+    func unmuteMicrophone(_ callId: String) {
+        directCallModule.unmuteMicrophone(callId)
     }
     
-    func updateLocalVideoView(callId: String, videoViewId: NSNumber) {
-        directCallModule.updateLocalVideoView(callId: callId, videoViewId: videoViewId)
+    func updateLocalVideoView(_ callId: String, _ videoViewId: NSNumber) {
+        directCallModule.updateLocalVideoView(callId, videoViewId)
     }
     
-    func updateRemoteVideoView(callId: String, videoViewId: NSNumber) {
-        directCallModule.updateRemoteVideoView(callId: callId, videoViewId: videoViewId)
+    func updateRemoteVideoView(_ callId: String, _ videoViewId: NSNumber) {
+        directCallModule.updateRemoteVideoView(callId, videoViewId)
     }
 }
