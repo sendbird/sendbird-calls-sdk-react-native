@@ -102,6 +102,14 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
     if (Platform.OS !== 'ios') return;
     await this.binder.nativeModule.unregisterVoIPPushToken(token);
   };
+  public ios_handleRemoteNotificationData(data?: Record<string, string>) {
+    if (Platform.OS !== 'ios' || !data?.['sendbird_call']) {
+      return false;
+    } else {
+      this.binder.nativeModule.handleRemoteNotificationData(data);
+      return true;
+    }
+  }
   public android_handleFirebaseMessageData(data?: Record<string, string>) {
     if (Platform.OS !== 'android' || !data?.['sendbird_call']) {
       return false;
