@@ -13,6 +13,13 @@ import com.sendbird.calls.reactnative.module.CallsModule
 import com.sendbird.calls.reactnative.view.BaseVideoView
 
 object CallsUtils {
+    fun safeRun(fn: () -> Unit) {
+        try {
+            fn()
+        } catch (e: Throwable) {
+            Log.e(CallsModule.NAME, "[CallsUtils.safeRun] Catch error -> $e")
+        }
+    }
     fun <T> safeGet(fn: () -> T): T? {
         return try {
             fn()
@@ -24,7 +31,7 @@ object CallsUtils {
         try {
             completion()
         } catch (e: Throwable) {
-            Log.e(CallsModule.NAME, "safePromiseRejection error -> $e")
+            Log.e(CallsModule.NAME, "[CallsUtils.safePromiseRejection] Catch error -> $e")
             when (e) {
                 is SendBirdException -> promise.reject(e.code.toString(), e.message, e)
                 is RNCallsInternalError -> promise.reject(e.code, e.message, e)
@@ -213,40 +220,41 @@ object CallsUtils {
         return false
     }
 
-    fun convertParticipantToJsMap(participant: Participant) {convertToJsMap(mapOf(
-            "participantId" to participant.participantId,
-            "user" to convertUserToJsMap(participant.user),
-            "state" to participant.state.asString(),
+    fun convertParticipantToJsMap(participant: Participant) = convertToJsMap(mapOf(
+        "participantId" to participant.participantId,
+        "user" to convertUserToJsMap(participant.user),
+        "state" to participant.state.asString(),
 
-            "enteredAt" to participant.enteredAt,
-            "exitedAt" to (participant.exitedAt ?: 0),
-            "duration" to (participant.duration ?: 0),
+        "enteredAt" to participant.enteredAt,
+        "exitedAt" to (participant.exitedAt ?: 0),
+        "duration" to (participant.duration ?: 0),
 
-            "isAudioEnabled" to participant.isAudioEnabled,
-            "isVideoEnabled" to participant.isVideoEnabled,
+        "isAudioEnabled" to participant.isAudioEnabled,
+        "isVideoEnabled" to participant.isVideoEnabled,
 
-            "updatedAt" to participant.updatedAt,
-//        "videoView" to participant.videoView, // TODO: SendBirdVideoView
-        ))
-    }
+        "updatedAt" to participant.updatedAt,
+         // "videoView" to participant.videoView, // TODO: SendBirdVideoView
+    ))
+
     fun convertLocalParticipantToJsMap(localParticipant: LocalParticipant?) = when(localParticipant) {
         null -> null
         else -> convertToJsMap(mapOf(
-        "participantId" to localParticipant.participantId,
-        "user" to convertUserToJsMap(localParticipant.user),
-        "state" to localParticipant.state.asString(),
+            "participantId" to localParticipant.participantId,
+            "user" to convertUserToJsMap(localParticipant.user),
+            "state" to localParticipant.state.asString(),
 
-        "enteredAt" to localParticipant.enteredAt,
-        "exitedAt" to (localParticipant.exitedAt ?: 0),
-        "duration" to (localParticipant.duration ?: 0),
+            "enteredAt" to localParticipant.enteredAt,
+            "exitedAt" to (localParticipant.exitedAt ?: 0),
+            "duration" to (localParticipant.duration ?: 0),
 
-        "isAudioEnabled" to localParticipant.isAudioEnabled,
-        "isVideoEnabled" to localParticipant.isVideoEnabled,
+            "isAudioEnabled" to localParticipant.isAudioEnabled,
+            "isVideoEnabled" to localParticipant.isVideoEnabled,
 
-        "updatedAt" to localParticipant.updatedAt,
-//        "videoView" to participant.videoView, // TODO: SendBirdVideoView
-    ))
+            "updatedAt" to localParticipant.updatedAt,
+            // "videoView" to participant.videoView, // TODO: SendBirdVideoView
+        ))
     }
+
     fun convertRoomToJsMap(room: Room) = convertToJsMap(mapOf(
         "roomId" to room.roomId,
         "state" to room.state.asString(),

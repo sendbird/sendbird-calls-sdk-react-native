@@ -105,58 +105,54 @@ class CallsDirectCallModule(private val reactContext: ReactApplicationContext): 
 
     override fun startVideo(callId: String) {
         Log.d(CallsModule.NAME, "[DirectCallModule] startVideo() -> $callId")
-        val from = "directCall/startVideo"
-        try {
-            val call = CallsUtils.findDirectCall(callId, from)
+        CallsUtils.safeRun {
+            val call = CallsUtils.findDirectCall(callId,"directCall/startVideo")
             call.startVideo()
-        } finally { }
+        }
     }
 
     override fun stopVideo(callId: String) {
         Log.d(CallsModule.NAME, "[DirectCallModule] stopVideo() -> $callId")
-        val from = "directCall/stopVideo"
-        try {
-            val call = CallsUtils.findDirectCall(callId, from)
+        CallsUtils.safeRun {
+            val call = CallsUtils.findDirectCall(callId, "directCall/stopVideo")
             call.stopVideo()
-        } finally { }
+        }
     }
 
     override fun muteMicrophone(callId: String) {
         Log.d(CallsModule.NAME, "[DirectCallModule] muteMicrophone() -> $callId")
-        val from = "directCall/muteMicrophone"
-        try {
-            val call = CallsUtils.findDirectCall(callId, from)
+        CallsUtils.safeRun {
+            val call = CallsUtils.findDirectCall(callId, "directCall/muteMicrophone")
             call.muteMicrophone()
-        } finally { }
+        }
     }
 
     override fun unmuteMicrophone(callId: String) {
         Log.d(CallsModule.NAME, "[DirectCallModule] unmuteMicrophone() -> $callId")
-        val from = "directCall/unmuteMicrophone"
-        try {
-            val call = CallsUtils.findDirectCall(callId, from)
+        CallsUtils.safeRun {
+            val call = CallsUtils.findDirectCall(callId, "directCall/unmuteMicrophone")
             call.unmuteMicrophone()
-        } finally { }
+        }
     }
 
     override fun updateLocalVideoView(callId: String, videoViewId: Int) {
         Log.d(CallsModule.NAME, "[DirectCallModule] updateLocalVideoView() -> $callId / $videoViewId")
         val from = "directCall/updateLocalVideoView"
-        try {
+        CallsUtils.safeRun {
             val call = CallsUtils.findDirectCall(callId, from)
             val view = CallsUtils.findVideoView(reactContext, videoViewId, from)
             call.setLocalVideoView(view.getSurface())
-        } finally { }
+        }
     }
 
     override fun updateRemoteVideoView(callId: String, videoViewId: Int) {
         Log.d(CallsModule.NAME, "[DirectCallModule] updateRemoteVideoView() -> $callId / $videoViewId")
         val from = "directCall/updateRemoteVideoView"
-        try {
+        CallsUtils.safeRun {
             val call = CallsUtils.findDirectCall(callId, from)
             val view = CallsUtils.findVideoView(reactContext, videoViewId, from)
             call.setRemoteVideoView(view.getSurface())
-        } finally { }
+        }
     }
 
     /** DirectCallListeners **/

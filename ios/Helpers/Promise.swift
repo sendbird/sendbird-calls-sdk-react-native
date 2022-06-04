@@ -38,4 +38,8 @@ class Promise {
     func reject(_ error: NSError) {
         rejectBlock(INTERNAL_ERROR_CODE, error.localizedDescription, error)
     }
+    
+    func reject(_ error: Error) {
+        rejectBlock(INTERNAL_ERROR_CODE, error.localizedDescription, error)
+    }
 }
