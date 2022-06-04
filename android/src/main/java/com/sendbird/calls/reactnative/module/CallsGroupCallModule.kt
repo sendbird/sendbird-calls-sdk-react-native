@@ -37,12 +37,12 @@ class CallsGroupCallModule(private val reactContext: ReactApplicationContext): G
     }
 
     override fun exit(roomId: String) {
-        Log.d(CallsModule.NAME, "[GroupCallModule] exit($roomId)")
         val from = "groupCall/exit"
-        try {
+        Log.d(CallsModule.NAME, "[GroupCallModule] $from -> $roomId")
+        CallsUtils.safeRun {
             val room = CallsUtils.findRoom(roomId, from)
             room.exit()
-        } finally { }
+        }
     }
 
     /** RoomListeners **/
@@ -57,7 +57,7 @@ class CallsGroupCallModule(private val reactContext: ReactApplicationContext): G
     override fun onRemoteParticipantEntered(participant: RemoteParticipant) {
         val from = "groupCall/onRemoteParticipantEntered"
         Log.d(CallsModule.NAME, "[GroupCallModule] $from")
-        try {
+        CallsUtils.safeRun {
             val participantJsMap = CallsUtils.convertParticipantToJsMap(participant)
             if (participantJsMap == null) throw RNCallsInternalError(from, RNCallsInternalError.Type.NOT_FOUND_PARTICIPANT)
             else {
@@ -68,13 +68,13 @@ class CallsGroupCallModule(private val reactContext: ReactApplicationContext): G
                     participantJsMap,
                 )
             }
-        } finally { }
+        }
     }
 
     override fun onRemoteParticipantExited(participant: RemoteParticipant) {
         val from = "groupCall/onRemoteParticipantExited"
         Log.d(CallsModule.NAME, "[GroupCallModule] $from")
-        try {
+        CallsUtils.safeRun {
             val participantJsMap = CallsUtils.convertParticipantToJsMap(participant)
             if (participantJsMap == null) throw RNCallsInternalError(from, RNCallsInternalError.Type.NOT_FOUND_PARTICIPANT)
             else {
@@ -85,7 +85,7 @@ class CallsGroupCallModule(private val reactContext: ReactApplicationContext): G
                     participantJsMap,
                 )
             }
-        } finally { }
+        }
     }
 
     override fun onRemoteParticipantStreamStarted(participant: RemoteParticipant) {
