@@ -20,7 +20,6 @@
 - [ ] call view - alone
 - [ ] call view - multiple
 - [ ] participants
-- [ ] room infomation
 - [ ] splash
 
 ### DONE
@@ -28,3 +27,4 @@
 - [x] settings
 - [x] application infomation
 - [x] main(tab):: dial
+- [x] room infomation

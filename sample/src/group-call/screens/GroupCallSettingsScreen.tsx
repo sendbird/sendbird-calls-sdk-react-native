@@ -1,13 +1,19 @@
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useAuthContext } from '../../shared/contexts/AuthContext';
 import Palette from '../../shared/styles/palette';
 import Typography from '../../shared/styles/typography';
-import { GroupCallSettingStackProps } from '../navigations/GroupCallSettingStack';
+import type { GroupCallSettingStackParamList } from '../navigations/navigatorTypes';
 import { GroupRoutes } from '../navigations/routes';
 
-const GroupCallSettingsScreen = ({ navigation: { navigate } }: GroupCallSettingStackProps) => {
+type SettingsScreenNavigationProps = NativeStackNavigationProp<GroupCallSettingStackParamList>;
+type GroupCallSettingsScreenProps = {
+  navigation: SettingsScreenNavigationProps;
+};
+
+const GroupCallSettingsScreen = ({ navigation: { navigate } }: GroupCallSettingsScreenProps) => {
   const { currentUser, setCurrentUser } = useAuthContext();
   const { profileUrl, nickname, userId } = currentUser ?? {};
 

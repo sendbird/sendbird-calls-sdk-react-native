@@ -12,11 +12,11 @@ import { AppLogger } from '../../shared/utils/logger';
 
 const enterRoom = async (roomId: string, withoutCache = false) => {
   try {
+    console.log(roomId, withoutCache);
     const room: Room = withoutCache
       ? await SendbirdCalls.fetchRoomById(roomId)
       : await SendbirdCalls.getCachedRoomById(roomId);
     AppLogger.log('enterRoom', room);
-    // TODO: enter
     room.enter();
   } catch (e) {
     AppLogger.log('enterRoom - e', e);
@@ -58,11 +58,11 @@ const GroupCallDialScreen = () => {
               onChangeText={setRoomId}
               placeholder={'Room ID'}
               placeholderTextColor={Palette.onBackgroundLight02}
-              onSubmitEditing={() => enterRoom(roomId)}
+              onSubmitEditing={() => enterRoom(roomId, true)}
               style={styles.input}
             />
             {!!roomId && (
-              <SBButton style={styles.textButton} onPress={() => enterRoom(roomId)} variant="text">
+              <SBButton style={styles.textButton} onPress={() => enterRoom(roomId, true)} variant="text">
                 {'Enter'}
               </SBButton>
             )}
