@@ -1,20 +1,23 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
 import { useAuthContext } from '../contexts/AuthContext';
+import Palette from '../styles/palette';
+import Typography from '../styles/typography';
 
 const UserInfoHeader = () => {
   const { currentUser } = useAuthContext();
   const { profileUrl, nickname, userId } = currentUser ?? {};
 
+  const source = profileUrl ? { uri: profileUrl } : require('../../assets/iconAvatar.png');
+
   return (
     <View style={styles.container}>
-      {/* <Image source={{ uri: profileUrl }} style={styles.profileImg} /> */}
-      <Text>{profileUrl}</Text>
+      <Image source={source} style={styles.profileImg} />
 
       <View style={styles.info}>
-        <Text style={styles.nickname}>{nickname || '-'}</Text>
-        <Text style={styles.userId}>User ID: {userId}</Text>
+        <Text style={Typography.h3}>{nickname || '-'}</Text>
+        <Text style={[Typography.caption2, { paddingTop: 2 }]}>User ID: {userId}</Text>
       </View>
     </View>
   );
@@ -22,27 +25,22 @@ const UserInfoHeader = () => {
 
 const styles = StyleSheet.create({
   container: {
-    height: 60,
+    height: 44,
+    paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
-    paddingHorizontal: 20,
+    backgroundColor: Palette.background50,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: Palette.background100,
   },
   info: {
     paddingHorizontal: 10,
   },
   profileImg: {
-    backgroundColor: '#e3e3e3',
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
   },
-  nickname: {
-    fontWeight: '600',
-  },
-  userId: {},
 });
 
 export default UserInfoHeader;

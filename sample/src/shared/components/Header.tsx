@@ -1,6 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+
+import Palette from '../styles/palette';
+import Typography from '../styles/typography';
 
 export enum HeaderLeftTypes {
   NONE = 'NONE',
@@ -19,7 +22,7 @@ const Header = ({ title, headerLeftType = HeaderLeftTypes.NONE }: IHeaderLeftPro
   return (
     <View style={styles.container}>
       <View style={[styles.headerTitle, headerLeftType !== HeaderLeftTypes.NONE && { alignItems: 'center' }]}>
-        <Text style={styles.title}>{title}</Text>
+        <Text style={Typography.h1}>{title}</Text>
       </View>
       {(() => {
         switch (headerLeftType) {
@@ -27,7 +30,10 @@ const Header = ({ title, headerLeftType = HeaderLeftTypes.NONE }: IHeaderLeftPro
             return (
               canGoBack() && (
                 <Pressable onPress={goBack}>
-                  <Text>back</Text>
+                  <Image
+                    source={require('../../assets/iconBack.png')}
+                    style={[styles.icon, { marginRight: 16, tintColor: Palette.primary300 }]}
+                  />
                 </Pressable>
               )
             );
@@ -47,13 +53,13 @@ const Header = ({ title, headerLeftType = HeaderLeftTypes.NONE }: IHeaderLeftPro
 
 const styles = StyleSheet.create({
   container: {
-    height: 60,
+    height: 44,
+    paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
-    paddingHorizontal: 20,
+    backgroundColor: Palette.background50,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: Palette.background100,
   },
   headerTitle: {
     ...StyleSheet.absoluteFillObject,
@@ -61,8 +67,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     paddingHorizontal: 20,
   },
-  title: {
-    fontWeight: '600',
+  icon: {
+    width: 24,
+    height: 24,
   },
 });
 

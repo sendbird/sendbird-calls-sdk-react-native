@@ -1,70 +1,74 @@
 import React, { useState } from 'react';
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { SendbirdCalls } from '@sendbird/calls-react-native';
+import { Room, SendbirdCalls } from '@sendbird/calls-react-native';
 
 import InputSafeView from '../../shared/components/InputSafeView';
+import SBButton from '../../shared/components/SBButton';
+import SBTextInput from '../../shared/components/SBTextInput';
+import Palette from '../../shared/styles/palette';
+import Typography from '../../shared/styles/typography';
+import { AppLogger } from '../../shared/utils/logger';
 
-const getCachedRoomById = (roomId: string) => {
-  return SendbirdCalls.getCachedRoomById(roomId);
+const enterRoom = async (roomId: string, withoutCache = false) => {
+  try {
+    const room: Room = withoutCache
+      ? await SendbirdCalls.fetchRoomById(roomId)
+      : await SendbirdCalls.getCachedRoomById(roomId);
+    AppLogger.log('enterRoom', room);
+    // TODO: enter
+    room.enter();
+  } catch (e) {
+    AppLogger.log('enterRoom - e', e);
+  }
 };
 
-const fetchRoomById = (roomId: string) => {
-  SendbirdCalls.fetchRoomById(roomId)
-    .then(async (room) => {
-      console.log('fetchRoomById: ', room);
-
-      const cachedRoom = await getCachedRoomById(roomId);
-      console.log('getCachedRoomById: ', cachedRoom);
-
-      cachedRoom
-        .enter()
-        .then(() => {
-          cachedRoom.exit();
-        })
-        .catch((e) => console.log('enter e: ', e));
-    })
-    .catch((e) => {
-      console.log('fetchRoomById e: ', e);
-    });
-};
-
-const createRoom = () => {
-  fetchRoomById('124902db-3c13-4b70-8feb-0d718635461c');
-  // SendbirdCalls.createRoom(SendbirdCalls.RoomType.SMALL_ROOM_FOR_VIDEO)
-  //   .then(async (room) => {
-  //     console.log('createRoom: ', room);
-
-  //     const cachedRoom = getCachedRoomById(room.roomId);
-  //     console.log('getCachedRoomById: ', cachedRoom);
-
-  //     fetchRoomById(room.roomId);
-  //   })
-  //   .catch((e) => {
-  //     console.log('createRoom e: ', e);
-  //   });
+const createRoom = async () => {
+  try {
+    const room: Room = await SendbirdCalls.createRoom(SendbirdCalls.RoomType.SMALL_ROOM_FOR_VIDEO);
+    AppLogger.log('createRoom', room);
+    enterRoom(room.roomId);
+  } catch (e) {
+    AppLogger.log('createRoom - e', e);
+  }
 };
 
 const GroupCallDialScreen = () => {
-  const [roomID, setRoomID] = useState<string>('');
+  const [roomId, setRoomId] = useState<string>('');
 
   return (
     <InputSafeView>
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <View style={styles.card}>
-          <Text>Icon</Text>
+          <Image source={require('../../assets/iconRoomAdd.png')} style={styles.icon} />
           <Text style={styles.title}>Create a room</Text>
-          <Text style={styles.desc}>Start a group call in a room and share the room ID with others.</Text>
-          <Button title="Create" onPress={createRoom} />
+          <Text style={Typography.body2}>Start a group call in a room and share the room ID with others.</Text>
+          <SBButton style={styles.button} onPress={createRoom}>
+            {'Create'}
+          </SBButton>
         </View>
 
         <View style={[styles.card, { marginTop: 20 }]}>
-          <Text>Icon</Text>
+          <Image source={require('../../assets/iconJoin.png')} style={styles.icon} />
           <Text style={styles.title}>Enter with room ID</Text>
-          <Text style={styles.desc}>Enter an existing room to participate in a group call.</Text>
-          <TextInput style={styles.input} value={roomID} onChangeText={setRoomID} placeholder="Room ID" />
+          <Text style={Typography.body2}>Enter an existing room to participate in a group call.</Text>
+          <View style={styles.inputBox}>
+            <SBTextInput
+              value={roomId}
+              onChangeText={setRoomId}
+              placeholder={'Room ID'}
+              placeholderTextColor={Palette.onBackgroundLight02}
+              onSubmitEditing={() => enterRoom(roomId)}
+              style={styles.input}
+            />
+            {!!roomId && (
+              <SBButton style={styles.textButton} onPress={() => enterRoom(roomId)} variant="text">
+                {'Enter'}
+              </SBButton>
+            )}
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </InputSafeView>
   );
 };
@@ -72,19 +76,44 @@ const GroupCallDialScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 24,
   },
   card: {
-    backgroundColor: '#fff',
-    padding: 20,
+    backgroundColor: Palette.background50,
+    padding: 24,
+    borderRadius: 4,
+  },
+  icon: {
+    width: 24,
+    height: 24,
   },
   title: {
-    fontWeight: '600',
+    ...Typography.h1,
+    marginTop: 16,
+    marginBottom: 8,
   },
-  desc: {},
+  button: {
+    paddingVertical: 16,
+    marginTop: 24,
+    borderRadius: 4,
+  },
+  inputBox: {
+    marginTop: 24,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   input: {
-    backgroundColor: '#e3e3e3',
+    flex: 1,
+    paddingVertical: 16,
     paddingHorizontal: 16,
+    borderRadius: 4,
+    backgroundColor: Palette.background100,
+  },
+  textButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    marginLeft: 8,
   },
 });
 

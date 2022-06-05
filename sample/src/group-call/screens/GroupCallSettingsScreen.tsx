@@ -1,33 +1,47 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useAuthContext } from '../../shared/contexts/AuthContext';
+import Palette from '../../shared/styles/palette';
+import Typography from '../../shared/styles/typography';
+import { GroupCallSettingStackProps } from '../navigations/GroupCallSettingStack';
 import { GroupRoutes } from '../navigations/routes';
-import type { GroupCallSettingStackProps } from './GroupCallSettingStack';
 
 const GroupCallSettingsScreen = ({ navigation: { navigate } }: GroupCallSettingStackProps) => {
-  const { currentUser } = useAuthContext();
+  const { currentUser, setCurrentUser } = useAuthContext();
   const { profileUrl, nickname, userId } = currentUser ?? {};
+
+  const profileSource = profileUrl ? { uri: profileUrl } : require('../../assets/iconAvatar.png');
 
   return (
     <View style={styles.container}>
       <View style={styles.profile}>
-        <Text>{profileUrl}</Text>
-        <Text style={styles.nickname}>{nickname}</Text>
-        <Text style={styles.userId}>User ID: {userId}</Text>
+        <Image source={profileSource} style={styles.profileImg} />
+        <Text style={[Typography.subtitle1, { marginTop: 8, marginBottom: 4 }]}>{nickname}</Text>
+        <Text style={Typography.caption2}>User ID: {userId}</Text>
       </View>
 
       <View style={styles.list}>
         <Pressable style={styles.item} onPress={() => navigate(GroupRoutes.APP_INFO)}>
           <View style={styles.itemContent}>
-            <Text style={styles.leftIcon}>Icon</Text>
-            <Text style={styles.itemName}>Application information</Text>
+            <Image
+              source={require('../../assets/iconInfo.png')}
+              style={[styles.icon, { marginRight: 16, tintColor: Palette.primary300 }]}
+            />
+            <Text style={Typography.subtitle2}>Application information</Text>
           </View>
-          <Text style={styles.rightIcon}>Right Icon</Text>
+          <Image
+            source={require('../../assets/iconShevronRight.png')}
+            style={[styles.icon, { tintColor: Palette.background600 }]}
+          />
         </Pressable>
-        <Pressable style={styles.item}>
-          <Text style={styles.leftIcon}>Icon</Text>
-          <Text style={styles.itemName}>Sign out</Text>
+
+        <Pressable style={styles.item} onPress={() => setCurrentUser(null)}>
+          <Image
+            source={require('../../assets/iconLeave.png')}
+            style={[styles.icon, { marginRight: 16, tintColor: Palette.error300 }]}
+          />
+          <Text style={Typography.subtitle2}>Sign out</Text>
         </Pressable>
       </View>
     </View>
@@ -37,18 +51,19 @@ const GroupCallSettingsScreen = ({ navigation: { navigate } }: GroupCallSettingS
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
+    backgroundColor: Palette.background50,
   },
   profile: {
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 20,
   },
-  nickname: {
-    fontWeight: '600',
+  profileImg: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
   },
-  userId: {},
   list: {
     borderTopWidth: 1,
     borderTopColor: '#eee',
@@ -56,21 +71,18 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: Palette.background100,
   },
   itemContent: {
     flex: 1,
     flexDirection: 'row',
   },
-  leftIcon: {
-    marginRight: 10,
+  icon: {
+    width: 24,
+    height: 24,
   },
-  itemName: {
-    fontWeight: '600',
-  },
-  rightIcon: {},
 });
 
 export default GroupCallSettingsScreen;

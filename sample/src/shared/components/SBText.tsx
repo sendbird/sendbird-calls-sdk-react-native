@@ -10,7 +10,7 @@ export type TextProps = RNTextProps & TypographyProps & { color?: string };
 const SBText: React.FC<TextProps> = ({ children, color, style, ...props }) => {
   const typoStyles = useTypographyFilter(props);
   return (
-    <RNText style={[{ color: color ?? Palette.onBackgroundLight01 }, ...typoStyles, style]} {...props}>
+    <RNText style={[...typoStyles, style, { color: color ?? Palette.onBackgroundLight01 }]} {...props}>
       {children}
     </RNText>
   );

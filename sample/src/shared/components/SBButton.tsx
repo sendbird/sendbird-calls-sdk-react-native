@@ -2,6 +2,7 @@ import React from 'react';
 import { Pressable, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 
 import Palette from '../styles/palette';
+import Typography from '../styles/typography';
 import SBText from './SBText';
 
 const buttonStyles = {
@@ -90,7 +91,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   icon: { marginVertical: -4, marginRight: 8 },
-  text: {},
+  text: {
+    ...Typography.button2,
+  },
 });
 
 export default SBButton;

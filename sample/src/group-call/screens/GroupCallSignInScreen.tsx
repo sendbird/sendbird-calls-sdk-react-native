@@ -6,6 +6,7 @@ import { SendbirdCalls } from '@sendbird/calls-react-native';
 import { APP_ID } from '../../env';
 import SignInForm from '../../shared/components/SignInForm';
 import { useAuthContext } from '../../shared/contexts/AuthContext';
+import Palette from '../../shared/styles/palette';
 import { AppLogger } from '../../shared/utils/logger';
 
 type Input = {
@@ -29,7 +30,14 @@ const GroupCallSignInScreen = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={{ flex: 1, paddingVertical: 12, paddingHorizontal: 16 }}>
+    <ScrollView
+      contentContainerStyle={{
+        flex: 1,
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+        backgroundColor: Palette.background50,
+      }}
+    >
       <SignInForm {...state} onChange={setState} onSubmit={onSignIn} />
     </ScrollView>
   );

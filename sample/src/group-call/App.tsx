@@ -1,9 +1,10 @@
+/* eslint-disable multiline-ternary */
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
 import { useAuthContext } from '../shared/contexts/AuthContext';
+import GroupCallHomeTab from './navigations/GroupCallHomeTab';
 import { GroupRoutes } from './navigations/routes';
-import GroupCallHomeTab from './screens/GroupCallHomeTab';
 import GroupCallSignInScreen from './screens/GroupCallSignInScreen';
 
 const Stack = createNativeStackNavigator();
@@ -11,7 +12,7 @@ const Stack = createNativeStackNavigator();
 const GroupCallApp = () => {
   const { currentUser } = useAuthContext();
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
       {!currentUser ? (
         <Stack.Screen name={GroupRoutes.SIGN_IN} component={GroupCallSignInScreen} />
       ) : (

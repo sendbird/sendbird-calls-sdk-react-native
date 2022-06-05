@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import { TextInput as RNTextInput, StyleSheet, TextInputProps } from 'react-native';
 
 import Palette from '../styles/palette';
@@ -44,6 +45,8 @@ const SBTextInput = React.forwardRef<RNTextInput, Props>(function TextInput(
   const inputStyle = editable ? variantStyle.active : variantStyle.disabled;
   const underlineStyle = variant === 'underline' && { borderBottomWidth: 2, borderBottomColor: inputStyle.highlight };
 
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+
   return (
     <RNTextInput
       ref={ref}
@@ -53,10 +56,18 @@ const SBTextInput = React.forwardRef<RNTextInput, Props>(function TextInput(
       style={[
         Typography.body3,
         styles.input,
-        { color: inputStyle.text, backgroundColor: inputStyle.background },
+        {
+          color: inputStyle.text,
+          backgroundColor: inputStyle.background,
+          borderWidth: 1,
+          borderColor: inputStyle.background,
+        },
+        isFocused && { borderWidth: 1, borderColor: inputStyle.highlight },
         underlineStyle,
         style,
       ]}
+      onFocus={() => setIsFocused(true)}
+      onBlur={() => setIsFocused(false)}
       {...props}
     >
       {children}

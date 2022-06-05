@@ -14,16 +14,17 @@
 
 ### TODOS
 
-- [ ] splash
 - [ ] signin
-- [ ] main(tab):: dial
 - [ ] enter room
 - [ ] create room
 - [ ] call view - alone
 - [ ] call view - multiple
 - [ ] participants
 - [ ] room infomation
-- [ ] settings
-- [ ] application infomation
+- [ ] splash
 
 ### DONE
+
+- [x] settings
+- [x] application infomation
+- [x] main(tab):: dial
