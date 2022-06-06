@@ -28,6 +28,8 @@ export interface NativeCommonModule {
   handleFirebaseMessageData(data: Record<string, string>): void;
 
   /** @platform iOS **/
+  handleRemoteNotificationData(data: Record<string, string>): void;
+  /** @platform iOS **/
   voipRegistration(): Promise<string>;
   /** @platform iOS **/
   registerVoIPPushToken(token: string, unique?: boolean): Promise<void>;
@@ -71,7 +73,11 @@ export interface NativeDirectCallModule {
 export interface SendbirdCallsNativeSpec extends NativeModuleInterface, NativeCommonModule, NativeDirectCallModule {}
 
 type AndroidSpecificKeys = 'handleFirebaseMessageData';
-type IOSSpecificKeys = 'voipRegistration' | 'registerVoIPPushToken' | 'unregisterVoIPPushToken';
+type IOSSpecificKeys =
+  | 'voipRegistration'
+  | 'registerVoIPPushToken'
+  | 'unregisterVoIPPushToken'
+  | 'handleRemoteNotificationData';
 type PlatformSpecificInterface = AsJSInterface<
   AsJSInterface<NativeCommonModule, 'ios', IOSSpecificKeys>,
   'android',

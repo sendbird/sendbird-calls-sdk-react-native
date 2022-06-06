@@ -10,6 +10,7 @@ import Foundation
 
 let INTERNAL_ERROR_CODE = "RNCALLS_INTERNAL"
 enum RNCallsInternalError: Error {
+    case invalidParams(_ from: String)
     case notFoundVideoDevice(_ from: String)
     case notFoundVideoView(_ from: String)
     case notFoundDirectCall(_ from: String)
@@ -19,8 +20,10 @@ enum RNCallsInternalError: Error {
     
     var message: String {
         switch self {
+        case let .invalidParams(from: from):
+            return "[\(from)] Invalid parameters"
         case let .notFoundVideoDevice(from: from):
-            return "[\(from) Cannot found device with specific id]"
+            return "[\(from)] Cannot found device with specific id]"
         case let .notFoundVideoView(from: from):
             return "[\(from)] Cannot found video view"
         case let .notFoundDirectCall(from: from):

@@ -8,6 +8,11 @@
 
 @interface RCT_EXTERN_MODULE(RNSendbirdCalls, NSObject)
 
+// MARK: Base
+RCT_EXTERN_METHOD(handleRemoteNotificationData
+                  : (NSDictionary *)data)
+
+// MARK: Common
 RCT_EXTERN_METHOD(initialize
                   : (NSString *)appId)
 
@@ -57,6 +62,50 @@ RCT_EXTERN_METHOD(dial
                   : (NSDictionary *)options
                   : (RCTPromiseResolveBlock)resolve
                   : (RCTPromiseRejectBlock)reject)
+
+// MARK: DirectCall
+RCT_EXTERN_METHOD(selectVideoDevice
+                  : (NSString *)callId
+                  : (NSDictionary *)device
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(accept
+                  : (NSString *)callId
+                  : (NSDictionary *)options
+                  : (BOOL *)holdActiveCall
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(end
+                  : (NSString *)callId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(switchCamera
+                  : (NSString *)callId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(startVideo
+                  : (NSString *)callId)
+
+RCT_EXTERN_METHOD(stopVideo
+                  : (NSString *)callId)
+
+RCT_EXTERN_METHOD(muteMicrophone
+                  : (NSString *)callId)
+
+RCT_EXTERN_METHOD(unmuteMicrophone
+                  : (NSString *)callId)
+
+RCT_EXTERN_METHOD(updateLocalVideoView
+                  : (NSString *)callId
+                  : (NSNumber *)videoViewId)
+
+RCT_EXTERN_METHOD(updateRemmoteVideoView
+                  : (NSString *)callId
+                  : (NSNumber *)videoViewId)
 
 //#ifdef RCT_NEW_ARCH_ENABLED
 //- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:

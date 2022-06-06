@@ -109,12 +109,12 @@ class CallsUtils {
         }
         if let localVideoViewId = options["localVideoViewId"] as? NSNumber {
             callOptions.localVideoView = safeGet {
-                try CallsUtils.findViewBy(RNSendbirdCalls.shared.bridge, localVideoViewId).surface
+                try CallsUtils.findViewBy(CallsEvents.shared.bridge, localVideoViewId).surface
             }
         }
         if let remoteVideoViewId = options["remoteVideoViewId"] as? NSNumber {
             callOptions.remoteVideoView = safeGet {
-                try CallsUtils.findViewBy(RNSendbirdCalls.shared.bridge, remoteVideoViewId).surface
+                try CallsUtils.findViewBy(CallsEvents.shared.bridge, remoteVideoViewId).surface
             }
         }
         
