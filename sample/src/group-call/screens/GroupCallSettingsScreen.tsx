@@ -1,4 +1,4 @@
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React from 'react';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 
@@ -44,7 +44,7 @@ const GroupCallSettingsScreen = ({ navigation: { navigate } }: GroupCallSettings
           />
         </Pressable>
 
-        <Pressable style={styles.item} onPress={() => setCurrentUser(null)}>
+        <Pressable style={styles.item} onPress={() => setCurrentUser(undefined)}>
           <Image
             source={require('../../assets/iconLeave.png')}
             style={[styles.icon, { marginRight: 16, tintColor: Palette.error300 }]}

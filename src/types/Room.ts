@@ -1,7 +1,7 @@
 import type { AudioDevice } from './Media';
 import type { NativeGroupCallModule } from './NativeModule';
 import type { Participant } from './Participant';
-import type { AsJSGroupCall, AsJSInterface } from './index';
+import type { AsJSGroupCall } from './index';
 
 export interface RoomListener {
   /** Called when the room is deleted **/

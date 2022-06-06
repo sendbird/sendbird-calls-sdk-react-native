@@ -3,6 +3,7 @@ import { Pressable, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 
 import Palette from '../styles/palette';
 import Typography from '../styles/typography';
+import type { ChildrenProps } from '../types/props';
 import SBText from './SBText';
 
 const buttonStyles = {
@@ -43,7 +44,7 @@ type Props = {
   onPress?: () => void;
   buttonColor?: string;
   contentColor?: string;
-};
+} & ChildrenProps;
 const SBButton: React.FC<Props> = ({
   variant = 'contained',
   buttonColor,

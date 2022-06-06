@@ -13,10 +13,11 @@ import { AppLogger } from '../../shared/utils/logger';
 const enterRoom = async (roomId: string, withoutCache = false) => {
   try {
     console.log(roomId, withoutCache);
-    const room: Room = withoutCache
+    const room: Room | null = withoutCache
       ? await SendbirdCalls.fetchRoomById(roomId)
       : await SendbirdCalls.getCachedRoomById(roomId);
     AppLogger.log('enterRoom', room);
+    if (room === null) throw 'There is no Room';
     room.enter();
   } catch (e) {
     AppLogger.log('enterRoom - e', e);
