@@ -3,7 +3,7 @@ import React from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import Palette from '../styles/palette';
-import Typography from '../styles/typography';
+import SBText from './SBText';
 
 export enum HeaderLeftTypes {
   NONE = 'NONE',
@@ -22,7 +22,7 @@ const Header = ({ title, headerLeftType = HeaderLeftTypes.NONE }: IHeaderLeftPro
   return (
     <View style={styles.container}>
       <View style={[styles.headerTitle, headerLeftType !== HeaderLeftTypes.NONE && { alignItems: 'center' }]}>
-        <Text style={Typography.h1}>{title}</Text>
+        <SBText h1>{title}</SBText>
       </View>
       {(() => {
         switch (headerLeftType) {

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, View } from 'react-native';
 
 import { Room, SendbirdCalls } from '@sendbird/calls-react-native';
 
 import InputSafeView from '../../shared/components/InputSafeView';
 import SBButton from '../../shared/components/SBButton';
+import SBText from '../../shared/components/SBText';
 import SBTextInput from '../../shared/components/SBTextInput';
 import Palette from '../../shared/styles/palette';
-import Typography from '../../shared/styles/typography';
 import { AppLogger } from '../../shared/utils/logger';
 
 const enterRoom = async (roomId: string, withoutCache = false) => {
@@ -41,8 +41,10 @@ const GroupCallDialScreen = () => {
       <ScrollView style={styles.container}>
         <View style={styles.card}>
           <Image source={require('../../assets/iconRoomAdd.png')} style={styles.icon} />
-          <Text style={styles.title}>Create a room</Text>
-          <Text style={Typography.body2}>Start a group call in a room and share the room ID with others.</Text>
+          <SBText h1 style={styles.title}>
+            Create a room
+          </SBText>
+          <SBText body2>Start a group call in a room and share the room ID with others.</SBText>
           <SBButton style={styles.button} onPress={createRoom}>
             {'Create'}
           </SBButton>
@@ -50,8 +52,10 @@ const GroupCallDialScreen = () => {
 
         <View style={[styles.card, { marginTop: 20 }]}>
           <Image source={require('../../assets/iconJoin.png')} style={styles.icon} />
-          <Text style={styles.title}>Enter with room ID</Text>
-          <Text style={Typography.body2}>Enter an existing room to participate in a group call.</Text>
+          <SBText h1 style={styles.title}>
+            Enter with room ID
+          </SBText>
+          <SBText body2>Enter an existing room to participate in a group call.</SBText>
           <View style={styles.inputBox}>
             <SBTextInput
               value={roomId}
@@ -88,12 +92,11 @@ const styles = StyleSheet.create({
     height: 24,
   },
   title: {
-    ...Typography.h1,
     marginTop: 16,
     marginBottom: 8,
   },
   button: {
-    paddingVertical: 16,
+    height: 48,
     marginTop: 24,
     borderRadius: 4,
   },

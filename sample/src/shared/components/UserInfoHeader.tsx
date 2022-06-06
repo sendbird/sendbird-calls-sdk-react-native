@@ -1,9 +1,9 @@
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 
 import { useAuthContext } from '../contexts/AuthContext';
 import Palette from '../styles/palette';
-import Typography from '../styles/typography';
+import SBText from './SBText';
 
 const UserInfoHeader = () => {
   const { currentUser } = useAuthContext();
@@ -16,8 +16,10 @@ const UserInfoHeader = () => {
       <Image source={source} style={styles.profileImg} />
 
       <View style={styles.info}>
-        <Text style={Typography.h3}>{nickname || '-'}</Text>
-        <Text style={[Typography.caption2, { paddingTop: 2 }]}>User ID: {userId}</Text>
+        <SBText h3>{nickname || '-'}</SBText>
+        <SBText caption2 style={{ paddingTop: 2 }}>
+          User ID: {userId}
+        </SBText>
       </View>
     </View>
   );

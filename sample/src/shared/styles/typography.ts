@@ -35,6 +35,7 @@ const Typography: Record<Typo, FontAttributes> = {
     fontSize: scaleFactor(16),
     lineHeight: scaleFactor(20),
     letterSpacing: scaleFactor(-0.2),
+    color: Palette.onBackgroundLight01,
   },
   h3: {
     fontWeight: 'bold',
@@ -72,12 +73,14 @@ const Typography: Record<Typo, FontAttributes> = {
     fontWeight: 'normal',
     fontSize: scaleFactor(14),
     lineHeight: scaleFactor(20),
+    color: Palette.onBackgroundLight01,
   },
   button: {
     fontWeight: 'bold',
     fontSize: scaleFactor(14),
     lineHeight: scaleFactor(16),
     letterSpacing: scaleFactor(0.4),
+    color: Palette.onBackgroundLight01,
   },
   button2: {
     fontWeight: '500',
@@ -90,6 +93,7 @@ const Typography: Record<Typo, FontAttributes> = {
     fontWeight: 'bold',
     fontSize: scaleFactor(12),
     lineHeight: scaleFactor(12),
+    color: Palette.onBackgroundLight01,
   },
   caption2: {
     fontWeight: 'normal',
@@ -101,11 +105,13 @@ const Typography: Record<Typo, FontAttributes> = {
     fontWeight: 'bold',
     fontSize: scaleFactor(11),
     lineHeight: scaleFactor(12),
+    color: Palette.onBackgroundLight01,
   },
   caption4: {
     fontWeight: 'normal',
     fontSize: scaleFactor(11),
     lineHeight: scaleFactor(12),
+    color: Palette.onBackgroundLight01,
   },
 };
 
