@@ -14,7 +14,6 @@
 
 ### TODOS
 
-- [ ] signin
 - [ ] enter room
 - [ ] create room
 - [ ] call view - alone
@@ -28,3 +27,4 @@
 - [x] application infomation
 - [x] main(tab):: dial
 - [x] room infomation
+- [x] signin

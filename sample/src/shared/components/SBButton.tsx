@@ -2,7 +2,6 @@ import React from 'react';
 import { Pressable, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 
 import Palette from '../styles/palette';
-import Typography from '../styles/typography';
 import type { ChildrenProps } from '../types/props';
 import SBText from './SBText';
 
