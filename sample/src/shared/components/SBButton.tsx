@@ -74,7 +74,7 @@ const SBButton: React.FC<Props> = ({
         const stateColor = getStateColor(pressed, disabled);
 
         return (
-          <SBText button color={contentColor ?? stateColor.content} style={styles.text}>
+          <SBText button2 color={contentColor ?? stateColor.content}>
             {children}
           </SBText>
         );
@@ -92,9 +92,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   icon: { marginVertical: -4, marginRight: 8 },
-  text: {
-    ...Typography.button2,
-  },
 });
 
 export default SBButton;
