@@ -15,10 +15,9 @@ class RNSendbirdCalls: NSObject, RNBridgeModuleProtocol {
         get {
             CallsEvents.shared.bridge
         }
-    }
-    
-    @objc func setBridge(bridge: RCTBridge!) {
-        CallsEvents.shared.bridge = bridge
+        set(value) {
+            CallsEvents.shared.bridge = value
+        }
     }
     
     @objc static func requiresMainQueueSetup() -> Bool {
@@ -39,6 +38,14 @@ class RNSendbirdCalls: NSObject, RNBridgeModuleProtocol {
         module.invalidate()
         module = CallsModule()
         CallsEvents.shared.invalidate()
+    }
+    
+    @objc func addListener(_ eventName: String) {
+        CallsEvents.shared.addListener(eventName)
+    }
+    
+    @objc func removeListeners(_ count: Double) {
+        CallsEvents.shared.removeListeners(count)
     }
     
     @objc func handleRemoteNotificationData(data: [AnyHashable: Any]) {

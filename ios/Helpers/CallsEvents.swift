@@ -79,9 +79,9 @@ class CallsEvents: RCTEventEmitter {
     
     override func supportedEvents() -> [String]! {
         return [
-            DefaultEventType.allCases.map{ Event.default($0).type },
-            DirectCallEventType.allCases.map{ Event.directCall($0).type }
-        ].flatMap{ $0 }
+            Event.default(.onRinging).name,
+            Event.directCall(.onConnected).name
+        ]
     }
 }
 

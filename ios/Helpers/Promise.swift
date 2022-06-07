@@ -8,7 +8,7 @@
 
 import Foundation
 import SendBirdCalls
-
+import React
 
 class Promise {
     private let resolveBlock: RCTPromiseResolveBlock

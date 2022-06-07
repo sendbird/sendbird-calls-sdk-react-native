@@ -8,6 +8,12 @@
 
 @interface RCT_EXTERN_MODULE(RNSendbirdCalls, NSObject)
 
+RCT_EXTERN_METHOD(addListener
+                  : (NSString *)eventName)
+
+RCT_EXTERN_METHOD(removeListeners
+                  : (double)count)
+
 // MARK: Base
 RCT_EXTERN_METHOD(handleRemoteNotificationData
                   : (NSDictionary *)data)
