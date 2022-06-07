@@ -21,9 +21,7 @@ const DirectCallHomeTab = () => {
           tabBarIcon: ({ focused }) => {
             return (
               <Image
-                source={
-                  focused ? require('../../../assets/icCallFilled.png') : require('../../../assets/icCall.png')
-                }
+                source={focused ? require('../../../assets/icCallFilled.png') : require('../../../assets/icCall.png')}
                 style={{ width: 24, height: 24, tintColor: focused ? Palette.background600 : Palette.background300 }}
               />
             );
