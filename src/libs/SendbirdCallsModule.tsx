@@ -91,14 +91,8 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
         .then(props => new Room(this.binder, props));
   }
   public fetchRoomById(roomId: string): Promise<Room> {
-    return new Promise((resolve, reject) => {
-      this.binder.nativeModule
-        .fetchRoomById(roomId)
-        .then((roomProps: RoomProperties) => {
-          resolve(new Room(this.binder, roomProps));
-        })
-        .catch((e) => reject(e));
-    });
+    return this.binder.nativeModule.fetchRoomById(roomId)
+        .then(props => new Room(this.binder, props));
   }
   public getCachedRoomById(roomId: string): Promise<Room | null> {
     return new Promise((resolve, reject) => {
