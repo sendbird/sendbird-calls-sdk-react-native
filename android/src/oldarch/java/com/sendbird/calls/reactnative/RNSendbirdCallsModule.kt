@@ -2,6 +2,7 @@ package com.sendbird.calls.reactnative
 
 import android.util.Log
 import com.facebook.react.bridge.*
+import com.sendbird.calls.RoomListener
 import com.sendbird.calls.SendBirdCall
 import com.sendbird.calls.reactnative.module.CallsModule
 import com.sendbird.calls.reactnative.module.CallsModuleStruct
@@ -60,7 +61,12 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     override fun dial(calleeId: String, isVideoCall: Boolean, options: ReadableMap, promise: Promise) = module.dial(calleeId, isVideoCall, options, promise)
     @ReactMethod
     override fun createRoom(roomType: String, promise: Promise) = module.createRoom(roomType, promise)
+    @ReactMethod
+    override fun fetchRoomById(roomId: String, promise: Promise) = module.fetchRoomById(roomId, promise)
+    @ReactMethod
+    override fun getCachedRoomById(roomId: String, promise: Promise) = module.getCachedRoomById(roomId, promise)
 
+    /** DirectCall **/
     @ReactMethod
     override fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise) = module.selectVideoDevice(callId, device, promise)
     @ReactMethod
@@ -83,4 +89,10 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     override fun updateLocalVideoView(callId: String, videoViewId: Int) = module.updateLocalVideoView(callId, videoViewId)
     @ReactMethod
     override fun updateRemoteVideoView(callId: String, videoViewId: Int) = module.updateRemoteVideoView(callId, videoViewId)
+
+    /** GroupCall - Room **/
+    @ReactMethod
+    override fun enter(roomId: String, options: ReadableMap, promise: Promise) = module.enter(roomId, options, promise)
+    @ReactMethod
+    override fun exit(roomId: String) = module.exit(roomId)
 }

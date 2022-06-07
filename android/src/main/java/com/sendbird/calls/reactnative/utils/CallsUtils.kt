@@ -220,7 +220,9 @@ object CallsUtils {
         return false
     }
 
-    fun convertParticipantToJsMap(participant: Participant) = convertToJsMap(mapOf(
+    fun convertParticipantToJsMap(participant: Participant?) = when(participant) {
+        null -> null
+        else -> convertToJsMap(mapOf(
         "participantId" to participant.participantId,
         "user" to convertUserToJsMap(participant.user),
         "state" to participant.state.asString(),
@@ -233,42 +235,32 @@ object CallsUtils {
         "isVideoEnabled" to participant.isVideoEnabled,
 
         "updatedAt" to participant.updatedAt,
-         // "videoView" to participant.videoView, // TODO: SendBirdVideoView
+//        "videoView" to participant.videoView, // TODO: SendBirdVideoView
     ))
+    }
 
-    fun convertLocalParticipantToJsMap(localParticipant: LocalParticipant?) = when(localParticipant) {
+    fun convertRoomToJsMap(room: Room?) = when(room) {
         null -> null
         else -> convertToJsMap(mapOf(
-            "participantId" to localParticipant.participantId,
-            "user" to convertUserToJsMap(localParticipant.user),
-            "state" to localParticipant.state.asString(),
+            "roomId" to room.roomId,
+            "state" to room.state.asString(),
+            "type" to room.type.asString(),
+            "customItems" to room.customItems,
 
-            "enteredAt" to localParticipant.enteredAt,
-            "exitedAt" to (localParticipant.exitedAt ?: 0),
-            "duration" to (localParticipant.duration ?: 0),
+            "participants" to room.participants.map{ convertParticipantToJsMap(it) },
+            "localParticipant" to convertParticipantToJsMap(room.localParticipant),
+            "remoteParticipants" to room.remoteParticipants.map { convertParticipantToJsMap(it) },
 
-            "isAudioEnabled" to localParticipant.isAudioEnabled,
-            "isVideoEnabled" to localParticipant.isVideoEnabled,
+            "availableAudioDevices" to room.availableAudioDevices.map { it.asString() },
+            "currentAudioDevice" to room.currentAudioDevice?.asString(),
 
-            "updatedAt" to localParticipant.updatedAt,
-            // "videoView" to participant.videoView, // TODO: SendBirdVideoView
+            "createdAt" to room.createdAt,
+            "createdBy" to room.createdBy,
         ))
     }
 
-    fun convertRoomToJsMap(room: Room) = convertToJsMap(mapOf(
-        "roomId" to room.roomId,
-        "state" to room.state.asString(),
-        "type" to room.type.asString(),
-        "customItems" to room.customItems,
+    fun findRoom(roomId: String, from: String?): Room {
+        return SendBirdCall.getCachedRoomById(roomId) ?: throw RNCallsInternalError(from, RNCallsInternalError.Type.NOT_FOUND_ROOM)
+    }
 
-        "participants" to room.participants.map{ convertParticipantToJsMap(it) },
-        "localParticipant" to convertLocalParticipantToJsMap(room.localParticipant),
-        "remoteParticipants" to room.remoteParticipants.map { convertParticipantToJsMap(it) },
-
-        "availableAudioDevices" to room.availableAudioDevices.map { it.asString() },
-        "currentAudioDevice" to room.currentAudioDevice?.asString(),
-
-        "createdAt" to room.createdAt,
-        "createdBy" to room.createdBy,
-    ))
 }

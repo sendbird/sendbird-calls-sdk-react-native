@@ -1,10 +1,7 @@
 package com.sendbird.calls.reactnative.module
 
 import android.util.Log
-import com.facebook.react.bridge.Arguments
-import com.facebook.react.bridge.Promise
-import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.bridge.*
 import com.sendbird.calls.*
 import com.sendbird.calls.reactnative.utils.CallsUtils
 
@@ -102,4 +99,23 @@ class CallsCommonModule(private val reactContext: ReactApplicationContext): Comm
         }
     }
 
+    override fun fetchRoomById(roomId: String, promise: Promise) {
+        Log.d(CallsModule.NAME, "[CommonModule] fetchRoomById($roomId)")
+        val from = "common/fetchRoomById"
+        CallsUtils.safePromiseRejection(promise, from) {
+            SendBirdCall.fetchRoomById(roomId) { room: Room?, error: SendBirdException? ->
+                if(error != null) throw error
+                if(room != null) promise.resolve(CallsUtils.convertRoomToJsMap(room))
+            }
+        }
+    }
+
+    override fun getCachedRoomById(roomId: String , promise: Promise) {
+        Log.d(CallsModule.NAME, "[CommonModule] getCachedRoomById($roomId)")
+        val from = "common/getCachedRoomById"
+        CallsUtils.safePromiseRejection(promise, from) {
+            val room = SendBirdCall.getCachedRoomById(roomId)
+            if (room != null) promise.resolve(CallsUtils.convertRoomToJsMap(room)) else promise.resolve(null)
+        }
+    }
 }

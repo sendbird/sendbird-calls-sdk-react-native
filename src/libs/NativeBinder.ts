@@ -23,6 +23,7 @@ const NoopModuleProxy = new Proxy(
 export enum CallsEvent {
   DEFAULT = 'sendbird.call.default',
   DIRECT_CALL = 'sendbird.call.direct',
+  GROUP_CALL = 'sendbird.call.group',
 }
 
 export enum DefaultEventType {
@@ -43,6 +44,11 @@ export enum DirectCallEventType {
   ON_CUSTOM_ITEMS_UPDATED = 'sendbird.call.direct.onCustomItemsUpdated',
   ON_CUSTOM_ITEMS_DELETED = 'sendbird.call.direct.onCustomItemsDeleted',
   ON_USER_HOLD_STATUS_CHANGED = 'sendbird.call.direct.onUserHoldStatusChanged',
+}
+
+export enum GroupCallEventType {
+  ON_REMOTE_PARTICIPANT_ENTERED = 'sendbird.call.group.onRemoteParticipantEntered',
+  ON_REMOTE_PARTICIPANT_EXITED = 'sendbird.call.group.onRemoteParticipantExited',
 }
 
 type MakeEventUnionMember<Type, Data> = {

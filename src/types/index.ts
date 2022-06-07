@@ -36,6 +36,11 @@ export type AsJSDirectCall<T> = {
   [key in keyof T]: T[key] extends (callId: string, ...args: infer Args) => infer R ? (...args: Args) => R : T[key];
 };
 
+/** @internal **/
+export type AsJSGroupCall<T> = {
+  [key in keyof T]: T[key] extends (roomId: string, ...args: infer Args) => infer R ? (...args: Args) => R : T[key];
+};
+
 export * from './Call';
 export * from './Media';
 export * from './NativeModule';

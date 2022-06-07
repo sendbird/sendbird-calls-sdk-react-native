@@ -1,16 +1,11 @@
-import { NativeStackNavigationProp, createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
 import Header, { HeaderLeftTypes } from '../../shared/components/Header';
 import type { GroupCallSettingStackParamList } from '../navigations/navigatorTypes';
 import { GroupRoutes } from '../navigations/routes';
-import GroupCallAppInfoScreen from './GroupCallAppInfoScreen';
-import GroupCallSettingsScreen from './GroupCallSettingsScreen';
-
-type SettingScreenNavigationProps = NativeStackNavigationProp<GroupCallSettingStackParamList>;
-export type GroupCallSettingStackProps = {
-  navigation: SettingScreenNavigationProps;
-};
+import GroupCallAppInfoScreen from '../screens/GroupCallAppInfoScreen';
+import GroupCallSettingsScreen from '../screens/GroupCallSettingsScreen';
 
 const Stack = createNativeStackNavigator<GroupCallSettingStackParamList>();
 

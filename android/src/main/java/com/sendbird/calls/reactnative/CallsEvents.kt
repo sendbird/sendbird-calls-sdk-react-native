@@ -15,6 +15,10 @@ fun directCallType(type: String): String {
     return "${CallsEvents.EVENT_DIRECT_CALL}.${type}"
 }
 
+fun groupCallType(type: String): String {
+    return "${CallsEvents.EVENT_GROUP_CALL}.${type}"
+}
+
 class CallsEvents {
     companion object {
         /**
@@ -23,11 +27,13 @@ class CallsEvents {
          * */
         const val EVENT_DEFAULT = "sendbird.call.default"
         const val EVENT_DIRECT_CALL = "sendbird.call.direct"
+        const val EVENT_GROUP_CALL = "sendbird.call.group"
 
         /**
          * Event Type
          * TYPE_{EVENT}_{TYPE}
          * */
+        // Direct
         val TYPE_DEFAULT_ON_RINGING = defaultType("onRinging")
         val TYPE_DIRECT_CALL_ON_ESTABLISHED = directCallType("onEstablished")
         val TYPE_DIRECT_CALL_ON_CONNECTED = directCallType("onConnected")
@@ -42,6 +48,9 @@ class CallsEvents {
         val TYPE_DIRECT_CALL_ON_CUSTOM_ITEMS_UPDATED = directCallType("onCustomItemsUpdated")
         val TYPE_DIRECT_CALL_ON_CUSTOM_ITEMS_DELETED = directCallType("onCustomItemsDeleted")
         val TYPE_DIRECT_CALL_ON_USER_HOLD_STATUS_CHANGED = directCallType("onUserHoldStatusChanged")
+        // Group
+        val TYPE_GROUP_CALL_ON_REMOTE_PARTICIPANT_ENTERED = groupCallType("onRemoteParticipantEntered")
+        val TYPE_GROUP_CALL_ON_REMOTE_PARTICIPANT_EXITED = groupCallType("onRemoteParticipantExited")
 
         fun sendEvent(reactContext: ReactContext, event: String, eventType: String, data: WritableMap) {
             Log.d(CallsModule.NAME, "[CallsEvents] sendEvent() $event++$eventType")

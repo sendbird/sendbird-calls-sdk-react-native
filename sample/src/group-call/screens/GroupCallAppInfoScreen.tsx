@@ -1,19 +1,26 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { SendbirdCalls } from '@sendbird/calls-react-native';
+
+import SBText from '../../shared/components/SBText';
+import Palette from '../../shared/styles/palette';
 
 const GroupCallAppInfoScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.info}>
-        <Text style={styles.title}>Name</Text>
-        <Text style={styles.desc}>Voice & Video</Text>
+        <SBText body2>Name</SBText>
+        <SBText body1 style={{ marginTop: 4 }}>
+          Voice & Video
+        </SBText>
       </View>
 
       <View style={styles.info}>
-        <Text style={styles.title}>ID</Text>
-        <Text style={styles.desc}>{SendbirdCalls.applicationId}</Text>
+        <SBText body2>ID</SBText>
+        <SBText body1 style={{ marginTop: 4 }}>
+          {SendbirdCalls.applicationId}
+        </SBText>
       </View>
     </View>
   );
@@ -22,18 +29,14 @@ const GroupCallAppInfoScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
+    backgroundColor: Palette.background50,
   },
   info: {
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-    paddingVertical: 10,
+    borderBottomColor: Palette.background100,
+    paddingVertical: 16,
   },
-  title: {
-    fontWeight: '600',
-  },
-  desc: {},
 });
 
 export default GroupCallAppInfoScreen;

@@ -1,6 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
-import { AppRegistry } from 'react-native';
+import { AppRegistry, StatusBar } from 'react-native';
 import { withTouchReload } from 'react-native-touch-reload';
 
 import { SendbirdCalls } from '@sendbird/calls-react-native';
@@ -24,6 +24,7 @@ function App() {
   return (
     <AuthProvider>
       <NavigationContainer>
+        <StatusBar backgroundColor={'#FFFFFF'} barStyle={'dark-content'} />
         <InitialApp />
       </NavigationContainer>
     </AuthProvider>

@@ -16,3 +16,15 @@ export const noopDirectCallListener = {
   onRemoteVideoSettingsChanged: noop,
   onUserHoldStatusChanged: noop,
 };
+export const noopRoomListener = {
+  onDeleted: noop,
+  onError: noop,
+  onRemoteParticipantEntered: noop,
+  onRemoteParticipantExited: noop,
+  onRemoteParticipantStreamStarted: noop,
+  onAudioDeviceChanged: noop,
+  onRemoteVideoSettingsChanged: noop,
+  onRemoteAudioSettingsChanged: noop,
+  onCustomItemsUpdated: noop,
+  onCustomItemsDeleted: noop,
+};

@@ -2,6 +2,7 @@ import React from 'react';
 import { Pressable, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 
 import Palette from '../styles/palette';
+import type { ChildrenProps } from '../types/props';
 import SBText from './SBText';
 
 const buttonStyles = {
@@ -42,7 +43,7 @@ type Props = {
   onPress?: () => void;
   buttonColor?: string;
   contentColor?: string;
-};
+} & ChildrenProps;
 const SBButton: React.FC<Props> = ({
   variant = 'contained',
   buttonColor,
@@ -72,7 +73,7 @@ const SBButton: React.FC<Props> = ({
         const stateColor = getStateColor(pressed, disabled);
 
         return (
-          <SBText button color={contentColor ?? stateColor.content} style={styles.text}>
+          <SBText button2 color={contentColor ?? stateColor.content}>
             {children}
           </SBText>
         );
@@ -90,7 +91,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   icon: { marginVertical: -4, marginRight: 8 },
-  text: {},
 });
 
 export default SBButton;

@@ -15,6 +15,7 @@ class CallsModule(private val reactContext: ReactApplicationContext) : CallsModu
     var initialized = false
     private val commonModule = CallsCommonModule(reactContext)
     private val directCallModule = CallsDirectCallModule(reactContext)
+    private val groupCallModule = CallsGroupCallModule(reactContext)
 
     fun invalidate(handler: CompletionHandler?) {
         if(initialized) {
@@ -57,6 +58,8 @@ class CallsModule(private val reactContext: ReactApplicationContext) : CallsModu
     override fun unregisterPushToken(token: String, promise: Promise) = commonModule.unregisterPushToken(token, promise)
     override fun dial(calleeId: String, isVideoCall: Boolean, options: ReadableMap, promise: Promise) = commonModule.dial(calleeId, isVideoCall, options, promise)
     override fun createRoom(roomType: String, promise: Promise) = commonModule.createRoom(roomType, promise)
+    override fun fetchRoomById(roomId: String, promise: Promise) = commonModule.fetchRoomById(roomId, promise)
+    override fun getCachedRoomById(roomId: String, promise: Promise) = commonModule.getCachedRoomById(roomId, promise)
 
     /** DirectCall module interface**/
     override fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise)= directCallModule.selectVideoDevice(callId, device, promise)
@@ -70,6 +73,10 @@ class CallsModule(private val reactContext: ReactApplicationContext) : CallsModu
     override fun unmuteMicrophone(callId: String)= directCallModule.unmuteMicrophone(callId)
     override fun updateLocalVideoView(callId: String, videoViewId: Int)= directCallModule.updateLocalVideoView(callId, videoViewId)
     override fun updateRemoteVideoView(callId: String, videoViewId: Int)= directCallModule.updateRemoteVideoView(callId, videoViewId)
+
+    /** GroupCall module interface**/
+    override fun enter(roomId: String, options: ReadableMap, promise: Promise) = groupCallModule.enter(roomId, options, promise)
+    override fun exit(roomId: String) = groupCallModule.exit(roomId)
 
     companion object {
         const val NAME = "RNSendbirdCalls"
