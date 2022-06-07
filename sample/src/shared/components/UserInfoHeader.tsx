@@ -1,18 +1,21 @@
 import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { DEFAULT_HEADER_HEIGHT } from '../constants';
 import { useAuthContext } from '../contexts/AuthContext';
 import Palette from '../styles/palette';
 import SBText from './SBText';
 
 const UserInfoHeader = () => {
+  const { top } = useSafeAreaInsets();
   const { currentUser } = useAuthContext();
   const { profileUrl, nickname, userId } = currentUser ?? {};
 
   const source = profileUrl ? { uri: profileUrl } : require('../../assets/iconAvatar.png');
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: top, height: DEFAULT_HEADER_HEIGHT + top }]}>
       <Image source={source} style={styles.profileImg} />
 
       <View style={styles.info}>
@@ -27,7 +30,6 @@ const UserInfoHeader = () => {
 
 const styles = StyleSheet.create({
   container: {
-    height: 44,
     paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',

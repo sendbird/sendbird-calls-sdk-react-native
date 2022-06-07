@@ -4,11 +4,10 @@ import { Platform, ScrollView } from 'react-native';
 
 import { SendbirdCalls } from '@sendbird/calls-react-native';
 
-import { APP_ID, INITIAL_ROUTE } from '../../env';
+import { APP_ID } from '../../env';
 import SignInForm from '../../shared/components/SignInForm';
 import { useAuthContext } from '../../shared/contexts/AuthContext';
 import { AppLogger } from '../../shared/utils/logger';
-import { DirectRoutes } from '../navigations/routes';
 
 type Input = {
   applicationId: string;
@@ -29,10 +28,14 @@ const DirectCallSignInScreen = () => {
 
       setCurrentUser(user);
 
-      if (INITIAL_ROUTE === DirectRoutes.DIRECT_CALL) {
-        const token = Platform.OS === 'android' ? await messaging().getToken() : await messaging().getAPNSToken();
-        AppLogger.log('token:', token);
-        token && SendbirdCalls.registerPushToken(token, true);
+      const token = await messaging().getToken();
+      const apnsToken = await messaging().getAPNSToken();
+      AppLogger.log('token:', token);
+      if (Platform.OS === 'ios' && apnsToken) {
+        AppLogger.log('apns-token:', apnsToken);
+        SendbirdCalls.registerPushToken(apnsToken, true);
+      } else {
+        SendbirdCalls.registerPushToken(token, true);
       }
     });
   };

@@ -1,7 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { DEFAULT_HEADER_HEIGHT } from '../constants';
 import Palette from '../styles/palette';
 import SBText from './SBText';
 
@@ -18,10 +20,10 @@ interface IHeaderLeftProps {
 
 const Header = ({ title, headerLeftType = HeaderLeftTypes.NONE }: IHeaderLeftProps) => {
   const { goBack, canGoBack } = useNavigation();
-
+  const { top } = useSafeAreaInsets();
   return (
-    <View style={styles.container}>
-      <View style={[styles.headerTitle, headerLeftType !== HeaderLeftTypes.NONE && { alignItems: 'center' }]}>
+    <View style={[styles.container, { paddingTop: top, height: DEFAULT_HEADER_HEIGHT + top }]}>
+      <View style={[styles.headerTitle, { top }, headerLeftType !== HeaderLeftTypes.NONE && { alignItems: 'center' }]}>
         <SBText h1>{title}</SBText>
       </View>
       {(() => {
@@ -53,7 +55,6 @@ const Header = ({ title, headerLeftType = HeaderLeftTypes.NONE }: IHeaderLeftPro
 
 const styles = StyleSheet.create({
   container: {
-    height: 44,
     paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',
