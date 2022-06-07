@@ -87,14 +87,8 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
     return this.binder.nativeModule.dial(calleeUserId, isVideoCall, options);
   }
   public createRoom(roomType: RoomType): Promise<Room> {
-    return new Promise((resolve, reject) => {
-      this.binder.nativeModule
-        .createRoom(roomType)
-        .then((roomProps: RoomProperties) => {
-          resolve(new Room(this.binder, roomProps));
-        })
-        .catch((e) => reject(e));
-    });
+    return this.binder.nativeModule.createRoom(roomType)
+        .then(props => new Room(this.binder, props));
   }
   public fetchRoomById(roomId: string): Promise<Room> {
     return new Promise((resolve, reject) => {
