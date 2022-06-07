@@ -11,11 +11,11 @@ import com.sendbird.calls.handler.SendBirdCallListener
 import com.sendbird.calls.reactnative.CallsEvents
 import com.sendbird.calls.reactnative.utils.CallsUtils
 
-class CallsModule(private val reactContext: ReactApplicationContext) : CallsModuleStruct, SendBirdCallListener() {
+class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct, SendBirdCallListener() {
     var initialized = false
-    private val commonModule = CallsCommonModule(reactContext)
-    private val directCallModule = CallsDirectCallModule(reactContext)
-    private val groupCallModule = CallsGroupCallModule(reactContext)
+    val directCallModule = CallsDirectCallModule(this)
+    val groupCallModule = CallsGroupCallModule(this)
+    val commonModule = CallsCommonModule(this)
 
     fun invalidate(handler: CompletionHandler?) {
         if(initialized) {
