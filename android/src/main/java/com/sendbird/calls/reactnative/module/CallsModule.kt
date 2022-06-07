@@ -74,7 +74,7 @@ class CallsModule(private val reactContext: ReactApplicationContext) : CallsModu
     override fun updateLocalVideoView(callId: String, videoViewId: Int)= directCallModule.updateLocalVideoView(callId, videoViewId)
     override fun updateRemoteVideoView(callId: String, videoViewId: Int)= directCallModule.updateRemoteVideoView(callId, videoViewId)
 
-    /** DirectCall module interface**/
+    /** GroupCall module interface**/
     override fun enter(roomId: String, options: ReadableMap, promise: Promise) = groupCallModule.enter(roomId, options, promise)
     override fun exit(roomId: String) = groupCallModule.exit(roomId)
 
