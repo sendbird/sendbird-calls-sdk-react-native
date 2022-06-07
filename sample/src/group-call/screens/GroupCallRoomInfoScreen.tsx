@@ -1,21 +1,17 @@
-import type { RouteProp } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import SBText from '../../shared/components/SBText';
 import Palette from '../../shared/styles/palette';
-import type { GroupCallRootStackParamList } from '../navigations/navigatorTypes';
+import { useGroupNavigation } from '../hooks/useGroupNavigation';
+import { GroupRoutes } from '../navigations/routes';
 
-type RoomInfoScreenRouteProps = RouteProp<GroupCallRootStackParamList, 'room_info'>;
-type RoomInfoScreenNavigationProps = NativeStackNavigationProp<GroupCallRootStackParamList, 'room_info'>;
-type Props = {
-  navigation: RoomInfoScreenNavigationProps;
-  route: RoomInfoScreenRouteProps;
-};
-
-const GroupCallRoomInfoScreen = ({ route: { params } }: Props) => {
-  const { roomId, createdBy } = params;
+const GroupCallRoomInfoScreen = () => {
+  const {
+    route: {
+      params: { roomId, createdBy },
+    },
+  } = useGroupNavigation<GroupRoutes.ROOM_INFO>();
 
   return (
     <View style={styles.container}>

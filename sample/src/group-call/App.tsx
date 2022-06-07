@@ -5,12 +5,11 @@ import React from 'react';
 import Header, { HeaderLeftTypes } from '../shared/components/Header';
 import { useAuthContext } from '../shared/contexts/AuthContext';
 import GroupCallHomeTab from './navigations/GroupCallHomeTab';
-import type { GroupCallRootStackParamList } from './navigations/navigatorTypes';
 import { GroupRoutes } from './navigations/routes';
 import GroupCallRoomInfoScreen from './screens/GroupCallRoomInfoScreen';
 import GroupCallSignInScreen from './screens/GroupCallSignInScreen';
 
-const Stack = createNativeStackNavigator<GroupCallRootStackParamList>();
+const Stack = createNativeStackNavigator();
 
 const GroupCallApp = () => {
   const { currentUser } = useAuthContext();

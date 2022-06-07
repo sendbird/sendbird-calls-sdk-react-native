@@ -15,11 +15,11 @@ const enterRoom = async (roomId: string, withoutCache = false) => {
   try {
     console.log(roomId, withoutCache);
     const room: Room | null = withoutCache
-      ? await SendbirdCalls.fetchRoomById(roomId)
+      ? await SendbirdCalls.fetchRoomById(roomId) // TODO: check - maybe error
       : await SendbirdCalls.getCachedRoomById(roomId);
     AppLogger.log('enterRoom', room);
-    if (room === null) throw 'There is no Room';
-    room.enter();
+    // if (room === null) throw 'There is no Room';
+    // room.enter();
   } catch (e) {
     AppLogger.log('enterRoom - e', e);
   }
@@ -42,7 +42,7 @@ const GroupCallDialScreen = () => {
     <InputSafeView>
       <ScrollView style={styles.container}>
         <View style={styles.card}>
-          <SBIcon icon={'RoomAdd'} />
+          <SBIcon icon={'RoomAdd'} containerStyle={{ alignItems: 'flex-start' }} />
           <SBText h1 style={styles.title}>
             Create a room
           </SBText>
@@ -53,7 +53,7 @@ const GroupCallDialScreen = () => {
         </View>
 
         <View style={[styles.card, { marginTop: 20 }]}>
-          <SBIcon icon={'Join'} />
+          <SBIcon icon={'Join'} containerStyle={{ alignItems: 'flex-start' }} />
           <SBText h1 style={styles.title}>
             Enter with room ID
           </SBText>
@@ -66,6 +66,8 @@ const GroupCallDialScreen = () => {
               placeholderTextColor={Palette.onBackgroundLight02}
               onSubmitEditing={() => enterRoom(roomId, true)}
               style={styles.input}
+              autoCapitalize={'none'}
+              autoCorrect={false}
             />
             {!!roomId && (
               <SBButton style={styles.textButton} onPress={() => enterRoom(roomId, true)} variant="text">
@@ -83,6 +85,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
+    backgroundColor: Palette.background100,
   },
   card: {
     backgroundColor: Palette.background50,

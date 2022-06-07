@@ -37,9 +37,11 @@ const Header = ({ title, titleAlignCenter, headerLeftType = HeaderLeftTypes.NONE
         );
       case HeaderLeftTypes.CANCEL:
         return (
-          <Pressable>
-            <SBText button>Cancel</SBText>
-          </Pressable>
+          canGoBack() && (
+            <Pressable onPress={goBack}>
+              <SBText button>Cancel</SBText>
+            </Pressable>
+          )
         );
       default: // HeaderLeftTypes.NONE
         return null;

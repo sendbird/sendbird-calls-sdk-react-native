@@ -1,4 +1,3 @@
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React from 'react';
 
 import { SendbirdCalls } from '@sendbird/calls-react-native';
@@ -6,15 +5,13 @@ import { SendbirdCalls } from '@sendbird/calls-react-native';
 import SettingsView from '../../shared/components/SettingsView';
 import { useAuthContext } from '../../shared/contexts/AuthContext';
 import AuthManager from '../../shared/libs/AuthManager';
-import type { GroupCallSettingStackParamList } from '../navigations/navigatorTypes';
+import { useGroupNavigation } from '../hooks/useGroupNavigation';
 import { GroupRoutes } from '../navigations/routes';
 
-type SettingsScreenNavigationProps = NativeStackNavigationProp<GroupCallSettingStackParamList>;
-type GroupCallSettingsScreenProps = {
-  navigation: SettingsScreenNavigationProps;
-};
-
-const GroupCallSettingsScreen = ({ navigation: { navigate } }: GroupCallSettingsScreenProps) => {
+const GroupCallSettingsScreen = () => {
+  const {
+    navigation: { navigate },
+  } = useGroupNavigation<GroupRoutes.SETTINGS>();
   const { currentUser, setCurrentUser } = useAuthContext();
 
   if (!currentUser) return null;

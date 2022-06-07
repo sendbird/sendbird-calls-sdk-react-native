@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
     marginTop: 48,
   },
   logoTitle: {
+    marginTop: 30,
     fontWeight: 'bold',
     fontSize: 24,
     color: Palette.onBackgroundLight01,
