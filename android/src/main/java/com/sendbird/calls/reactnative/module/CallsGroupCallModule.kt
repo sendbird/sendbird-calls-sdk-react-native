@@ -9,7 +9,7 @@ import com.sendbird.calls.reactnative.CallsEvents
 import com.sendbird.calls.reactnative.RNCallsInternalError
 import com.sendbird.calls.reactnative.utils.CallsUtils
 
-class CallsGroupCallModule(private val reactContext: ReactApplicationContext): GroupCallModule, RoomListener {
+class CallsGroupCallModule(private val root: CallsModule): GroupCallModule, RoomListener {
     /** GroupCallMethods **/
     override fun enter(roomId: String, options: ReadableMap, promise: Promise) {
         Log.d(CallsModule.NAME, "[GroupCallModule] enter($roomId)")
@@ -62,7 +62,7 @@ class CallsGroupCallModule(private val reactContext: ReactApplicationContext): G
             if (participantJsMap == null) throw RNCallsInternalError(from, RNCallsInternalError.Type.NOT_FOUND_PARTICIPANT)
             else {
                 CallsEvents.sendEvent(
-                    reactContext,
+                    root.reactContext,
                     CallsEvents.EVENT_GROUP_CALL,
                     CallsEvents.TYPE_GROUP_CALL_ON_REMOTE_PARTICIPANT_ENTERED,
                     participantJsMap,
@@ -79,7 +79,7 @@ class CallsGroupCallModule(private val reactContext: ReactApplicationContext): G
             if (participantJsMap == null) throw RNCallsInternalError(from, RNCallsInternalError.Type.NOT_FOUND_PARTICIPANT)
             else {
                 CallsEvents.sendEvent(
-                    reactContext,
+                    root.reactContext,
                     CallsEvents.EVENT_GROUP_CALL,
                     CallsEvents.TYPE_GROUP_CALL_ON_REMOTE_PARTICIPANT_EXITED,
                     participantJsMap,

@@ -8,6 +8,7 @@ export type Typo =
   | 'h1'
   | 'h2'
   | 'h3'
+  | 'title1'
   | 'subtitle1'
   | 'subtitle2'
   | 'body1'
@@ -42,6 +43,12 @@ const Typography: Record<Typo, FontAttributes> = {
     fontSize: scaleFactor(16),
     lineHeight: scaleFactor(20),
     letterSpacing: scaleFactor(-0.2),
+    color: Palette.onBackgroundLight01,
+  },
+  title1: {
+    fontWeight: '700',
+    fontSize: scaleFactor(24),
+    lineHeight: scaleFactor(28),
     color: Palette.onBackgroundLight01,
   },
   subtitle1: {

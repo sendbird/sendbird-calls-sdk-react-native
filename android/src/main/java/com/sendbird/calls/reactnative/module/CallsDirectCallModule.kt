@@ -3,7 +3,6 @@ package com.sendbird.calls.reactnative.module
 import android.util.Log
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
-import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReadableMap
 import com.sendbird.calls.AcceptParams
 import com.sendbird.calls.AudioDevice
@@ -15,7 +14,7 @@ import com.sendbird.calls.reactnative.RNCallsInternalError
 import com.sendbird.calls.reactnative.extension.asString
 import com.sendbird.calls.reactnative.utils.CallsUtils
 
-class CallsDirectCallModule(private val reactContext: ReactApplicationContext): DirectCallModule,
+class CallsDirectCallModule(private val root: CallsModule): DirectCallModule,
     DirectCallListener() {
     /** DirectCallMethods **/
     override fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise)  {
@@ -69,8 +68,8 @@ class CallsDirectCallModule(private val reactContext: ReactApplicationContext): 
             val acceptParams = AcceptParams().apply {
                 setHoldActiveCall(holdActiveCall)
                 setCallOptions(CallOptions().apply {
-                    if(localVideoViewId != null) setLocalVideoView(CallsUtils.findVideoView(reactContext, localVideoViewId, from).getSurface())
-                    if(remoteVideoViewId != null) setRemoteVideoView(CallsUtils.findVideoView(reactContext, remoteVideoViewId, from).getSurface())
+                    if(localVideoViewId != null) setLocalVideoView(CallsUtils.findVideoView(root.reactContext, localVideoViewId, from).getSurface())
+                    if(remoteVideoViewId != null) setRemoteVideoView(CallsUtils.findVideoView(root.reactContext, remoteVideoViewId, from).getSurface())
                     setAudioEnabled(audioEnabled)
                     setVideoEnabled(videoEnabled)
                     setFrontCameraAsDefault(frontCamera)
@@ -140,7 +139,7 @@ class CallsDirectCallModule(private val reactContext: ReactApplicationContext): 
         val from = "directCall/updateLocalVideoView"
         CallsUtils.safeRun {
             val call = CallsUtils.findDirectCall(callId, from)
-            val view = CallsUtils.findVideoView(reactContext, videoViewId, from)
+            val view = CallsUtils.findVideoView(root.reactContext, videoViewId, from)
             call.setLocalVideoView(view.getSurface())
         }
     }
@@ -150,7 +149,7 @@ class CallsDirectCallModule(private val reactContext: ReactApplicationContext): 
         val from = "directCall/updateRemoteVideoView"
         CallsUtils.safeRun {
             val call = CallsUtils.findDirectCall(callId, from)
-            val view = CallsUtils.findVideoView(reactContext, videoViewId, from)
+            val view = CallsUtils.findVideoView(root.reactContext, videoViewId, from)
             call.setRemoteVideoView(view.getSurface())
         }
     }
@@ -162,7 +161,7 @@ class CallsDirectCallModule(private val reactContext: ReactApplicationContext): 
         availableAudioDevices: MutableSet<AudioDevice>
     ) {
         CallsEvents.sendEvent(
-            reactContext,
+            root.reactContext,
             CallsEvents.EVENT_DIRECT_CALL,
             CallsEvents.TYPE_DIRECT_CALL_ON_AUDIO_DEVICE_CHANGED,
             CallsUtils.convertDirectCallToJsMap(call),
@@ -175,7 +174,7 @@ class CallsDirectCallModule(private val reactContext: ReactApplicationContext): 
 
     override fun onConnected(call: DirectCall) {
         CallsEvents.sendEvent(
-            reactContext,
+            root.reactContext,
             CallsEvents.EVENT_DIRECT_CALL,
             CallsEvents.TYPE_DIRECT_CALL_ON_CONNECTED,
             CallsUtils.convertDirectCallToJsMap(call)
@@ -184,7 +183,7 @@ class CallsDirectCallModule(private val reactContext: ReactApplicationContext): 
 
     override fun onCustomItemsDeleted(call: DirectCall, deletedKeys: List<String>) {
         CallsEvents.sendEvent(
-            reactContext,
+            root.reactContext,
             CallsEvents.EVENT_DIRECT_CALL,
             CallsEvents.TYPE_DIRECT_CALL_ON_CUSTOM_ITEMS_DELETED,
             CallsUtils.convertDirectCallToJsMap(call),
@@ -194,7 +193,7 @@ class CallsDirectCallModule(private val reactContext: ReactApplicationContext): 
 
     override fun onCustomItemsUpdated(call: DirectCall, updatedKeys: List<String>) {
         CallsEvents.sendEvent(
-            reactContext,
+            root.reactContext,
             CallsEvents.EVENT_DIRECT_CALL,
             CallsEvents.TYPE_DIRECT_CALL_ON_CUSTOM_ITEMS_UPDATED,
             CallsUtils.convertDirectCallToJsMap(call),
@@ -204,7 +203,7 @@ class CallsDirectCallModule(private val reactContext: ReactApplicationContext): 
 
     override fun onEnded(call: DirectCall) {
         CallsEvents.sendEvent(
-            reactContext,
+            root.reactContext,
             CallsEvents.EVENT_DIRECT_CALL,
             CallsEvents.TYPE_DIRECT_CALL_ON_ENDED,
             CallsUtils.convertDirectCallToJsMap(call)
@@ -213,7 +212,7 @@ class CallsDirectCallModule(private val reactContext: ReactApplicationContext): 
 
     override fun onEstablished(call: DirectCall) {
         CallsEvents.sendEvent(
-            reactContext,
+            root.reactContext,
             CallsEvents.EVENT_DIRECT_CALL,
             CallsEvents.TYPE_DIRECT_CALL_ON_ESTABLISHED,
             CallsUtils.convertDirectCallToJsMap(call)
@@ -222,7 +221,7 @@ class CallsDirectCallModule(private val reactContext: ReactApplicationContext): 
 
     override fun onLocalVideoSettingsChanged(call: DirectCall) {
         CallsEvents.sendEvent(
-            reactContext,
+            root.reactContext,
             CallsEvents.EVENT_DIRECT_CALL,
             CallsEvents.TYPE_DIRECT_CALL_ON_LOCAL_VIDEO_SETTINGS_CHANGED,
             CallsUtils.convertDirectCallToJsMap(call)
@@ -231,7 +230,7 @@ class CallsDirectCallModule(private val reactContext: ReactApplicationContext): 
 
     override fun onReconnected(call: DirectCall) {
         CallsEvents.sendEvent(
-            reactContext,
+            root.reactContext,
             CallsEvents.EVENT_DIRECT_CALL,
             CallsEvents.TYPE_DIRECT_CALL_ON_RECONNECTED,
             CallsUtils.convertDirectCallToJsMap(call)
@@ -240,7 +239,7 @@ class CallsDirectCallModule(private val reactContext: ReactApplicationContext): 
 
     override fun onReconnecting(call: DirectCall) {
         CallsEvents.sendEvent(
-            reactContext,
+            root.reactContext,
             CallsEvents.EVENT_DIRECT_CALL,
             CallsEvents.TYPE_DIRECT_CALL_ON_RECONNECTING,
             CallsUtils.convertDirectCallToJsMap(call)
@@ -249,7 +248,7 @@ class CallsDirectCallModule(private val reactContext: ReactApplicationContext): 
 
     override fun onRemoteAudioSettingsChanged(call: DirectCall) {
         CallsEvents.sendEvent(
-            reactContext,
+            root.reactContext,
             CallsEvents.EVENT_DIRECT_CALL,
             CallsEvents.TYPE_DIRECT_CALL_ON_REMOTE_AUDIO_SETTINGS_CHANGED,
             CallsUtils.convertDirectCallToJsMap(call)
@@ -258,7 +257,7 @@ class CallsDirectCallModule(private val reactContext: ReactApplicationContext): 
 
     override fun onRemoteRecordingStatusChanged(call: DirectCall) {
         CallsEvents.sendEvent(
-            reactContext,
+            root.reactContext,
             CallsEvents.EVENT_DIRECT_CALL,
             CallsEvents.TYPE_DIRECT_CALL_ON_REMOTE_RECORDING_STATUS_CHANGED,
             CallsUtils.convertDirectCallToJsMap(call)
@@ -267,7 +266,7 @@ class CallsDirectCallModule(private val reactContext: ReactApplicationContext): 
 
     override fun onRemoteVideoSettingsChanged(call: DirectCall) {
         CallsEvents.sendEvent(
-            reactContext,
+            root.reactContext,
             CallsEvents.EVENT_DIRECT_CALL,
             CallsEvents.TYPE_DIRECT_CALL_ON_REMOTE_VIDEO_SETTINGS_CHANGED,
             CallsUtils.convertDirectCallToJsMap(call)
@@ -280,7 +279,7 @@ class CallsDirectCallModule(private val reactContext: ReactApplicationContext): 
         isUserOnHold: Boolean
     ) {
         CallsEvents.sendEvent(
-            reactContext,
+            root.reactContext,
             CallsEvents.EVENT_DIRECT_CALL,
             CallsEvents.TYPE_DIRECT_CALL_ON_USER_HOLD_STATUS_CHANGED,
             CallsUtils.convertDirectCallToJsMap(call),

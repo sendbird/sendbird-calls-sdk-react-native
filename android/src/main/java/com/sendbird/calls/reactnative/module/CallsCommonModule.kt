@@ -5,7 +5,7 @@ import com.facebook.react.bridge.*
 import com.sendbird.calls.*
 import com.sendbird.calls.reactnative.utils.CallsUtils
 
-class CallsCommonModule(private val reactContext: ReactApplicationContext): CommonModule {
+class CallsCommonModule(private val root: CallsModule): CommonModule {
     override fun getCurrentUser(promise: Promise) {
         Log.d(CallsModule.NAME, "[CommonModule] getCurrentUser()")
         val user = SendBirdCall.currentUser
@@ -21,7 +21,7 @@ class CallsCommonModule(private val reactContext: ReactApplicationContext): Comm
 
     override fun initialize(appId: String): Boolean {
         Log.d(CallsModule.NAME, "[CommonModule] initialize($appId)")
-        return SendBirdCall.init(reactContext, appId)
+        return SendBirdCall.init(root.reactContext, appId)
     }
 
     override fun authenticate(userId: String, accessToken: String?, promise: Promise) {
@@ -71,8 +71,8 @@ class CallsCommonModule(private val reactContext: ReactApplicationContext): Comm
             val dialPrams = DialParams(calleeId).apply {
                 setVideoCall(isVideoCall)
                 setCallOptions(CallOptions().apply {
-                    if(localVideoViewId != null) setLocalVideoView(CallsUtils.findVideoView(reactContext, localVideoViewId, from).getSurface())
-                    if(remoteVideoViewId != null) setRemoteVideoView(CallsUtils.findVideoView(reactContext, remoteVideoViewId, from).getSurface())
+                    if(localVideoViewId != null) setLocalVideoView(CallsUtils.findVideoView(root.reactContext, localVideoViewId, from).getSurface())
+                    if(remoteVideoViewId != null) setRemoteVideoView(CallsUtils.findVideoView(root.reactContext, remoteVideoViewId, from).getSurface())
                     if(channelUrl != null) setSendBirdChatOptions(SendBirdChatOptions().setChannelUrl(channelUrl))
                     setAudioEnabled(audioEnabled)
                     setVideoEnabled(videoEnabled)
@@ -82,7 +82,10 @@ class CallsCommonModule(private val reactContext: ReactApplicationContext): Comm
 
             SendBirdCall.dial(dialPrams) { directCall: DirectCall?, error: SendBirdException? ->
                 if(error != null) throw error
-                if(directCall != null) promise.resolve(CallsUtils.convertDirectCallToJsMap(directCall))
+                if(directCall != null) {
+                    directCall.setListener(root.directCallModule)
+                    promise.resolve(CallsUtils.convertDirectCallToJsMap(directCall))
+                }
             }
         }
     }

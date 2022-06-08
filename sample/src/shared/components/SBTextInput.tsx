@@ -54,7 +54,7 @@ const SBTextInput = React.forwardRef<RNTextInput, Props>(function TextInput(
       selectionColor={inputStyle.highlight}
       placeholderTextColor={inputStyle.placeholder}
       style={[
-        Typography.body3,
+        Typography.subtitle2,
         styles.input,
         {
           color: inputStyle.text,
@@ -77,6 +77,8 @@ const SBTextInput = React.forwardRef<RNTextInput, Props>(function TextInput(
 
 const styles = StyleSheet.create({
   input: {
+    borderRadius: 4,
+    height: 56,
     paddingVertical: 8,
     paddingHorizontal: 16,
   },
