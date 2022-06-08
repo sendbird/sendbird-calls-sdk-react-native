@@ -1,13 +1,13 @@
-import { RouteProp, useRoute } from '@react-navigation/native';
 import React from 'react';
 import { Button, View, useWindowDimensions } from 'react-native';
 
 import { useDirectCall } from '../../../../src/hooks/useDirectCall';
-import type { DirectRoutes, ParamListBase } from '../navigations/routes';
+import type { DirectRoutes } from '../navigations/routes';
+import { useDirectNavigation } from '../navigations/useDirectNavigation';
 
 const DirectCallVoiceCallingScreen = () => {
-  const { params } = useRoute<RouteProp<ParamListBase, typeof DirectRoutes.VOICE_CALLING>>();
-  const { call, status } = useDirectCall(params.callProps);
+  const { route } = useDirectNavigation<DirectRoutes.VOICE_CALLING>();
+  const { call, status } = useDirectCall(route.params.callProps);
   const { width, height } = useWindowDimensions();
 
   if (!call) return null;

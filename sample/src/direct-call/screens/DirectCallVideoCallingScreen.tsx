@@ -1,4 +1,3 @@
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect } from 'react';
 import { Button, StyleSheet, View, useWindowDimensions } from 'react-native';
 
@@ -6,12 +5,14 @@ import { DirectCallVideoView } from '@sendbird/calls-react-native';
 
 import { useDirectCall } from '../../../../src/hooks/useDirectCall';
 import SBText from '../../shared/components/SBText';
-import type { ParamListBase } from '../navigations/routes';
 import type { DirectRoutes } from '../navigations/routes';
+import { useDirectNavigation } from '../navigations/useDirectNavigation';
 
 const DirectCallVideoCallingScreen = () => {
-  const navigation = useNavigation<any>();
-  const { params } = useRoute<RouteProp<ParamListBase, typeof DirectRoutes.VIDEO_CALLING>>();
+  const {
+    navigation,
+    route: { params },
+  } = useDirectNavigation<DirectRoutes.VIDEO_CALLING>();
   const { call, status } = useDirectCall(params.callProps);
   const { width, height } = useWindowDimensions();
 

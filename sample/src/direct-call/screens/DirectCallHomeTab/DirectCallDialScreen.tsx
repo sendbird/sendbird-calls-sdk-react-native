@@ -1,5 +1,4 @@
 import messaging from '@react-native-firebase/messaging';
-import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Image, Keyboard, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 
@@ -9,9 +8,10 @@ import SBText from '../../../shared/components/SBText';
 import SBTextInput from '../../../shared/components/SBTextInput';
 import { useStates } from '../../../shared/hooks/useStates';
 import { DirectRoutes } from '../../navigations/routes';
+import { useDirectNavigation } from '../../navigations/useDirectNavigation';
 
 const DirectCallScreen = () => {
-  const navigation = useNavigation<any>();
+  const { navigation } = useDirectNavigation<DirectRoutes.DIAL>();
 
   const [state, setState] = useStates({ userId: '' });
 

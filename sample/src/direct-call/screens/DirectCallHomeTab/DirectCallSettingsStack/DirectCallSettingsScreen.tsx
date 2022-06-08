@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 
@@ -6,9 +5,10 @@ import SBText from '../../../../shared/components/SBText';
 import { useAuthContext } from '../../../../shared/contexts/AuthContext';
 import Palette from '../../../../shared/styles/palette';
 import { DirectRoutes } from '../../../navigations/routes';
+import { useDirectNavigation } from '../../../navigations/useDirectNavigation';
 
 const DirectCallSettingsScreen = () => {
-  const navigation = useNavigation<any>();
+  const { navigation } = useDirectNavigation<DirectRoutes.SETTINGS>();
   const { currentUser, setCurrentUser } = useAuthContext();
   const { profileUrl, nickname, userId } = currentUser ?? {};
 
