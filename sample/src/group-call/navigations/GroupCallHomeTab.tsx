@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
-import { Image } from 'react-native';
 
+import SBIcon from '../../shared/components/SBIcon';
 import UserInfoHeader from '../../shared/components/UserInfoHeader';
 import Palette from '../../shared/styles/palette';
 import GroupCallDialScreen from '../screens/GroupCallDialScreen';
@@ -20,9 +20,9 @@ const GroupCallHomeTab = () => {
           header: UserInfoHeader,
           tabBarIcon: ({ focused }) => {
             return (
-              <Image
-                source={focused ? require('../../assets/iconRoomsFilled.png') : require('../../assets/iconRooms.png')}
-                style={{ width: 24, height: 24, tintColor: focused ? Palette.background600 : Palette.background300 }}
+              <SBIcon
+                icon={focused ? 'RoomsFilled' : 'Rooms'}
+                color={focused ? Palette.background600 : Palette.background300}
               />
             );
           },
@@ -35,11 +35,9 @@ const GroupCallHomeTab = () => {
           headerShown: false,
           tabBarIcon: ({ focused }) => {
             return (
-              <Image
-                source={
-                  focused ? require('../../assets/iconSettingsFilled.png') : require('../../assets/iconSettings.png')
-                }
-                style={{ width: 24, height: 24, tintColor: focused ? Palette.background600 : Palette.background300 }}
+              <SBIcon
+                icon={focused ? 'SettingsFilled' : 'Settings'}
+                color={focused ? Palette.background600 : Palette.background300}
               />
             );
           },

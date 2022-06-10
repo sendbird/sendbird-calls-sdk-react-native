@@ -38,7 +38,8 @@
     "fix:eslint": "eslint --fix src sample --ext ts,tsx -c ./.eslintrc.js",
     "fix:prettier": "prettier --write \"sample/**/*.{ts,tsx}\" \"src/**/*.{ts,tsx}\"",
     "adb:reverse": "adb start-server && adb reverse tcp:8081 tcp:8081",
-    "start:sample": "yarn sample start"
+    "start:sample": "yarn sample start",
+    "icons": "node scripts/bundle-icons.js"
   },
   "keywords": [
     "react-native",

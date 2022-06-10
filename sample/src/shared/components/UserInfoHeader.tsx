@@ -2,6 +2,7 @@ import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import IconAssets from '../../assets';
 import { DEFAULT_HEADER_HEIGHT } from '../constants';
 import { useAuthContext } from '../contexts/AuthContext';
 import Palette from '../styles/palette';
@@ -12,7 +13,7 @@ const UserInfoHeader = () => {
   const { currentUser } = useAuthContext();
   const { profileUrl, nickname, userId } = currentUser ?? {};
 
-  const source = profileUrl ? { uri: profileUrl } : require('../../assets/iconAvatar.png');
+  const source = profileUrl ? { uri: profileUrl } : IconAssets.Avatar;
 
   return (
     <View style={[styles.container, { paddingTop: top, height: DEFAULT_HEADER_HEIGHT + top }]}>

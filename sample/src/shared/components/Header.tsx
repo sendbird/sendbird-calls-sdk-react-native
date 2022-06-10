@@ -1,10 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { DEFAULT_HEADER_HEIGHT } from '../constants';
 import Palette from '../styles/palette';
+import SBIcon from './SBIcon';
 import SBText from './SBText';
 
 export enum HeaderLeftTypes {
@@ -32,10 +33,7 @@ const Header = ({ title, headerLeftType = HeaderLeftTypes.NONE }: IHeaderLeftPro
             return (
               canGoBack() && (
                 <Pressable onPress={goBack}>
-                  <Image
-                    source={require('../../assets/iconBack.png')}
-                    style={[styles.icon, { marginRight: 16, tintColor: Palette.primary300 }]}
-                  />
+                  <SBIcon icon={'Back'} color={Palette.primary300} containerStyle={{ marginRight: 16 }} />
                 </Pressable>
               )
             );
@@ -67,10 +65,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-start',
     paddingHorizontal: 20,
-  },
-  icon: {
-    width: 24,
-    height: 24,
   },
 });
 
