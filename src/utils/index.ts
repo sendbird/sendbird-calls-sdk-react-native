@@ -2,6 +2,7 @@ export const noop = () => {
   void 0;
 };
 export const noopDirectCallListener = {
+  onUpdatePropertyManually: noop,
   onAudioDeviceChanged: noop,
   onConnected: noop,
   onCustomItemsDeleted: noop,

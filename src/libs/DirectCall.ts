@@ -12,7 +12,7 @@ import type {
   RecordingStatus,
   VideoDevice,
 } from '../types';
-import { RouteChangeReason } from '../types';
+import { DirectCallUserRole, RouteChangeReason } from '../types';
 import { noopDirectCallListener } from '../utils';
 import { Logger } from '../utils/logger';
 import type NativeBinder from './NativeBinder';
@@ -71,7 +71,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
   private _isVideoCall: boolean;
   private _localRecordingStatus: RecordingStatus;
   private _localUser: DirectCallUser | null;
-  private _myRole: DirectCallUser | null;
+  private _myRole: DirectCallUserRole | null;
   private _remoteRecordingStatus: RecordingStatus;
   private _remoteUser: DirectCallUser | null;
 
@@ -290,15 +290,28 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
   };
   public muteMicrophone = () => {
     this.binder.nativeModule.muteMicrophone(this.callId);
+    // NOTE: native doesn't have onLocalAudioSettingsChanged event
+    this._isLocalAudioEnabled = false;
+    this._listener.onUpdatePropertyManually(this);
   };
   public unmuteMicrophone = () => {
     this.binder.nativeModule.unmuteMicrophone(this.callId);
+    // NOTE: native doesn't have onLocalAudioSettingsChanged event
+    this._isLocalAudioEnabled = true;
+    this._listener.onUpdatePropertyManually(this);
   };
   public startVideo = () => {
     this.binder.nativeModule.startVideo(this.callId);
+    // NOTE: ios native doesn't have onLocalAudioSettingsChanged event
+    this._isLocalVideoEnabled = true;
+    this._listener.onUpdatePropertyManually(this);
+    Platform.OS === 'ios' && this._listener.onLocalVideoSettingsChanged(this);
   };
   public stopVideo = () => {
     this.binder.nativeModule.stopVideo(this.callId);
+    // NOTE: ios native doesn't have onLocalAudioSettingsChanged event
+    this._isLocalVideoEnabled = false;
+    Platform.OS === 'ios' && this._listener.onLocalVideoSettingsChanged(this);
   };
   public switchCamera = async () => {
     await this.binder.nativeModule.switchCamera(this.callId);

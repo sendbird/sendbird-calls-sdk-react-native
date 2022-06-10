@@ -1,20 +1,21 @@
-import React, { useEffect } from 'react';
-import { Button, StyleSheet, View, useWindowDimensions } from 'react-native';
+import React, { FC, useEffect, useMemo, useRef } from 'react';
+import { Animated, Easing, Platform, Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { DirectCallVideoView } from '@sendbird/calls-react-native';
+import type { DirectCall } from '@sendbird/calls-react-native';
+import { DirectCallUserRole, DirectCallVideoView } from '@sendbird/calls-react-native';
 
-import { useDirectCall } from '../../../../src/hooks/useDirectCall';
+import { DirectCallStatus, useDirectCall } from '../../../../src/hooks/useDirectCall';
+import SBIcon from '../../shared/components/SBIcon';
 import SBText from '../../shared/components/SBText';
+import { DEFAULT_HEADER_HEIGHT } from '../../shared/constants';
+import Palette from '../../shared/styles/palette';
 import type { DirectRoutes } from '../navigations/routes';
 import { useDirectNavigation } from '../navigations/useDirectNavigation';
 
 const DirectCallVideoCallingScreen = () => {
-  const {
-    navigation,
-    route: { params },
-  } = useDirectNavigation<DirectRoutes.VIDEO_CALLING>();
-  const { call, status } = useDirectCall(params.callProps);
-  const { width, height } = useWindowDimensions();
+  const { navigation, route } = useDirectNavigation<DirectRoutes.VIDEO_CALLING>();
+  const { call, status } = useDirectCall(route.params.callProps);
 
   useEffect(() => {
     if (call?.isEnded) navigation.goBack();
@@ -24,36 +25,197 @@ const DirectCallVideoCallingScreen = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <SBText>{status}</SBText>
-      {status === 'connected' && (
-        <View style={{ width, height, zIndex: -99 }}>
-          <DirectCallVideoView viewType={'remote'} callId={call.callId} style={StyleSheet.absoluteFill} />
-          <DirectCallVideoView
-            viewType={'local'}
-            callId={call.callId}
-            style={{
-              position: 'absolute',
-              left: 12,
-              top: 12,
-              width: width * 0.4,
-              height: width * 0.4 * (9 / 6),
-              borderRadius: 8,
-              overflow: 'hidden',
-              backgroundColor: 'black',
-            }}
-          />
-        </View>
-      )}
+      <ContentView status={status} call={call} />
+      <ControllerView status={status} call={call} />
+    </View>
+  );
+};
 
-      <View style={{ position: 'absolute', bottom: 0, width, height: height * 0.5, alignItems: 'flex-end' }}>
-        {status === 'ringing' && <Button title={'Accept'} onPress={() => call.accept()} />}
-        {status === 'ringing' && <Button title={'Decline'} onPress={() => call.end()} />}
-        {status.match(/connected|reconnecting/) && <Button title={'Disconnect'} onPress={() => call.end()} />}
-        {status === 'connected' && <Button title={'StartVideo'} onPress={() => call.startVideo()} />}
-        {status === 'connected' && <Button title={'StopVideo'} onPress={() => call.stopVideo()} />}
-        {status === 'connected' && <Button title={'Mute'} onPress={() => call?.muteMicrophone()} />}
-        {status === 'connected' && <Button title={'Unmute'} onPress={() => call?.unmuteMicrophone()} />}
-        {status === 'connected' && <Button title={'Switch'} onPress={() => call?.switchCamera()} />}
+const useLocalViewSize = (initialScale: 'small' | 'large' = 'large') => {
+  const { width, height } = useWindowDimensions();
+
+  const { top } = useSafeAreaInsets();
+  const topInset = DEFAULT_HEADER_HEIGHT + top;
+
+  const MAX_WIDTH = Math.min(width, height);
+  const MIN_WIDTH = 96;
+  const MAX_HEIGHT = Math.max(width, height) - topInset;
+  const MIN_HEIGHT = 160;
+
+  const viewWidth = useRef(new Animated.Value(initialScale === 'large' ? MAX_WIDTH : MIN_WIDTH)).current;
+  const viewPadding = viewWidth.interpolate({
+    inputRange: [MIN_WIDTH, MAX_WIDTH],
+    outputRange: [16, 0],
+    extrapolate: 'clamp',
+  });
+  const viewHeight = viewWidth.interpolate({
+    inputRange: [MIN_WIDTH, MAX_WIDTH],
+    outputRange: [MIN_HEIGHT, MAX_HEIGHT],
+    extrapolate: 'clamp',
+  });
+  const scaleTo = (size: 'small' | 'large') => {
+    Animated.timing(viewWidth, {
+      toValue: size === 'small' ? MIN_WIDTH : MAX_WIDTH,
+      duration: 300,
+      easing: Easing.inOut(Easing.ease),
+      useNativeDriver: false,
+    }).start();
+  };
+
+  return {
+    viewPadding,
+    viewWidth,
+    viewHeight,
+    scaleTo,
+  };
+};
+
+type CallStatusProps = {
+  status: DirectCallStatus;
+  call: DirectCall;
+};
+const ContentView: FC<CallStatusProps> = ({ call, status }) => {
+  const { viewPadding, viewWidth, viewHeight, scaleTo } = useLocalViewSize('large');
+
+  useEffect(() => {
+    switch (status) {
+      case 'pending': {
+        scaleTo('large');
+        break;
+      }
+      case 'established':
+      case 'connected':
+      case 'reconnecting': {
+        scaleTo('small');
+        break;
+      }
+      case 'ended': {
+        break;
+      }
+    }
+  }, [status]);
+
+  return (
+    // FIXME: zIndex not working
+    <View style={{ flex: 1, zIndex: -99 }}>
+      {status !== 'pending' && Platform.OS !== 'ios' && (
+        <DirectCallVideoView viewType={'remote'} callId={call.callId} style={StyleSheet.absoluteFill} />
+      )}
+      {Platform.OS !== 'ios' && (
+        <AnimatedVideoView
+          viewType={'local'}
+          callId={call.callId}
+          style={{
+            position: 'absolute',
+            left: viewPadding,
+            top: viewPadding,
+            width: viewWidth,
+            height: viewHeight,
+            backgroundColor: 'gray',
+            zIndex: 99,
+          }}
+        />
+      )}
+    </View>
+  );
+};
+const AnimatedVideoView = Animated.createAnimatedComponent(DirectCallVideoView);
+
+// TODO: Extract styles
+const ControllerView: FC<CallStatusProps> = ({ status, call }) => {
+  const remoteUserNickname = useMemo(() => {
+    if (call.myRole === DirectCallUserRole.CALLEE) {
+      return call.caller?.nickname ?? 'No name';
+    }
+    if (call.myRole === DirectCallUserRole.CALLER) {
+      return call.callee?.nickname ?? 'No name';
+    }
+    return 'No name';
+  }, [call]);
+
+  return (
+    <View style={{ position: 'absolute', left: 16, right: 16, top: 16, bottom: 16 }}>
+      <View style={{ flex: 1 }}>
+        <View style={{ alignItems: 'flex-end' }}>
+          <Pressable onPress={() => call.switchCamera()}>
+            <SBIcon icon={'btnCameraFlipIos'} size={48} />
+          </Pressable>
+        </View>
+        <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
+          {status === 'pending' && (
+            <SBText h2 color={Palette.onBackgroundDark01} style={{ fontSize: 20, fontWeight: '600' }}>
+              {remoteUserNickname}
+            </SBText>
+          )}
+          {status === 'pending' && (
+            <SBText color={Palette.onBackgroundDark01} body3>
+              {call.myRole === DirectCallUserRole.CALLER ? 'calling...' : 'Incoming voice call...'}
+            </SBText>
+          )}
+          <View style={{ height: 150, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
+            {status !== 'pending' && !call.isRemoteAudioEnabled && (
+              <>
+                <SBIcon
+                  icon={'AudioOff'}
+                  size={40}
+                  color={Palette.onBackgroundDark01}
+                  containerStyle={{ marginBottom: 16 }}
+                />
+                <SBText color={Palette.onBackgroundDark01} body3>{`${remoteUserNickname} is muted`}</SBText>
+              </>
+            )}
+          </View>
+        </View>
+      </View>
+      <View style={{ flex: 1, justifyContent: 'flex-end', paddingBottom: 64 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 24 }}>
+          <Pressable
+            onPress={() => {
+              if (call.isLocalAudioEnabled) {
+                call.muteMicrophone();
+              } else {
+                call.unmuteMicrophone();
+              }
+            }}
+          >
+            <SBIcon icon={call.isLocalAudioEnabled ? 'btnAudioOff' : 'btnAudioOffSelected'} size={64} />
+          </Pressable>
+          <Pressable
+            style={{ marginHorizontal: 24 }}
+            onPress={() => {
+              if (call.isLocalVideoEnabled) {
+                call.stopVideo();
+              } else {
+                call.startVideo();
+              }
+            }}
+          >
+            <SBIcon icon={call.isLocalVideoEnabled ? 'btnVideoOff' : 'btnVideoOffSelected'} size={64} />
+          </Pressable>
+          <Pressable
+            onPress={() => {
+              //TODO: bottom sheet / route picker view
+              if (Platform.OS === 'android') {
+                // call.android_selectAudioDevice();
+              } else {
+                // call.ios_
+              }
+            }}
+          >
+            <SBIcon icon={'btnBluetooth'} size={64} />
+          </Pressable>
+        </View>
+
+        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+          {call.myRole === DirectCallUserRole.CALLEE && (
+            <Pressable style={{ marginRight: 24 }} onPress={() => call.accept()}>
+              <SBIcon icon={'btnCallVideoAccept'} size={64} />
+            </Pressable>
+          )}
+          <Pressable onPress={() => call.end()}>
+            <SBIcon icon={'btnCallEnd'} size={64} />
+          </Pressable>
+        </View>
       </View>
     </View>
   );

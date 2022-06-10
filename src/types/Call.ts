@@ -8,6 +8,9 @@ export interface SendbirdCallListener {
 }
 
 export interface DirectCallListener {
+  /** Called when the update properties internally on Javascript side **/
+  onUpdatePropertyManually: (call: DirectCallProperties) => void;
+
   /** Called when the callee has accepted the call, but not yet connected to media streams. **/
   onEstablished: (call: DirectCallProperties) => void;
 
@@ -74,7 +77,7 @@ export interface DirectCallProperties {
 
   localUser: DirectCallUser | null;
   remoteUser: DirectCallUser | null;
-  myRole: DirectCallUser | null;
+  myRole: DirectCallUserRole | null;
 
   availableVideoDevices: VideoDevice[];
   currentVideoDevice: VideoDevice | null;

@@ -3,12 +3,13 @@ import { useEffect, useState } from 'react';
 import type { DirectCallProperties } from '@sendbird/calls-react-native';
 import { DirectCall, SendbirdCalls } from '@sendbird/calls-react-native';
 
+export type DirectCallStatus = 'pending' | 'established' | 'connected' | 'reconnecting' | 'ended';
 export const useDirectCall = (props: DirectCallProperties) => {
   const [_, update] = useState(0);
   const forceUpdate = () => update((prev) => prev + 1);
 
   const [call, setCall] = useState<DirectCall>();
-  const [status, setStatus] = useState<'ringing' | 'established' | 'connected' | 'reconnecting' | 'ended'>('ringing');
+  const [status, setStatus] = useState<DirectCallStatus>('pending');
 
   useEffect(() => {
     const directCall = SendbirdCalls.getDirectCall(props);
@@ -50,6 +51,9 @@ export const useDirectCall = (props: DirectCallProperties) => {
         forceUpdate();
       },
       onUserHoldStatusChanged() {
+        forceUpdate();
+      },
+      onUpdatePropertyManually() {
         forceUpdate();
       },
     });
