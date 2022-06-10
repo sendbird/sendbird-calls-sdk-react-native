@@ -19,6 +19,7 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   private _initialized = false;
   private _currentUser: User | null = null;
   private _onRinging: (props: DirectCallProperties) => void = noop;
+  private _onBackgroundRinging: (props: DirectCallProperties) => void = noop;
 
   public get applicationId() {
     return this._applicationId;
@@ -57,6 +58,7 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
       if (type === DefaultEventType.ON_RINGING) {
         this.Logger.debug('[SendbirdCalls]', 'onRinging', data.callId);
         this._onRinging(data);
+        this._onBackgroundRinging(data);
       }
     });
 
@@ -133,6 +135,9 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
     if (!_directCalls[props.callId]) _directCalls[props.callId] = new DirectCall(this.binder, props);
     return _directCalls[props.callId];
   };
+  public onBackgroundRinging(listener: (props: DirectCallProperties) => void) {
+    this._onBackgroundRinging = listener;
+  }
   public onRinging(listener: (props: DirectCallProperties) => void) {
     this._onRinging = listener;
   }

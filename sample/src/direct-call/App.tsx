@@ -16,7 +16,8 @@ import DirectCallVoiceCallingScreen from './screens/DirectCallVoiceCallingScreen
 messaging().setBackgroundMessageHandler(async (message) => {
   const isSendbirdCalls = SendbirdCalls.android_handleFirebaseMessageData(message.data);
   if (isSendbirdCalls) {
-    SendbirdCalls.onRinging(async (call) => {
+    // TODO: implement android foreground service (notification)
+    SendbirdCalls.onBackgroundRinging(async (call) => {
       const channelId = await Notifee.createChannel({
         name: 'Ringing',
         id: 'sendbird.calls.rn.ringing',

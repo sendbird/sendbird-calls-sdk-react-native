@@ -5,51 +5,53 @@ import PushKit
 import Foundation
 import AVFoundation
 
-protocol RNBridgeModuleProtocol: RCTBridgeModule, RCTInvalidating { }
-
 @objc(RNSendbirdCalls)
-class RNSendbirdCalls: NSObject, RNBridgeModuleProtocol {
+class RNSendbirdCalls: RCTEventEmitter {
     internal var module = CallsModule()
     
-    @objc var bridge: RCTBridge! {
-        get {
-            CallsEvents.shared.bridge
-        }
-        set(value) {
-            CallsEvents.shared.bridge = value
-        }
+    override init() {
+        super.init()
+        CallsEvents.shared.eventEmitter = self
     }
     
-    @objc static func requiresMainQueueSetup() -> Bool {
+    @objc override static func requiresMainQueueSetup() -> Bool {
         return true
     }
     
-    @objc static func moduleName() -> String! {
+    @objc override static func moduleName() -> String! {
         return "RNSendbirdCalls"
     }
     
-    @objc func constantsToExport() -> [AnyHashable : Any]! {
+    @objc override func constantsToExport() -> [AnyHashable : Any]! {
         return [
             "NATIVE_SDK_VERSION": SendBirdCall.sdkVersion
         ]
     }
     
-    @objc func invalidate() {
+    @objc override func invalidate() {
+        super.invalidate()
         module.invalidate()
         module = CallsModule()
-        CallsEvents.shared.invalidate()
-    }
-    
-    @objc func addListener(_ eventName: String) {
-        CallsEvents.shared.addListener(eventName)
-    }
-    
-    @objc func removeListeners(_ count: Double) {
-        CallsEvents.shared.removeListeners(count)
     }
     
     @objc func handleRemoteNotificationData(data: [AnyHashable: Any]) {
         SendBirdCall.application(UIApplication.shared, didReceiveRemoteNotification: data)
+    }
+}
+
+// MARK: RCTEventEmitter
+extension RNSendbirdCalls {
+    override func startObserving() {
+        CallsEvents.shared.startObserving()
+    }
+    override func stopObserving() {
+        CallsEvents.shared.stopObserving()
+    }
+    override func supportedEvents() -> [String]! {
+        return [
+            CallsEvents.Event.default(.onRinging).name,
+            CallsEvents.Event.directCall(.onConnected).name
+        ]
     }
 }
 

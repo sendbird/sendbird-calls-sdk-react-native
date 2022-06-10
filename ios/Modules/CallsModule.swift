@@ -11,9 +11,22 @@ import SendBirdCalls
 import CallKit
 import React
 
+class CallsBaseModule: NSObject {
+    internal var root: CallsModule
+    init(root: CallsModule) {
+        self.root = root
+    }
+}
+
 class CallsModule: SendBirdCallDelegate {
-    internal let commonModule = CallsCommonModule()
-    internal let directCallModule = CallsDirectCallModule()
+    internal lazy var commonModule: CallsCommonModule = {
+        CallsCommonModule(root: self)
+    }()
+    
+    internal lazy var directCallModule: CallsDirectCallModule = {
+        CallsDirectCallModule(root: self)
+    }()
+    
     internal var initialized: Bool {
         get {
             return SendBirdCall.appId != nil
@@ -26,7 +39,6 @@ class CallsModule: SendBirdCallDelegate {
             SendBirdCall.removeAllDelegates()
             SendBirdCall.removeAllRecordingDelegates()
             SendBirdCall.getOngoingCalls().forEach { $0.end() }
-            CallsEvents.shared.invalidate()
         }
     }
     

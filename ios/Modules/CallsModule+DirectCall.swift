@@ -25,7 +25,7 @@ protocol CallsDirectCallModuleProtocol {
 }
 
 // MARK: DirectCallMethods
-class CallsDirectCallModule: NSObject, CallsDirectCallModuleProtocol {
+class CallsDirectCallModule: CallsBaseModule, CallsDirectCallModuleProtocol {
     func selectVideoDevice(_ callId: String, _ device: [String: String], _ promise: Promise) {
         let from = "directCall/accept"
         guard let deviceId = device["deviceId"], let _ = device["position"] else {

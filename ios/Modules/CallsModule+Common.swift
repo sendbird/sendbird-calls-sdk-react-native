@@ -29,7 +29,7 @@ protocol CallsCommonModuleProtocol {
     func dial(_ calleeId: String, _ isVideoCall: Bool, _ options: [String: Any?], _ promise: Promise)
 }
 
-class CallsCommonModule: NSObject, CallsCommonModuleProtocol {
+class CallsCommonModule: CallsBaseModule, CallsCommonModuleProtocol {
     var voipPromise: Promise?
     var voipRegistry: PKPushRegistry?
     var voipToken: String?
@@ -156,6 +156,7 @@ class CallsCommonModule: NSObject, CallsCommonModuleProtocol {
             if let error = error {
                 promise.reject(error)
             } else if let directCall = directCall {
+                directCall.delegate = self.root.directCallModule
                 promise.resolve(CallsUtils.convertDirectCallToDict(directCall))
             }
         }

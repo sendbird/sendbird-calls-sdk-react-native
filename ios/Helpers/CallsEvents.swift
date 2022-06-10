@@ -9,7 +9,7 @@
 import Foundation
 import React
 
-class CallsEvents: RCTEventEmitter {
+class CallsEvents {
     enum Event {
         case `default`(_ type: DefaultEventType)
         case directCall(_ type: DirectCallEventType)
@@ -57,43 +57,35 @@ class CallsEvents: RCTEventEmitter {
     
     var hasListeners = false
     var pendingEvents: [Dictionary<String, Any?>] = []
-    
-    override class func requiresMainQueueSetup() -> Bool {
-        return true
+    var eventEmitter: RCTEventEmitter!
+    var bridge: RCTBridge {
+        get {
+            self.eventEmitter.bridge
+        }
     }
     
-    override func startObserving() {
+    func startObserving() {
         hasListeners = true
         for event in pendingEvents {
             if let eventName = event["name"] as? CallsEvents.Event, let data = event["data"] as? Any {
-                sendEvent(eventName, data, event["additionalData"] ?? nil)
+                self.sendEvent(eventName, data, event["additionalData"] ?? nil)
             }
         }
         pendingEvents.removeAll()
     }
-    
-    override func stopObserving() {
+    func stopObserving() {
         hasListeners = false
-    }
-    
-    
-    override func supportedEvents() -> [String]! {
-        return [
-            Event.default(.onRinging).name,
-            Event.directCall(.onConnected).name
-        ]
     }
 }
 
 // MARK: Custom event sender
 extension CallsEvents {
     func sendEvent(_ event: Event, _ data: Any) {
-        if (hasListeners) {
-            sendEvent(withName: event.name, body: [
+        if (hasListeners && eventEmitter != nil) {
+            eventEmitter.sendEvent(withName: event.name, body: [
                 "eventType": event.type,
                 "data": data,
             ])
-            
         } else {
             pendingEvents.append([
                 "name": event,
@@ -103,13 +95,12 @@ extension CallsEvents {
     }
     
     func sendEvent(_ event: Event, _ data: Any, _ additionalData: Any?) {
-        if (hasListeners) {
-            sendEvent(withName: event.name, body: [
+        if (hasListeners && eventEmitter != nil) {
+            eventEmitter.sendEvent(withName: event.name, body: [
                 "eventType": event.type,
                 "data": data,
                 "additionalData": additionalData ?? [:]
             ])
-            
         } else {
             pendingEvents.append([
                 "name": event,
