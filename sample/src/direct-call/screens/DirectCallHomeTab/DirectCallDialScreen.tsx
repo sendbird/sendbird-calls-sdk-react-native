@@ -1,19 +1,27 @@
 import messaging from '@react-native-firebase/messaging';
 import React from 'react';
-import { Image, Keyboard, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, Keyboard, Platform, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { DirectCallProperties, SendbirdCalls } from '@sendbird/calls-react-native';
 
+import SBIcon from '../../../shared/components/SBIcon';
 import SBText from '../../../shared/components/SBText';
 import SBTextInput from '../../../shared/components/SBTextInput';
 import { useStates } from '../../../shared/hooks/useStates';
+import { AppLogger } from '../../../shared/utils/logger';
 import { DirectRoutes } from '../../navigations/routes';
 import { useDirectNavigation } from '../../navigations/useDirectNavigation';
 
 const DirectCallScreen = () => {
   const { navigation } = useDirectNavigation<DirectRoutes.DIAL>();
 
-  const [state, setState] = useStates({ userId: '' });
+  const [state, setState] = useStates({
+    userId: Platform.select({
+      ios: 'DirectCall_android',
+      android: 'DirectCall_ios',
+      default: 'test',
+    }),
+  });
 
   React.useEffect(() => {
     messaging().onMessage((message) => {
@@ -34,8 +42,15 @@ const DirectCallScreen = () => {
   };
 
   const calling = async (isVideoCall: boolean) => {
-    const callProps = await SendbirdCalls.dial(state.userId, isVideoCall);
-    onNavigate(callProps);
+    try {
+      navigation.navigate(DirectRoutes.VIDEO_CALLING);
+      // const callProps = await SendbirdCalls.dial(state.userId, isVideoCall);
+      // AppLogger.log('dial called', callProps.callId);
+      // onNavigate(callProps);
+    } catch (e) {
+      // @ts-ignore
+      Alert.alert('Failed', e.message);
+    }
   };
 
   return (
@@ -52,15 +67,11 @@ const DirectCallScreen = () => {
         />
       </View>
       <View style={{ flexDirection: 'row' }}>
-        <TouchableOpacity
-          onPress={() => {
-            calling(true);
-          }}
-        >
-          <Image source={require('../../../assets/btnCallVideo.png')} style={[styles.btn, { marginRight: 32 }]} />
+        <TouchableOpacity disabled={!state.userId} onPress={() => calling(true)}>
+          <SBIcon icon={'btnCallVideo'} size={64} containerStyle={{ marginRight: 32 }} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => calling(false)}>
-          <Image source={require('../../../assets/btnCallVoice.png')} style={styles.btn} />
+        <TouchableOpacity disabled={!state.userId} onPress={() => calling(false)}>
+          <SBIcon icon={'btnCallVoice'} size={64} />
         </TouchableOpacity>
       </View>
     </Pressable>
@@ -73,10 +84,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  btn: {
-    width: 64,
-    height: 64,
   },
 });
 

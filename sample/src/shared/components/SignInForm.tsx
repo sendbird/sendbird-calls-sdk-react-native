@@ -1,8 +1,9 @@
 import React from 'react';
-import { Image, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import Palette from '../styles/palette';
 import SBButton from './SBButton';
+import SBIcon from './SBIcon';
 import SBText from './SBText';
 import SBTextInput from './SBTextInput';
 
@@ -18,7 +19,7 @@ const SignInForm = ({ applicationId, userId, accessToken, onSubmit, onChange, co
   return (
     <View style={containerStyle}>
       <View style={styles.logoContainer}>
-        <Image source={require('../../assets/icSendbird.png')} style={styles.logo} />
+        <SBIcon icon={'Sendbird'} size={48} />
         <SBText style={styles.logoTitle}>Sendbird Calls</SBText>
       </View>
       <SBTextInput
@@ -51,10 +52,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 34,
     marginTop: 48,
-  },
-  logo: {
-    width: 48,
-    height: 48,
   },
   logoTitle: {
     fontWeight: 'bold',

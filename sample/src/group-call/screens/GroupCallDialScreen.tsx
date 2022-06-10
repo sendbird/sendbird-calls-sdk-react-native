@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Image, ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { Room, SendbirdCalls } from '@sendbird/calls-react-native';
 
 import InputSafeView from '../../shared/components/InputSafeView';
 import SBButton from '../../shared/components/SBButton';
+import SBIcon from '../../shared/components/SBIcon';
 import SBText from '../../shared/components/SBText';
 import SBTextInput from '../../shared/components/SBTextInput';
 import Palette from '../../shared/styles/palette';
@@ -41,7 +42,7 @@ const GroupCallDialScreen = () => {
     <InputSafeView>
       <ScrollView style={styles.container}>
         <View style={styles.card}>
-          <Image source={require('../../assets/iconRoomAdd.png')} style={styles.icon} />
+          <SBIcon icon={'RoomAdd'} />
           <SBText h1 style={styles.title}>
             Create a room
           </SBText>
@@ -52,7 +53,7 @@ const GroupCallDialScreen = () => {
         </View>
 
         <View style={[styles.card, { marginTop: 20 }]}>
-          <Image source={require('../../assets/iconJoin.png')} style={styles.icon} />
+          <SBIcon icon={'Join'} />
           <SBText h1 style={styles.title}>
             Enter with room ID
           </SBText>
@@ -87,10 +88,6 @@ const styles = StyleSheet.create({
     backgroundColor: Palette.background50,
     padding: 24,
     borderRadius: 4,
-  },
-  icon: {
-    width: 24,
-    height: 24,
   },
   title: {
     marginTop: 16,
