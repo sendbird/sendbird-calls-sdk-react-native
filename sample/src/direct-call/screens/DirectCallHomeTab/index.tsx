@@ -1,6 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
-import { Image } from 'react-native';
 
 import SBIcon from '../../../shared/components/SBIcon';
 import UserInfoHeader from '../../../shared/components/UserInfoHeader';

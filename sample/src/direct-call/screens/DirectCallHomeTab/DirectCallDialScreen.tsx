@@ -1,6 +1,6 @@
 import messaging from '@react-native-firebase/messaging';
 import React from 'react';
-import { Alert, Image, Keyboard, Platform, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, Keyboard, Platform, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { DirectCallProperties, SendbirdCalls } from '@sendbird/calls-react-native';
 
@@ -43,10 +43,9 @@ const DirectCallScreen = () => {
 
   const calling = async (isVideoCall: boolean) => {
     try {
-      navigation.navigate(DirectRoutes.VIDEO_CALLING);
-      // const callProps = await SendbirdCalls.dial(state.userId, isVideoCall);
-      // AppLogger.log('dial called', callProps.callId);
-      // onNavigate(callProps);
+      const callProps = await SendbirdCalls.dial(state.userId, isVideoCall);
+      AppLogger.log('dial called', callProps.callId);
+      onNavigate(callProps);
     } catch (e) {
       // @ts-ignore
       Alert.alert('Failed', e.message);
