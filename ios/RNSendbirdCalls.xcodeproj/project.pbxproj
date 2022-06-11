@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		ED1849E92854449D00354FA9 /* AVAudioSession+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1849E82854449D00354FA9 /* AVAudioSession+Extension.swift */; };
+		ED1849EB2854641600354FA9 /* RNSBDirectCallVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1849EA2854641600354FA9 /* RNSBDirectCallVideoView.swift */; };
+		ED1849ED2854644800354FA9 /* RNSBDirectCallVideoViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = ED1849EC2854644800354FA9 /* RNSBDirectCallVideoViewManager.m */; };
+		ED1849EF2854683600354FA9 /* RNSBDirectCallVideoViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1849EE2854683600354FA9 /* RNSBDirectCallVideoViewManager.swift */; };
 		ED452A0028498CAC000D8CE8 /* CallsEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4529FF28498CAC000D8CE8 /* CallsEvents.swift */; };
 		ED452A0328498CC9000D8CE8 /* BaseVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED452A0228498CC9000D8CE8 /* BaseVideoView.swift */; };
 		ED452A072849BC46000D8CE8 /* RNCallsInternalError.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED452A062849BC46000D8CE8 /* RNCallsInternalError.swift */; };
@@ -40,6 +43,9 @@
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libRNSendbirdCalls.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNSendbirdCalls.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED1849E82854449D00354FA9 /* AVAudioSession+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVAudioSession+Extension.swift"; sourceTree = "<group>"; };
+		ED1849EA2854641600354FA9 /* RNSBDirectCallVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNSBDirectCallVideoView.swift; sourceTree = "<group>"; };
+		ED1849EC2854644800354FA9 /* RNSBDirectCallVideoViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNSBDirectCallVideoViewManager.m; sourceTree = "<group>"; };
+		ED1849EE2854683600354FA9 /* RNSBDirectCallVideoViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNSBDirectCallVideoViewManager.swift; sourceTree = "<group>"; };
 		ED4529FF28498CAC000D8CE8 /* CallsEvents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallsEvents.swift; sourceTree = "<group>"; };
 		ED452A0228498CC9000D8CE8 /* BaseVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseVideoView.swift; sourceTree = "<group>"; };
 		ED452A062849BC46000D8CE8 /* RNCallsInternalError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNCallsInternalError.swift; sourceTree = "<group>"; };
@@ -80,13 +86,16 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				F4FF95D5245B92E700C19C63 /* RNSendbirdCalls-Bridging-Header.h */,
 				ED452A0128498CBB000D8CE8 /* Views */,
 				ED5C6945282267F000E9904E /* Extensions */,
 				ED5C6940282244B700E9904E /* Helpers */,
 				EDFE16872820F2B100D3E55C /* Modules */,
 				F4FF95D6245B92E800C19C63 /* RNSendbirdCalls.swift */,
 				ED895EC32806DBCF00980F59 /* RNSendbirdCalls.m */,
-				F4FF95D5245B92E700C19C63 /* RNSendbirdCalls-Bridging-Header.h */,
+				ED1849EA2854641600354FA9 /* RNSBDirectCallVideoView.swift */,
+				ED1849EE2854683600354FA9 /* RNSBDirectCallVideoViewManager.swift */,
+				ED1849EC2854644800354FA9 /* RNSBDirectCallVideoViewManager.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -198,13 +207,16 @@
 				ED5C69472822680800E9904E /* Data+Extension.swift in Sources */,
 				EDFE16892820F2C400D3E55C /* CallsModule.swift in Sources */,
 				ED452A0028498CAC000D8CE8 /* CallsEvents.swift in Sources */,
+				ED1849EF2854683600354FA9 /* RNSBDirectCallVideoViewManager.swift in Sources */,
 				ED79CE2A28264C13007CC64F /* SendBirdCalls+Extension.swift in Sources */,
 				EDFE168F28212C2E00D3E55C /* CallsUtils.swift in Sources */,
 				ED79CE2C28264D1C007CC64F /* UserDefaults+Extension.swift in Sources */,
 				ED5C6942282244D500E9904E /* Promise.swift in Sources */,
+				ED1849ED2854644800354FA9 /* RNSBDirectCallVideoViewManager.m in Sources */,
 				ED452A0328498CC9000D8CE8 /* BaseVideoView.swift in Sources */,
 				ED79CE262826309B007CC64F /* CXCallManager.swift in Sources */,
 				ED1849E92854449D00354FA9 /* AVAudioSession+Extension.swift in Sources */,
+				ED1849EB2854641600354FA9 /* RNSBDirectCallVideoView.swift in Sources */,
 				ED5C694B2824BF3F00E9904E /* CallsModule+DirectCall.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

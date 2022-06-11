@@ -5,7 +5,6 @@ import React from 'react';
 
 import { SendbirdCalls } from '@sendbird/calls-react-native';
 
-import UserInfoHeader from '../shared/components/UserInfoHeader';
 import { useAuthContext } from '../shared/contexts/AuthContext';
 import { DirectRoutes } from './navigations/routes';
 import DirectCallHomeTab from './screens/DirectCallHomeTab';
@@ -78,7 +77,7 @@ const DirectCallApp = () => {
       ) : (
         <>
           <Stack.Screen name={DirectRoutes.HOME_TAB} component={DirectCallHomeTab} options={{ headerShown: false }} />
-          <Stack.Group screenOptions={{ header: UserInfoHeader }}>
+          <Stack.Group screenOptions={{ headerShown: false }}>
             <Stack.Screen name={DirectRoutes.VIDEO_CALLING} component={DirectCallVideoCallingScreen} />
             <Stack.Screen name={DirectRoutes.VOICE_CALLING} component={DirectCallVoiceCallingScreen} />
           </Stack.Group>

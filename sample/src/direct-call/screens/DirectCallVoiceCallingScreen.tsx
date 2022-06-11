@@ -1,9 +1,9 @@
 import React from 'react';
-import { Button, View, useWindowDimensions } from 'react-native';
+import { Button, StatusBar, View, useWindowDimensions } from 'react-native';
 
-import { useDirectCall } from '../../../../src/hooks/useDirectCall';
 import type { DirectRoutes } from '../navigations/routes';
 import { useDirectNavigation } from '../navigations/useDirectNavigation';
+import { useDirectCall } from '../useDirectCall';
 
 const DirectCallVoiceCallingScreen = () => {
   const { route } = useDirectNavigation<DirectRoutes.VOICE_CALLING>();
@@ -14,6 +14,7 @@ const DirectCallVoiceCallingScreen = () => {
 
   return (
     <View>
+      <StatusBar hidden />
       <View style={{ width, height: height * 0.5, alignItems: 'flex-end' }}>
         {status === 'ringing' && <Button title={'Accept'} onPress={() => call.accept()} />}
         {status === 'ringing' && <Button title={'Decline'} onPress={() => call.end()} />}

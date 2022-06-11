@@ -18,38 +18,25 @@ class RNSBDirectCallVideoView(context: Context) : BaseVideoView(context) {
         return SendBirdCall.getCall(callId)
     }
 
-    fun setViewType(viewType: ViewType) {
-        val prevType = mViewType
-        val nextType = viewType
-        mViewType = viewType
-
+    fun updateView() {
         val call = getCall(mCallId)
-        if (call != null && prevType != nextType && mCallId != null) {
-            if(prevType === ViewType.LOCAL && nextType === ViewType.REMOTE) {
-                call.setRemoteVideoView(mSurface)
-            }
-            if(prevType === ViewType.REMOTE && nextType === ViewType.LOCAL) {
-                call.setLocalVideoView(mSurface)
-            }
+        when (mViewType) {
+            ViewType.REMOTE -> call?.setRemoteVideoView(mSurface)
+            ViewType.LOCAL -> call?.setLocalVideoView(mSurface)
         }
     }
 
-    fun setCallId(callId: String) {
-        val prevCall = getCall(mCallId)
-        val nextCall = getCall(callId) ?: return
+    fun setZOrderMediaOverlay(overlay: Boolean) {
+        mSurface.setZOrderMediaOverlay(overlay)
+    }
 
-        if (prevCall != nextCall) {
-            mCallId = callId
-            when(mViewType) {
-                ViewType.LOCAL -> {
-                    prevCall?.setLocalVideoView(null)
-                    nextCall.setLocalVideoView(mSurface)
-                }
-                ViewType.REMOTE -> {
-                    prevCall?.setRemoteVideoView(null)
-                    nextCall.setRemoteVideoView(mSurface)
-                }
-            }
-        }
+    fun setViewType(viewType: ViewType) {
+        this.mViewType = viewType
+        this.updateView()
+    }
+
+    fun setCallId(callId: String) {
+        this.mCallId = callId
+        this.updateView()
     }
 }

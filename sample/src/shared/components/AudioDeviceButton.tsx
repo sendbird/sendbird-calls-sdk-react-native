@@ -24,7 +24,7 @@ const AudioDeviceButton: FC<Props> = ({
   currentAudioDeviceIOS,
 
   currentAudioDeviceAndroid,
-  availableAudioDevicesAndroid,
+  availableAudioDevicesAndroid = [],
   onSelectAudioDeviceAndroid,
 }) => {
   const disabled = (() => {
@@ -118,6 +118,7 @@ const AudioDeviceSelectModal: FC<{
           {devices.map((device) => {
             return (
               <Pressable
+                key={device}
                 android_ripple={{ color: Palette.primary300 }}
                 onPress={() => onSelect(device)}
                 style={menuStyles.button}

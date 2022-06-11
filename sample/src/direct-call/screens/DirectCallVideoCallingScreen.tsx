@@ -1,18 +1,17 @@
 import React, { FC, useEffect, useMemo, useRef } from 'react';
-import { Animated, Easing, Platform, Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { Animated, Easing, Pressable, StatusBar, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { AudioDeviceRoute, DirectCall } from '@sendbird/calls-react-native';
 import { DirectCallUserRole, DirectCallVideoView } from '@sendbird/calls-react-native';
 
-import { DirectCallStatus, useDirectCall } from '../../../../src/hooks/useDirectCall';
 import AudioDeviceButton from '../../shared/components/AudioDeviceButton';
 import SBIcon from '../../shared/components/SBIcon';
 import SBText from '../../shared/components/SBText';
-import { DEFAULT_HEADER_HEIGHT } from '../../shared/constants';
 import Palette from '../../shared/styles/palette';
 import type { DirectRoutes } from '../navigations/routes';
 import { useDirectNavigation } from '../navigations/useDirectNavigation';
+import { DirectCallStatus, useDirectCall } from '../useDirectCall';
 
 const DirectCallVideoCallingScreen = () => {
   const { navigation, route } = useDirectNavigation<DirectRoutes.VIDEO_CALLING>();
@@ -26,6 +25,7 @@ const DirectCallVideoCallingScreen = () => {
 
   return (
     <View style={{ flex: 1 }}>
+      <StatusBar hidden />
       <ContentView status={status} call={call} />
       <ControllerView status={status} call={call} ios_audioDevice={currentAudioDeviceIOS} />
     </View>
@@ -35,18 +35,22 @@ const DirectCallVideoCallingScreen = () => {
 const useLocalViewSize = (initialScale: 'small' | 'large' = 'large') => {
   const { width, height } = useWindowDimensions();
 
-  const { top } = useSafeAreaInsets();
-  const topInset = DEFAULT_HEADER_HEIGHT + top;
+  const { top: topInset } = useSafeAreaInsets();
 
   const MAX_WIDTH = Math.min(width, height);
   const MIN_WIDTH = 96;
-  const MAX_HEIGHT = Math.max(width, height) - topInset;
+  const MAX_HEIGHT = Math.max(width, height);
   const MIN_HEIGHT = 160;
 
   const viewWidth = useRef(new Animated.Value(initialScale === 'large' ? MAX_WIDTH : MIN_WIDTH)).current;
-  const viewPadding = viewWidth.interpolate({
+  const left = viewWidth.interpolate({
     inputRange: [MIN_WIDTH, MAX_WIDTH],
     outputRange: [16, 0],
+    extrapolate: 'clamp',
+  });
+  const top = viewWidth.interpolate({
+    inputRange: [MIN_WIDTH, MAX_WIDTH],
+    outputRange: [16 + topInset, 0],
     extrapolate: 'clamp',
   });
   const viewHeight = viewWidth.interpolate({
@@ -64,7 +68,8 @@ const useLocalViewSize = (initialScale: 'small' | 'large' = 'large') => {
   };
 
   return {
-    viewPadding,
+    left,
+    top,
     viewWidth,
     viewHeight,
     scaleTo,
@@ -76,7 +81,7 @@ type CallStatusProps = {
   call: DirectCall;
 };
 const ContentView: FC<CallStatusProps> = ({ call, status }) => {
-  const { viewPadding, viewWidth, viewHeight, scaleTo } = useLocalViewSize('large');
+  const { left, top, viewWidth, viewHeight, scaleTo } = useLocalViewSize('large');
 
   useEffect(() => {
     switch (status) {
@@ -97,34 +102,19 @@ const ContentView: FC<CallStatusProps> = ({ call, status }) => {
   }, [status]);
 
   return (
-    // FIXME: zIndex not working
-    <View style={{ flex: 1, zIndex: -99 }}>
-      {status !== 'pending' && Platform.OS !== 'ios' && (
-        <DirectCallVideoView viewType={'remote'} callId={call.callId} style={StyleSheet.absoluteFill} />
-      )}
-      {Platform.OS !== 'ios' && (
-        <AnimatedVideoView
-          viewType={'local'}
-          callId={call.callId}
-          style={{
-            position: 'absolute',
-            left: viewPadding,
-            top: viewPadding,
-            width: viewWidth,
-            height: viewHeight,
-            backgroundColor: 'gray',
-            zIndex: 99,
-          }}
-        />
-      )}
+    <View style={{ flex: 1 }}>
+      <DirectCallVideoView viewType={'remote'} callId={call.callId} style={StyleSheet.absoluteFillObject} />
+      <Animated.View style={{ left, top, width: viewWidth, height: viewHeight }}>
+        <DirectCallVideoView viewType={'local'} callId={call.callId} android_zOrderMediaOverlay />
+      </Animated.View>
     </View>
   );
 };
-const AnimatedVideoView = Animated.createAnimatedComponent(DirectCallVideoView);
 
 type ControllerViewProps = CallStatusProps & { ios_audioDevice: AudioDeviceRoute };
 // TODO: Extract styles
 const ControllerView: FC<ControllerViewProps> = ({ status, call, ios_audioDevice }) => {
+  const { top } = useSafeAreaInsets();
   const remoteUserNickname = useMemo(() => {
     if (call.myRole === DirectCallUserRole.CALLEE) {
       return call.caller?.nickname ?? 'No name';
@@ -136,7 +126,7 @@ const ControllerView: FC<ControllerViewProps> = ({ status, call, ios_audioDevice
   }, [call]);
 
   return (
-    <View style={{ position: 'absolute', left: 16, right: 16, top: 16, bottom: 16 }}>
+    <View style={{ position: 'absolute', left: 16, right: 16, top: 16 + top, bottom: 16 }}>
       <View style={{ flex: 1 }}>
         <View style={{ alignItems: 'flex-end' }}>
           <Pressable onPress={() => call.switchCamera()}>

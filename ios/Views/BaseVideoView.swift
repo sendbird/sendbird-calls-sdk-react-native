@@ -10,12 +10,13 @@ import Foundation
 import SendBirdCalls
 
 class BaseVideoView: UIView {
-    var surface: SendBirdVideoView
+    var surface = SendBirdVideoView()
     
     override init(frame: CGRect) {
-        surface = SendBirdVideoView()
-        surface.frame = frame
         super.init(frame: frame)
+        surface.clipsToBounds = true
+        surface.embed(in: self)
+        surface.backgroundColor = .clear
     }
     
     @available(*, unavailable)
