@@ -1,18 +1,21 @@
 import { useEffect, useState } from 'react';
 
-import type { DirectCallProperties } from '@sendbird/calls-react-native';
+import type { AudioDeviceRoute, DirectCallProperties } from '@sendbird/calls-react-native';
 import { DirectCall, SendbirdCalls } from '@sendbird/calls-react-native';
 
 export type DirectCallStatus = 'pending' | 'established' | 'connected' | 'reconnecting' | 'ended';
 export const useDirectCall = (props: DirectCallProperties) => {
-  const [_, update] = useState(0);
+  const [, update] = useState(0);
   const forceUpdate = () => update((prev) => prev + 1);
 
   const [call, setCall] = useState<DirectCall>();
   const [status, setStatus] = useState<DirectCallStatus>('pending');
 
+  const [currentAudioDeviceIOS, setCurrentAudioDeviceIOS] = useState<AudioDeviceRoute>({ inputs: [], outputs: [] });
+
   useEffect(() => {
     const directCall = SendbirdCalls.getDirectCall(props);
+
     directCall.setListener({
       onEstablished() {
         setStatus('established');
@@ -29,8 +32,12 @@ export const useDirectCall = (props: DirectCallProperties) => {
       onEnded() {
         setStatus('ended');
       },
-      onAudioDeviceChanged() {
-        forceUpdate();
+      onAudioDeviceChanged(_, { platform, data }) {
+        if (platform === 'ios') {
+          setCurrentAudioDeviceIOS(data.currentRoute);
+        } else {
+          forceUpdate();
+        }
       },
       onCustomItemsDeleted() {
         forceUpdate();
@@ -53,12 +60,12 @@ export const useDirectCall = (props: DirectCallProperties) => {
       onUserHoldStatusChanged() {
         forceUpdate();
       },
-      onUpdatePropertyManually() {
+      onPropertyUpdatedManually() {
         forceUpdate();
       },
     });
     setCall(directCall);
   }, []);
 
-  return { call, status };
+  return { call, status, currentAudioDeviceIOS };
 };

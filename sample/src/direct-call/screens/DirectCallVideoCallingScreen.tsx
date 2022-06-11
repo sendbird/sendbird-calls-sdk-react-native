@@ -2,10 +2,11 @@ import React, { FC, useEffect, useMemo, useRef } from 'react';
 import { Animated, Easing, Platform, Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import type { DirectCall } from '@sendbird/calls-react-native';
+import type { AudioDeviceRoute, DirectCall } from '@sendbird/calls-react-native';
 import { DirectCallUserRole, DirectCallVideoView } from '@sendbird/calls-react-native';
 
 import { DirectCallStatus, useDirectCall } from '../../../../src/hooks/useDirectCall';
+import AudioDeviceButton from '../../shared/components/AudioDeviceButton';
 import SBIcon from '../../shared/components/SBIcon';
 import SBText from '../../shared/components/SBText';
 import { DEFAULT_HEADER_HEIGHT } from '../../shared/constants';
@@ -15,7 +16,7 @@ import { useDirectNavigation } from '../navigations/useDirectNavigation';
 
 const DirectCallVideoCallingScreen = () => {
   const { navigation, route } = useDirectNavigation<DirectRoutes.VIDEO_CALLING>();
-  const { call, status } = useDirectCall(route.params.callProps);
+  const { call, status, currentAudioDeviceIOS } = useDirectCall(route.params.callProps);
 
   useEffect(() => {
     if (call?.isEnded) navigation.goBack();
@@ -26,7 +27,7 @@ const DirectCallVideoCallingScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       <ContentView status={status} call={call} />
-      <ControllerView status={status} call={call} />
+      <ControllerView status={status} call={call} ios_audioDevice={currentAudioDeviceIOS} />
     </View>
   );
 };
@@ -121,8 +122,9 @@ const ContentView: FC<CallStatusProps> = ({ call, status }) => {
 };
 const AnimatedVideoView = Animated.createAnimatedComponent(DirectCallVideoView);
 
+type ControllerViewProps = CallStatusProps & { ios_audioDevice: AudioDeviceRoute };
 // TODO: Extract styles
-const ControllerView: FC<CallStatusProps> = ({ status, call }) => {
+const ControllerView: FC<ControllerViewProps> = ({ status, call, ios_audioDevice }) => {
   const remoteUserNickname = useMemo(() => {
     if (call.myRole === DirectCallUserRole.CALLEE) {
       return call.caller?.nickname ?? 'No name';
@@ -192,22 +194,16 @@ const ControllerView: FC<CallStatusProps> = ({ status, call }) => {
           >
             <SBIcon icon={call.isLocalVideoEnabled ? 'btnVideoOff' : 'btnVideoOffSelected'} size={64} />
           </Pressable>
-          <Pressable
-            onPress={() => {
-              //TODO: bottom sheet / route picker view
-              if (Platform.OS === 'android') {
-                // call.android_selectAudioDevice();
-              } else {
-                // call.ios_
-              }
-            }}
-          >
-            <SBIcon icon={'btnBluetooth'} size={64} />
-          </Pressable>
+          <AudioDeviceButton
+            currentAudioDeviceIOS={ios_audioDevice}
+            availableAudioDevicesAndroid={call.android_availableAudioDevices}
+            currentAudioDeviceAndroid={call.android_currentAudioDevice}
+            onSelectAudioDeviceAndroid={call.android_selectAudioDevice}
+          />
         </View>
 
         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-          {call.myRole === DirectCallUserRole.CALLEE && (
+          {call.myRole === DirectCallUserRole.CALLEE && status === 'pending' && (
             <Pressable style={{ marginRight: 24 }} onPress={() => call.accept()}>
               <SBIcon icon={'btnCallVideoAccept'} size={64} />
             </Pressable>

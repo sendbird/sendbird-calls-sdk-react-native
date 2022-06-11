@@ -105,17 +105,6 @@ class CallsCommonModule: CallsBaseModule, CallsCommonModuleProtocol {
         }
     }
     
-    func voipRegistration(_ promise: Promise) {
-        if voipEnabled {
-            promise.resolve(voipToken)
-        } else {
-            self.voipPromise = promise
-            self.voipRegistry = PKPushRegistry(queue: DispatchQueue.main)
-            self.voipRegistry?.delegate = self
-            self.voipRegistry?.desiredPushTypes = [.voIP]
-        }
-    }
-    
     func registerVoIPPushToken(_ token: String, _ unique: Bool, _ promise: Promise) {
         if let dataToken = try? token.toDataFromHexString() {
             SendBirdCall.registerVoIPPush(token: dataToken, unique: unique) { error in
@@ -161,6 +150,22 @@ class CallsCommonModule: CallsBaseModule, CallsCommonModuleProtocol {
             }
         }
     }
+}
+
+// MARK: PushKit
+extension CallsCommonModule {
+    func voipRegistration(_ promise: Promise) {
+        if voipEnabled {
+            promise.resolve(voipToken)
+        } else {
+            self.voipPromise = promise
+            self.voipRegistry = PKPushRegistry(queue: DispatchQueue.main)
+            self.voipRegistry?.desiredPushTypes = [.voIP]
+            self.voipRegistry?.delegate = self
+        }
+    }
+    
+    
 }
 
 

@@ -4,7 +4,7 @@ import { Image, ImageStyle, StyleProp, StyleSheet, View, ViewStyle } from 'react
 
 import IconAssets from '../../assets';
 
-type IconNames = keyof typeof IconAssets;
+export type IconNames = keyof typeof IconAssets;
 type SizeFactor = keyof typeof sizeStyles;
 
 type Props = {

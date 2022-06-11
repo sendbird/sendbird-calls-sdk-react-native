@@ -8,17 +8,20 @@
 
 @interface RCT_EXTERN_MODULE(RNSendbirdCalls, NSObject)
 
+// MARK: - ReactNative: RCTEventEmitter
 RCT_EXTERN_METHOD(addListener
                   : (NSString *)eventName)
 
 RCT_EXTERN_METHOD(removeListeners
                   : (double)count)
 
-// MARK: Base
+// MARK: - SendbirdCalls: Utils
 RCT_EXTERN_METHOD(handleRemoteNotificationData
                   : (NSDictionary *)data)
 
-// MARK: Common
+RCT_EXTERN_METHOD(routePickerView)
+
+// MARK: - SendbirdCalls: Common
 RCT_EXTERN_METHOD(initialize
                   : (NSString *)appId)
 
@@ -69,7 +72,7 @@ RCT_EXTERN_METHOD(dial
                   : (RCTPromiseResolveBlock)resolve
                   : (RCTPromiseRejectBlock)reject)
 
-// MARK: DirectCall
+// MARK: - SendbirdCalls: DirectCall
 RCT_EXTERN_METHOD(selectVideoDevice
                   : (NSString *)callId
                   : (NSDictionary *)device

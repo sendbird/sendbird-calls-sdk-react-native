@@ -260,8 +260,8 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
                 platform: 'ios',
                 data: {
                   reason: additionalData?.reason ?? RouteChangeReason.unknown,
-                  currentRoute: additionalData?.currentPort ?? { inputs: [], outputs: [] },
-                  previousRoute: additionalData?.previousPort ?? { inputs: [], outputs: [] },
+                  currentRoute: additionalData?.currentRoute ?? { inputs: [], outputs: [] },
+                  previousRoute: additionalData?.previousRoute ?? { inputs: [], outputs: [] },
                 },
               });
             }
@@ -292,19 +292,19 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
     this.binder.nativeModule.muteMicrophone(this.callId);
     // NOTE: native doesn't have onLocalAudioSettingsChanged event
     this._isLocalAudioEnabled = false;
-    this._listener.onUpdatePropertyManually(this);
+    this._listener.onPropertyUpdatedManually(this);
   };
   public unmuteMicrophone = () => {
     this.binder.nativeModule.unmuteMicrophone(this.callId);
     // NOTE: native doesn't have onLocalAudioSettingsChanged event
     this._isLocalAudioEnabled = true;
-    this._listener.onUpdatePropertyManually(this);
+    this._listener.onPropertyUpdatedManually(this);
   };
   public startVideo = () => {
     this.binder.nativeModule.startVideo(this.callId);
     // NOTE: ios native doesn't have onLocalAudioSettingsChanged event
     this._isLocalVideoEnabled = true;
-    this._listener.onUpdatePropertyManually(this);
+    this._listener.onPropertyUpdatedManually(this);
     Platform.OS === 'ios' && this._listener.onLocalVideoSettingsChanged(this);
   };
   public stopVideo = () => {

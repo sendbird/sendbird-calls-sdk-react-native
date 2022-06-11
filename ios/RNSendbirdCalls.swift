@@ -4,6 +4,7 @@ import CallKit
 import PushKit
 import Foundation
 import AVFoundation
+import AVKit
 
 @objc(RNSendbirdCalls)
 class RNSendbirdCalls: RCTEventEmitter {
@@ -36,6 +37,19 @@ class RNSendbirdCalls: RCTEventEmitter {
     
     @objc func handleRemoteNotificationData(data: [AnyHashable: Any]) {
         SendBirdCall.application(UIApplication.shared, didReceiveRemoteNotification: data)
+    }
+    
+    @objc func handleVoIPNotificationData(data: [AnyHashable: Any]) {
+        // SendBirdCall.pushRegistry(T##registry: PKPushRegistry##PKPushRegistry, didReceiveIncomingPushWith: T##PKPushPayload, for: T##PKPushType, completionHandler: T##PushRegistryHandler?##PushRegistryHandler?##(UUID?) -> Void)
+    }
+    
+    @objc func routePickerView() {
+        guard #available(iOS 11.0, *),
+              let routePickerView = SendBirdCall.routePickerView(frame: .zero) as? AVRoutePickerView,
+              let button = routePickerView.subviews.first(where: { $0 is UIButton }) as? UIButton
+        else { return }
+        
+        button.sendActions(for: .touchUpInside)
     }
 }
 

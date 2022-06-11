@@ -37,6 +37,8 @@ export interface NativeCommonModule {
   registerVoIPPushToken(token: string, unique?: boolean): Promise<void>;
   /** @platform iOS **/
   unregisterVoIPPushToken(token: string): Promise<void>;
+  /** @platform iOS **/
+  routePickerView(): void;
 }
 
 export interface NativeDirectCallModule {
@@ -88,7 +90,8 @@ type IOSSpecificKeys =
   | 'voipRegistration'
   | 'registerVoIPPushToken'
   | 'unregisterVoIPPushToken'
-  | 'handleRemoteNotificationData';
+  | 'handleRemoteNotificationData'
+  | 'routePickerView';
 type PlatformSpecificInterface = AsJSInterface<
   AsJSInterface<NativeCommonModule, 'ios', IOSSpecificKeys>,
   'android',

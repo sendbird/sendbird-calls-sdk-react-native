@@ -125,14 +125,14 @@ class CallsUtils {
         return [
             "inputs": route.inputs.map {
                 [
-                    "portName": $0.portName,
-                    "portType": $0.portType.rawValue
+                    "name": $0.portName,
+                    "type": $0.portType.asString()
                 ]
             },
             "outputs": route.outputs.map {
                 [
-                    "portName": $0.portName,
-                    "portType": $0.portType.rawValue
+                    "name": $0.portName,
+                    "type": $0.portType.asString()
                 ]
             }
         ]
