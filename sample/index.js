@@ -14,7 +14,7 @@ import { CALL_PERMISSIONS, usePermissions } from './src/shared/hooks/usePermissi
 import { navigationRef } from './src/shared/libs/StaticNavigation';
 import Palette from './src/shared/styles/palette';
 
-Platform.OS === 'android' && SendbirdCalls.Logger.setLogLevel('debug');
+SendbirdCalls.Logger.setLogLevel('debug');
 SendbirdCalls.initialize(APP_ID);
 
 const isGroupCall = INITIAL_ROUTE === 'group-call';

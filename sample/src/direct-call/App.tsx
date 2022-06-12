@@ -11,19 +11,25 @@ import {
   setNotificationForegroundService,
   startRingingWithNotification,
 } from './callHandler/android';
+import { setCallKitListeners, startRingingWithCallKit } from './callHandler/ios';
 import { DirectRoutes } from './navigations/routes';
 import DirectCallHomeTab from './screens/DirectCallHomeTab';
 import DirectCallSignInScreen from './screens/DirectCallSignInScreen';
 import DirectCallVideoCallingScreen from './screens/DirectCallVideoCallingScreen';
 import DirectCallVoiceCallingScreen from './screens/DirectCallVoiceCallingScreen';
 
-/** Android Call handling **/
 if (Platform.OS === 'android') {
   setFirebaseMessageHandlers();
   setNotificationForegroundService();
 }
 
+if (Platform.OS === 'ios') {
+  setCallKitListeners();
+}
+
 SendbirdCalls.onRinging(async (call) => {
+  const directCall = await SendbirdCalls.getDirectCall(call.callId);
+
   if (!SendbirdCalls.currentUser) {
     const credential = await AuthManager.getSavedCredential();
 
@@ -32,13 +38,13 @@ SendbirdCalls.onRinging(async (call) => {
       await SendbirdCalls.authenticate(credential.userId, credential.accessToken);
     } else {
       // Invalid user call
-      const directCall = await SendbirdCalls.getDirectCall(call.callId);
       return directCall.end();
     }
   }
 
   // Show interaction UI (Accept/Decline)
   if (Platform.OS === 'android') startRingingWithNotification(call);
+  if (Platform.OS === 'ios') startRingingWithCallKit(call);
 });
 
 export const Stack = createNativeStackNavigator();

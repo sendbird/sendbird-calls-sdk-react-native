@@ -26,6 +26,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
   }
 
   constructor(private binder: NativeBinder, props: DirectCallProperties) {
+    this._ios_callUUID = props.ios_callUUID;
     this._android_availableAudioDevices = props.android_availableAudioDevices;
     this._android_currentAudioDevice = props.android_currentAudioDevice;
     this._availableVideoDevices = props.availableVideoDevices;
@@ -54,6 +55,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
     this._remoteUser = props.remoteUser;
   }
 
+  private _ios_callUUID: string | null;
   private _android_availableAudioDevices: AudioDevice[];
   private _android_currentAudioDevice: AudioDevice | null;
   private _availableVideoDevices: VideoDevice[];
@@ -82,6 +84,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
   private _remoteUser: DirectCallUser | null;
 
   private _updateInternal(props: DirectCallProperties) {
+    this._ios_callUUID = props.ios_callUUID;
     this._android_availableAudioDevices = props.android_availableAudioDevices;
     this._android_currentAudioDevice = props.android_currentAudioDevice;
     this._availableVideoDevices = props.availableVideoDevices;
@@ -111,6 +114,9 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
     return this;
   }
 
+  public get ios_callUUID() {
+    return this._ios_callUUID;
+  }
   public get android_availableAudioDevices() {
     return this._android_availableAudioDevices;
   }

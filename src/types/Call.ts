@@ -67,6 +67,7 @@ export interface DirectCallListener {
 
 export interface DirectCallProperties {
   callId: string;
+  ios_callUUID: string | null;
   callLog: DirectCallLog | null;
   callee: DirectCallUser | null;
   caller: DirectCallUser | null;

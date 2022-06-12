@@ -26,6 +26,7 @@ class CallsUtils {
     static func convertDirectCallToDict(_ call: DirectCall) -> [String: Any?] {
         return [
             "callId": call.callId,
+            "callUUID": call.callUUID?.uuidString,
             "callLog": convertDirectCallLogToDict(call.callLog),
             "callee": convertDirectCallUserToDict(call.callee),
             "caller": convertDirectCallUserToDict(call.caller),

@@ -7,6 +7,14 @@
 #import <React/RCTAppSetupUtils.h>
 #import <Firebase.h>
 
+#import <CoreMedia/CoreMedia.h>
+#import <WebRTC/WebRTC.h>
+#import <PushKit/PushKit.h>
+#import <AVKit/AVKit.h>
+#import <SendBirdCalls/SendBirdCalls-Swift.h>
+#import <RNVoipPushNotificationManager.h>
+#import <RNCallKeep.h>
+
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
 #import <React/RCTCxxBridgeDelegate.h>
@@ -33,7 +41,6 @@
 {
   [FIRApp configure];
   RCTAppSetupPrepareApp(application);
-  
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
 
@@ -59,6 +66,41 @@
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   return YES;
+}
+
+// MARK: Remote Notification
+//- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
+//{
+//  NSLog(@"didReceiveRemoteNotification %@", userInfo);
+//  [SBCSendBirdCall application:application didReceiveRemoteNotification:userInfo];
+//}
+
+// MARK: - VoIP Notification - Receive token
+- (void)pushRegistry:(PKPushRegistry *)registry didUpdatePushCredentials:(PKPushCredentials *)pushCredentials forType:(PKPushType)type
+{
+  [RNVoipPushNotificationManager didUpdatePushCredentials:pushCredentials forType:(NSString *)type];
+}
+
+// MARK: - VoIP Notification - Receive incoming push event
+- (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(PKPushType)type
+{
+  NSLog(@"didReceiveIncomingPushWithPayload %@", payload);
+  [SBCSendBirdCall pushRegistry:registry didReceiveIncomingPushWith:payload for:type completionHandler:nil];
+}
+
+// MARK: - VoIP Notification - Receive incoming call
+- (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(PKPushType)type withCompletionHandler:(void (^)())completion
+{
+  NSLog(@"didReceiveIncomingPushWithPayloadWithCompletionHandler %@", payload);
+  [SBCSendBirdCall pushRegistry:registry didReceiveIncomingPushWith:payload for:type completionHandler:^(NSUUID * _Nullable uuid) {
+    NSLog(@"didReceiveIncomingPushWith uuid %@", uuid);
+    if(uuid != nil) {
+      NSString* uuidString = [uuid UUIDString];
+      [RNVoipPushNotificationManager addCompletionHandler:uuidString completionHandler:completion];
+    } else {
+      completion();
+    }
+  }];
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge

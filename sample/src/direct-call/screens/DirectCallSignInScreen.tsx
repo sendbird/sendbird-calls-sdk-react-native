@@ -1,6 +1,7 @@
 import messaging from '@react-native-firebase/messaging';
 import React, { useReducer } from 'react';
 import { Platform, ScrollView } from 'react-native';
+import RNVoipPushNotification from 'react-native-voip-push-notification';
 
 import { SendbirdCalls } from '@sendbird/calls-react-native';
 
@@ -45,19 +46,19 @@ const DirectCallSignInScreen = () => {
         SendbirdCalls.registerPushToken(token, true),
         TokenManager.set({ value: token, type: 'fcm' }),
       ]);
+      AppLogger.log('registered token:', TokenManager.token);
     }
 
     if (Platform.OS === 'ios') {
-      const apnsToken = await messaging().getAPNSToken();
-      if (apnsToken) {
+      RNVoipPushNotification.addEventListener('register', async (voipToken) => {
         await Promise.all([
-          SendbirdCalls.registerPushToken(apnsToken, true),
-          TokenManager.set({ value: apnsToken, type: 'apns' }),
+          SendbirdCalls.ios_registerVoIPPushToken(voipToken, true),
+          TokenManager.set({ value: voipToken, type: 'voip' }),
         ]);
-      }
+        AppLogger.log('registered token:', TokenManager.token);
+      });
+      RNVoipPushNotification.registerVoipToken();
     }
-
-    AppLogger.log('registered token:', TokenManager.token);
   };
 
   const onSignIn = async (value: Input) => {

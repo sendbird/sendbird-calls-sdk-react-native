@@ -60,16 +60,15 @@ export async function setNotificationForegroundService() {
 }
 
 export async function startRingingWithNotification(call: DirectCallProperties) {
-  const onGoingCalls = await SendbirdCalls.getOngoingCalls();
   const directCall = await SendbirdCalls.getDirectCall(call.callId);
+  const callType = call.isVideoCall ? 'Video' : 'Voice';
 
-  // Accept only 1 call
-  if (onGoingCalls.length >= 2) {
+  // Accept only one ongoing call
+  const onGoingCalls = await SendbirdCalls.getOngoingCalls();
+  if (onGoingCalls.length > 1) {
     AppLogger.warn('Ongoing calls:', onGoingCalls.length);
     return directCall.end();
   }
-
-  const callType = call.isVideoCall ? 'Video' : 'Voice';
 
   // Display Notification for action
   await Notifee.displayNotification({
