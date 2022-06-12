@@ -9,9 +9,9 @@ import AudioDeviceButton from '../../shared/components/AudioDeviceButton';
 import SBIcon from '../../shared/components/SBIcon';
 import SBText from '../../shared/components/SBText';
 import Palette from '../../shared/styles/palette';
+import { DirectCallStatus, useDirectCall } from '../hooks/useDirectCall';
 import type { DirectRoutes } from '../navigations/routes';
 import { useDirectNavigation } from '../navigations/useDirectNavigation';
-import { DirectCallStatus, useDirectCall } from '../hooks/useDirectCall';
 
 const DirectCallVideoCallingScreen = () => {
   const { navigation, route } = useDirectNavigation<DirectRoutes.VIDEO_CALLING>();

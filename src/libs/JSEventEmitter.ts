@@ -1,3 +1,5 @@
+import { Logger } from '@sendbird/calls-react-native';
+
 type Listener = (...args: unknown[]) => void;
 type ListenerPool = Record<number, Listener>;
 
@@ -32,7 +34,7 @@ export default class JSEventEmitter {
         try {
           listener(...args);
         } catch (e) {
-          console.warn(e);
+          Logger.warn('[JSEventEmitter]', e);
         }
       });
     }, 0);

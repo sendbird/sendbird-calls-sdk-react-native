@@ -1,13 +1,13 @@
 import React from 'react';
 import { Button, StatusBar, View, useWindowDimensions } from 'react-native';
 
+import { useDirectCall } from '../hooks/useDirectCall';
 import type { DirectRoutes } from '../navigations/routes';
 import { useDirectNavigation } from '../navigations/useDirectNavigation';
-import { useDirectCall } from '../hooks/useDirectCall';
 
 const DirectCallVoiceCallingScreen = () => {
   const { route } = useDirectNavigation<DirectRoutes.VOICE_CALLING>();
-  const { call, status } = useDirectCall(route.params.callProps);
+  const { call, status } = useDirectCall(route.params.callId);
   const { width, height } = useWindowDimensions();
 
   if (!call) return null;

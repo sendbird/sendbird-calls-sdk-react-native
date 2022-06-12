@@ -4,7 +4,9 @@ import messaging, { FirebaseMessagingTypes } from '@react-native-firebase/messag
 
 import { DirectCallProperties, SendbirdCalls } from '@sendbird/calls-react-native';
 
+import { RunAfterAppReady } from '../../shared/libs/StaticNavigation';
 import { AppLogger } from '../../shared/utils/logger';
+import { DirectRouteWithParams, DirectRoutes } from '../navigations/routes';
 
 /** Firebase RemoteMessage handler **/
 export function setFirebaseMessageHandlers() {
@@ -17,7 +19,6 @@ export function setFirebaseMessageHandlers() {
 
 /** Notifee ForegroundService with Notification */
 export const NOTIFICATION_CHANNEL_ID = 'sendbird.calls.rn.ringing';
-const FOREGROUND_SERVICE_NOTIFICATION_ID = 'sendbird.calls.rn.foreground.notification';
 export async function setNotificationForegroundService() {
   // Create channel
   await Notifee.createChannel({ name: 'Ringing', id: NOTIFICATION_CHANNEL_ID, importance: AndroidImportance.HIGH });
@@ -33,28 +34,24 @@ export async function setNotificationForegroundService() {
     const callProps: DirectCallProperties = JSON.parse(callString);
 
     const directCall = await SendbirdCalls.getDirectCall(callProps.callId);
-    if (directCall.isEnded) AppLogger.warn('Call is already ended:', directCall.callId);
+    if (directCall.isEnded) {
+      AppLogger.warn('Call is already ended:', directCall.callId);
+      return Notifee.stopForegroundService();
+    }
 
     if (detail.pressAction?.id === 'accept') {
       AppLogger.debug('[CALL START]', directCall.callId);
-      await directCall.accept().then(() => {
-        const callType = directCall.isVideoCall ? 'Video' : 'Voice';
-        return Notifee.displayNotification({
-          ...detail.notification,
-          title: `${callType} Call with ${directCall.remoteUser?.nickname ?? 'Unknown'}`,
-          android: {
-            asForegroundService: true,
-            channelId: NOTIFICATION_CHANNEL_ID,
-            actions: [{ title: 'End', pressAction: { id: 'decline' } }],
-            timestamp: Date.now(),
-            showTimestamp: true,
-            showChronometer: true,
-          },
-        });
+      RunAfterAppReady<DirectRoutes, DirectRouteWithParams>((navigation) => {
+        if (directCall.isVideoCall) {
+          navigation.navigate(DirectRoutes.VIDEO_CALLING, { callId: directCall.callId });
+        } else {
+          navigation.navigate(DirectRoutes.VOICE_CALLING, { callId: directCall.callId });
+        }
+        directCall.accept();
       });
     } else if (detail.pressAction?.id === 'decline') {
       AppLogger.warn('[CALL END]', directCall.callId);
-      directCall.end();
+      await directCall.end();
     }
   };
 
@@ -74,10 +71,9 @@ export async function startRingingWithNotification(call: DirectCallProperties) {
 
   const callType = call.isVideoCall ? 'Video' : 'Voice';
 
-  // Start Notification as foreground service
+  // Display Notification for action
   await Notifee.displayNotification({
-    //NOTE: all foreground service notification id is same, if difference registerForegroundService called multiple times
-    id: FOREGROUND_SERVICE_NOTIFICATION_ID,
+    id: call.callId,
     title: `${callType} Call from ${call.remoteUser?.nickname ?? 'Unknown'}`,
     data: { call: JSON.stringify(call) },
     android: {
@@ -85,13 +81,30 @@ export async function startRingingWithNotification(call: DirectCallProperties) {
       channelId: NOTIFICATION_CHANNEL_ID,
       actions: [
         { title: 'Accept', pressAction: { id: 'accept', launchActivity: 'default' } },
-        { title: 'Decline', pressAction: { id: 'decline', launchActivity: 'default' } },
+        { title: 'Decline', pressAction: { id: 'decline' } },
       ],
     },
   });
 
-  // Remove service on call ended
   const unsubscribe = directCall.addListener({
+    // Update notification on established
+    onEstablished() {
+      const callType = directCall.isVideoCall ? 'Video' : 'Voice';
+      return Notifee.displayNotification({
+        id: call.callId,
+        title: `${callType} Call with ${directCall.remoteUser?.nickname ?? 'Unknown'}`,
+        data: { call: JSON.stringify(call) },
+        android: {
+          asForegroundService: true,
+          channelId: NOTIFICATION_CHANNEL_ID,
+          actions: [{ title: 'End', pressAction: { id: 'decline' } }],
+          timestamp: Date.now(),
+          showTimestamp: true,
+          showChronometer: true,
+        },
+      });
+    },
+    // Remove notification on ended
     onEnded() {
       Notifee.stopForegroundService();
       unsubscribe();

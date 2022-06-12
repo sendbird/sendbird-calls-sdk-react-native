@@ -6,12 +6,12 @@ import { SendbirdCalls } from '@sendbird/calls-react-native';
 
 import { useAuthContext } from '../shared/contexts/AuthContext';
 import AuthManager from '../shared/libs/AuthManager';
-import { DirectRoutes } from './navigations/routes';
 import {
   setFirebaseMessageHandlers,
   setNotificationForegroundService,
   startRingingWithNotification,
-} from './notifications/android';
+} from './callHandler/android';
+import { DirectRoutes } from './navigations/routes';
 import DirectCallHomeTab from './screens/DirectCallHomeTab';
 import DirectCallSignInScreen from './screens/DirectCallSignInScreen';
 import DirectCallVideoCallingScreen from './screens/DirectCallVideoCallingScreen';
