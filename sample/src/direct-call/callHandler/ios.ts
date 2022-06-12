@@ -79,7 +79,7 @@ export const startRingingWithCallKit = async (props: DirectCallProperties) => {
     const unsubscribe = directCall.addListener({
       onEnded({ callLog }) {
         AppLogger.warn('onEnded with callkit');
-        RNCallKeep.endCall(uuid);
+        RNCallKeep.endAllCalls();
         if (callLog?.endedBy?.userId === remoteUser.userId) {
           RNCallKeep.reportEndCallWithUUID(uuid, 2);
         }
