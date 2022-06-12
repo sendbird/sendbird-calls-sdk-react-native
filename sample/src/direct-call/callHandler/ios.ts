@@ -25,7 +25,6 @@ export const setCallKitListeners = async () => {
     },
   });
 
-  // NOTE: answerCall called twice, maybe a bug on react-native-callkeep
   RNCallKeep.addEventListener('answerCall', async ({ callUUID }) => {
     const directCall = await SendbirdCalls.getDirectCall(callUUID);
     AppLogger.debug('[CALL START]', directCall.callId);
@@ -78,9 +77,6 @@ export const startRingingWithCallKit = async (props: DirectCallProperties) => {
     }
 
     const unsubscribe = directCall.addListener({
-      onEstablished() {
-        RNCallKeep.answerIncomingCall(uuid);
-      },
       onEnded({ callLog }) {
         AppLogger.warn('onEnded with callkit');
         RNCallKeep.endCall(uuid);

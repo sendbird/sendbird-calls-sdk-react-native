@@ -11,12 +11,11 @@ export const staticNavigation: StaticNavigation<string, { route: any; params: an
   navigate(name, params) {
     if (navigationRef.isReady()) {
       const currentRoute = navigationRef.getCurrentRoute();
-      if (currentRoute?.name !== name) {
+      if (currentRoute?.name === name) {
+        navigationRef.dispatch(StackActions.replace(name, params));
+      } else {
         navigationRef.navigate(name, params);
       }
-      // else {
-      //   navigationRef.dispatch(StackActions.replace(name, params));
-      // }
     }
   },
   push(name, params) {
