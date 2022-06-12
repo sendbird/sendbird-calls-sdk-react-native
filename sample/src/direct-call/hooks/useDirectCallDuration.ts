@@ -11,7 +11,7 @@ export const useDirectCallDuration = (callId: string, interval = 1000) => {
 
     const timer = setInterval(async () => {
       SendbirdCalls.getDirectCall(callId)
-        .then(({ duration }) => setDuration(Math.round(duration / 1000)))
+        .then(({ duration }) => setDuration(duration))
         .catch();
     }, interval);
 

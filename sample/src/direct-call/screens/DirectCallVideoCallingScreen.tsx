@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { StatusBar, View } from 'react-native';
 
+import Palette from '../../shared/styles/palette';
 import DirectCallControllerView from '../components/DirectCallControllerView';
 import DirectCallVideoContentView from '../components/DirectCallVideoContentView';
 import { useDirectCall } from '../hooks/useDirectCall';
@@ -22,9 +23,9 @@ const DirectCallVideoCallingScreen = () => {
   if (!call) return null;
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: Palette.background500 }}>
       <StatusBar hidden />
-      <DirectCallVideoContentView status={status} call={call} />
+      {status !== 'ended' && <DirectCallVideoContentView status={status} call={call} />}
       <DirectCallControllerView status={status} call={call} ios_audioDevice={currentAudioDeviceIOS} />
     </View>
   );

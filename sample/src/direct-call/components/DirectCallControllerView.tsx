@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC, Fragment, useMemo } from 'react';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -8,6 +8,7 @@ import IconAssets from '../../assets';
 import AudioDeviceButton from '../../shared/components/AudioDeviceButton';
 import SBIcon from '../../shared/components/SBIcon';
 import SBText from '../../shared/components/SBText';
+import { useIIFE } from '../../shared/hooks/useEffectAsync';
 import Palette from '../../shared/styles/palette';
 import { DirectCallStatus } from '../hooks/useDirectCall';
 import { useDirectCallDuration } from '../hooks/useDirectCallDuration';
@@ -29,19 +30,26 @@ const DirectCallControllerView: FC<ControllerViewProps> = ({ status, call, ios_a
     return 'No name';
   }, [call]);
 
+  const someOf = (stats: DirectCallStatus[]) => stats.some((s) => s === status);
+  const statusStandby = someOf(['pending']);
+  const statusInProgress = someOf(['established', 'connected', 'reconnecting']);
+  const statusEnded = someOf(['ended']);
+  const isVoiceCall = !call.isVideoCall;
+  const isVideoCall = call.isVideoCall;
+
   return (
-    <View style={{ position: 'absolute', left: 16, right: 16, top: 16 + top, bottom: 16 }}>
+    <View style={[StyleSheet.absoluteFill, { padding: 16 }]}>
       <View style={styles.topController}>
-        <View style={{ alignItems: 'flex-end' }}>
-          {call.isVideoCall && (
+        <View style={{ alignItems: 'flex-end', paddingTop: top }}>
+          {isVideoCall && statusInProgress && (
             <Pressable onPress={() => call.switchCamera()}>
               <SBIcon icon={'btnCameraFlipIos'} size={48} />
             </Pressable>
           )}
         </View>
         <View style={styles.information}>
-          {status === 'pending' && (
-            <>
+          {statusStandby && (
+            <Fragment>
               <SBText h2 color={Palette.onBackgroundDark01} style={styles.nickname}>
                 {remoteUserNickname}
               </SBText>
@@ -50,10 +58,10 @@ const DirectCallControllerView: FC<ControllerViewProps> = ({ status, call, ios_a
                   ? 'calling...'
                   : `Incoming ${call.isVideoCall ? 'video' : 'voice'} call...`}
               </SBText>
-            </>
+            </Fragment>
           )}
-          {status !== 'pending' && !call.isVideoCall && (
-            <>
+          {((isVoiceCall && statusInProgress) || statusEnded) && (
+            <Fragment>
               <Image
                 style={styles.profile}
                 source={call.remoteUser?.profileUrl ? { uri: call.remoteUser?.profileUrl } : IconAssets.Avatar}
@@ -62,11 +70,11 @@ const DirectCallControllerView: FC<ControllerViewProps> = ({ status, call, ios_a
                 {remoteUserNickname}
               </SBText>
               <StatusView status={status} callId={call.callId} />
-            </>
+            </Fragment>
           )}
           <View style={styles.remoteMuteStatus}>
-            {status !== 'pending' && !call.isRemoteAudioEnabled && (
-              <>
+            {statusInProgress && !call.isRemoteAudioEnabled && (
+              <Fragment>
                 <SBIcon
                   icon={'AudioOff'}
                   size={40}
@@ -74,14 +82,14 @@ const DirectCallControllerView: FC<ControllerViewProps> = ({ status, call, ios_a
                   containerStyle={{ marginBottom: 16 }}
                 />
                 <SBText color={Palette.onBackgroundDark01} body3>{`${remoteUserNickname} is muted`}</SBText>
-              </>
+              </Fragment>
             )}
           </View>
         </View>
       </View>
 
       <View style={styles.bottomController}>
-        {status !== 'ended' && (
+        {(statusStandby || statusInProgress) && (
           <>
             <View style={[styles.bottomButtonGroup, { marginBottom: 24 }]}>
               <Pressable
@@ -93,7 +101,7 @@ const DirectCallControllerView: FC<ControllerViewProps> = ({ status, call, ios_a
               >
                 <SBIcon icon={call.isLocalAudioEnabled ? 'btnAudioOff' : 'btnAudioOffSelected'} size={64} />
               </Pressable>
-              {call.isVideoCall && (
+              {isVideoCall && (
                 <Pressable
                   style={styles.bottomButton}
                   onPress={() => {
@@ -113,7 +121,7 @@ const DirectCallControllerView: FC<ControllerViewProps> = ({ status, call, ios_a
             </View>
 
             <View style={styles.bottomButtonGroup}>
-              {call.myRole === DirectCallUserRole.CALLEE && status === 'pending' && (
+              {statusStandby && call.myRole === DirectCallUserRole.CALLEE && (
                 <Pressable style={styles.bottomButton} onPress={() => call.accept()}>
                   <SBIcon icon={'btnCallVideoAccept'} size={64} />
                 </Pressable>
@@ -131,15 +139,12 @@ const DirectCallControllerView: FC<ControllerViewProps> = ({ status, call, ios_a
 
 const StatusView = ({ callId, status }: { callId: string; status: DirectCallStatus }) => {
   const seconds = useDirectCallDuration(callId);
+  const timer = useIIFE(() => new Date(seconds).toISOString().substring(11, 19));
   return (
     <SBText color={Palette.onBackgroundDark01} body3>
-      {status === 'ended' ? 'Ended' : secondsToHHMMSS(seconds)}
+      {status === 'ended' ? 'Ended' : timer}
     </SBText>
   );
-};
-
-const secondsToHHMMSS = (seconds: number) => {
-  return new Date(seconds * 1000).toISOString().substring(11, 19);
 };
 
 const styles = StyleSheet.create({
