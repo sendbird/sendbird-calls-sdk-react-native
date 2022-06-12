@@ -43,35 +43,7 @@ class CallsModule: SendBirdCallDelegate {
     }
     
     func didStartRinging(_ call: DirectCall) {
-        // TODO: Extaract to @sendbird/calls-react-native-voip
-        if commonModule.voipEnabled {
-            guard let uuid = call.callUUID else { return }
-            guard CXCallManager.shared.shouldProcessCall(for: uuid) else { return }  // Should be cross-checked with state to prevent weird event processings
-            
-            // Use CXProvider to report the incoming call to the system
-            // Construct a CXCallUpdate describing the incoming call, including the caller.
-            let name = call.caller?.userId ?? "Unknown"
-            let update = CXCallUpdate()
-            update.remoteHandle = CXHandle(type: .generic, value: name)
-            update.hasVideo = call.isVideoCall
-            update.localizedCallerName = call.caller?.userId ?? "Unknown"
-            
-            if SendBirdCall.getOngoingCallCount() > 1 {
-                // Allow only one ongoing call.
-                CXCallManager.shared.reportIncomingCall(with: uuid, update: update) { _ in
-                    CXCallManager.shared.endCall(for: uuid, endedAt: Date(), reason: .declined)
-                }
-                call.end()
-            } else {
-                // Report the incoming call to the system
-                CXCallManager.shared.reportIncomingCall(with: uuid, update: update)
-            }
-        }
-        
         CallsEvents.shared.sendEvent(.default(.onRinging), CallsUtils.convertDirectCallToDict(call))
-        
-        // TODO: background service
-        
         call.delegate = directCallModule
     }
 }
@@ -84,6 +56,10 @@ extension CallsModule: CallsCommonModuleProtocol {
     
     func getOngoingCalls(_ promise: Promise) {
         commonModule.getOngoingCalls(promise)
+    }
+    
+    func getDirectCall(_ callIdOrUUID: String, _ promise: Promise) {
+        commonModule.getDirectCall(callIdOrUUID, promise)
     }
     
     func initialize(_ appId: String) -> Bool {
@@ -105,10 +81,6 @@ extension CallsModule: CallsCommonModuleProtocol {
     
     func unregisterPushToken(_ token: String, _ promise: Promise) {
         commonModule.unregisterPushToken(token, promise)
-    }
-    
-    func voipRegistration(_ promise: Promise) {
-        commonModule.voipRegistration(promise)
     }
     
     func registerVoIPPushToken(_ token: String, _ unique: Bool, _ promise: Promise) {

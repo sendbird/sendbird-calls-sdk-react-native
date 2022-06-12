@@ -46,6 +46,7 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
     /** Common module interface **/
     override fun getCurrentUser(promise: Promise) = commonModule.getCurrentUser(promise)
     override fun getOngoingCalls(promise: Promise) = commonModule.getOngoingCalls(promise)
+    override fun getDirectCall(callId: String, promise: Promise) = commonModule.getDirectCall(callId, promise)
     override fun initialize(appId: String): Boolean {
         Log.d(NAME, "[CallsModule] initialize() -> $appId")
         initialized = commonModule.initialize(appId)

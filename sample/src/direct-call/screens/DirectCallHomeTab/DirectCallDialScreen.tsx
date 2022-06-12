@@ -34,9 +34,9 @@ const DirectCallScreen = () => {
 
   const onNavigate = (callProps: DirectCallProperties) => {
     if (callProps.isVideoCall) {
-      navigation.navigate(DirectRoutes.VIDEO_CALLING, { callProps });
+      navigation.navigate(DirectRoutes.VIDEO_CALLING, { callId: callProps.callId });
     } else {
-      navigation.navigate(DirectRoutes.VOICE_CALLING, { callProps });
+      navigation.navigate(DirectRoutes.VOICE_CALLING, { callId: callProps.callId });
     }
   };
 

@@ -168,13 +168,11 @@ extension CallsDirectCallModule: DirectCallDelegate {
     }
     
     func didEnd(_ call: DirectCall) {
-        // TODO: Extaract to @sendbird/calls-react-native-voip
-        // TODO: voip call end
-        //  if let callUUID = call.callUUID {
-        //      CXCallManager.shared.endCall(for: callUUID, endedAt: Date(), reason: call.endResult)
-        //  }
         CallsEvents.shared.sendEvent(.directCall(.onEnded),
                                      CallsUtils.convertDirectCallToDict(call))
+        
+        // Remove manually from native side
+        call.delegate = nil
     }
     
     func didEstablish(_ call: DirectCall) {

@@ -1,0 +1,20 @@
+import { useState } from 'react';
+
+import { SendbirdCalls } from '@sendbird/calls-react-native';
+
+import { useEffectAsync } from '../../shared/hooks/useEffectAsync';
+
+export const useDirectCallDuration = (callId: string, interval = 1000) => {
+  const [duration, setDuration] = useState(0);
+  useEffectAsync(() => {
+    const timer = setInterval(async () => {
+      SendbirdCalls.getDirectCall(callId)
+        .then(({ duration }) => setDuration(Math.round(duration / 1000)))
+        .catch();
+    }, interval);
+
+    return () => clearInterval(timer);
+  }, [callId, interval]);
+
+  return duration;
+};

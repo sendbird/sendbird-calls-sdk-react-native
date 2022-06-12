@@ -9,6 +9,7 @@ import {
   SendbirdCalls,
 } from '@sendbird/calls-react-native';
 
+import { useIIFE } from '../hooks/useEffectAsync';
 import Palette from '../styles/palette';
 import SBIcon, { IconNames } from './SBIcon';
 import SBText from './SBText';
@@ -27,7 +28,7 @@ const AudioDeviceButton: FC<Props> = ({
   availableAudioDevicesAndroid = [],
   onSelectAudioDeviceAndroid,
 }) => {
-  const disabled = (() => {
+  const disabled = useIIFE(() => {
     if (Platform.OS === 'ios') {
       // return ios_currentAudioDevice.outputs[0]?.type === AVAudioSessionPort.builtInSpeaker;
     }
@@ -36,9 +37,9 @@ const AudioDeviceButton: FC<Props> = ({
       // return android_currentAudioDevice === AudioDeviceType.SPEAKERPHONE;
     }
     return false;
-  })();
+  });
 
-  const audioBtn = ((): IconNames => {
+  const audioBtn = useIIFE((): IconNames => {
     if (Platform.OS === 'ios') {
       switch (currentAudioDeviceIOS.outputs[0]?.type) {
         case AVAudioSessionPort.bluetoothLE:
@@ -60,7 +61,7 @@ const AudioDeviceButton: FC<Props> = ({
     }
 
     return 'btnSpeaker';
-  })();
+  });
 
   const [visible, setVisible] = useState(false);
 

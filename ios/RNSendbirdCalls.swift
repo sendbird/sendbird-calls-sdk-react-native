@@ -39,10 +39,6 @@ class RNSendbirdCalls: RCTEventEmitter {
         SendBirdCall.application(UIApplication.shared, didReceiveRemoteNotification: data)
     }
     
-    @objc func handleVoIPNotificationData(data: [AnyHashable: Any]) {
-        // SendBirdCall.pushRegistry(T##registry: PKPushRegistry##PKPushRegistry, didReceiveIncomingPushWith: T##PKPushPayload, for: T##PKPushType, completionHandler: T##PushRegistryHandler?##PushRegistryHandler?##(UUID?) -> Void)
-    }
-    
     @objc func routePickerView() {
         guard #available(iOS 11.0, *),
               let routePickerView = SendBirdCall.routePickerView(frame: .zero) as? AVRoutePickerView,
@@ -79,6 +75,14 @@ extension RNSendbirdCalls {
         module.getCurrentUser(Promise(resolve, reject))
     }
     
+    @objc func getOngoingCalls(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.getOngoingCalls(Promise(resolve, reject))
+    }
+    
+    @objc func getDirectCall(_ callIdOrUUID: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.getDirectCall(callIdOrUUID, Promise(resolve, reject))
+    }
+    
     @objc func authenticate(_ userId: String, _ accessToken: String?, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
         module.authenticate(userId, accessToken, Promise(resolve, reject))
     }
@@ -93,10 +97,6 @@ extension RNSendbirdCalls {
     
     @objc func unregisterPushToken(_ token: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
         module.unregisterPushToken(token, Promise(resolve, reject))
-    }
-    
-    @objc func voipRegistration(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
-        module.voipRegistration(Promise(resolve, reject))
     }
     
     @objc func registerVoIPPushToken(_ token: String, _ unique: Bool, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {

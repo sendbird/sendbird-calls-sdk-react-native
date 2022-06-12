@@ -11,15 +11,15 @@ import SBText from '../../shared/components/SBText';
 import Palette from '../../shared/styles/palette';
 import type { DirectRoutes } from '../navigations/routes';
 import { useDirectNavigation } from '../navigations/useDirectNavigation';
-import { DirectCallStatus, useDirectCall } from '../useDirectCall';
+import { DirectCallStatus, useDirectCall } from '../hooks/useDirectCall';
 
 const DirectCallVideoCallingScreen = () => {
   const { navigation, route } = useDirectNavigation<DirectRoutes.VIDEO_CALLING>();
-  const { call, status, currentAudioDeviceIOS } = useDirectCall(route.params.callProps);
+  const { call, status, currentAudioDeviceIOS } = useDirectCall(route.params.callId);
 
   useEffect(() => {
-    if (call?.isEnded) navigation.goBack();
-  }, [call?.isEnded]);
+    if (status === 'ended') navigation.goBack();
+  }, [status]);
 
   if (!call) return null;
 
@@ -103,8 +103,12 @@ const ContentView: FC<CallStatusProps> = ({ call, status }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <DirectCallVideoView viewType={'remote'} callId={call.callId} style={StyleSheet.absoluteFillObject} />
-      <Animated.View style={{ left, top, width: viewWidth, height: viewHeight }}>
+      <DirectCallVideoView
+        viewType={'remote'}
+        callId={call.callId}
+        style={[StyleSheet.absoluteFillObject, { backgroundColor: 'black' }]}
+      />
+      <Animated.View style={{ left, top, width: viewWidth, height: viewHeight, backgroundColor: 'black' }}>
         <DirectCallVideoView viewType={'local'} callId={call.callId} android_zOrderMediaOverlay />
       </Animated.View>
     </View>

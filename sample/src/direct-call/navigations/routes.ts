@@ -1,5 +1,3 @@
-import type { DirectCallProperties } from '@sendbird/calls-react-native';
-
 export enum DirectRoutes {
   SIGN_IN = 'sign-in',
   HOME_TAB = 'home-tab',
@@ -44,12 +42,12 @@ export type DirectRouteWithParams =
   | {
       route: DirectRoutes.VIDEO_CALLING;
       params: {
-        callProps: DirectCallProperties;
+        callId: string;
       };
     }
   | {
       route: DirectRoutes.VOICE_CALLING;
       params: {
-        callProps: DirectCallProperties;
+        callId: string;
       };
     };

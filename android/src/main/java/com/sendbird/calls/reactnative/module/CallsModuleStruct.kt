@@ -8,6 +8,7 @@ interface CallsModuleStruct: CommonModule, DirectCallModule, GroupCallModule { }
 interface CommonModule {
     fun getCurrentUser(promise: Promise)
     fun getOngoingCalls(promise: Promise)
+    fun getDirectCall(callId: String, promise: Promise)
 
     fun initialize(appId: String): Boolean
 

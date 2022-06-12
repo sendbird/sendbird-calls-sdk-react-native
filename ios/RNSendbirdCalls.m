@@ -29,6 +29,15 @@ RCT_EXTERN_METHOD(getCurrentUser
                   : (RCTPromiseResolveBlock)resolve
                   : (RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(getOngoingCalls
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(getDirectCall
+                  : (NSString *)callIdOrUUID
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(authenticate
                   : (NSString *)userId
                   : (nullable NSString *)accessToken
@@ -47,10 +56,6 @@ RCT_EXTERN_METHOD(registerPushToken
 
 RCT_EXTERN_METHOD(unregisterPushToken
                   : (NSString *)token
-                  : (RCTPromiseResolveBlock)resolve
-                  : (RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(voipRegistration
                   : (RCTPromiseResolveBlock)resolve
                   : (RCTPromiseRejectBlock)reject)
 

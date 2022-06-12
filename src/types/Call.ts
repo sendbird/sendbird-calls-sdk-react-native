@@ -102,7 +102,7 @@ export interface DirectCallProperties {
 type JSDirectCallModule = AsJSInterface<AsJSDirectCall<NativeDirectCallModule>, 'android', 'selectAudioDevice'>;
 
 export interface DirectCallMethods extends JSDirectCallModule {
-  setListener(listener: Partial<DirectCallListener>): void;
+  addListener(listener: Partial<DirectCallListener>): () => void;
 }
 
 export interface DirectCallLog {

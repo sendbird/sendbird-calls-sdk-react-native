@@ -54,7 +54,6 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule,
 
             Log.d(CallsModule.NAME, "[DirectCallModule] accept options -> ${options.toHashMap()}")
 
-
             val localVideoViewId = CallsUtils.safeGet { options.getInt("localVideoViewId") }
             val remoteVideoViewId = CallsUtils.safeGet { options.getInt("remoteVideoViewId") }
 

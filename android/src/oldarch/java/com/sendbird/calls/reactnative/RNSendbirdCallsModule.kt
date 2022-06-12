@@ -44,9 +44,11 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
+    override fun getCurrentUser(promise: Promise) = module.getCurrentUser(promise)
+    @ReactMethod
     override fun getOngoingCalls(promise: Promise) = module.getOngoingCalls(promise)
     @ReactMethod
-    override fun getCurrentUser(promise: Promise) = module.getCurrentUser(promise)
+    override fun getDirectCall(callId: String, promise: Promise) = module.getDirectCall(callId, promise)
     @ReactMethod
     override fun initialize(appId: String) = module.initialize(appId)
     @ReactMethod

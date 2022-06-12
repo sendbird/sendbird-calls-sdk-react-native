@@ -19,6 +19,13 @@ import type NativeBinder from './NativeBinder';
 import { CallsEvent, DirectCallEventType } from './NativeBinder';
 
 export class DirectCall implements DirectCallProperties, DirectCallMethods {
+  private static pool: Record<string, DirectCall> = {};
+  public static get(binder: NativeBinder, props: DirectCallProperties) {
+    if (!DirectCall.pool[props.callId]) DirectCall.pool[props.callId] = new DirectCall(binder, props);
+    const directCall = DirectCall.pool[props.callId];
+    return directCall._updateInternal(props);
+  }
+
   constructor(private binder: NativeBinder, props: DirectCallProperties) {
     this._android_availableAudioDevices = props.android_availableAudioDevices;
     this._android_currentAudioDevice = props.android_currentAudioDevice;
@@ -102,6 +109,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
     this._myRole = props.myRole;
     this._remoteRecordingStatus = props.remoteRecordingStatus;
     this._remoteUser = props.remoteUser;
+    return this;
   }
 
   public get android_availableAudioDevices() {
@@ -183,13 +191,11 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
     return this._endResult;
   }
 
-  private _listenerRef?: () => void;
   private _listener: DirectCallListener = noopDirectCallListener;
-  public setListener = (listener: Partial<DirectCallListener>) => {
-    Logger.debug('[DirectCall]', 'setListener');
-
+  public addListener = (listener: Partial<DirectCallListener>) => {
+    Logger.debug('[DirectCall]', 'setListener', this.callId);
     this._listener = { ...noopDirectCallListener, ...listener };
-    this._listenerRef = this.binder.addListener(CallsEvent.DIRECT_CALL, ({ type, data, additionalData }) => {
+    return this.binder.addListener(CallsEvent.DIRECT_CALL, ({ type, data, additionalData }) => {
       if (data.callId === this.callId) {
         this._updateInternal(data);
         switch (type) {
@@ -270,9 +276,8 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
         }
       }
     });
-
-    return this._listenerRef;
   };
+
   public accept = async (
     options: CallOptions = { audioEnabled: true, frontCamera: true, videoEnabled: true },
     holdActiveCall = false,
