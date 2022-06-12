@@ -7,8 +7,8 @@ import { RunAfterAppReady } from '../../shared/libs/StaticNavigation';
 import { AppLogger } from '../../shared/utils/logger';
 import { DirectRouteWithParams, DirectRoutes } from '../navigations/routes';
 
-export const setCallKitListeners = async () => {
-  await RNCallKeep.setup({
+export const setupCallKit = () => {
+  return RNCallKeep.setup({
     ios: {
       appName: 'SendbirdCalls RN',
       supportsVideo: true,
@@ -24,7 +24,8 @@ export const setCallKitListeners = async () => {
       additionalPermissions: [],
     },
   });
-
+};
+export const setCallKitListeners = () => {
   RNCallKeep.addEventListener('answerCall', async ({ callUUID }) => {
     const directCall = await SendbirdCalls.getDirectCall(callUUID);
     AppLogger.debug('[CALL START]', directCall.callId);
@@ -66,6 +67,7 @@ export const startRingingWithCallKit = async (props: DirectCallProperties) => {
     );
 
     RNVoipPushNotification.onVoipNotificationCompleted(props.ios_callUUID);
+    const unsubscribeCallKit = setCallKitListeners();
 
     // Accept only one ongoing call
     const onGoingCalls = await SendbirdCalls.getOngoingCalls();
@@ -83,6 +85,7 @@ export const startRingingWithCallKit = async (props: DirectCallProperties) => {
         if (callLog?.endedBy?.userId === remoteUser.userId) {
           RNCallKeep.reportEndCallWithUUID(uuid, 2);
         }
+        unsubscribeCallKit();
         unsubscribe();
       },
     });

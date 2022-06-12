@@ -11,7 +11,7 @@ import {
   setNotificationForegroundService,
   startRingingWithNotification,
 } from './callHandler/android';
-import { setCallKitListeners, startRingingWithCallKit } from './callHandler/ios';
+import { setupCallKit, startRingingWithCallKit } from './callHandler/ios';
 import { DirectRoutes } from './navigations/routes';
 import DirectCallHomeTab from './screens/DirectCallHomeTab';
 import DirectCallSignInScreen from './screens/DirectCallSignInScreen';
@@ -24,7 +24,7 @@ if (Platform.OS === 'android') {
 }
 
 if (Platform.OS === 'ios') {
-  setCallKitListeners();
+  setupCallKit();
 }
 
 SendbirdCalls.onRinging(async (call) => {
