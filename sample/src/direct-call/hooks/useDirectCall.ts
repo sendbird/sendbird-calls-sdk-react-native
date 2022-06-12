@@ -16,8 +16,9 @@ export const useDirectCall = (callId: string) => {
 
   useEffectAsync(async () => {
     const directCall = await SendbirdCalls.getDirectCall(callId);
+    setCall(directCall);
 
-    const unsubscribe = directCall.addListener({
+    return directCall.addListener({
       onEstablished() {
         setStatus('established');
       },
@@ -32,7 +33,6 @@ export const useDirectCall = (callId: string) => {
       },
       onEnded() {
         setStatus('ended');
-        unsubscribe();
       },
       onAudioDeviceChanged(_, { platform, data }) {
         if (platform === 'ios') {
@@ -66,7 +66,6 @@ export const useDirectCall = (callId: string) => {
         forceUpdate();
       },
     });
-    setCall(directCall);
   }, []);
 
   return { call, status, currentAudioDeviceIOS };
