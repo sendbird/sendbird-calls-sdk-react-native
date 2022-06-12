@@ -100,10 +100,6 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   }
 
   /** Platform iOS **/
-  public ios_voipRegistration = async () => {
-    if (Platform.OS !== 'ios') return '';
-    return this.binder.nativeModule.voipRegistration();
-  };
   public ios_registerVoIPPushToken = async (token: string, unique = true) => {
     if (Platform.OS !== 'ios') return;
     await this.binder.nativeModule.registerVoIPPushToken(token, unique);
