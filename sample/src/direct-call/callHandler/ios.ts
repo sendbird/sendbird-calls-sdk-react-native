@@ -1,5 +1,4 @@
 import RNCallKeep from 'react-native-callkeep';
-import RNVoipPushNotification from 'react-native-voip-push-notification';
 
 import { DirectCallProperties, SendbirdCalls } from '@sendbird/calls-react-native';
 
@@ -7,8 +6,8 @@ import { RunAfterAppReady } from '../../shared/libs/StaticNavigation';
 import { AppLogger } from '../../shared/utils/logger';
 import { DirectRouteWithParams, DirectRoutes } from '../navigations/routes';
 
-export const setupCallKit = () => {
-  return RNCallKeep.setup({
+export const setupCallKit = async () => {
+  await RNCallKeep.setup({
     ios: {
       appName: 'SendbirdCalls RN',
       supportsVideo: true,
@@ -25,7 +24,10 @@ export const setupCallKit = () => {
     },
   });
 };
-export const setCallKitListeners = () => {
+
+// You can set CallKit listener on app mount with `setupCallKit`
+// but it leads some weird behavior like listener is not triggered after app refresh on development mode.
+export const setupCallKitListeners = () => {
   RNCallKeep.addEventListener('answerCall', async ({ callUUID }) => {
     const directCall = await SendbirdCalls.getDirectCall(callUUID);
     AppLogger.debug('[CALL START]', directCall.callId);
@@ -58,6 +60,7 @@ export const startRingingWithCallKit = async (props: DirectCallProperties) => {
     const remoteUser = props.remoteUser;
     const directCall = await SendbirdCalls.getDirectCall(props.callId);
 
+    // Display on native side for app termination
     RNCallKeep.displayIncomingCall(
       uuid,
       remoteUser.userId,
@@ -65,9 +68,6 @@ export const startRingingWithCallKit = async (props: DirectCallProperties) => {
       'generic',
       props.isVideoCall,
     );
-
-    RNVoipPushNotification.onVoipNotificationCompleted(props.ios_callUUID);
-    const unsubscribeCallKit = setCallKitListeners();
 
     // Accept only one ongoing call
     const onGoingCalls = await SendbirdCalls.getOngoingCalls();
@@ -78,15 +78,16 @@ export const startRingingWithCallKit = async (props: DirectCallProperties) => {
       return;
     }
 
-    const unsubscribe = directCall.addListener({
+    const unsubscribeCallKit = setupCallKitListeners();
+    const unsubscribeDirectCall = directCall.addListener({
       onEnded({ callLog }) {
         AppLogger.warn('onEnded with callkit');
         RNCallKeep.endAllCalls();
         if (callLog?.endedBy?.userId === remoteUser.userId) {
           RNCallKeep.reportEndCallWithUUID(uuid, 2);
         }
+        unsubscribeDirectCall();
         unsubscribeCallKit();
-        unsubscribe();
       },
     });
   }

@@ -68,7 +68,7 @@
   return YES;
 }
 
-// MARK: Remote Notification
+// MARK: - Remote Notification
 //- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 //{
 //  NSLog(@"didReceiveRemoteNotification %@", userInfo);
@@ -81,24 +81,60 @@
   [RNVoipPushNotificationManager didUpdatePushCredentials:pushCredentials forType:(NSString *)type];
 }
 
-// MARK: - VoIP Notification - Receive incoming push event
-- (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(PKPushType)type
-{
-  NSLog(@"didReceiveIncomingPushWithPayload %@", payload);
-  [SBCSendBirdCall pushRegistry:registry didReceiveIncomingPushWith:payload for:type completionHandler:nil];
-}
-
 // MARK: - VoIP Notification - Receive incoming call
+/**
+ * This being called after voip registration
+ * so you can register voip on the JS side, after set `SendbirdCalls.onRinging` and `RNCallKeep.addListener`
+ * 
+ * 0. voip notification wake your app
+ * 1. [Native] App is start
+ * 2. [JS] JS bridge created and your React-Native app is mounted
+ * 3. [JS] call SendbirdCalls.initialize()
+ * 4. [JS] set SendbirdCalls.onRinging
+ * 5. [JS] set RNCallKeep.addListener
+ * 6. [JS] RNVoipPushNotification.registerVoipToken() >> it means register voip
+ * 7. [Native] didReceiveIncomingPushWithPayload called
+ * 8-1. [Native] SendbirdCalls.didReceiveIncomingPush >> it will trigger Ringing event
+ * 8-2. [Native] report to CallKit
+ * 9. [JS] onRinging listener called
+ */
 - (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(PKPushType)type withCompletionHandler:(void (^)())completion
 {
-  NSLog(@"didReceiveIncomingPushWithPayloadWithCompletionHandler %@", payload);
+  // WARN: If you don't report to CallKit, the app will be shut down.
   [SBCSendBirdCall pushRegistry:registry didReceiveIncomingPushWith:payload for:type completionHandler:^(NSUUID * _Nullable uuid) {
-    NSLog(@"didReceiveIncomingPushWith uuid %@", uuid);
     if(uuid != nil) {
-      NSString* uuidString = [uuid UUIDString];
-      [RNVoipPushNotificationManager addCompletionHandler:uuidString completionHandler:completion];
+      // Report valid call
+      SBCDirectCall* call = [SBCSendBirdCall callForUUID: uuid];
+      [RNCallKeep reportNewIncomingCall: [uuid UUIDString]
+                                 handle: [[call remoteUser] userId]
+                             handleType: @"generic"
+                               hasVideo: [call isVideoCall]
+                    localizedCallerName: [[call remoteUser] nickname]
+                        supportsHolding: YES
+                           supportsDTMF: YES
+                       supportsGrouping: YES
+                     supportsUngrouping: YES
+                            fromPushKit: YES
+                                payload: [payload dictionaryPayload]
+                  withCompletionHandler: completion];
     } else {
-      completion();
+      // Report and end invalid call
+      NSUUID* uuid = [NSUUID alloc];
+      NSString* uuidString = [uuid UUIDString];
+      
+      [RNCallKeep reportNewIncomingCall: uuidString
+                                 handle: @"invalid"
+                             handleType: @"generic"
+                               hasVideo: NO
+                    localizedCallerName: @"invalid"
+                        supportsHolding: NO
+                           supportsDTMF: NO
+                       supportsGrouping: NO
+                     supportsUngrouping: NO
+                            fromPushKit: YES
+                                payload: [payload dictionaryPayload]
+                  withCompletionHandler: completion];
+      [RNCallKeep endCallWithUUID:uuidString reason:1];
     }
   }];
 }

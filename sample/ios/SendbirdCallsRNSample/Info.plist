@@ -43,7 +43,6 @@
 	<string>Enable microphone access so that others can hear you.</string>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>remote-notification</string>
 		<string>voip</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
