@@ -1,7 +1,5 @@
 /* eslint-disable */
 import { NativeEventEmitter, NativeModules } from 'react-native';
-// @ts-ignore
-import EventEmitter from 'react-native/Libraries/vendor/emitter/EventEmitter';
 
 import type { AsNativeInterface, DirectCallProperties, SendbirdCallsNativeSpec } from '../types';
 import { LINKING_ERROR } from '../utils/constants';
