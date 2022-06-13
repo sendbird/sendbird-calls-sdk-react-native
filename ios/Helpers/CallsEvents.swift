@@ -32,11 +32,11 @@ class CallsEvents {
             }
         }
     }
-
+    
     enum DefaultEventType: String, CaseIterable {
         case onRinging
     }
-
+    
     enum DirectCallEventType: String, CaseIterable {
         case onEstablished
         case onConnected
@@ -63,16 +63,22 @@ class CallsEvents {
             self.eventEmitter.bridge
         }
     }
-    
+}
+
+// MARK: RCTEventEmitter
+extension CallsEvents {
     func startObserving() {
         hasListeners = true
-        for event in pendingEvents {
-            if let eventName = event["name"] as? CallsEvents.Event, let data = event["data"] as? Any {
-                self.sendEvent(eventName, data, event["additionalData"] ?? nil)
+        DispatchQueue.main.async {
+            for event in self.pendingEvents {
+                if let eventName = event["name"] as? CallsEvents.Event, let data = event["data"] as? Any {
+                    self.sendEvent(eventName, data, event["additionalData"] ?? nil)
+                }
             }
+            self.pendingEvents.removeAll()
         }
-        pendingEvents.removeAll()
     }
+    
     func stopObserving() {
         hasListeners = false
     }

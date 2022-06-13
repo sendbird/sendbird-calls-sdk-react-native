@@ -33,6 +33,10 @@ class CallsModule: SendBirdCallDelegate {
         }
     }
     
+    init() {
+        SendBirdCall.addDelegate(self, identifier: "sendbird.call.listener")
+    }
+    
     func invalidate() {
         if(initialized){
             SendBirdCall.deauthenticate(completionHandler: nil)
@@ -43,8 +47,10 @@ class CallsModule: SendBirdCallDelegate {
     }
     
     func didStartRinging(_ call: DirectCall) {
-        CallsEvents.shared.sendEvent(.default(.onRinging), CallsUtils.convertDirectCallToDict(call))
-        call.delegate = directCallModule
+        DispatchQueue.main.async {
+            CallsEvents.shared.sendEvent(.default(.onRinging), CallsUtils.convertDirectCallToDict(call))
+            call.delegate = self.directCallModule
+        }
     }
 }
 
@@ -63,7 +69,6 @@ extension CallsModule: CallsCommonModuleProtocol {
     }
     
     func initialize(_ appId: String) -> Bool {
-        SendBirdCall.addDelegate(self, identifier: "sendbird.call.listener")
         return commonModule.initialize(appId)
     }
     
