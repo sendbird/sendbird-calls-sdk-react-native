@@ -8,6 +8,9 @@ export interface SendbirdCallListener {
 }
 
 export interface DirectCallListener {
+  /** Called when the update properties internally on Javascript side **/
+  onPropertyUpdatedManually: (call: DirectCallProperties) => void;
+
   /** Called when the callee has accepted the call, but not yet connected to media streams. **/
   onEstablished: (call: DirectCallProperties) => void;
 
@@ -64,6 +67,7 @@ export interface DirectCallListener {
 
 export interface DirectCallProperties {
   callId: string;
+  ios_callUUID: string | null;
   callLog: DirectCallLog | null;
   callee: DirectCallUser | null;
   caller: DirectCallUser | null;
@@ -74,7 +78,7 @@ export interface DirectCallProperties {
 
   localUser: DirectCallUser | null;
   remoteUser: DirectCallUser | null;
-  myRole: DirectCallUser | null;
+  myRole: DirectCallUserRole | null;
 
   availableVideoDevices: VideoDevice[];
   currentVideoDevice: VideoDevice | null;
@@ -99,7 +103,7 @@ export interface DirectCallProperties {
 type JSDirectCallModule = AsJSInterface<AsJSDirectCall<NativeDirectCallModule>, 'android', 'selectAudioDevice'>;
 
 export interface DirectCallMethods extends JSDirectCallModule {
-  setListener(listener: Partial<DirectCallListener>): void;
+  addListener(listener: Partial<DirectCallListener>): () => void;
 }
 
 export interface DirectCallLog {

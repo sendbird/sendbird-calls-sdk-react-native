@@ -1,6 +1,6 @@
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import React from 'react';
-import { AppRegistry, StatusBar } from 'react-native';
+import { AppRegistry, Platform, StatusBar } from 'react-native';
 import { withTouchReload } from 'react-native-touch-reload';
 
 import { SendbirdCalls } from '@sendbird/calls-react-native';
@@ -11,6 +11,7 @@ import { APP_ID, INITIAL_ROUTE } from './src/env';
 import GroupCallApp from './src/group-call/App';
 import { AuthProvider } from './src/shared/contexts/AuthContext';
 import { CALL_PERMISSIONS, usePermissions } from './src/shared/hooks/usePermissions';
+import { navigationRef } from './src/shared/libs/StaticNavigation';
 import Palette from './src/shared/styles/palette';
 
 SendbirdCalls.Logger.setLogLevel('debug');
@@ -25,6 +26,7 @@ function App() {
   return (
     <AuthProvider>
       <NavigationContainer
+        ref={navigationRef}
         theme={{
           ...DefaultTheme,
           colors: {

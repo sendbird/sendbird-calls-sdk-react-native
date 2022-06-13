@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@notifee/react-native": "^5.2.2",
+    "@react-native-async-storage/async-storage": "^1.17.6",
     "@react-native-firebase/app": "^14.9.4",
     "@react-native-firebase/messaging": "^14.9.4",
     "@react-navigation/bottom-tabs": "^6.3.1",
@@ -19,10 +20,12 @@
     "@sendbird/calls-react-native": "link:../",
     "react": "17.0.2",
     "react-native": "0.68.2",
+    "react-native-callkeep": "^4.3.3",
     "react-native-permissions": "^3.3.1",
     "react-native-safe-area-context": "^4.2.5",
     "react-native-screens": "^3.13.1",
-    "react-native-touch-reload": "sendbird/react-native-touch-reload"
+    "react-native-touch-reload": "sendbird/react-native-touch-reload",
+    "react-native-voip-push-notification": "^3.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

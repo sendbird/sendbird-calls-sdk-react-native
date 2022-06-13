@@ -3,13 +3,13 @@
 //  RNSendbirdCalls
 //
 //  Created by Airen Kang on 2022/05/07.
-//  Copyright © 2022 Facebook. All rights reserved.
+//  Copyright © 2022 Sendbird. All rights reserved.
 //
 
 import Foundation
 import React
 
-class CallsEvents: RCTEventEmitter {
+class CallsEvents {
     enum Event {
         case `default`(_ type: DefaultEventType)
         case directCall(_ type: DirectCallEventType)
@@ -32,11 +32,11 @@ class CallsEvents: RCTEventEmitter {
             }
         }
     }
-
+    
     enum DefaultEventType: String, CaseIterable {
         case onRinging
     }
-
+    
     enum DirectCallEventType: String, CaseIterable {
         case onEstablished
         case onConnected
@@ -57,43 +57,41 @@ class CallsEvents: RCTEventEmitter {
     
     var hasListeners = false
     var pendingEvents: [Dictionary<String, Any?>] = []
-    
-    override class func requiresMainQueueSetup() -> Bool {
-        return true
-    }
-    
-    override func startObserving() {
-        hasListeners = true
-        for event in pendingEvents {
-            if let eventName = event["name"] as? CallsEvents.Event, let data = event["data"] as? Any {
-                sendEvent(eventName, data, event["additionalData"] ?? nil)
-            }
+    var eventEmitter: RCTEventEmitter!
+    var bridge: RCTBridge {
+        get {
+            self.eventEmitter.bridge
         }
-        pendingEvents.removeAll()
+    }
+}
+
+// MARK: RCTEventEmitter
+extension CallsEvents {
+    func startObserving() {
+        hasListeners = true
+        DispatchQueue.main.async {
+            for event in self.pendingEvents {
+                if let eventName = event["name"] as? CallsEvents.Event, let data = event["data"] as? Any {
+                    self.sendEvent(eventName, data, event["additionalData"] ?? nil)
+                }
+            }
+            self.pendingEvents.removeAll()
+        }
     }
     
-    override func stopObserving() {
+    func stopObserving() {
         hasListeners = false
-    }
-    
-    
-    override func supportedEvents() -> [String]! {
-        return [
-            Event.default(.onRinging).name,
-            Event.directCall(.onConnected).name
-        ]
     }
 }
 
 // MARK: Custom event sender
 extension CallsEvents {
     func sendEvent(_ event: Event, _ data: Any) {
-        if (hasListeners) {
-            sendEvent(withName: event.name, body: [
+        if (hasListeners && eventEmitter != nil) {
+            eventEmitter.sendEvent(withName: event.name, body: [
                 "eventType": event.type,
                 "data": data,
             ])
-            
         } else {
             pendingEvents.append([
                 "name": event,
@@ -103,13 +101,12 @@ extension CallsEvents {
     }
     
     func sendEvent(_ event: Event, _ data: Any, _ additionalData: Any?) {
-        if (hasListeners) {
-            sendEvent(withName: event.name, body: [
+        if (hasListeners && eventEmitter != nil) {
+            eventEmitter.sendEvent(withName: event.name, body: [
                 "eventType": event.type,
                 "data": data,
                 "additionalData": additionalData ?? [:]
             ])
-            
         } else {
             pendingEvents.append([
                 "name": event,

@@ -24,20 +24,19 @@ const DirectCallScreen = () => {
   });
 
   React.useEffect(() => {
-    messaging().onMessage((message) => {
+    const listener = messaging().onMessage((message) => {
       SendbirdCalls.android_handleFirebaseMessageData(message.data);
-      // const isSendbirdMessage = SendbirdCalls.android_handleFirebaseMessageData(message.data);
-      // if (!isSendbirdMessage) handle your remote notification here
     });
-
-    SendbirdCalls.onRinging(onNavigate);
+    return () => {
+      listener();
+    };
   }, []);
 
   const onNavigate = (callProps: DirectCallProperties) => {
     if (callProps.isVideoCall) {
-      navigation.navigate(DirectRoutes.VIDEO_CALLING, { callProps });
+      navigation.navigate(DirectRoutes.VIDEO_CALLING, { callId: callProps.callId });
     } else {
-      navigation.navigate(DirectRoutes.VOICE_CALLING, { callProps });
+      navigation.navigate(DirectRoutes.VOICE_CALLING, { callId: callProps.callId });
     }
   };
 

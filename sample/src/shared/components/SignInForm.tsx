@@ -14,20 +14,31 @@ type Props = {
   onChange: (value: { applicationId: string; userId: string; accessToken?: string }) => void;
   onSubmit: (value: { applicationId: string; userId: string; accessToken?: string }) => void;
   containerStyle?: StyleProp<ViewStyle>;
+  hideApplicationId?: boolean;
 };
-const SignInForm = ({ applicationId, userId, accessToken, onSubmit, onChange, containerStyle }: Props) => {
+const SignInForm = ({
+  applicationId,
+  userId,
+  accessToken,
+  onSubmit,
+  onChange,
+  containerStyle,
+  hideApplicationId,
+}: Props) => {
   return (
     <View style={containerStyle}>
       <View style={styles.logoContainer}>
         <SBIcon icon={'Sendbird'} size={48} />
         <SBText style={styles.logoTitle}>Sendbird Calls</SBText>
       </View>
-      <SBTextInput
-        value={applicationId}
-        onChangeText={(applicationId) => onChange({ applicationId, userId, accessToken })}
-        placeholder={'Application ID'}
-        style={styles.input}
-      />
+      {!hideApplicationId && (
+        <SBTextInput
+          value={applicationId}
+          onChangeText={(applicationId) => onChange({ applicationId, userId, accessToken })}
+          placeholder={'Application ID'}
+          style={styles.input}
+        />
+      )}
       <SBTextInput
         value={userId}
         onChangeText={(userId) => onChange({ applicationId, userId, accessToken })}

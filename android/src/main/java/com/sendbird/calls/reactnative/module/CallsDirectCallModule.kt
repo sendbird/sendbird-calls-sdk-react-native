@@ -4,10 +4,7 @@ import android.util.Log
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReadableMap
-import com.sendbird.calls.AcceptParams
-import com.sendbird.calls.AudioDevice
-import com.sendbird.calls.CallOptions
-import com.sendbird.calls.DirectCall
+import com.sendbird.calls.*
 import com.sendbird.calls.handler.DirectCallListener
 import com.sendbird.calls.reactnative.CallsEvents
 import com.sendbird.calls.reactnative.RNCallsInternalError
@@ -56,7 +53,6 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule,
             val call = CallsUtils.findDirectCall(callId, from)
 
             Log.d(CallsModule.NAME, "[DirectCallModule] accept options -> ${options.toHashMap()}")
-
 
             val localVideoViewId = CallsUtils.safeGet { options.getInt("localVideoViewId") }
             val remoteVideoViewId = CallsUtils.safeGet { options.getInt("remoteVideoViewId") }

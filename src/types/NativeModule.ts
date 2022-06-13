@@ -1,6 +1,5 @@
 import type { NativeModule, TurboModule } from 'react-native';
 
-import type { DirectCall } from '../libs/DirectCall';
 import type { CallOptions, DirectCallProperties } from './Call';
 import type { AudioDevice, VideoDevice } from './Media';
 import type { EnterParams, RoomProperties, RoomType } from './Room';
@@ -15,6 +14,7 @@ export interface NativeCommonModule {
 
   getCurrentUser(): Promise<User | null>;
   getOngoingCalls(): Promise<DirectCallProperties[]>;
+  getDirectCall(callId: string): Promise<DirectCallProperties>;
 
   initialize(appId: string): boolean;
   authenticate(userId: string, accessToken?: string | null): Promise<User>;
@@ -28,15 +28,12 @@ export interface NativeCommonModule {
 
   /** @platform Android **/
   handleFirebaseMessageData(data: Record<string, string>): void;
-
-  /** @platform iOS **/
-  handleRemoteNotificationData(data: Record<string, string>): void;
-  /** @platform iOS **/
-  voipRegistration(): Promise<string>;
   /** @platform iOS **/
   registerVoIPPushToken(token: string, unique?: boolean): Promise<void>;
   /** @platform iOS **/
   unregisterVoIPPushToken(token: string): Promise<void>;
+  /** @platform iOS **/
+  routePickerView(): void;
 }
 
 export interface NativeDirectCallModule {
@@ -84,17 +81,12 @@ export interface SendbirdCallsNativeSpec
     NativeGroupCallModule {}
 
 type AndroidSpecificKeys = 'handleFirebaseMessageData';
-type IOSSpecificKeys =
-  | 'voipRegistration'
-  | 'registerVoIPPushToken'
-  | 'unregisterVoIPPushToken'
-  | 'handleRemoteNotificationData';
+type IOSSpecificKeys = 'registerVoIPPushToken' | 'unregisterVoIPPushToken' | 'routePickerView';
 type PlatformSpecificInterface = AsJSInterface<
   AsJSInterface<NativeCommonModule, 'ios', IOSSpecificKeys>,
   'android',
   AndroidSpecificKeys
 >;
 export interface SendbirdCallsJavascriptSpec extends PlatformSpecificInterface {
-  getDirectCall(props: DirectCallProperties): DirectCall;
   onRinging(listener: (props: DirectCallProperties) => void): void;
 }

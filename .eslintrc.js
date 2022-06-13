@@ -3,11 +3,7 @@ module.exports = {
     es2021: true,
   },
   ignorePatterns: ['*.config.js', '.eslintrc.js', 'bootstrap.js'],
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'prettier',
-  ],
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 12,
@@ -22,7 +18,7 @@ module.exports = {
     'quotes': ['error', 'single', { avoidEscape: true }],
     'arrow-parens': ['error', 'always'],
     'eol-last': ['warn', 'always'],
-    'multiline-ternary': ['warn', 'always-multiline'],
+    'multiline-ternary': ['off'],
     'no-nested-ternary': 'error',
     'no-empty': ['error', { allowEmptyCatch: true }],
     'comma-dangle': ['warn', 'always-multiline'],

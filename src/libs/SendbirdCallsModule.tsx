@@ -9,8 +9,6 @@ import { DirectCall } from './DirectCall';
 import NativeBinder, { CallsEvent, DefaultEventType } from './NativeBinder';
 import { Room } from './Room';
 
-const _directCalls: Record<string, DirectCall> = {};
-
 export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec {
   public SDK_VERSION = pkg.version;
   public Logger = Logger;
@@ -48,11 +46,14 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   public getOngoingCalls(): Promise<DirectCallProperties[]> {
     return this.binder.nativeModule.getOngoingCalls();
   }
+  public getDirectCall = async (callId: string): Promise<DirectCall> => {
+    const callProps = await this.binder.nativeModule.getDirectCall(callId);
+    return DirectCall.get(this.binder, callProps);
+  };
   public initialize = (appId: string) => {
     if (this.initialized) return this.initialized;
     this.Logger.debug('[SendbirdCalls]', 'initialize()');
 
-    this.Logger.debug('[SendbirdCalls]', 'initialize()', 'add javascript listener');
     this.binder.addListener(CallsEvent.DEFAULT, ({ type, data }) => {
       if (type === DefaultEventType.ON_RINGING) {
         this.Logger.debug('[SendbirdCalls]', 'onRinging', data.callId);
@@ -98,11 +99,7 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
       .then((props) => (props ? new Room(this.binder, props) : null));
   }
 
-  /** Platform specific **/
-  public ios_voipRegistration = async () => {
-    if (Platform.OS !== 'ios') return '';
-    return this.binder.nativeModule.voipRegistration();
-  };
+  /** Platform iOS **/
   public ios_registerVoIPPushToken = async (token: string, unique = true) => {
     if (Platform.OS !== 'ios') return;
     await this.binder.nativeModule.registerVoIPPushToken(token, unique);
@@ -111,28 +108,22 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
     if (Platform.OS !== 'ios') return;
     await this.binder.nativeModule.unregisterVoIPPushToken(token);
   };
-  public ios_handleRemoteNotificationData(data?: Record<string, string>) {
-    if (Platform.OS !== 'ios' || !data?.['sendbird_call']) {
-      return false;
-    } else {
-      this.binder.nativeModule.handleRemoteNotificationData(data);
-      return true;
-    }
-  }
-  public android_handleFirebaseMessageData(data?: Record<string, string>) {
+  public ios_routePickerView = () => {
+    if (Platform.OS !== 'ios') return;
+    this.binder.nativeModule.routePickerView();
+  };
+
+  /** Platform Android **/
+  public android_handleFirebaseMessageData = (data?: Record<string, string>) => {
     if (Platform.OS !== 'android' || !data?.['sendbird_call']) {
       return false;
     } else {
       this.binder.nativeModule.handleFirebaseMessageData(data);
       return true;
     }
-  }
+  };
 
   /** Additional **/
-  public getDirectCall = (props: DirectCallProperties) => {
-    if (!_directCalls[props.callId]) _directCalls[props.callId] = new DirectCall(this.binder, props);
-    return _directCalls[props.callId];
-  };
   public onRinging(listener: (props: DirectCallProperties) => void) {
     this._onRinging = listener;
   }

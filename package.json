@@ -24,6 +24,7 @@
   "scripts": {
     "docs": "typedoc src/index.ts --excludeInternal --excludePrivate --excludeProtected",
     "test": "jest",
+    "test:build": "yarn build && yarn clean",
     "typescript": "tsc --noEmit",
     "build": "bob build",
     "clean": "del lib",

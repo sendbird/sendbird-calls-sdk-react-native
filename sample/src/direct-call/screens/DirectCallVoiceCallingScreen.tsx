@@ -1,27 +1,29 @@
-import React from 'react';
-import { Button, View, useWindowDimensions } from 'react-native';
+import React, { useEffect } from 'react';
+import { View } from 'react-native';
 
-import { useDirectCall } from '../../../../src/hooks/useDirectCall';
+import Palette from '../../shared/styles/palette';
+import DirectCallControllerView from '../components/DirectCallControllerView';
+import { useDirectCall } from '../hooks/useDirectCall';
 import type { DirectRoutes } from '../navigations/routes';
 import { useDirectNavigation } from '../navigations/useDirectNavigation';
 
 const DirectCallVoiceCallingScreen = () => {
-  const { route } = useDirectNavigation<DirectRoutes.VOICE_CALLING>();
-  const { call, status } = useDirectCall(route.params.callProps);
-  const { width, height } = useWindowDimensions();
+  const { route, navigation } = useDirectNavigation<DirectRoutes.VOICE_CALLING>();
+  const { call, status, currentAudioDeviceIOS } = useDirectCall(route.params.callId);
+
+  useEffect(() => {
+    if (status === 'ended') {
+      setTimeout(() => {
+        navigation.goBack();
+      }, 2000);
+    }
+  }, [status]);
 
   if (!call) return null;
 
   return (
-    <View>
-      <View style={{ width, height: height * 0.5, alignItems: 'flex-end' }}>
-        {status === 'ringing' && <Button title={'Accept'} onPress={() => call.accept()} />}
-        {status === 'ringing' && <Button title={'Decline'} onPress={() => call.end()} />}
-        {status.match(/connected|reconnecting/) && <Button title={'Disconnect'} onPress={() => call.end()} />}
-        {status === 'connected' && <Button title={'Mute'} onPress={() => call?.muteMicrophone()} />}
-        {status === 'connected' && <Button title={'Unmute'} onPress={() => call?.unmuteMicrophone()} />}
-        {status === 'connected' && <Button title={'Switch'} onPress={() => call?.switchCamera()} />}
-      </View>
+    <View style={{ flex: 1, backgroundColor: Palette.background500 }}>
+      <DirectCallControllerView status={status} call={call} ios_audioDevice={currentAudioDeviceIOS} />
     </View>
   );
 };

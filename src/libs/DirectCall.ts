@@ -12,14 +12,21 @@ import type {
   RecordingStatus,
   VideoDevice,
 } from '../types';
-import { RouteChangeReason } from '../types';
-import { noopDirectCallListener } from '../utils';
+import { DirectCallUserRole, RouteChangeReason } from '../types';
 import { Logger } from '../utils/logger';
 import type NativeBinder from './NativeBinder';
 import { CallsEvent, DirectCallEventType } from './NativeBinder';
 
 export class DirectCall implements DirectCallProperties, DirectCallMethods {
+  private static pool: Record<string, DirectCall> = {};
+  public static get(binder: NativeBinder, props: DirectCallProperties) {
+    if (!DirectCall.pool[props.callId]) DirectCall.pool[props.callId] = new DirectCall(binder, props);
+    const directCall = DirectCall.pool[props.callId];
+    return directCall._updateInternal(props);
+  }
+
   constructor(private binder: NativeBinder, props: DirectCallProperties) {
+    this._ios_callUUID = props.ios_callUUID;
     this._android_availableAudioDevices = props.android_availableAudioDevices;
     this._android_currentAudioDevice = props.android_currentAudioDevice;
     this._availableVideoDevices = props.availableVideoDevices;
@@ -48,6 +55,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
     this._remoteUser = props.remoteUser;
   }
 
+  private _ios_callUUID: string | null;
   private _android_availableAudioDevices: AudioDevice[];
   private _android_currentAudioDevice: AudioDevice | null;
   private _availableVideoDevices: VideoDevice[];
@@ -71,11 +79,12 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
   private _isVideoCall: boolean;
   private _localRecordingStatus: RecordingStatus;
   private _localUser: DirectCallUser | null;
-  private _myRole: DirectCallUser | null;
+  private _myRole: DirectCallUserRole | null;
   private _remoteRecordingStatus: RecordingStatus;
   private _remoteUser: DirectCallUser | null;
 
   private _updateInternal(props: DirectCallProperties) {
+    this._ios_callUUID = props.ios_callUUID;
     this._android_availableAudioDevices = props.android_availableAudioDevices;
     this._android_currentAudioDevice = props.android_currentAudioDevice;
     this._availableVideoDevices = props.availableVideoDevices;
@@ -102,8 +111,12 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
     this._myRole = props.myRole;
     this._remoteRecordingStatus = props.remoteRecordingStatus;
     this._remoteUser = props.remoteUser;
+    return this;
   }
 
+  public get ios_callUUID() {
+    return this._ios_callUUID;
+  }
   public get android_availableAudioDevices() {
     return this._android_availableAudioDevices;
   }
@@ -183,96 +196,111 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
     return this._endResult;
   }
 
-  private _listenerRef?: () => void;
-  private _listener: DirectCallListener = noopDirectCallListener;
-  public setListener = (listener: Partial<DirectCallListener>) => {
-    Logger.debug('[DirectCall]', 'setListener');
+  private _internalEvents = {
+    pool: [] as Partial<DirectCallListener>[],
+    emit: (event: keyof DirectCallListener, ...args: unknown[]) => {
+      // @ts-ignore
+      this._internalEvents.pool.forEach((listener) => listener[event]?.(...args));
+    },
+    add: (listener: Partial<DirectCallListener>) => {
+      this._internalEvents.pool.push(listener);
+      return () => {
+        const index = this._internalEvents.pool.indexOf(listener);
+        if (index > -1) delete this._internalEvents.pool[index];
+      };
+    },
+  };
 
-    this._listener = { ...noopDirectCallListener, ...listener };
-    this._listenerRef = this.binder.addListener(CallsEvent.DIRECT_CALL, ({ type, data, additionalData }) => {
-      if (data.callId === this.callId) {
-        this._updateInternal(data);
-        switch (type) {
-          case DirectCallEventType.ON_ESTABLISHED: {
-            this._listener.onEstablished(data);
-            break;
-          }
-          case DirectCallEventType.ON_CONNECTED: {
-            this._listener.onConnected(data);
-            break;
-          }
-          case DirectCallEventType.ON_RECONNECTING: {
-            this._listener.onReconnecting(data);
-            break;
-          }
-          case DirectCallEventType.ON_RECONNECTED: {
-            this._listener.onReconnected(data);
-            break;
-          }
-          case DirectCallEventType.ON_ENDED: {
-            this._listener.onEnded(data);
-            break;
-          }
-          case DirectCallEventType.ON_REMOTE_AUDIO_SETTINGS_CHANGED: {
-            this._listener.onRemoteAudioSettingsChanged(data);
-            break;
-          }
-          case DirectCallEventType.ON_REMOTE_VIDEO_SETTINGS_CHANGED: {
-            this._listener.onRemoteVideoSettingsChanged(data);
-            break;
-          }
-          case DirectCallEventType.ON_LOCAL_VIDEO_SETTINGS_CHANGED: {
-            this._listener.onLocalVideoSettingsChanged(data);
-            break;
-          }
-          case DirectCallEventType.ON_REMOTE_RECORDING_STATUS_CHANGED: {
-            this._listener.onRemoteRecordingStatusChanged(data);
-            break;
-          }
-          case DirectCallEventType.ON_CUSTOM_ITEMS_UPDATED: {
-            this._listener.onCustomItemsUpdated(data, additionalData?.updatedKeys ?? []);
-            break;
-          }
-          case DirectCallEventType.ON_CUSTOM_ITEMS_DELETED: {
-            this._listener.onCustomItemsDeleted(data, additionalData?.deletedKeys ?? []);
-            break;
-          }
-          case DirectCallEventType.ON_USER_HOLD_STATUS_CHANGED: {
-            this._listener.onUserHoldStatusChanged(
-              data,
-              additionalData?.isLocalUser ?? false,
-              additionalData?.isUserOnHold ?? false,
-            );
-            break;
-          }
-          case DirectCallEventType.ON_AUDIO_DEVICE_CHANGED: {
-            if (Platform.OS === 'android') {
-              this._listener.onAudioDeviceChanged(data, {
-                platform: 'android',
-                data: {
-                  currentAudioDevice: additionalData?.currentAudioDevice ?? null,
-                  availableAudioDevices: additionalData?.availableAudioDevices ?? [],
-                },
-              });
+  public addListener = (listener: Partial<DirectCallListener>) => {
+    Logger.debug('[DirectCall]', 'addListener', this.callId);
+
+    const unsubscribes = [
+      this.binder.addListener(CallsEvent.DIRECT_CALL, ({ type, data, additionalData }) => {
+        if (data.callId === this.callId) {
+          this._updateInternal(data);
+          switch (type) {
+            case DirectCallEventType.ON_ESTABLISHED: {
+              listener.onEstablished?.(data);
+              break;
             }
-            if (Platform.OS === 'ios') {
-              this._listener.onAudioDeviceChanged(data, {
-                platform: 'ios',
-                data: {
-                  reason: additionalData?.reason ?? RouteChangeReason.unknown,
-                  currentRoute: additionalData?.currentPort ?? { inputs: [], outputs: [] },
-                  previousRoute: additionalData?.previousPort ?? { inputs: [], outputs: [] },
-                },
-              });
+            case DirectCallEventType.ON_CONNECTED: {
+              listener.onConnected?.(data);
+              break;
             }
-            break;
+            case DirectCallEventType.ON_RECONNECTING: {
+              listener.onReconnecting?.(data);
+              break;
+            }
+            case DirectCallEventType.ON_RECONNECTED: {
+              listener.onReconnected?.(data);
+              break;
+            }
+            case DirectCallEventType.ON_ENDED: {
+              listener.onEnded?.(data);
+              break;
+            }
+            case DirectCallEventType.ON_REMOTE_AUDIO_SETTINGS_CHANGED: {
+              listener.onRemoteAudioSettingsChanged?.(data);
+              break;
+            }
+            case DirectCallEventType.ON_REMOTE_VIDEO_SETTINGS_CHANGED: {
+              listener.onRemoteVideoSettingsChanged?.(data);
+              break;
+            }
+            case DirectCallEventType.ON_LOCAL_VIDEO_SETTINGS_CHANGED: {
+              listener.onLocalVideoSettingsChanged?.(data);
+              break;
+            }
+            case DirectCallEventType.ON_REMOTE_RECORDING_STATUS_CHANGED: {
+              listener.onRemoteRecordingStatusChanged?.(data);
+              break;
+            }
+            case DirectCallEventType.ON_CUSTOM_ITEMS_UPDATED: {
+              listener.onCustomItemsUpdated?.(data, additionalData?.updatedKeys ?? []);
+              break;
+            }
+            case DirectCallEventType.ON_CUSTOM_ITEMS_DELETED: {
+              listener.onCustomItemsDeleted?.(data, additionalData?.deletedKeys ?? []);
+              break;
+            }
+            case DirectCallEventType.ON_USER_HOLD_STATUS_CHANGED: {
+              listener.onUserHoldStatusChanged?.(
+                data,
+                additionalData?.isLocalUser ?? false,
+                additionalData?.isUserOnHold ?? false,
+              );
+              break;
+            }
+            case DirectCallEventType.ON_AUDIO_DEVICE_CHANGED: {
+              if (Platform.OS === 'android') {
+                listener.onAudioDeviceChanged?.(data, {
+                  platform: 'android',
+                  data: {
+                    currentAudioDevice: additionalData?.currentAudioDevice ?? null,
+                    availableAudioDevices: additionalData?.availableAudioDevices ?? [],
+                  },
+                });
+              }
+              if (Platform.OS === 'ios') {
+                listener.onAudioDeviceChanged?.(data, {
+                  platform: 'ios',
+                  data: {
+                    reason: additionalData?.reason ?? RouteChangeReason.unknown,
+                    currentRoute: additionalData?.currentRoute ?? { inputs: [], outputs: [] },
+                    previousRoute: additionalData?.previousRoute ?? { inputs: [], outputs: [] },
+                  },
+                });
+              }
+              break;
+            }
           }
         }
-      }
-    });
-
-    return this._listenerRef;
+      }),
+      this._internalEvents.add(listener),
+    ];
+    return () => unsubscribes.forEach((fn) => fn());
   };
+
   public accept = async (
     options: CallOptions = { audioEnabled: true, frontCamera: true, videoEnabled: true },
     holdActiveCall = false,
@@ -290,15 +318,27 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
   };
   public muteMicrophone = () => {
     this.binder.nativeModule.muteMicrophone(this.callId);
+    // NOTE: native doesn't have onLocalAudioSettingsChanged event
+    this._isLocalAudioEnabled = false;
+    this._internalEvents.emit('onPropertyUpdatedManually', this);
   };
   public unmuteMicrophone = () => {
     this.binder.nativeModule.unmuteMicrophone(this.callId);
+    // NOTE: native doesn't have onLocalAudioSettingsChanged event
+    this._isLocalAudioEnabled = true;
+    this._internalEvents.emit('onPropertyUpdatedManually', this);
   };
   public startVideo = () => {
     this.binder.nativeModule.startVideo(this.callId);
+    this._isLocalVideoEnabled = true;
+    // NOTE: ios native doesn't have onLocalAudioSettingsChanged event
+    Platform.OS === 'ios' && this._internalEvents.emit('onLocalVideoSettingsChanged', this);
   };
   public stopVideo = () => {
     this.binder.nativeModule.stopVideo(this.callId);
+    this._isLocalVideoEnabled = false;
+    // NOTE: ios native doesn't have onLocalAudioSettingsChanged event
+    Platform.OS === 'ios' && this._internalEvents.emit('onLocalVideoSettingsChanged', this);
   };
   public switchCamera = async () => {
     await this.binder.nativeModule.switchCamera(this.callId);

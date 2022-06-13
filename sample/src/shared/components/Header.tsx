@@ -1,9 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { DEFAULT_HEADER_HEIGHT } from '../constants';
+import { useIIFE } from '../hooks/useEffectAsync';
 import Palette from '../styles/palette';
 import SBIcon from './SBIcon';
 import SBText from './SBText';
@@ -22,31 +23,34 @@ interface IHeaderLeftProps {
 const Header = ({ title, headerLeftType = HeaderLeftTypes.NONE }: IHeaderLeftProps) => {
   const { goBack, canGoBack } = useNavigation();
   const { top } = useSafeAreaInsets();
+
+  const leftButton = useIIFE(() => {
+    switch (headerLeftType) {
+      case HeaderLeftTypes.BACK:
+        return (
+          canGoBack() && (
+            <Pressable onPress={goBack}>
+              <SBIcon icon={'Back'} color={Palette.primary300} containerStyle={{ marginRight: 16 }} />
+            </Pressable>
+          )
+        );
+      case HeaderLeftTypes.CANCEL:
+        return (
+          <Pressable>
+            <SBText button>Cancel</SBText>
+          </Pressable>
+        );
+      default: // HeaderLeftTypes.NONE
+        return null;
+    }
+  });
+
   return (
     <View style={[styles.container, { paddingTop: top, height: DEFAULT_HEADER_HEIGHT + top }]}>
       <View style={[styles.headerTitle, { top }, headerLeftType !== HeaderLeftTypes.NONE && { alignItems: 'center' }]}>
         <SBText h1>{title}</SBText>
       </View>
-      {(() => {
-        switch (headerLeftType) {
-          case HeaderLeftTypes.BACK:
-            return (
-              canGoBack() && (
-                <Pressable onPress={goBack}>
-                  <SBIcon icon={'Back'} color={Palette.primary300} containerStyle={{ marginRight: 16 }} />
-                </Pressable>
-              )
-            );
-          case HeaderLeftTypes.CANCEL:
-            return (
-              <Pressable>
-                <Text>cancel</Text>
-              </Pressable>
-            );
-          default: // HeaderLeftTypes.NONE
-            return null;
-        }
-      })()}
+      {leftButton}
     </View>
   );
 };

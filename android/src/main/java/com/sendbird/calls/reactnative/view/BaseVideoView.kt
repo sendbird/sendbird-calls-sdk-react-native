@@ -1,6 +1,7 @@
 package com.sendbird.calls.reactnative.view
 
 import android.content.Context
+import android.graphics.Color
 import android.widget.FrameLayout
 import com.sendbird.calls.SendBirdVideoView
 
@@ -9,7 +10,7 @@ open class BaseVideoView(context: Context) : FrameLayout(context) {
 
     init {
         mSurface = SendBirdVideoView(context)
-        mSurface.layout(0, 0, width, height)
+        mSurface.setBackgroundColor(Color.TRANSPARENT)
         mSurface.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         this.addView(mSurface)
     }

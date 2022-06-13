@@ -26,6 +26,7 @@ class CallsUtils {
     static func convertDirectCallToDict(_ call: DirectCall) -> [String: Any?] {
         return [
             "callId": call.callId,
+            "callUUID": call.callUUID?.uuidString,
             "callLog": convertDirectCallLogToDict(call.callLog),
             "callee": convertDirectCallUserToDict(call.callee),
             "caller": convertDirectCallUserToDict(call.caller),
@@ -125,14 +126,14 @@ class CallsUtils {
         return [
             "inputs": route.inputs.map {
                 [
-                    "portName": $0.portName,
-                    "portType": $0.portType.rawValue
+                    "name": $0.portName,
+                    "type": $0.portType.asString()
                 ]
             },
             "outputs": route.outputs.map {
                 [
-                    "portName": $0.portName,
-                    "portType": $0.portType.rawValue
+                    "name": $0.portName,
+                    "type": $0.portType.asString()
                 ]
             }
         ]

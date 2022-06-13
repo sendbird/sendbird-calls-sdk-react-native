@@ -4,52 +4,64 @@ import CallKit
 import PushKit
 import Foundation
 import AVFoundation
-
-protocol RNBridgeModuleProtocol: RCTBridgeModule, RCTInvalidating { }
+import AVKit
 
 @objc(RNSendbirdCalls)
-class RNSendbirdCalls: NSObject, RNBridgeModuleProtocol {
+class RNSendbirdCalls: RCTEventEmitter {
     internal var module = CallsModule()
     
-    @objc var bridge: RCTBridge! {
-        get {
-            CallsEvents.shared.bridge
-        }
-        set(value) {
-            CallsEvents.shared.bridge = value
-        }
+    override init() {
+        super.init()
+        CallsEvents.shared.eventEmitter = self
     }
     
-    @objc static func requiresMainQueueSetup() -> Bool {
+    @objc override static func requiresMainQueueSetup() -> Bool {
         return true
     }
     
-    @objc static func moduleName() -> String! {
+    @objc override static func moduleName() -> String! {
         return "RNSendbirdCalls"
     }
     
-    @objc func constantsToExport() -> [AnyHashable : Any]! {
+    @objc override func constantsToExport() -> [AnyHashable : Any]! {
         return [
             "NATIVE_SDK_VERSION": SendBirdCall.sdkVersion
         ]
     }
     
-    @objc func invalidate() {
+    @objc override func invalidate() {
+        super.invalidate()
         module.invalidate()
         module = CallsModule()
-        CallsEvents.shared.invalidate()
-    }
-    
-    @objc func addListener(_ eventName: String) {
-        CallsEvents.shared.addListener(eventName)
-    }
-    
-    @objc func removeListeners(_ count: Double) {
-        CallsEvents.shared.removeListeners(count)
     }
     
     @objc func handleRemoteNotificationData(data: [AnyHashable: Any]) {
         SendBirdCall.application(UIApplication.shared, didReceiveRemoteNotification: data)
+    }
+    
+    @objc func routePickerView() {
+        guard #available(iOS 11.0, *),
+              let routePickerView = SendBirdCall.routePickerView(frame: .zero) as? AVRoutePickerView,
+              let button = routePickerView.subviews.first(where: { $0 is UIButton }) as? UIButton
+        else { return }
+        
+        button.sendActions(for: .touchUpInside)
+    }
+}
+
+// MARK: RCTEventEmitter
+extension RNSendbirdCalls {
+    override func startObserving() {
+        CallsEvents.shared.startObserving()
+    }
+    override func stopObserving() {
+        CallsEvents.shared.stopObserving()
+    }
+    override func supportedEvents() -> [String]! {
+        return [
+            CallsEvents.Event.default(.onRinging).name,
+            CallsEvents.Event.directCall(.onConnected).name
+        ]
     }
 }
 
@@ -61,6 +73,14 @@ extension RNSendbirdCalls {
     
     @objc func getCurrentUser(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
         module.getCurrentUser(Promise(resolve, reject))
+    }
+    
+    @objc func getOngoingCalls(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.getOngoingCalls(Promise(resolve, reject))
+    }
+    
+    @objc func getDirectCall(_ callIdOrUUID: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.getDirectCall(callIdOrUUID, Promise(resolve, reject))
     }
     
     @objc func authenticate(_ userId: String, _ accessToken: String?, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
@@ -77,10 +97,6 @@ extension RNSendbirdCalls {
     
     @objc func unregisterPushToken(_ token: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
         module.unregisterPushToken(token, Promise(resolve, reject))
-    }
-    
-    @objc func voipRegistration(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
-        module.voipRegistration(Promise(resolve, reject))
     }
     
     @objc func registerVoIPPushToken(_ token: String, _ unique: Bool, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {

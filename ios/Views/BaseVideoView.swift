@@ -3,19 +3,20 @@
 //  RNSendbirdCalls
 //
 //  Created by Airen Kang on 2022/06/03.
-//  Copyright © 2022 Facebook. All rights reserved.
+//  Copyright © 2022 Sendbird. All rights reserved.
 //
 
 import Foundation
 import SendBirdCalls
 
 class BaseVideoView: UIView {
-    var surface: SendBirdVideoView
+    var surface = SendBirdVideoView()
     
     override init(frame: CGRect) {
-        surface = SendBirdVideoView()
-        surface.frame = frame
         super.init(frame: frame)
+        surface.clipsToBounds = true
+        surface.embed(in: self)
+        surface.backgroundColor = .clear
     }
     
     @available(*, unavailable)

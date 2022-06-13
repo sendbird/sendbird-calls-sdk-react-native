@@ -13,6 +13,7 @@ import PushKit
 protocol CallsCommonModuleProtocol {
     func getCurrentUser(_ promise: Promise)
     func getOngoingCalls(_ promise: Promise)
+    func getDirectCall(_ callIdOrUUID: String, _ promise: Promise)
     
     func initialize(_ appId: String) -> Bool
     
@@ -24,19 +25,11 @@ protocol CallsCommonModuleProtocol {
     
     func registerVoIPPushToken(_ token: String, _ unique: Bool, _ promise: Promise)
     func unregisterVoIPPushToken(_ token: String, _ promise: Promise)
-    func voipRegistration(_ promise: Promise)
     
     func dial(_ calleeId: String, _ isVideoCall: Bool, _ options: [String: Any?], _ promise: Promise)
 }
 
-class CallsCommonModule: NSObject, CallsCommonModuleProtocol {
-    var voipPromise: Promise?
-    var voipRegistry: PKPushRegistry?
-    var voipToken: String?
-    var voipEnabled: Bool {
-        return voipToken != nil && voipRegistry != nil
-    }
-    
+class CallsCommonModule: CallsBaseModule, CallsCommonModuleProtocol {
     func getCurrentUser(_ promise: Promise) {
         guard let user = SendBirdCall.currentUser else {
             return promise.resolve()
@@ -49,6 +42,16 @@ class CallsCommonModule: NSObject, CallsCommonModuleProtocol {
         promise.resolve(list)
     }
     
+    func getDirectCall(_ callIdOrUUID: String, _ promise: Promise) {
+        do {
+            let call = try CallsUtils.findDirectCallBy(callIdOrUUID)
+            promise.resolve(CallsUtils.convertDirectCallToDict(call))
+        } catch {
+            promise.reject(error)
+        }
+    }
+    
+    
     func initialize(_ appId: String) -> Bool {
         return SendBirdCall.configure(appId: appId)
     }
@@ -57,10 +60,8 @@ class CallsCommonModule: NSObject, CallsCommonModuleProtocol {
         let authParams = AuthenticateParams(userId: userId, accessToken: accessToken)
         SendBirdCall.authenticate(with: authParams) { user, error in
             if let error = error {
-                UserDefaults.standard.clearRNCalls()
                 promise.reject(error)
             } else if let user = user {
-                UserDefaults.standard.credential = RNCallsCredential(userId: userId, accessToken: accessToken)
                 promise.resolve(CallsUtils.convertUserToDict(user))
             }
         }
@@ -71,7 +72,6 @@ class CallsCommonModule: NSObject, CallsCommonModuleProtocol {
             if let error = error {
                 promise.reject(error)
             } else {
-                UserDefaults.standard.clearRNCalls()
                 promise.resolve()
             }
         }
@@ -102,17 +102,6 @@ class CallsCommonModule: NSObject, CallsCommonModuleProtocol {
             }
         } else {
             promise.reject(RNCallsInternalError.tokenParseFailure("common/unregisterPushToken"))
-        }
-    }
-    
-    func voipRegistration(_ promise: Promise) {
-        if voipEnabled {
-            promise.resolve(voipToken)
-        } else {
-            self.voipPromise = promise
-            self.voipRegistry = PKPushRegistry(queue: DispatchQueue.main)
-            self.voipRegistry?.delegate = self
-            self.voipRegistry?.desiredPushTypes = [.voIP]
         }
     }
     
@@ -156,26 +145,9 @@ class CallsCommonModule: NSObject, CallsCommonModuleProtocol {
             if let error = error {
                 promise.reject(error)
             } else if let directCall = directCall {
+                directCall.delegate = self.root.directCallModule
                 promise.resolve(CallsUtils.convertDirectCallToDict(directCall))
             }
         }
-    }
-}
-
-
-// MARK: PKPushRegistryDelegate
-extension CallsCommonModule: PKPushRegistryDelegate {
-    func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
-        if let promise = self.voipPromise {
-            voipToken = pushCredentials.token.toHexString()
-            UserDefaults.standard.voipPushToken = voipToken
-            promise.resolve(voipToken)
-        }
-        
-        voipPromise = nil
-    }
-    
-    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType) {
-        SendBirdCall.pushRegistry(registry, didReceiveIncomingPushWith: payload, for: type, completionHandler: nil)
     }
 }

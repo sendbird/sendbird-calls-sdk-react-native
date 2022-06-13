@@ -3,6 +3,7 @@ package com.sendbird.calls.reactnative.module
 import android.util.Log
 import com.facebook.react.bridge.*
 import com.sendbird.calls.*
+import com.sendbird.calls.reactnative.RNCallsInternalError
 import com.sendbird.calls.reactnative.utils.CallsUtils
 
 class CallsCommonModule(private val root: CallsModule): CommonModule {
@@ -16,7 +17,13 @@ class CallsCommonModule(private val root: CallsModule): CommonModule {
     override fun getOngoingCalls(promise: Promise) {
         Log.d(CallsModule.NAME, "[CommonModule] getOngoingCalls()")
         val list = SendBirdCall.ongoingCalls.map { CallsUtils.convertDirectCallToJsMap(it) }
-        promise.resolve(Arguments.fromList(list))
+        promise.resolve(CallsUtils.convertToJsArray(list))
+    }
+
+    override fun getDirectCall(callId: String, promise: Promise) {
+        Log.d(CallsModule.NAME, "[CommonModule] getDirectCall($callId)")
+        val call = SendBirdCall.getCall(callId) ?: return promise.reject(RNCallsInternalError("common/getDirectCall", RNCallsInternalError.Type.NOT_FOUND_DIRECT_CALL))
+        promise.resolve(CallsUtils.convertDirectCallToJsMap(call))
     }
 
     override fun initialize(appId: String): Boolean {

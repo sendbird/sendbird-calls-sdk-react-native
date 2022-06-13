@@ -1,60 +1,32 @@
 import React, { useEffect } from 'react';
-import { Button, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { StatusBar, View } from 'react-native';
 
-import { DirectCallVideoView } from '@sendbird/calls-react-native';
-
-import { useDirectCall } from '../../../../src/hooks/useDirectCall';
-import SBText from '../../shared/components/SBText';
+import Palette from '../../shared/styles/palette';
+import DirectCallControllerView from '../components/DirectCallControllerView';
+import DirectCallVideoContentView from '../components/DirectCallVideoContentView';
+import { useDirectCall } from '../hooks/useDirectCall';
 import type { DirectRoutes } from '../navigations/routes';
 import { useDirectNavigation } from '../navigations/useDirectNavigation';
 
 const DirectCallVideoCallingScreen = () => {
-  const {
-    navigation,
-    route: { params },
-  } = useDirectNavigation<DirectRoutes.VIDEO_CALLING>();
-  const { call, status } = useDirectCall(params.callProps);
-  const { width, height } = useWindowDimensions();
+  const { navigation, route } = useDirectNavigation<DirectRoutes.VIDEO_CALLING>();
+  const { call, status, currentAudioDeviceIOS } = useDirectCall(route.params.callId);
 
   useEffect(() => {
-    if (call?.isEnded) navigation.goBack();
-  }, [call?.isEnded]);
+    if (status === 'ended') {
+      setTimeout(() => {
+        navigation.goBack();
+      }, 2000);
+    }
+  }, [status]);
 
   if (!call) return null;
 
   return (
-    <View style={{ flex: 1 }}>
-      <SBText>{status}</SBText>
-      {status === 'connected' && (
-        <View style={{ width, height, zIndex: -99 }}>
-          <DirectCallVideoView viewType={'remote'} callId={call.callId} style={StyleSheet.absoluteFill} />
-          <DirectCallVideoView
-            viewType={'local'}
-            callId={call.callId}
-            style={{
-              position: 'absolute',
-              left: 12,
-              top: 12,
-              width: width * 0.4,
-              height: width * 0.4 * (9 / 6),
-              borderRadius: 8,
-              overflow: 'hidden',
-              backgroundColor: 'black',
-            }}
-          />
-        </View>
-      )}
-
-      <View style={{ position: 'absolute', bottom: 0, width, height: height * 0.5, alignItems: 'flex-end' }}>
-        {status === 'ringing' && <Button title={'Accept'} onPress={() => call.accept()} />}
-        {status === 'ringing' && <Button title={'Decline'} onPress={() => call.end()} />}
-        {status.match(/connected|reconnecting/) && <Button title={'Disconnect'} onPress={() => call.end()} />}
-        {status === 'connected' && <Button title={'StartVideo'} onPress={() => call.startVideo()} />}
-        {status === 'connected' && <Button title={'StopVideo'} onPress={() => call.stopVideo()} />}
-        {status === 'connected' && <Button title={'Mute'} onPress={() => call?.muteMicrophone()} />}
-        {status === 'connected' && <Button title={'Unmute'} onPress={() => call?.unmuteMicrophone()} />}
-        {status === 'connected' && <Button title={'Switch'} onPress={() => call?.switchCamera()} />}
-      </View>
+    <View style={{ flex: 1, backgroundColor: Palette.background500 }}>
+      <StatusBar hidden />
+      {status !== 'ended' && <DirectCallVideoContentView status={status} call={call} />}
+      <DirectCallControllerView status={status} call={call} ios_audioDevice={currentAudioDeviceIOS} />
     </View>
   );
 };
