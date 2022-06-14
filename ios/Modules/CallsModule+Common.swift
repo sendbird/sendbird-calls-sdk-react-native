@@ -31,23 +31,29 @@ protocol CallsCommonModuleProtocol {
 
 class CallsCommonModule: CallsBaseModule, CallsCommonModuleProtocol {
     func getCurrentUser(_ promise: Promise) {
-        guard let user = SendBirdCall.currentUser else {
-            return promise.resolve()
+        DispatchQueue.main.async {
+            guard let user = SendBirdCall.currentUser else {
+                return promise.resolve()
+            }
+            promise.resolve(CallsUtils.convertUserToDict(user))
         }
-        promise.resolve(CallsUtils.convertUserToDict(user))
     }
     
     func getOngoingCalls(_ promise: Promise) {
-        let list = SendBirdCall.getOngoingCalls().map{ CallsUtils.convertDirectCallToDict($0) }
-        promise.resolve(list)
+        DispatchQueue.main.async {
+            let list = SendBirdCall.getOngoingCalls().map{ CallsUtils.convertDirectCallToDict($0) }
+            promise.resolve(list)
+        }
     }
     
     func getDirectCall(_ callIdOrUUID: String, _ promise: Promise) {
-        do {
-            let call = try CallsUtils.findDirectCallBy(callIdOrUUID)
-            promise.resolve(CallsUtils.convertDirectCallToDict(call))
-        } catch {
-            promise.reject(error)
+        DispatchQueue.main.async {
+            do {
+                let call = try CallsUtils.findDirectCallBy(callIdOrUUID)
+                promise.resolve(CallsUtils.convertDirectCallToDict(call))
+            } catch {
+                promise.reject(error)
+            }
         }
     }
     
@@ -127,6 +133,7 @@ class CallsCommonModule: CallsBaseModule, CallsCommonModuleProtocol {
                 } else {
                     promise.resolve()
                 }
+                
             }
         } else {
             promise.reject(RNCallsInternalError.tokenParseFailure("common/unregisterVoIPPushToken"))
