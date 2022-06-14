@@ -1,7 +1,6 @@
 import { DirectCallEndResult, DirectCallLog, DirectCallUser, DirectCallUserRole } from '@sendbird/calls-react-native';
 
 import JSEventEmitter from '../../../../src/libs/JSEventEmitter';
-import { AppLogger } from '../utils/logger';
 import { SimpleStorage, createStorage } from './createStorage';
 
 export interface CallHistory {
@@ -15,15 +14,12 @@ export interface CallHistory {
 
   duration: string;
   startedAt: number;
-  endedAt: number;
 }
 
-const asHistory = (log: DirectCallLog): CallHistory => {
+export const asHistory = (log: DirectCallLog): CallHistory => {
   const isOutgoing = log.myRole === DirectCallUserRole.CALLER;
   const remoteUser = isOutgoing ? log.callee : log.caller;
   const me = isOutgoing ? log.caller : log.callee;
-
-  const endedAt = Date.now();
 
   const duration = (() => {
     if (log.endResult === DirectCallEndResult.DECLINED) return '0s';
@@ -34,12 +30,7 @@ const asHistory = (log: DirectCallLog): CallHistory => {
     if (log.endResult === DirectCallEndResult.NO_ANSWER) return '0s';
     if (log.endResult === DirectCallEndResult.TIMED_OUT) return '0s';
 
-    AppLogger.log('actual duration', log.duration);
-    AppLogger.log('actual startedAt', log.startedAt);
-    AppLogger.log('actual endedAt', log.endedAt);
-
-    const [h, m, s] = new Date(endedAt - log.startedAt).toISOString().substring(11, 19).split(':');
-    AppLogger.log('history', h, m, s);
+    const [h, m, s] = new Date(log.duration).toISOString().substring(11, 19).split(':');
     const hms = Object.entries({ h, m, s });
     return hms
       .reduce((prev, curr) => (Number(curr[1]) > 0 && prev.push(curr[1] + curr[0]), prev), [] as string[])
@@ -56,7 +47,6 @@ const asHistory = (log: DirectCallLog): CallHistory => {
     endResult: log.endResult,
     duration,
     startedAt: log.startedAt,
-    endedAt,
   };
 };
 

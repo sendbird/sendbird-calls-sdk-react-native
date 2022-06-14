@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { Alert, FlatList, View } from 'react-native';
 
 import { DirectCallProperties, SendbirdCalls } from '@sendbird/calls-react-native';
@@ -7,38 +7,21 @@ import Loading from '../../../shared/components/Loading';
 import SBIcon from '../../../shared/components/SBIcon';
 import SBText from '../../../shared/components/SBText';
 import { useAuthContext } from '../../../shared/contexts/AuthContext';
-import { useEffectAsync } from '../../../shared/hooks/useEffectAsync';
-import CallHistoryManager, { CallHistory } from '../../../shared/libs/CallHistoryManager';
 import Palette from '../../../shared/styles/palette';
 import { AppLogger } from '../../../shared/utils/logger';
 import CallHistoryCell from '../../components/CallHistoryCell';
+import { useRemoteHistory } from '../../hooks/useCallHistory';
 import { DirectRoutes } from '../../navigations/routes';
 import { useDirectNavigation } from '../../navigations/useDirectNavigation';
 
 const DirectCallHistoryScreen = () => {
-  const [history, setHistory] = useState<CallHistory[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [refresh, setRefresh] = useState(false);
   const { currentUser } = useAuthContext();
   const { navigation } = useDirectNavigation<DirectRoutes.HISTORY>();
 
+  // const { onRefresh, refreshing, history, loading } = useLocalHistory();
+  const { onRefresh, refreshing, history, loading, onEndReached } = useRemoteHistory();
+
   if (!currentUser) return null;
-
-  useEffectAsync(async () => {
-    setHistory(await CallHistoryManager.get());
-    setLoading(false);
-
-    return CallHistoryManager.subscribeUpdate((history) => {
-      setHistory((prev) => [history, ...prev]);
-    });
-  }, []);
-
-  const onRefresh = async () => {
-    setRefresh(true);
-    const data = await CallHistoryManager.get();
-    setHistory(data);
-    setRefresh(false);
-  };
 
   const onNavigate = (callProps: DirectCallProperties) => {
     if (callProps.isVideoCall) {
@@ -67,8 +50,9 @@ const DirectCallHistoryScreen = () => {
         renderItem={({ item }) => <CallHistoryCell onDial={onDial} history={item} />}
         ListEmptyComponent={<EmptyList />}
         contentContainerStyle={{ flexGrow: 1 }}
-        refreshing={refresh}
+        refreshing={refreshing}
         onRefresh={onRefresh}
+        onEndReached={onEndReached}
       />
       <Loading visible={loading} />
     </React.Fragment>

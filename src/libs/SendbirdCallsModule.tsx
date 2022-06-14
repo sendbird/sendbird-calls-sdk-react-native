@@ -3,8 +3,10 @@ import { Platform } from 'react-native';
 import pkg from '../../package.json';
 import type { CallOptions, DirectCallProperties, SendbirdCallsJavascriptSpec, User } from '../types';
 import { RoomType } from '../types';
+import { NativeQueryType, QueryParams } from '../types/Query';
 import { noop } from '../utils';
 import { Logger } from '../utils/logger';
+import { BridgedQuery } from './BridgedQuery';
 import { DirectCall } from './DirectCall';
 import NativeBinder, { CallsEvent, DefaultEventType } from './NativeBinder';
 import { Room } from './Room';
@@ -127,4 +129,14 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   public onRinging(listener: (props: DirectCallProperties) => void) {
     this._onRinging = listener;
   }
+
+  /** Queries **/
+  public createDirectCallLogListQuery = async (params: QueryParams['DirectCallLog'] = {}) => {
+    const queryKey = await this.binder.nativeModule.createDirectCallLogListQuery(params);
+    return new BridgedQuery(queryKey, NativeQueryType.DIRECT_CALL_LOG, this.binder);
+  };
+  public createRoomListQuery = async (params: QueryParams['RoomList'] = {}) => {
+    const queryKey = await this.binder.nativeModule.createRoomListQuery(params);
+    return new BridgedQuery(queryKey, NativeQueryType.ROOM_LIST, this.binder);
+  };
 }

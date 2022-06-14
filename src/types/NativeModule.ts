@@ -1,7 +1,9 @@
 import type { NativeModule, TurboModule } from 'react-native';
 
-import type { CallOptions, DirectCallProperties } from './Call';
+import { BridgedQuery } from '../libs/BridgedQuery';
+import type { CallOptions, DirectCallLog, DirectCallProperties } from './Call';
 import type { AudioDevice, VideoDevice } from './Media';
+import { NativeQueryCreator, NativeQueryKey, NativeQueryResult, NativeQueryType, QueryParams } from './Query';
 import type { EnterParams, RoomProperties, RoomType } from './Room';
 import type { User } from './User';
 import type { AsJSInterface } from './index';
@@ -78,7 +80,14 @@ export interface SendbirdCallsNativeSpec
   extends NativeModuleInterface,
     NativeCommonModule,
     NativeDirectCallModule,
-    NativeGroupCallModule {}
+    NativeGroupCallModule {
+  /** Queries **/
+  createDirectCallLogListQuery: NativeQueryCreator<QueryParams['DirectCallLog']>;
+  createRoomListQuery: NativeQueryCreator<QueryParams['RoomList']>;
+  queryNext(key: NativeQueryKey, type: NativeQueryType.DIRECT_CALL_LOG): NativeQueryResult<DirectCallLog>;
+  queryNext(key: NativeQueryKey, type: NativeQueryType.ROOM_LIST): NativeQueryResult<RoomProperties>;
+  queryRelease(key: NativeQueryKey): void;
+}
 
 type AndroidSpecificKeys = 'handleFirebaseMessageData';
 type IOSSpecificKeys = 'registerVoIPPushToken' | 'unregisterVoIPPushToken' | 'routePickerView';
@@ -89,4 +98,10 @@ type PlatformSpecificInterface = AsJSInterface<
 >;
 export interface SendbirdCallsJavascriptSpec extends PlatformSpecificInterface {
   onRinging(listener: (props: DirectCallProperties) => void): void;
+
+  /** Queries **/
+  createDirectCallLogListQuery(
+    params: QueryParams['DirectCallLog'],
+  ): Promise<BridgedQuery<NativeQueryType.DIRECT_CALL_LOG>>;
+  createRoomListQuery(params: QueryParams['RoomList']): Promise<BridgedQuery<NativeQueryType.ROOM_LIST>>;
 }
