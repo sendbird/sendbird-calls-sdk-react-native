@@ -4,6 +4,8 @@ import type { AudioDeviceRoute } from '@sendbird/calls-react-native';
 import { DirectCall, SendbirdCalls } from '@sendbird/calls-react-native';
 
 import { useEffectAsync } from '../../shared/hooks/useEffectAsync';
+import CallHistoryManager from '../../shared/libs/CallHistoryManager';
+import { AppLogger } from '../../shared/utils/logger';
 
 export type DirectCallStatus = 'pending' | 'established' | 'connected' | 'reconnecting' | 'ended';
 export const useDirectCall = (callId: string) => {
@@ -31,7 +33,9 @@ export const useDirectCall = (callId: string) => {
       onReconnected() {
         setStatus('connected');
       },
-      onEnded() {
+      onEnded({ callId, callLog }) {
+        AppLogger.debug('[useDirectCall/onEnded] add to call history manager');
+        callLog && CallHistoryManager.add(callId, callLog);
         setStatus('ended');
       },
       onAudioDeviceChanged(_, { platform, data }) {

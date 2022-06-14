@@ -69,7 +69,7 @@ const DirectCallControllerView: FC<ControllerViewProps> = ({ status, call, ios_a
               <SBText h2 color={Palette.onBackgroundDark01} style={styles.nickname}>
                 {remoteUserNickname}
               </SBText>
-              <StatusView status={status} callId={call.callId} />
+              <StatusView statusInProgress={statusInProgress} status={status} callId={call.callId} />
             </Fragment>
           )}
           <View style={styles.remoteMuteStatus}>
@@ -137,12 +137,20 @@ const DirectCallControllerView: FC<ControllerViewProps> = ({ status, call, ios_a
   );
 };
 
-const StatusView = ({ callId, status }: { callId: string; status: DirectCallStatus }) => {
+const StatusView = ({
+  callId,
+  status,
+  statusInProgress,
+}: {
+  callId: string;
+  status: DirectCallStatus;
+  statusInProgress: boolean;
+}) => {
   const seconds = useDirectCallDuration(callId);
   const timer = useIIFE(() => new Date(seconds).toISOString().substring(11, 19));
   return (
     <SBText color={Palette.onBackgroundDark01} body3>
-      {status === 'ended' ? 'Ended' : timer}
+      {statusInProgress ? timer : status}
     </SBText>
   );
 };

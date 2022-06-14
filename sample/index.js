@@ -1,6 +1,6 @@
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import React from 'react';
-import { AppRegistry, Platform, StatusBar } from 'react-native';
+import { AppRegistry, LogBox, StatusBar } from 'react-native';
 import { withTouchReload } from 'react-native-touch-reload';
 
 import { SendbirdCalls } from '@sendbird/calls-react-native';
@@ -13,6 +13,8 @@ import { AuthProvider } from './src/shared/contexts/AuthContext';
 import { CALL_PERMISSIONS, usePermissions } from './src/shared/hooks/usePermissions';
 import { navigationRef } from './src/shared/libs/StaticNavigation';
 import Palette from './src/shared/styles/palette';
+
+LogBox.ignoreLogs(['Sending `RNCallKeepDidChangeAudioRoute` with no listeners registered.']);
 
 SendbirdCalls.Logger.setLogLevel('debug');
 SendbirdCalls.initialize(APP_ID);

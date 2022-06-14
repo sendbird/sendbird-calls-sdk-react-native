@@ -1,0 +1,113 @@
+import dayjs from 'dayjs';
+import React, { FC, useMemo } from 'react';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
+
+import IconAssets from '../../assets';
+import SBIcon, { IconNames } from '../../shared/components/SBIcon';
+import SBText from '../../shared/components/SBText';
+import { CallHistory } from '../../shared/libs/CallHistoryManager';
+import Palette from '../../shared/styles/palette';
+
+const CallHistoryCell: FC<{ history: CallHistory; onDial: (userId: string, isVideoCall: boolean) => void }> = ({
+  history,
+  onDial,
+}) => {
+  const remoteUser = history.remoteUser;
+  const profileSource = remoteUser?.profileUrl ? { uri: remoteUser.profileUrl } : IconAssets.Avatar;
+
+  const icon: IconNames = useMemo(() => {
+    if (history.isVideoCall) {
+      return history.isOutgoing ? 'CallVideoOutgoingFilled' : 'CallVideoIncomingFilled';
+    } else {
+      return history.isOutgoing ? 'CallVoiceOutgoingFilled' : 'CallVoiceIncomingFilled';
+    }
+  }, [history]);
+
+  return (
+    <View style={styles.cellContainer}>
+      <SBIcon icon={icon} size={20} containerStyle={{ marginRight: 8 }} />
+      <Image source={profileSource} style={styles.cellProfile} />
+      <View style={styles.cellInfo}>
+        <View style={{ flex: 1 }}>
+          <SBText subtitle1 color={Palette.onBackgroundLight01} numberOfLines={2}>
+            {remoteUser?.nickname || '—'}
+          </SBText>
+          <SBText body3 color={Palette.onBackgroundLight03} numberOfLines={1}>
+            {`User ID: ${remoteUser?.userId}`}
+          </SBText>
+          <View>
+            <SBText body3 color={Palette.onBackgroundLight03} numberOfLines={2}>
+              {[history.endResult, history.duration].join(' · ')}
+            </SBText>
+          </View>
+        </View>
+        <View style={{ alignItems: 'flex-end' }}>
+          <SBText caption2 style={{ marginBottom: 12 }}>
+            {dayjs(history.endedAt).format('YYYY/MM/DD H:mm')}
+          </SBText>
+          <View style={{ flexDirection: 'row' }}>
+            <Pressable
+              style={{ marginRight: 12 }}
+              disabled={!history.remoteUser}
+              onPress={() => onDial(history.remoteUser?.userId ?? 'unknown', true)}
+            >
+              {({ pressed }) => {
+                return (
+                  <SBIcon
+                    size={32}
+                    icon={(() => {
+                      if (!history.remoteUser) return 'btnCallVideoTertiaryDisabled';
+                      if (pressed) return 'btnCallVideoTertiaryPressed';
+                      return 'btnCallVideoTertiary';
+                    })()}
+                  />
+                );
+              }}
+            </Pressable>
+            <Pressable
+              disabled={!history.remoteUser}
+              onPress={() => onDial(history.remoteUser?.userId ?? 'unknown', false)}
+            >
+              {({ pressed }) => {
+                return (
+                  <SBIcon
+                    size={32}
+                    icon={(() => {
+                      if (!history.remoteUser) return 'btnCallVoiceTertiaryDisabled';
+                      if (pressed) return 'btnCallVoiceTertiaryPressed';
+                      return 'btnCallVoiceTertiary';
+                    })()}
+                  />
+                );
+              }}
+            </Pressable>
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  cellContainer: {
+    paddingLeft: 12,
+    paddingRight: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  cellProfile: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    marginRight: 16,
+  },
+  cellInfo: {
+    paddingVertical: 10,
+    flex: 1,
+    flexDirection: 'row',
+    borderBottomColor: Palette.background100,
+    borderBottomWidth: 1,
+  },
+});
+
+export default React.memo(CallHistoryCell);

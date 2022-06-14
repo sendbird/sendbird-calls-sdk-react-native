@@ -69,6 +69,7 @@ const IconAssets = {
   'SettingsFilled': require('./iconSettingsFilled.png'),
   'ShevronRight': require('./iconShevronRight.png'),
   'Speaker': require('./iconSpeaker.png'),
+  'SpinnerLarge': require('./iconSpinnerLarge.png'),
   'VideoOff': require('./iconVideoOff.png'),
 };
 export default IconAssets;

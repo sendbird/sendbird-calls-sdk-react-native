@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SimpleStorage, createStorage } from './createStorage';
 
 interface Token {
   value: string;
@@ -6,30 +6,21 @@ interface Token {
 }
 
 class TokenManager {
-  private key = 'calls@tokenManager';
-  token: Token | null = null;
-  storage = {
-    get: async () => {
-      const token = await AsyncStorage.getItem(this.key);
-      return token ? JSON.parse(token) : null;
-    },
-    update: () => {
-      if (this.token) {
-        return AsyncStorage.setItem(this.key, JSON.stringify(this.token));
-      } else {
-        return AsyncStorage.removeItem(this.key);
-      }
-    },
-  };
+  private _token: Token | null = null;
+  private _storage: SimpleStorage<Token> = createStorage('calls@tokenManager');
+
+  get token() {
+    return this._token;
+  }
 
   async get() {
-    this.token = await this.storage.get();
-    return this.token;
+    this._token = await this._storage.get();
+    return this._token;
   }
 
   set(token: Token | null) {
-    this.token = token;
-    return this.storage.update();
+    this._token = token;
+    return this._storage.update(this._token);
   }
 }
 

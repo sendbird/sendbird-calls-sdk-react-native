@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SimpleStorage, createStorage } from './createStorage';
 
 interface Credential {
   applicationId: string;
@@ -6,38 +6,25 @@ interface Credential {
   accessToken?: string;
 }
 class AuthManager {
-  private key = 'calls@authManager';
-  credential: Credential | null = null;
-  storage = {
-    get: async () => {
-      const str = await AsyncStorage.getItem(this.key);
-      return str ? JSON.parse(str) : null;
-    },
-    update: () => {
-      if (this.credential) {
-        return AsyncStorage.setItem(this.key, JSON.stringify(this.credential));
-      } else {
-        return AsyncStorage.removeItem(this.key);
-      }
-    },
-  };
+  private _storage: SimpleStorage<Credential> = createStorage('calls@authManager');
+  private _credential: Credential | null = null;
 
-  isAuthenticated() {
-    return Boolean(this.credential);
-  }
   async getSavedCredential() {
-    if (this.credential) return this.credential;
-    const cred = await this.storage.get();
-    if (cred) this.credential = cred;
-    return this.credential;
+    if (this._credential) return this._credential;
+    const cred = await this._storage.get();
+    if (cred) this._credential = cred;
+    return this._credential;
+  }
+  isAuthenticated() {
+    return Boolean(this._credential);
   }
   authenticate(cred: Credential) {
-    this.credential = cred;
-    return this.storage.update();
+    this._credential = cred;
+    return this._storage.update(this._credential);
   }
   deAuthenticate() {
-    this.credential = null;
-    return this.storage.update();
+    this._credential = null;
+    return this._storage.update(this._credential);
   }
 }
 

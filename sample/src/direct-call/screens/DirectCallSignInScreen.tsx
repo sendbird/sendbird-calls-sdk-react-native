@@ -55,6 +55,7 @@ const DirectCallSignInScreen = () => {
           SendbirdCalls.ios_registerVoIPPushToken(voipToken, true),
           TokenManager.set({ value: voipToken, type: 'voip' }),
         ]);
+        RNVoipPushNotification.removeEventListener('register');
         AppLogger.log('registered token:', TokenManager.token);
       });
       RNVoipPushNotification.registerVoipToken();

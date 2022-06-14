@@ -18,6 +18,7 @@
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/native-stack": "^6.6.2",
     "@sendbird/calls-react-native": "link:../",
+    "dayjs": "^1.11.3",
     "react": "17.0.2",
     "react-native": "0.68.2",
     "react-native-callkeep": "^4.3.3",
