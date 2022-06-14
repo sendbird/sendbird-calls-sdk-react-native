@@ -6,7 +6,7 @@ export enum GroupRoutes {
   SETTINGS = 'settings',
   APP_INFO = 'app_info',
   ROOM = 'room',
-  JOIN = 'join',
+  ENTER_ROOM = 'enter_room',
   PARTICIPANTS = 'participants',
   ROOM_INFO = 'room_info',
 }
@@ -38,11 +38,11 @@ export type GroupRouteWithParams =
     }
   | {
       route: GroupRoutes.ROOM;
-      params: undefined;
+      params: { roomId: string };
     }
   | {
-      route: GroupRoutes.JOIN;
-      params: undefined;
+      route: GroupRoutes.ENTER_ROOM;
+      params: { roomId: string };
     }
   | {
       route: GroupRoutes.PARTICIPANTS;

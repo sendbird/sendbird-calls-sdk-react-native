@@ -240,6 +240,7 @@ object CallsUtils {
     }
 
     fun convertRoomToJsMap(room: Room?) = when(room) {
+//        TODO: room == null??
         null -> null
         else -> convertToJsMap(mapOf(
             "roomId" to room.roomId,

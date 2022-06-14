@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { DEFAULT_HEADER_HEIGHT } from '../constants';
 import { useIIFE } from '../hooks/useEffectAsync';
 import Palette from '../styles/palette';
+import SBButton from './SBButton';
 import SBIcon from './SBIcon';
 import SBText from './SBText';
 
@@ -38,9 +39,9 @@ const Header = ({ title, titleAlignCenter, headerLeftType = HeaderLeftTypes.NONE
       case HeaderLeftTypes.CANCEL:
         return (
           canGoBack() && (
-            <Pressable onPress={goBack}>
-              <SBText button>Cancel</SBText>
-            </Pressable>
+            <SBButton variant={'text'} onPress={goBack}>
+              {'Cancel'}
+            </SBButton>
           )
         );
       default: // HeaderLeftTypes.NONE

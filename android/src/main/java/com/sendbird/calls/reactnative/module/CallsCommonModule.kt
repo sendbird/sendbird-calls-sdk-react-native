@@ -114,8 +114,8 @@ class CallsCommonModule(private val root: CallsModule): CommonModule {
         val from = "common/fetchRoomById"
         CallsUtils.safePromiseRejection(promise, from) {
             SendBirdCall.fetchRoomById(roomId) { room: Room?, error: SendBirdException? ->
-                if(error != null) throw error
-                if(room != null) promise.resolve(CallsUtils.convertRoomToJsMap(room))
+                if (error != null) promise.reject(error) // TODO: check throw error
+                if (room != null) promise.resolve(CallsUtils.convertRoomToJsMap(room))
             }
         }
     }

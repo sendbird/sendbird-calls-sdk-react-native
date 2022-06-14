@@ -6,6 +6,7 @@ import Header, { HeaderLeftTypes } from '../shared/components/Header';
 import { useAuthContext } from '../shared/contexts/AuthContext';
 import GroupCallHomeTab from './navigations/GroupCallHomeTab';
 import { GroupRoutes } from './navigations/routes';
+import GroupCallEnterRoomScreen from './screens/GroupCallEnterRoomScreen';
 import GroupCallRoomInfoScreen from './screens/GroupCallRoomInfoScreen';
 import GroupCallSignInScreen from './screens/GroupCallSignInScreen';
 
@@ -20,6 +21,11 @@ const GroupCallApp = () => {
       ) : (
         <>
           <Stack.Screen name={GroupRoutes.HOME_TAB} component={GroupCallHomeTab} options={{ headerShown: false }} />
+          <Stack.Screen
+            name={GroupRoutes.ENTER_ROOM}
+            component={GroupCallEnterRoomScreen}
+            options={{ header: () => <Header title="Enter room" headerLeftType={HeaderLeftTypes.CANCEL} /> }}
+          />
           <Stack.Screen
             name={GroupRoutes.ROOM_INFO}
             component={GroupCallRoomInfoScreen}

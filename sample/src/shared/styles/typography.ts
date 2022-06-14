@@ -62,6 +62,7 @@ const Typography: Record<Typo, FontAttributes> = {
     fontWeight: 'normal',
     fontSize: scaleFactor(16),
     lineHeight: scaleFactor(24),
+    letterSpacing: scaleFactor(-0.2),
     color: Palette.onBackgroundLight01,
   },
   body1: {
