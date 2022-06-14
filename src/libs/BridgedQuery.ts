@@ -1,4 +1,4 @@
-import { NativeQueryType, Query } from '../types/Query';
+import { NativeQueryKey, NativeQueryType, Query } from '../types/Query';
 import NativeBinder from './NativeBinder';
 
 export class BridgedQuery<T extends NativeQueryType> implements Query {
@@ -11,11 +11,11 @@ export class BridgedQuery<T extends NativeQueryType> implements Query {
     return this._hasNext;
   }
 
-  constructor(protected queryKey: string, protected type: T, protected binder: NativeBinder) {}
+  constructor(protected queryKey: NativeQueryKey, protected type: T, protected binder: NativeBinder) {}
 
   async next() {
     this._isLoading = true;
-    const { hasNext, result } = await this.binder.nativeModule.queryNext(this.queryKey, this.type as any);
+    const { hasNext, result } = await this.binder.nativeModule.queryNext(this.queryKey, this.type);
     this._hasNext = hasNext;
     this._isLoading = false;
     return result;

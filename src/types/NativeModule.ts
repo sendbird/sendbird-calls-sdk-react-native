@@ -3,7 +3,14 @@ import type { NativeModule, TurboModule } from 'react-native';
 import { BridgedQuery } from '../libs/BridgedQuery';
 import type { CallOptions, DirectCallLog, DirectCallProperties } from './Call';
 import type { AudioDevice, VideoDevice } from './Media';
-import { NativeQueryCreator, NativeQueryKey, NativeQueryResult, NativeQueryType, QueryParams } from './Query';
+import {
+  DirectCallLogQueryParams,
+  NativeQueryCreator,
+  NativeQueryKey,
+  NativeQueryResult,
+  NativeQueryType,
+  RoomListQueryParams,
+} from './Query';
 import type { EnterParams, RoomProperties, RoomType } from './Room';
 import type { User } from './User';
 import type { AsJSInterface } from './index';
@@ -76,18 +83,22 @@ export interface NativeGroupCallModule {
   exit(roomId: string): void;
 }
 
-export interface SendbirdCallsNativeSpec
-  extends NativeModuleInterface,
-    NativeCommonModule,
-    NativeDirectCallModule,
-    NativeGroupCallModule {
-  /** Queries **/
-  createDirectCallLogListQuery: NativeQueryCreator<QueryParams['DirectCallLog']>;
-  createRoomListQuery: NativeQueryCreator<QueryParams['RoomList']>;
-  queryNext(key: NativeQueryKey, type: NativeQueryType.DIRECT_CALL_LOG): NativeQueryResult<DirectCallLog>;
-  queryNext(key: NativeQueryKey, type: NativeQueryType.ROOM_LIST): NativeQueryResult<RoomProperties>;
+export interface NativeQueries {
+  createDirectCallLogListQuery: NativeQueryCreator<DirectCallLogQueryParams>;
+  createRoomListQuery: NativeQueryCreator<RoomListQueryParams>;
+  queryNext<T extends NativeQueryType>(
+    key: NativeQueryKey,
+    type: T,
+  ): NativeQueryResult<T extends NativeQueryType.DIRECT_CALL_LOG ? DirectCallLog : RoomProperties>;
   queryRelease(key: NativeQueryKey): void;
 }
+
+export interface SendbirdCallsNativeSpec
+  extends NativeModuleInterface,
+    NativeQueries,
+    NativeCommonModule,
+    NativeDirectCallModule,
+    NativeGroupCallModule {}
 
 type AndroidSpecificKeys = 'handleFirebaseMessageData';
 type IOSSpecificKeys = 'registerVoIPPushToken' | 'unregisterVoIPPushToken' | 'routePickerView';
@@ -101,7 +112,7 @@ export interface SendbirdCallsJavascriptSpec extends PlatformSpecificInterface {
 
   /** Queries **/
   createDirectCallLogListQuery(
-    params: QueryParams['DirectCallLog'],
+    params: DirectCallLogQueryParams,
   ): Promise<BridgedQuery<NativeQueryType.DIRECT_CALL_LOG>>;
-  createRoomListQuery(params: QueryParams['RoomList']): Promise<BridgedQuery<NativeQueryType.ROOM_LIST>>;
+  createRoomListQuery(params: RoomListQueryParams): Promise<BridgedQuery<NativeQueryType.ROOM_LIST>>;
 }

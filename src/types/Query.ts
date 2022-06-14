@@ -1,5 +1,10 @@
 import { DirectCallEndResult, DirectCallUserRole, RoomState, RoomType } from '@sendbird/calls-react-native';
 
+export enum NativeQueryType {
+  DIRECT_CALL_LOG = 'DIRECT_CALL_LOG',
+  ROOM_LIST = 'ROOM_LIST',
+}
+
 export interface Query {
   release(): void;
   next(): Promise<unknown>;
@@ -7,34 +12,28 @@ export interface Query {
   isLoading: boolean;
 }
 
-export type NativeQueryKey = string;
+export type NativeQueryKey = `native#${string}`;
 
 export type NativeQueryCreator<QueryParams> = {
   (params: QueryParams): Promise<NativeQueryKey>;
 };
 
-export type QueryParams = {
-  DirectCallLog: {
-    limit?: number;
-    myRole?: DirectCallUserRole | 'ALL';
-    endResults?: DirectCallEndResult[];
-  };
-  RoomList: {
-    limit?: number;
-    createdByUserIds?: string[];
-    roomIds?: string[];
-    state?: RoomState;
-    type?: RoomType;
-    createdAt?: Range;
-    currentParticipantCount?: Range;
-  };
+export type DirectCallLogQueryParams = {
+  limit?: number;
+  myRole?: DirectCallUserRole | 'ALL';
+  endResults?: DirectCallEndResult[];
+};
+
+export type RoomListQueryParams = {
+  limit?: number;
+  createdByUserIds?: string[];
+  roomIds?: string[];
+  state?: RoomState;
+  type?: RoomType;
+  createdAt?: Range;
+  currentParticipantCount?: Range;
 };
 
 type Range = { upperBound?: number; lowerBound?: number };
-
-export enum NativeQueryType {
-  DIRECT_CALL_LOG = 'DIRECT_CALL_LOG',
-  ROOM_LIST = 'ROOM_LIST',
-}
 
 export type NativeQueryResult<T> = Promise<{ hasNext: boolean; result: T[] }>;
