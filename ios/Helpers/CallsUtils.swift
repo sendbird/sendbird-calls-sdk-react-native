@@ -138,6 +138,48 @@ class CallsUtils {
             }
         ]
     }
+    
+    static func convertRoomToDict(_ room: Room?) -> [String: Any]? {
+        guard let room = room else {
+            return nil
+        }
+        
+        return [
+            "roomId": room.roomId,
+            "state": room.state.asString,
+            "type": room.type.asString,
+            "customItems": room.customItems,
+            
+            "participants": room.participants.map { convertParticipantToDict($0) },
+            "localParticipant": convertParticipantToDict(room.localParticipant)!,
+            "remoteParticipants": room.remoteParticipants.map { convertParticipantToDict($0) },
+            
+            "createdAt": room.createdAt,
+            "createdBy": room.createdBy
+        ]
+    }
+    
+    static func convertParticipantToDict(_ participant: Participant?) -> [String: Any]? {
+        guard let participant = participant else {
+            return nil
+        }
+        
+        return [
+            "participantId": participant.participantId,
+            "user": convertUserToDict(participant.user),
+            "state": participant.state.asString,
+            
+            "enteredAt": participant.enteredAt,
+            "exitedAt": participant.exitedAt,
+            "duration": participant.duration,
+            
+            "isAudioEnabled": participant.isAudioEnabled,
+            "isVideoEnabled": participant.isVideoEnabled,
+            
+            "updatedAt": participant.updatedAt,
+            // "videoView": participant.videoView
+        ]
+    }
 }
 
 // MARK: Safe runner block

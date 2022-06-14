@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-import { DirectCallEndResult, DirectCallUserRole, SendbirdCalls } from '@sendbird/calls-react-native';
+import { DirectCallEndResult, SendbirdCalls } from '@sendbird/calls-react-native';
 
 import { BridgedQuery } from '../../../../src/libs/BridgedQuery';
 import { NativeQueryType } from '../../../../src/types/Query';
@@ -51,7 +51,7 @@ export const useRemoteHistory = () => {
   const initQuery = async () => {
     query.current?.release();
     query.current = await SendbirdCalls.createDirectCallLogListQuery({
-      myRole: DirectCallUserRole.CALLER,
+      // myRole: 'ALL',
       endResults: [
         DirectCallEndResult.COMPLETED,
         DirectCallEndResult.CANCELED,

@@ -75,7 +75,7 @@ class CallsQueries {
 //                range
 //            }
 //
-//            val participantCountRage = CallsUtils.safeGet {
+//            val participantCountRange = CallsUtils.safeGet {
 //                val range = Range()
 //                val count = params.getMap("currentParticipantCount")
 //                CallsUtils

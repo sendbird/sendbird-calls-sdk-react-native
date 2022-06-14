@@ -9,6 +9,110 @@
 import UIKit
 import SendBirdCalls
 
+// MARK: SendBirdCalls.Participant.State
+extension SendBirdCalls.Participant.State {
+    var asString: String {
+        switch self {
+        case .connected:
+            return "CONNECTED"
+        case .entered:
+            return "ENTERED"
+        case .exited:
+            return "EXITED"
+        @unknown default:
+            fatalError()
+        }
+    }
+    init?(fromString: String) {
+        switch fromString {
+        case "CONNECTED":
+            self = .connected
+        case "ENTERED":
+            self = .entered
+        case "EXITED":
+            self = .exited
+        default:
+            return nil
+        }
+    }
+}
+
+// MARK: SendBirdCalls.RoomType
+extension SendBirdCalls.RoomType {
+    var asString: String {
+        switch self {
+        case .smallRoomForVideo:
+            return "SMALL_ROOM_FOR_VIDEO"
+        case .largeRoomForAudioOnly:
+            return "LARGE_ROOM_FOR_AUDIO_ONLY"
+        @unknown default:
+            fatalError()
+        }
+    }
+    init?(fromString: String) {
+        switch fromString {
+        case "SMALL_ROOM_FOR_VIDEO":
+            self = .smallRoomForVideo
+        case "LARGE_ROOM_FOR_AUDIO_ONLY":
+            self = .largeRoomForAudioOnly
+        default:
+            return nil
+        }
+    }
+}
+
+// MARK: SendBirdCalls.Room.State
+extension SendBirdCalls.Room.State {
+    var asString: String {
+        switch self {
+        case .deleted:
+            return "DELETED"
+        case .open:
+            return "OPEN"
+        @unknown default:
+            fatalError()
+        }
+    }
+    init?(fromString: String) {
+        switch fromString {
+        case "DELETED":
+            self = .deleted
+        case "OPEN":
+            self = .open
+        default:
+            return nil
+        }
+    }
+}
+
+// MARK: SendBirdCalls.DirectCallLogListQuery.UserRoleFilter
+extension SendBirdCalls.DirectCallLogListQuery.UserRoleFilter {
+    var asString: String {
+        switch self {
+        case .all:
+            return "ALL"
+        case .callee:
+            return "CALLEE"
+        case .caller:
+            return "CALLER"
+        @unknown default:
+            fatalError()
+        }
+    }
+    init?(fromString: String) {
+        switch fromString {
+        case "ALL":
+            self = .all
+        case "CALLEE":
+            self = .callee
+        case "CALLER":
+            self = .caller
+        default:
+            return nil
+        }
+    }
+}
+
 // MARK: RecordingStatus
 extension RecordingStatus {
     var asString: String {

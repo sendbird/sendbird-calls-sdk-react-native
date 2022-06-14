@@ -16,7 +16,7 @@ export type NativeQueryCreator<QueryParams> = {
 export type QueryParams = {
   DirectCallLog: {
     limit?: number;
-    myRole?: DirectCallUserRole;
+    myRole?: DirectCallUserRole | 'ALL';
     endResults?: DirectCallEndResult[];
   };
   RoomList: {

@@ -19,6 +19,8 @@ class CallsBaseModule: NSObject {
 }
 
 class CallsModule: SendBirdCallDelegate {
+    internal var queries = CallsQueries()
+    
     internal lazy var commonModule: CallsCommonModule = {
         CallsCommonModule(root: self)
     }()
@@ -141,5 +143,21 @@ extension CallsModule: CallsDirectCallModuleProtocol {
     
     func updateRemoteVideoView(_ callId: String, _ videoViewId: NSNumber) {
         directCallModule.updateRemoteVideoView(callId, videoViewId)
+    }
+}
+
+// MARK: - Queries extension
+extension CallsModule {
+    func createDirectCallLogListQuery(_ params: [String: Any], _ promise: Promise) {
+        queries.createDirectCallLogListQuery(params, promise)
+    }
+    func createRoomListQuery(_ params: [String: Any], _ promise: Promise) {
+        queries.createRoomListQuery(params, promise)
+    }
+    func queryNext(_ queryKey: String, _ type: String, _ promise: Promise) {
+        queries.queryNext(queryKey, type, promise)
+    }
+    func queryRelease(_ querKey: String) {
+        queries.queryRelease(querKey)
     }
 }
