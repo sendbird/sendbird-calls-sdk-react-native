@@ -86,8 +86,6 @@ class CallHistoryManager extends JSEventEmitter {
       return;
     }
 
-    AppLogger.log('[CallHistoryManager] add');
-
     this._historyAll[this._userId].unshift(history);
     this._storage.update(this._historyAll);
     this.emit('update', history);

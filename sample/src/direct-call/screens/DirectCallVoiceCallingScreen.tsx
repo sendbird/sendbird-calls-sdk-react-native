@@ -15,7 +15,7 @@ const DirectCallVoiceCallingScreen = () => {
     if (status === 'ended') {
       setTimeout(() => {
         navigation.goBack();
-      }, 2000);
+      }, 1000);
     }
   }, [status]);
 

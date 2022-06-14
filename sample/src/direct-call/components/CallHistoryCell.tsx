@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import React, { FC, useMemo } from 'react';
-import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { Image, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import IconAssets from '../../assets';
 import SBIcon, { IconNames } from '../../shared/components/SBIcon';
@@ -24,7 +24,10 @@ const CallHistoryCell: FC<{ history: CallHistory; onDial: (userId: string, isVid
   }, [history]);
 
   return (
-    <View style={styles.cellContainer}>
+    <TouchableOpacity
+      onPress={() => onDial(history.remoteUser?.userId ?? 'unknown', history.isVideoCall)}
+      style={styles.cellContainer}
+    >
       <SBIcon icon={icon} size={20} containerStyle={{ marginRight: 8 }} />
       <Image source={profileSource} style={styles.cellProfile} />
       <View style={styles.cellInfo}>
@@ -84,7 +87,7 @@ const CallHistoryCell: FC<{ history: CallHistory; onDial: (userId: string, isVid
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
