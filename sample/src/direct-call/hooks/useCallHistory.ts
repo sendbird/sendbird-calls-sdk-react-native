@@ -2,8 +2,7 @@ import { useRef, useState } from 'react';
 
 import { DirectCallEndResult, SendbirdCalls } from '@sendbird/calls-react-native';
 
-import { BridgedQuery } from '../../../../src/libs/BridgedQuery';
-import { NativeQueryType } from '../../../../src/types/Query';
+import { DirectCallLogListQuery } from '../../../../src/libs/BridgedQuery';
 import { useEffectAsync } from '../../shared/hooks/useEffectAsync';
 import CallHistoryManager, { CallHistory, asHistory } from '../../shared/libs/CallHistoryManager';
 
@@ -36,7 +35,7 @@ export const useRemoteHistory = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const query = useRef<BridgedQuery<NativeQueryType.DIRECT_CALL_LOG>>();
+  const query = useRef<DirectCallLogListQuery>();
 
   useEffectAsync(async () => {
     await initQuery();

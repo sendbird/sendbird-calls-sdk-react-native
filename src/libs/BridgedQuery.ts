@@ -25,3 +25,6 @@ export class BridgedQuery<T extends NativeQueryType> implements Query {
     this.binder.nativeModule.queryRelease(this.queryKey);
   }
 }
+
+export class DirectCallLogListQuery extends BridgedQuery<NativeQueryType.DIRECT_CALL_LOG> {}
+export class RoomListQuery extends BridgedQuery<NativeQueryType.ROOM_LIST> {}

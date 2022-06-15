@@ -6,7 +6,7 @@ import { RoomType } from '../types';
 import { DirectCallLogQueryParams, NativeQueryType, RoomListQueryParams } from '../types/Query';
 import { noop } from '../utils';
 import { Logger } from '../utils/logger';
-import { BridgedQuery } from './BridgedQuery';
+import { DirectCallLogListQuery, RoomListQuery } from './BridgedQuery';
 import { DirectCall } from './DirectCall';
 import NativeBinder, { CallsEvent, DefaultEventType } from './NativeBinder';
 import { Room } from './Room';
@@ -133,10 +133,10 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   /** Queries **/
   public createDirectCallLogListQuery = async (params: DirectCallLogQueryParams = {}) => {
     const queryKey = await this.binder.nativeModule.createDirectCallLogListQuery(params);
-    return new BridgedQuery(queryKey, NativeQueryType.DIRECT_CALL_LOG, this.binder);
+    return new DirectCallLogListQuery(queryKey, NativeQueryType.DIRECT_CALL_LOG, this.binder);
   };
   public createRoomListQuery = async (params: RoomListQueryParams = {}) => {
     const queryKey = await this.binder.nativeModule.createRoomListQuery(params);
-    return new BridgedQuery(queryKey, NativeQueryType.ROOM_LIST, this.binder);
+    return new RoomListQuery(queryKey, NativeQueryType.ROOM_LIST, this.binder);
   };
 }
