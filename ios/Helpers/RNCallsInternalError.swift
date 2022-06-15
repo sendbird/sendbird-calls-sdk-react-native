@@ -10,6 +10,7 @@ import Foundation
 
 let INTERNAL_ERROR_CODE = "RNCALLS_INTERNAL"
 enum RNCallsInternalError: Error {
+    case queryCreateFailure(_ from: String)
     case invalidParams(_ from: String)
     case notFoundVideoDevice(_ from: String)
     case notFoundVideoView(_ from: String)
@@ -20,6 +21,8 @@ enum RNCallsInternalError: Error {
     
     var message: String {
         switch self {
+        case let .queryCreateFailure(from: from):
+            return "[\(from)] Create query failure"
         case let .invalidParams(from: from):
             return "[\(from)] Invalid parameters"
         case let .notFoundVideoDevice(from: from):

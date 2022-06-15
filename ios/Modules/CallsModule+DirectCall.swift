@@ -47,16 +47,6 @@ class CallsDirectCallModule: CallsBaseModule, CallsDirectCallModuleProtocol {
         }
     }
     
-    func accept(_ callId: String, options: [String : Any], _ holdActiveCall: Bool, _ promise: Promise) {
-        if let directCall = try? CallsUtils.findDirectCallBy(callId) {
-            directCall.end {
-                promise.resolve()
-            }
-        } else {
-            promise.reject(RNCallsInternalError.notFoundDirectCall("directCall/accept"))
-        }
-    }
-    
     func accept(_ callId: String, _ options: [String : Any?], _ holdActiveCall: Bool, _ promise: Promise) {
         if let directCall = try? CallsUtils.findDirectCallBy(callId) {
             let callOptions = CallsUtils.convertDictToCallOptions(options)

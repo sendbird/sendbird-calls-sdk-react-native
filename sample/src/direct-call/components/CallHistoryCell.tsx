@@ -46,7 +46,7 @@ const CallHistoryCell: FC<{ history: CallHistory; onDial: (userId: string, isVid
         </View>
         <View style={{ alignItems: 'flex-end' }}>
           <SBText caption2 style={{ marginBottom: 12 }}>
-            {dayjs(history.endedAt).format('YYYY/MM/DD H:mm')}
+            {dayjs(history.startedAt).format('YYYY/MM/DD H:mm')}
           </SBText>
           <View style={{ flexDirection: 'row' }}>
             <Pressable
