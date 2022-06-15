@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 
 import pkg from '../../package.json';
-import type { CallOptions, DirectCallProperties, RoomProperties, SendbirdCallsJavascriptSpec, User } from '../types';
+import type { CallOptions, DirectCallProperties, SendbirdCallsJavascriptSpec, User } from '../types';
 import { RoomType } from '../types';
 import { DirectCallLogQueryParams, NativeQueryType, RoomListQueryParams } from '../types/Query';
 import { noop } from '../utils';

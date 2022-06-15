@@ -11,7 +11,6 @@ import SBText from '../../shared/components/SBText';
 import SBTextInput from '../../shared/components/SBTextInput';
 import Palette from '../../shared/styles/palette';
 import { AppLogger } from '../../shared/utils/logger';
-import ModalRoomId from '../components/ModalRoomId';
 import { useGroupNavigation } from '../hooks/useGroupNavigation';
 import { GroupRoutes } from '../navigations/routes';
 
@@ -30,33 +29,26 @@ const GroupCallDialScreen = () => {
   const onNavigate = async (isCreated = false) => {
     if (isCreated) {
       try {
-        setVisible(true);
-        // const room = await SendbirdCalls.createRoom(SendbirdCalls.RoomType.SMALL_ROOM_FOR_VIDEO);
-        // room.enter();
+        const room = await SendbirdCalls.createRoom(SendbirdCalls.RoomType.SMALL_ROOM_FOR_VIDEO);
+        AppLogger.log('createRoom', room);
+        room.enter();
         // TODO: event
       } catch (e) {
-        AppLogger.log('[ERROR::createRoom]', e);
+        AppLogger.log('[ERROR] createRoom]', e);
       }
     } else {
       try {
-        const roomId = '5d901b6a-b725-4dfd-b479-55cd9e261aa1'; // TEST ROOM_ID
-        await SendbirdCalls.fetchRoomById(roomId);
+        const room = await SendbirdCalls.fetchRoomById(roomId);
+        AppLogger.log('fetchRoomById', room);
         navigate(GroupRoutes.ENTER_ROOM, { roomId });
       } catch (e) {
-        AppLogger.log('[ERROR::fetchRoomById]', e);
+        AppLogger.log('[ERROR] fetchRoomById]', e);
       }
     }
   };
 
-  const [visible, setVisible] = useState<boolean>(false);
-
   return (
     <InputSafeView>
-      <ModalRoomId
-        visible={visible}
-        roomId={'5d901b6a-b725-4dfd-b479-55cd9e261aa1'}
-        onClose={() => setVisible(false)}
-      />
       <ScrollView style={styles.container}>
         <View style={styles.card}>
           <SBIcon icon={'RoomAdd'} containerStyle={{ alignItems: 'flex-start' }} />
