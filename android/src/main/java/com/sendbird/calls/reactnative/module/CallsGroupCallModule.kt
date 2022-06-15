@@ -30,9 +30,14 @@ class CallsGroupCallModule(private val root: CallsModule): GroupCallModule, Room
                     }
                 }
 
-                it.enter(enterParams) { error: SendBirdException? ->
-                    if (error != null) throw error
-                    else promise.resolve(null)
+                it.enter(enterParams) { error ->
+                    error
+                        ?.let {
+                            promise.rejectCalls(it)
+                        }
+                        ?: run {
+                            promise.resolve(null)
+                        }
                 }
             }
             ?: run {
