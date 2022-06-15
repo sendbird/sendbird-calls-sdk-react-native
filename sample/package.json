@@ -7,7 +7,8 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
-    "adb:reverse": "adb start-server && adb reverse tcp:8081 tcp:8081"
+    "adb:reverse": "adb start-server && adb reverse tcp:8081 tcp:8081",
+    "build:android": "cd android && ./gradlew assembleRelease && open app/build/outputs/apk/release"
   },
   "dependencies": {
     "@notifee/react-native": "^5.2.2",
