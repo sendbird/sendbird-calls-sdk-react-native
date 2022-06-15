@@ -1,8 +1,17 @@
 import type { NativeModule, TurboModule } from 'react-native';
 
-import type { DirectCall } from '../libs/DirectCall';
-import type { CallOptions, DirectCallProperties } from './Call';
+import { BridgedQuery } from '../libs/BridgedQuery';
+import type { CallOptions, DirectCallLog, DirectCallProperties } from './Call';
 import type { AudioDevice, VideoDevice } from './Media';
+import {
+  DirectCallLogQueryParams,
+  NativeQueryCreator,
+  NativeQueryKey,
+  NativeQueryResult,
+  NativeQueryType,
+  RoomListQueryParams,
+} from './Query';
+import type { EnterParams, RoomProperties, RoomType } from './Room';
 import type { User } from './User';
 import type { AsJSInterface } from './index';
 
@@ -11,26 +20,29 @@ type NativeModuleInterface = NativeModule & TurboModule;
 export interface NativeCommonModule {
   applicationId: string;
   currentUser: User | null;
-  ongoingCallCount: number;
-  ongoingCalls: Array<DirectCallProperties>;
 
   getCurrentUser(): Promise<User | null>;
+  getOngoingCalls(): Promise<DirectCallProperties[]>;
+  getDirectCall(callId: string): Promise<DirectCallProperties>;
 
   initialize(appId: string): boolean;
   authenticate(userId: string, accessToken?: string | null): Promise<User>;
   deauthenticate(): Promise<void>;
   registerPushToken(token: string, unique?: boolean): Promise<void>;
   unregisterPushToken(token: string): Promise<void>;
+  dial(calleeUserId: string, isVideoCall: boolean, options: CallOptions): Promise<DirectCallProperties>;
+  createRoom(roomType: RoomType): Promise<RoomProperties>;
+  fetchRoomById(roomId: string): Promise<RoomProperties>;
+  getCachedRoomById(roomId: string): Promise<RoomProperties | null>;
 
   /** @platform Android **/
   handleFirebaseMessageData(data: Record<string, string>): void;
-
-  /** @platform iOS **/
-  voipRegistration(): Promise<string>;
   /** @platform iOS **/
   registerVoIPPushToken(token: string, unique?: boolean): Promise<void>;
   /** @platform iOS **/
   unregisterVoIPPushToken(token: string): Promise<void>;
+  /** @platform iOS **/
+  routePickerView(): void;
 }
 
 export interface NativeDirectCallModule {
@@ -66,16 +78,41 @@ export interface NativeDirectCallModule {
   // stopScreenShare(callId:string): Promise<void>;
 }
 
-export interface SendbirdCallsNativeSpec extends NativeModuleInterface, NativeCommonModule, NativeDirectCallModule {}
+export interface NativeGroupCallModule {
+  enter(roomId: string, options: EnterParams): Promise<void>;
+  exit(roomId: string): void;
+}
+
+export interface NativeQueries {
+  createDirectCallLogListQuery: NativeQueryCreator<DirectCallLogQueryParams>;
+  createRoomListQuery: NativeQueryCreator<RoomListQueryParams>;
+  queryNext<T extends NativeQueryType>(
+    key: NativeQueryKey,
+    type: T,
+  ): NativeQueryResult<T extends NativeQueryType.DIRECT_CALL_LOG ? DirectCallLog : RoomProperties>;
+  queryRelease(key: NativeQueryKey): void;
+}
+
+export interface SendbirdCallsNativeSpec
+  extends NativeModuleInterface,
+    NativeQueries,
+    NativeCommonModule,
+    NativeDirectCallModule,
+    NativeGroupCallModule {}
 
 type AndroidSpecificKeys = 'handleFirebaseMessageData';
-type IOSSpecificKeys = 'voipRegistration' | 'registerVoIPPushToken' | 'unregisterVoIPPushToken';
+type IOSSpecificKeys = 'registerVoIPPushToken' | 'unregisterVoIPPushToken' | 'routePickerView';
 type PlatformSpecificInterface = AsJSInterface<
   AsJSInterface<NativeCommonModule, 'ios', IOSSpecificKeys>,
   'android',
   AndroidSpecificKeys
 >;
 export interface SendbirdCallsJavascriptSpec extends PlatformSpecificInterface {
-  getDirectCall(props: DirectCallProperties): DirectCall;
   onRinging(listener: (props: DirectCallProperties) => void): void;
+
+  /** Queries **/
+  createDirectCallLogListQuery(
+    params: DirectCallLogQueryParams,
+  ): Promise<BridgedQuery<NativeQueryType.DIRECT_CALL_LOG>>;
+  createRoomListQuery(params: RoomListQueryParams): Promise<BridgedQuery<NativeQueryType.ROOM_LIST>>;
 }

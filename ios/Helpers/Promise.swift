@@ -8,30 +8,11 @@
 
 import Foundation
 import SendBirdCalls
-
-
-let INTERNAL_ERROR_CODE = "RNCALLS_INTERNAL"
+import React
 
 class Promise {
     private let resolveBlock: RCTPromiseResolveBlock
     private let rejectBlock: RCTPromiseRejectBlock
-    
-    enum RNCallsInternalError: Error {
-        case noResponse
-        case tokenParseFailure
-        case unknown
-        
-        var message: String {
-            switch(self) {
-            case .noResponse:
-                return "There is no response"
-            case .tokenParseFailure:
-                return "Failed to parse token, check token format"
-            case .unknown:
-                return "Unexpected error"
-            }
-        }
-    }
     
     init(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
         self.resolveBlock = resolve
@@ -46,20 +27,19 @@ class Promise {
         resolveBlock(value)
     }
     
-    func reject(from: String?, error: RNCallsInternalError) {
-        rejectBlock(INTERNAL_ERROR_CODE, "[\(from ?? "unknown")] \(error.message)", error)
-    }
-    
-    func reject(from: String?, message: String?) {
-        rejectBlock(INTERNAL_ERROR_CODE, "[\(from ?? "unknown")] \(message ?? "Unexpected error")", nil)
+    func reject(_ error: RNCallsInternalError) {
+        rejectBlock(INTERNAL_ERROR_CODE, error.message, error)
     }
     
     func reject(_ error: SBCError) {
-        let code = String(error.errorCode.rawValue)
-        rejectBlock(code, error.localizedDescription, error)
+        rejectBlock(String(error.errorCode.rawValue), error.localizedDescription, error)
     }
     
-    func reject(_ code: String, _ message: String, _ error: NSError) {
-        rejectBlock(code, message, error)
+    func reject(_ error: NSError) {
+        rejectBlock(INTERNAL_ERROR_CODE, error.localizedDescription, error)
+    }
+    
+    func reject(_ error: Error) {
+        rejectBlock(INTERNAL_ERROR_CODE, error.localizedDescription, error)
     }
 }

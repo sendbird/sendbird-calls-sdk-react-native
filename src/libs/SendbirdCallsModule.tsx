@@ -1,13 +1,15 @@
 import { Platform } from 'react-native';
 
 import pkg from '../../package.json';
-import type { DirectCallProperties, SendbirdCallsJavascriptSpec, User } from '../types';
+import type { CallOptions, DirectCallProperties, SendbirdCallsJavascriptSpec, User } from '../types';
+import { RoomType } from '../types';
+import { DirectCallLogQueryParams, NativeQueryType, RoomListQueryParams } from '../types/Query';
 import { noop } from '../utils';
 import { Logger } from '../utils/logger';
+import { DirectCallLogListQuery, RoomListQuery } from './BridgedQuery';
 import { DirectCall } from './DirectCall';
 import NativeBinder, { CallsEvent, DefaultEventType } from './NativeBinder';
-
-const _directCalls: Record<string, DirectCall> = {};
+import { Room } from './Room';
 
 export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec {
   public SDK_VERSION = pkg.version;
@@ -16,7 +18,6 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   private _applicationId = '';
   private _initialized = false;
   private _currentUser: User | null = null;
-  private _ongoingCalls: Array<DirectCallProperties> = [];
   private _onRinging: (props: DirectCallProperties) => void = noop;
 
   public get applicationId() {
@@ -28,11 +29,9 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   public get currentUser() {
     return this._currentUser;
   }
-  public get ongoingCallCount() {
-    return this._ongoingCalls.length;
-  }
-  public get ongoingCalls() {
-    return this._ongoingCalls;
+
+  public get RoomType() {
+    return RoomType;
   }
 
   constructor(private binder: NativeBinder) {}
@@ -41,16 +40,22 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
     return this.binder.nativeModule.getConstants?.() ?? {};
   };
 
+  /** Common **/
   public getCurrentUser = async () => {
     this._currentUser = await this.binder.nativeModule.getCurrentUser();
     return this.currentUser;
   };
-
+  public getOngoingCalls(): Promise<DirectCallProperties[]> {
+    return this.binder.nativeModule.getOngoingCalls();
+  }
+  public getDirectCall = async (callId: string): Promise<DirectCall> => {
+    const callProps = await this.binder.nativeModule.getDirectCall(callId);
+    return DirectCall.get(this.binder, callProps);
+  };
   public initialize = (appId: string) => {
     if (this.initialized) return this.initialized;
     this.Logger.debug('[SendbirdCalls]', 'initialize()');
 
-    this.Logger.debug('[SendbirdCalls]', 'initialize()', 'add javascript listener');
     this.binder.addListener(CallsEvent.DEFAULT, ({ type, data }) => {
       if (type === DefaultEventType.ON_RINGING) {
         this.Logger.debug('[SendbirdCalls]', 'onRinging', data.callId);
@@ -77,10 +82,26 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   public unregisterPushToken = async (token: string) => {
     await this.binder.nativeModule.unregisterPushToken(token);
   };
-  public ios_voipRegistration = async () => {
-    if (Platform.OS !== 'ios') return '';
-    return this.binder.nativeModule.voipRegistration();
-  };
+  public dial(
+    calleeUserId: string,
+    isVideoCall: boolean,
+    options: CallOptions = { audioEnabled: true, frontCamera: true, videoEnabled: true },
+  ): Promise<DirectCallProperties> {
+    return this.binder.nativeModule.dial(calleeUserId, isVideoCall, options);
+  }
+  public createRoom(roomType: RoomType): Promise<Room> {
+    return this.binder.nativeModule.createRoom(roomType).then((props) => new Room(this.binder, props));
+  }
+  public fetchRoomById(roomId: string): Promise<Room> {
+    return this.binder.nativeModule.fetchRoomById(roomId).then((props) => new Room(this.binder, props));
+  }
+  public getCachedRoomById(roomId: string): Promise<Room | null> {
+    return this.binder.nativeModule
+      .getCachedRoomById(roomId)
+      .then((props) => (props ? new Room(this.binder, props) : null));
+  }
+
+  /** Platform iOS **/
   public ios_registerVoIPPushToken = async (token: string, unique = true) => {
     if (Platform.OS !== 'ios') return;
     await this.binder.nativeModule.registerVoIPPushToken(token, unique);
@@ -89,19 +110,33 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
     if (Platform.OS !== 'ios') return;
     await this.binder.nativeModule.unregisterVoIPPushToken(token);
   };
-  public android_handleFirebaseMessageData(data?: Record<string, string>) {
+  public ios_routePickerView = () => {
+    if (Platform.OS !== 'ios') return;
+    this.binder.nativeModule.routePickerView();
+  };
+
+  /** Platform Android **/
+  public android_handleFirebaseMessageData = (data?: Record<string, string>) => {
     if (Platform.OS !== 'android' || !data?.['sendbird_call']) {
       return false;
     } else {
       this.binder.nativeModule.handleFirebaseMessageData(data);
       return true;
     }
-  }
-  public getDirectCall = (props: DirectCallProperties) => {
-    if (!_directCalls[props.callId]) _directCalls[props.callId] = new DirectCall(this.binder, props);
-    return _directCalls[props.callId];
   };
+
+  /** Additional **/
   public onRinging(listener: (props: DirectCallProperties) => void) {
     this._onRinging = listener;
   }
+
+  /** Queries **/
+  public createDirectCallLogListQuery = async (params: DirectCallLogQueryParams = {}) => {
+    const queryKey = await this.binder.nativeModule.createDirectCallLogListQuery(params);
+    return new DirectCallLogListQuery(queryKey, NativeQueryType.DIRECT_CALL_LOG, this.binder);
+  };
+  public createRoomListQuery = async (params: RoomListQueryParams = {}) => {
+    const queryKey = await this.binder.nativeModule.createRoomListQuery(params);
+    return new RoomListQuery(queryKey, NativeQueryType.ROOM_LIST, this.binder);
+  };
 }

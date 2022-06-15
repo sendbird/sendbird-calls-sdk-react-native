@@ -11,10 +11,11 @@ if (!NativeViewModule) throw new Error(LINKING_ERROR);
 export interface DirectCallVideoViewProps extends ViewProps {
   viewType: 'local' | 'remote';
   callId?: string;
+  android_zOrderMediaOverlay?: boolean;
 }
-
 export default class DirectCallVideoView extends React.PureComponent<DirectCallVideoViewProps> {
   private ref = createRef<any>();
+
   private get handle() {
     const nodeHandle = findNodeHandle(this.ref.current as any);
     if (nodeHandle == null || nodeHandle === -1) {
@@ -23,10 +24,18 @@ export default class DirectCallVideoView extends React.PureComponent<DirectCallV
     return nodeHandle;
   }
   private get validProps() {
-    if (this.props.viewType !== 'local' && this.props.viewType !== 'remote') {
-      throw new Error('DirectCallVideoView: Invalid ViewType props');
+    if (__DEV__) {
+      if (this.props.viewType !== 'local' && this.props.viewType !== 'remote') {
+        throw new Error('DirectCallVideoView: Invalid ViewType props');
+      }
     }
-    return { ...this.props, style: { width: '100%', height: '100%' } };
+
+    return {
+      viewType: this.props.viewType,
+      callId: this.props.callId,
+      zOrderMediaOverlay: this.props.android_zOrderMediaOverlay ?? false,
+      style: { width: '100%', height: '100%' },
+    };
   }
 
   public get videoViewId() {

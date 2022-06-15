@@ -6,12 +6,7 @@ import type { AsNativeInterface, DirectCallProperties } from '@sendbird/calls-re
 export function convertDirectCallPropsNTJ(data: AsNativeInterface<DirectCallProperties>): DirectCallProperties {
   return {
     ...data,
-    callLog: data.callLog && {
-      ...data.callLog,
-      android_endedUserId: data.callLog.endedUserId,
-      android_relayProtocol: data.callLog.relayProtocol,
-      android_users: data.callLog.users,
-    },
+    ios_callUUID: data.callUUID,
     android_availableAudioDevices: data.availableAudioDevices,
     android_currentAudioDevice: data.currentAudioDevice,
   };

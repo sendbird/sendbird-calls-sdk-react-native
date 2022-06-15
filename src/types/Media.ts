@@ -1,4 +1,4 @@
-import type { RouteChangeReason } from './Platform';
+import type { AVAudioSessionPort, RouteChangeReason } from './Platform';
 
 export enum AudioDeviceType {
   EARPIECE = 'EARPIECE',
@@ -43,7 +43,7 @@ export interface VideoDevice {
    * @ios uniqueId
    * */
   deviceId: string;
-  // position: VideoDevicePosition;
+  position: VideoDevicePosition;
 }
 
 export type RecordingOptions = {
@@ -56,8 +56,12 @@ export type RecordingOptions = {
 };
 
 export type Port = {
-  inputNames: string[];
-  outputNames: string[];
+  type: AVAudioSessionPort;
+  name: string;
+};
+export type AudioDeviceRoute = {
+  inputs: Port[];
+  outputs: Port[];
 };
 
 export type AudioDeviceChangedInfo =
@@ -72,7 +76,7 @@ export type AudioDeviceChangedInfo =
       platform: 'ios';
       data: {
         reason: RouteChangeReason;
-        currentPort: Port;
-        prevPort: Port;
+        currentRoute: AudioDeviceRoute;
+        previousRoute: AudioDeviceRoute;
       };
     };

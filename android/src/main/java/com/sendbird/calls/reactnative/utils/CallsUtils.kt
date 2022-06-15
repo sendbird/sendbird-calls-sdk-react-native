@@ -8,19 +8,30 @@ import com.facebook.react.bridge.*
 import com.facebook.react.common.LifecycleState
 import com.sendbird.calls.*
 import com.sendbird.calls.reactnative.RNCallsInternalError
-import com.sendbird.calls.reactnative.RNSBDirectCallVideoView
 import com.sendbird.calls.reactnative.extension.asString
 import com.sendbird.calls.reactnative.module.CallsModule
 import com.sendbird.calls.reactnative.view.BaseVideoView
 
-
 object CallsUtils {
+    fun safeRun(fn: () -> Unit) {
+        try {
+            fn()
+        } catch (e: Throwable) {
+            Log.e(CallsModule.NAME, "[CallsUtils.safeRun] Catch error -> $e")
+        }
+    }
+    fun <T> safeGet(fn: () -> T): T? {
+        return try {
+            fn()
+        } catch (e: Throwable){
+            null
+        }
+    }
     fun safePromiseRejection(promise: Promise, from: String?, completion: () -> Any?) {
         try {
-            val result = completion()
-            promise.resolve(result)
+            completion()
         } catch (e: Throwable) {
-            Log.e(CallsModule.NAME, "safePromiseRejection error -> $e")
+            Log.e(CallsModule.NAME, "[CallsUtils.safePromiseRejection] Catch error -> $e")
             when (e) {
                 is SendBirdException -> promise.reject(e.code.toString(), e.message, e)
                 is RNCallsInternalError -> promise.reject(e.code, e.message, e)
@@ -50,7 +61,7 @@ object CallsUtils {
         is String -> jsMap.putString(key, value)
         is Double -> jsMap.putDouble(key, value)
         is Float -> jsMap.putDouble(key, value.toDouble())
-        is Long -> jsMap.putInt(key, value.toInt())
+        is Long -> jsMap.putDouble(key, value.toDouble())
         is Int -> jsMap.putInt(key, value)
 
         is Map<*, *> -> jsMap.putMap(key, convertToJsMap(value))
@@ -71,7 +82,7 @@ object CallsUtils {
         is String -> jsArr.pushString(value)
         is Double -> jsArr.pushDouble(value)
         is Float -> jsArr.pushDouble(value.toDouble())
-        is Long -> jsArr.pushInt(value.toInt())
+        is Long -> jsArr.pushDouble(value.toDouble())
         is Int -> jsArr.pushInt(value)
 
         is Map<*, *> -> jsArr.pushMap(convertToJsMap(value))
@@ -137,8 +148,8 @@ object CallsUtils {
         "localUser" to convertDirectCallUserToJsMap(call.localUser),
         "remoteUser" to convertDirectCallUserToJsMap(call.remoteUser),
         "myRole" to call.myRole!!.asString(),
-        "availableVideoDevices" to call.availableVideoDevices.map { getVideoDevice(it) },
-        "currentVideoDevice" to getVideoDevice(call.currentVideoDevice),
+        "availableVideoDevices" to call.availableVideoDevices.map { convertVideoDeviceToJsMap(it) },
+        "currentVideoDevice" to convertVideoDeviceToJsMap(call.currentVideoDevice),
         "availableAudioDevices" to call.availableAudioDevices.map { it.asString() },
         "currentAudioDevice" to call.currentAudioDevice?.asString(),
         "isEnded" to call.isEnded,
@@ -167,8 +178,6 @@ object CallsUtils {
         "callee" to convertDirectCallUserToJsMap(callLog.callee),
         "caller" to convertDirectCallUserToJsMap(callLog.caller),
         "endedBy" to convertDirectCallUserToJsMap(callLog.endedBy),
-        "users" to callLog.users.map{ convertUserToJsMap(it) },
-        "endedUserId" to callLog.endedUserId,
     ))
 
     fun convertDirectCallUserToJsMap(callUser: DirectCallUser?) = when (callUser) {
@@ -180,7 +189,7 @@ object CallsUtils {
         }
     }
 
-    fun getVideoDevice(device: VideoDevice?) = when(device) {
+    fun convertVideoDeviceToJsMap(device: VideoDevice?) = when(device) {
         null -> null
         else -> convertToJsMap(mapOf(
             "deviceId" to device.deviceName,
@@ -210,4 +219,48 @@ object CallsUtils {
         }
         return false
     }
+
+    fun convertParticipantToJsMap(participant: Participant?) = when(participant) {
+        null -> null
+        else -> convertToJsMap(mapOf(
+        "participantId" to participant.participantId,
+        "user" to convertUserToJsMap(participant.user),
+        "state" to participant.state.asString(),
+
+        "enteredAt" to participant.enteredAt,
+        "exitedAt" to (participant.exitedAt ?: 0),
+        "duration" to (participant.duration ?: 0),
+
+        "isAudioEnabled" to participant.isAudioEnabled,
+        "isVideoEnabled" to participant.isVideoEnabled,
+
+        "updatedAt" to participant.updatedAt,
+//        "videoView" to participant.videoView, // TODO: SendBirdVideoView
+    ))
+    }
+
+    fun convertRoomToJsMap(room: Room?) = when(room) {
+        null -> null
+        else -> convertToJsMap(mapOf(
+            "roomId" to room.roomId,
+            "state" to room.state.asString(),
+            "type" to room.type.asString(),
+            "customItems" to room.customItems,
+
+            "participants" to room.participants.map{ convertParticipantToJsMap(it) },
+            "localParticipant" to convertParticipantToJsMap(room.localParticipant),
+            "remoteParticipants" to room.remoteParticipants.map { convertParticipantToJsMap(it) },
+
+            "availableAudioDevices" to room.availableAudioDevices.map { it.asString() },
+            "currentAudioDevice" to room.currentAudioDevice?.asString(),
+
+            "createdAt" to room.createdAt,
+            "createdBy" to room.createdBy,
+        ))
+    }
+
+    fun findRoom(roomId: String, from: String?): Room {
+        return SendBirdCall.getCachedRoomById(roomId) ?: throw RNCallsInternalError(from, RNCallsInternalError.Type.NOT_FOUND_ROOM)
+    }
+
 }

@@ -4,38 +4,87 @@ import CallKit
 import PushKit
 import Foundation
 import AVFoundation
-
-protocol RNBridgeModuleProtocol: RCTBridgeModule, RCTInvalidating { }
+import AVKit
 
 @objc(RNSendbirdCalls)
-class RNSendbirdCalls: NSObject, RNBridgeModuleProtocol {
-    static let shared = RNSendbirdCalls()
-    
+class RNSendbirdCalls: RCTEventEmitter {
     internal var module = CallsModule()
     
-    @objc static func moduleName() -> String! {
-        return "RNSendbirdCalls"
+    override init() {
+        super.init()
+        CallsEvents.shared.eventEmitter = self
     }
     
-    @objc static func requiresMainQueueSetup() -> Bool {
+    @objc override static func requiresMainQueueSetup() -> Bool {
         return true
     }
     
-    @objc func invalidate() {
+    @objc override static func moduleName() -> String! {
+        return "RNSendbirdCalls"
+    }
+    
+    @objc override func constantsToExport() -> [AnyHashable : Any]! {
+        return [
+            "NATIVE_SDK_VERSION": SendBirdCall.sdkVersion
+        ]
+    }
+    
+    @objc override func invalidate() {
+        super.invalidate()
         module.invalidate()
         module = CallsModule()
     }
-}
-
-// MARK: - Test
-extension RNSendbirdCalls {
-    @objc func multiply(_ a: Float, b: Float, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        resolve(a*b)
+    
+    @objc func handleRemoteNotificationData(data: [AnyHashable: Any]) {
+        SendBirdCall.application(UIApplication.shared, didReceiveRemoteNotification: data)
+    }
+    
+    @objc func routePickerView() {
+        guard #available(iOS 11.0, *),
+              let routePickerView = SendBirdCall.routePickerView(frame: .zero) as? AVRoutePickerView,
+              let button = routePickerView.subviews.first(where: { $0 is UIButton }) as? UIButton
+        else { return }
+        
+        button.sendActions(for: .touchUpInside)
     }
 }
 
+// MARK: RCTEventEmitter
+extension RNSendbirdCalls {
+    override func startObserving() {
+        CallsEvents.shared.startObserving()
+    }
+    override func stopObserving() {
+        CallsEvents.shared.stopObserving()
+    }
+    override func supportedEvents() -> [String]! {
+        return [
+            CallsEvents.Event.default(.onRinging).name,
+            CallsEvents.Event.directCall(.onConnected).name
+        ]
+    }
+}
 
-// MARK: - Common
+// MARK: Queries
+extension RNSendbirdCalls {
+    @objc func createDirectCallLogListQuery(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.createDirectCallLogListQuery(params, Promise(resolve,reject))
+    }
+    
+    @objc func createRoomListQuery(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.createRoomListQuery(params, Promise(resolve,reject))
+    }
+    
+    @objc func queryNext(_ queryKey: String, _ type: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.queryNext(queryKey, type, Promise(resolve,reject))
+    }
+    
+    @objc func queryRelease(_ querKey: String) {
+        module.queryRelease(querKey)
+    }
+}
+
+// MARK: Common
 extension RNSendbirdCalls {
     @objc func initialize(_ appId: String) -> Bool {
         return module.initialize(appId)
@@ -43,6 +92,14 @@ extension RNSendbirdCalls {
     
     @objc func getCurrentUser(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
         module.getCurrentUser(Promise(resolve, reject))
+    }
+    
+    @objc func getOngoingCalls(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.getOngoingCalls(Promise(resolve, reject))
+    }
+    
+    @objc func getDirectCall(_ callIdOrUUID: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.getDirectCall(callIdOrUUID, Promise(resolve, reject))
     }
     
     @objc func authenticate(_ userId: String, _ accessToken: String?, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
@@ -61,15 +118,58 @@ extension RNSendbirdCalls {
         module.unregisterPushToken(token, Promise(resolve, reject))
     }
     
-    @objc func voipRegistration(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
-        module.voipRegistration(Promise(resolve, reject))
-    }
-    
     @objc func registerVoIPPushToken(_ token: String, _ unique: Bool, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
         module.registerVoIPPushToken(token, unique, Promise(resolve, reject))
     }
     
     @objc func unregisterVoIPPushToken(_ token: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
         module.unregisterVoIPPushToken(token, Promise(resolve, reject))
+    }
+    
+    @objc func dial(_ calleeId: String, _ isVideoCall: Bool, _ options: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.dial(calleeId, isVideoCall, options, Promise(resolve, reject))
+    }
+}
+
+// MARK: DirectCall
+extension RNSendbirdCalls {
+    @objc func selectVideoDevice(_ callId: String, _ device: [String: String], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.selectVideoDevice(callId, device, Promise(resolve, reject))
+    }
+    
+    @objc func accept(_ callId: String, _ options: [String: Any], _ holdActiveCall: Bool, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.accept(callId, options, holdActiveCall, Promise(resolve, reject))
+    }
+    
+    @objc func end(_ callId: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.end(callId, Promise(resolve, reject))
+    }
+    
+    @objc func switchCamera(_ callId: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.switchCamera(callId, Promise(resolve, reject))
+    }
+    
+    @objc func startVideo(_ callId: String) {
+        module.startVideo(callId)
+    }
+    
+    @objc func stopVideo(_ callId: String) {
+        module.stopVideo(callId)
+    }
+    
+    @objc func muteMicrophone(_ callId: String) {
+        module.muteMicrophone(callId)
+    }
+    
+    @objc func unmuteMicrophone(_ callId: String) {
+        module.unmuteMicrophone(callId)
+    }
+    
+    @objc func updateLocalVideoView(_ callId: String, _ videoViewId: NSNumber) {
+        module.updateLocalVideoView(callId, videoViewId)
+    }
+    
+    @objc func updateRemoteVideoView(_ callId: String, _ videoViewId: NSNumber) {
+        module.updateRemoteVideoView(callId, videoViewId)
     }
 }

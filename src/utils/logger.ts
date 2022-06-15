@@ -19,7 +19,7 @@ export const getLogger = (lv: LogLevel = 'warn', title?: string) => {
       _title = title;
     },
     setLogLevel(lv: LogLevel) {
-      _logLevel = lv;
+      if (__DEV__) _logLevel = lv;
     },
     getLogLevel() {
       return _logLevel;

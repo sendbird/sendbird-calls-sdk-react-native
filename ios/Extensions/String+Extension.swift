@@ -11,19 +11,22 @@ import Foundation
 extension String {
     func toDataFromHexString() throws -> Data {
         if (!self.count.isMultiple(of: 2)) {
-            throw Promise.RNCallsInternalError.tokenParseFailure
+            throw RNCallsInternalError.tokenParseFailure("toDataFromHexString")
         }
-
-        let chars = self.map({ String($0) })
-        var data = Data(capacity: self.count / 2)
-        for i in stride(from: 0, to: self.count, by: 2) {
-            let hex = chars[0] + chars[i+1]
-            if let byte = UInt8(hex, radix:16) {
-                data.append(byte)
-            } else {
-                throw Promise.RNCallsInternalError.tokenParseFailure
-            }
+        
+        var hex = self
+        var data = Data()
+        
+        while(hex.count > 0) {
+            let subIndex = hex.index(hex.startIndex, offsetBy: 2)
+            let c = String(hex[..<subIndex])
+            hex = String(hex[subIndex...])
+            var ch: UInt32 = 0
+            Scanner(string: c).scanHexInt32(&ch)
+            var char = UInt8(ch)
+            data.append(&char, count: 1)
         }
-        return data;
+        
+        return data
     }
 }

@@ -11,10 +11,12 @@ import com.sendbird.calls.handler.SendBirdCallListener
 import com.sendbird.calls.reactnative.CallsEvents
 import com.sendbird.calls.reactnative.utils.CallsUtils
 
-class CallsModule(private val reactContext: ReactApplicationContext) : CallsModuleStruct, SendBirdCallListener() {
+class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct, SendBirdCallListener() {
     var initialized = false
-    private val commonModule = CallsCommonModule(reactContext)
-    private val directCallModule = CallsDirectCallModule(reactContext)
+    val directCallModule = CallsDirectCallModule(this)
+    val groupCallModule = CallsGroupCallModule(this)
+    val commonModule = CallsCommonModule(this)
+    val queries = CallsQueries()
 
     fun invalidate(handler: CompletionHandler?) {
         if(initialized) {
@@ -43,18 +45,23 @@ class CallsModule(private val reactContext: ReactApplicationContext) : CallsModu
     }
 
     /** Common module interface **/
+    override fun getCurrentUser(promise: Promise) = commonModule.getCurrentUser(promise)
+    override fun getOngoingCalls(promise: Promise) = commonModule.getOngoingCalls(promise)
+    override fun getDirectCall(callId: String, promise: Promise) = commonModule.getDirectCall(callId, promise)
     override fun initialize(appId: String): Boolean {
         Log.d(NAME, "[CallsModule] initialize() -> $appId")
         initialized = commonModule.initialize(appId)
         SendBirdCall.addListener("sendbird.call.listener", this)
         return initialized
     }
-
-    override fun getCurrentUser(promise: Promise) = commonModule.getCurrentUser(promise)
     override fun authenticate(userId: String, accessToken: String?, promise: Promise) = commonModule.authenticate(userId, accessToken, promise)
     override fun deauthenticate(promise: Promise) = commonModule.deauthenticate(promise)
     override fun registerPushToken(token: String, unique: Boolean, promise: Promise) = commonModule.registerPushToken(token, unique, promise)
     override fun unregisterPushToken(token: String, promise: Promise) = commonModule.unregisterPushToken(token, promise)
+    override fun dial(calleeId: String, isVideoCall: Boolean, options: ReadableMap, promise: Promise) = commonModule.dial(calleeId, isVideoCall, options, promise)
+    override fun createRoom(roomType: String, promise: Promise) = commonModule.createRoom(roomType, promise)
+    override fun fetchRoomById(roomId: String, promise: Promise) = commonModule.fetchRoomById(roomId, promise)
+    override fun getCachedRoomById(roomId: String, promise: Promise) = commonModule.getCachedRoomById(roomId, promise)
 
     /** DirectCall module interface**/
     override fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise)= directCallModule.selectVideoDevice(callId, device, promise)
@@ -68,6 +75,16 @@ class CallsModule(private val reactContext: ReactApplicationContext) : CallsModu
     override fun unmuteMicrophone(callId: String)= directCallModule.unmuteMicrophone(callId)
     override fun updateLocalVideoView(callId: String, videoViewId: Int)= directCallModule.updateLocalVideoView(callId, videoViewId)
     override fun updateRemoteVideoView(callId: String, videoViewId: Int)= directCallModule.updateRemoteVideoView(callId, videoViewId)
+
+    /** GroupCall module interface**/
+    override fun enter(roomId: String, options: ReadableMap, promise: Promise) = groupCallModule.enter(roomId, options, promise)
+    override fun exit(roomId: String) = groupCallModule.exit(roomId)
+
+    /** Queries **/
+    fun createDirectCallLogListQuery(params: ReadableMap, promise: Promise) = queries.createDirectCallLogListQuery(params, promise)
+    fun createRoomListQuery(params: ReadableMap, promise: Promise) = queries.createRoomListQuery(params, promise)
+    fun queryNext(key: String, type: String, promise: Promise) = queries.queryNext(key, type, promise)
+    fun queryRelease(key: String) = queries.queryRelease(key)
 
     companion object {
         const val NAME = "RNSendbirdCalls"
