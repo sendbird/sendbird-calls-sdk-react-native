@@ -21,6 +21,28 @@ RCT_EXTERN_METHOD(handleRemoteNotificationData
 
 RCT_EXTERN_METHOD(routePickerView)
 
+
+// MARK: - SendbirdCalls: Queries
+RCT_EXTERN_METHOD(createDirectCallLogListQuery
+                  : (NSDictionary *)params
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(createRoomListQuery
+                  : (NSDictionary *)params
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(queryNext
+                  : (NSString *)queryKey
+                  : (NSString *)type
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(queryRelease
+                  : (NSString *)querKey)
+
+
 // MARK: - SendbirdCalls: Common
 RCT_EXTERN_METHOD(initialize
                   : (NSString *)appId)

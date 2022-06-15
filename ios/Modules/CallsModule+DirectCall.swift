@@ -47,16 +47,6 @@ class CallsDirectCallModule: CallsBaseModule, CallsDirectCallModuleProtocol {
         }
     }
     
-    func accept(_ callId: String, options: [String : Any], _ holdActiveCall: Bool, _ promise: Promise) {
-        if let directCall = try? CallsUtils.findDirectCallBy(callId) {
-            directCall.end {
-                promise.resolve()
-            }
-        } else {
-            promise.reject(RNCallsInternalError.notFoundDirectCall("directCall/accept"))
-        }
-    }
-    
     func accept(_ callId: String, _ options: [String : Any?], _ holdActiveCall: Bool, _ promise: Promise) {
         if let directCall = try? CallsUtils.findDirectCallBy(callId) {
             let callOptions = CallsUtils.convertDictToCallOptions(options)
@@ -141,78 +131,100 @@ class CallsDirectCallModule: CallsBaseModule, CallsDirectCallModuleProtocol {
 // MARK: DirectCallDelegate
 extension CallsDirectCallModule: DirectCallDelegate {
     func didAudioDeviceChange(_ call: DirectCall, session: AVAudioSession, previousRoute: AVAudioSessionRouteDescription, reason: AVAudioSession.RouteChangeReason) {
-        CallsEvents.shared.sendEvent(.directCall(.onAudioDeviceChanged),
-                                     CallsUtils.convertDirectCallToDict(call),
-                                     [
-                                        "reason": reason.rawValue,
-                                        "currentRoute": CallsUtils.convertAVRouteToDict(session.currentRoute),
-                                        "previousRoute": CallsUtils.convertAVRouteToDict(previousRoute)
-                                     ])
+        DispatchQueue.main.async {
+            CallsEvents.shared.sendEvent(.directCall(.onAudioDeviceChanged),
+                                         CallsUtils.convertDirectCallToDict(call),
+                                         [
+                                            "reason": reason.rawValue,
+                                            "currentRoute": CallsUtils.convertAVRouteToDict(session.currentRoute),
+                                            "previousRoute": CallsUtils.convertAVRouteToDict(previousRoute)
+                                         ])
+        }
     }
     
     func didConnect(_ call: DirectCall) {
-        CallsEvents.shared.sendEvent(.directCall(.onConnected),
-                                     CallsUtils.convertDirectCallToDict(call))
+        DispatchQueue.main.async {
+            CallsEvents.shared.sendEvent(.directCall(.onConnected),
+                                         CallsUtils.convertDirectCallToDict(call))
+        }
     }
     
     func didDeleteCustomItems(call: DirectCall, deletedKeys: [String]) {
-        CallsEvents.shared.sendEvent(.directCall(.onCustomItemsDeleted),
-                                     CallsUtils.convertDirectCallToDict(call),
-                                     deletedKeys)
+        DispatchQueue.main.async {
+            CallsEvents.shared.sendEvent(.directCall(.onCustomItemsDeleted),
+                                         CallsUtils.convertDirectCallToDict(call),
+                                         deletedKeys)
+        }
     }
     
     func didUpdateCustomItems(call: DirectCall, updatedKeys: [String]) {
-        CallsEvents.shared.sendEvent(.directCall(.onCustomItemsUpdated),
-                                     CallsUtils.convertDirectCallToDict(call),
-                                     updatedKeys)
+        DispatchQueue.main.async {
+            CallsEvents.shared.sendEvent(.directCall(.onCustomItemsUpdated),
+                                         CallsUtils.convertDirectCallToDict(call),
+                                         updatedKeys)
+        }
     }
     
     func didEnd(_ call: DirectCall) {
-        CallsEvents.shared.sendEvent(.directCall(.onEnded),
-                                     CallsUtils.convertDirectCallToDict(call))
-        
-        // Remove manually from native side
-        call.delegate = nil
+        DispatchQueue.main.async {
+            CallsEvents.shared.sendEvent(.directCall(.onEnded),
+                                         CallsUtils.convertDirectCallToDict(call))
+            // Remove manually from native side
+            call.delegate = nil
+        }
     }
     
     func didEstablish(_ call: DirectCall) {
-        CallsEvents.shared.sendEvent(.directCall(.onEstablished),
-                                     CallsUtils.convertDirectCallToDict(call))
+        DispatchQueue.main.async {
+            CallsEvents.shared.sendEvent(.directCall(.onEstablished),
+                                         CallsUtils.convertDirectCallToDict(call))
+        }
     }
     
     // func didLocalVideoSettingsChange - Not implemented in iOS
     
     func didReconnect(_ call: DirectCall) {
-        CallsEvents.shared.sendEvent(.directCall(.onReconnected),
-                                     CallsUtils.convertDirectCallToDict(call))
+        DispatchQueue.main.async {
+            CallsEvents.shared.sendEvent(.directCall(.onReconnected),
+                                         CallsUtils.convertDirectCallToDict(call))
+        }
     }
     
     func didStartReconnecting(_ call: DirectCall) {
-        CallsEvents.shared.sendEvent(.directCall(.onReconnecting),
-                                     CallsUtils.convertDirectCallToDict(call))
+        DispatchQueue.main.async {
+            CallsEvents.shared.sendEvent(.directCall(.onReconnecting),
+                                         CallsUtils.convertDirectCallToDict(call))
+        }
     }
     
     func didRemoteAudioSettingsChange(_ call: DirectCall) {
-        CallsEvents.shared.sendEvent(.directCall(.onRemoteAudioSettingsChanged),
-                                     CallsUtils.convertDirectCallToDict(call))
+        DispatchQueue.main.async {
+            CallsEvents.shared.sendEvent(.directCall(.onRemoteAudioSettingsChanged),
+                                         CallsUtils.convertDirectCallToDict(call))
+        }
     }
     
     func didRemoteRecordingStatusChange(_ call: DirectCall) {
-        CallsEvents.shared.sendEvent(.directCall(.onRemoteRecordingStatusChanged),
-                                     CallsUtils.convertDirectCallToDict(call))
+        DispatchQueue.main.async {
+            CallsEvents.shared.sendEvent(.directCall(.onRemoteRecordingStatusChanged),
+                                         CallsUtils.convertDirectCallToDict(call))}
     }
     
     func didRemoteVideoSettingsChange(_ call: DirectCall) {
-        CallsEvents.shared.sendEvent(.directCall(.onRemoteVideoSettingsChanged),
-                                     CallsUtils.convertDirectCallToDict(call))
+        DispatchQueue.main.async {
+            CallsEvents.shared.sendEvent(.directCall(.onRemoteVideoSettingsChanged),
+                                         CallsUtils.convertDirectCallToDict(call))
+        }
     }
     
     func didUserHoldStatusChange(_ call: DirectCall, isLocalUser: Bool, isUserOnHold: Bool) {
-        CallsEvents.shared.sendEvent(.directCall(.onUserHoldStatusChanged),
-                                     CallsUtils.convertDirectCallToDict(call),
-                                     [
-                                        "isLocalUser": isLocalUser,
-                                        "isUserOnHold": isUserOnHold
-                                     ])
+        DispatchQueue.main.async {
+            CallsEvents.shared.sendEvent(.directCall(.onUserHoldStatusChanged),
+                                         CallsUtils.convertDirectCallToDict(call),
+                                         [
+                                            "isLocalUser": isLocalUser,
+                                            "isUserOnHold": isUserOnHold
+                                         ])
+        }
     }
 }

@@ -17,10 +17,11 @@ export enum HeaderLeftTypes {
 
 interface IHeaderLeftProps {
   title: string;
+  titleAlignCenter?: boolean;
   headerLeftType?: HeaderLeftTypes;
 }
 
-const Header = ({ title, headerLeftType = HeaderLeftTypes.NONE }: IHeaderLeftProps) => {
+const Header = ({ title, titleAlignCenter, headerLeftType = HeaderLeftTypes.NONE }: IHeaderLeftProps) => {
   const { goBack, canGoBack } = useNavigation();
   const { top } = useSafeAreaInsets();
 
@@ -47,7 +48,13 @@ const Header = ({ title, headerLeftType = HeaderLeftTypes.NONE }: IHeaderLeftPro
 
   return (
     <View style={[styles.container, { paddingTop: top, height: DEFAULT_HEADER_HEIGHT + top }]}>
-      <View style={[styles.headerTitle, { top }, headerLeftType !== HeaderLeftTypes.NONE && { alignItems: 'center' }]}>
+      <View
+        style={[
+          styles.headerTitle,
+          { top },
+          (headerLeftType !== HeaderLeftTypes.NONE || titleAlignCenter) && { alignItems: 'center' },
+        ]}
+      >
         <SBText h1>{title}</SBText>
       </View>
       {leftButton}

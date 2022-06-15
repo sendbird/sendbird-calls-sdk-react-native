@@ -16,6 +16,7 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
     val directCallModule = CallsDirectCallModule(this)
     val groupCallModule = CallsGroupCallModule(this)
     val commonModule = CallsCommonModule(this)
+    val queries = CallsQueries()
 
     fun invalidate(handler: CompletionHandler?) {
         if(initialized) {
@@ -78,6 +79,12 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
     /** GroupCall module interface**/
     override fun enter(roomId: String, options: ReadableMap, promise: Promise) = groupCallModule.enter(roomId, options, promise)
     override fun exit(roomId: String) = groupCallModule.exit(roomId)
+
+    /** Queries **/
+    fun createDirectCallLogListQuery(params: ReadableMap, promise: Promise) = queries.createDirectCallLogListQuery(params, promise)
+    fun createRoomListQuery(params: ReadableMap, promise: Promise) = queries.createRoomListQuery(params, promise)
+    fun queryNext(key: String, type: String, promise: Promise) = queries.queryNext(key, type, promise)
+    fun queryRelease(key: String) = queries.queryRelease(key)
 
     companion object {
         const val NAME = "RNSendbirdCalls"

@@ -6,6 +6,8 @@ import { SendbirdCalls } from '@sendbird/calls-react-native';
 
 import { useAuthContext } from '../shared/contexts/AuthContext';
 import AuthManager from '../shared/libs/AuthManager';
+import CallHistoryManager from '../shared/libs/CallHistoryManager';
+import { AppLogger } from '../shared/utils/logger';
 import {
   setFirebaseMessageHandlers,
   setNotificationForegroundService,
@@ -41,6 +43,14 @@ SendbirdCalls.onRinging(async (call) => {
       return directCall.end();
     }
   }
+
+  const unsubscribe = directCall.addListener({
+    onEnded({ callId, callLog }) {
+      AppLogger.debug('[onRinging/onEnded] add to call history manager');
+      callLog && CallHistoryManager.add(callId, callLog);
+      unsubscribe();
+    },
+  });
 
   // Show interaction UI (Accept/Decline)
   if (Platform.OS === 'android') startRingingWithNotification(call);

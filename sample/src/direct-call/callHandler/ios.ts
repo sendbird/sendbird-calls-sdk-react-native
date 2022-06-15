@@ -55,33 +55,15 @@ export const setupCallKitListeners = () => {
 
 export const startRingingWithCallKit = async (props: DirectCallProperties) => {
   if (props.remoteUser && props.ios_callUUID) {
-    AppLogger.debug('Report incoming call');
+    AppLogger.debug('[startRingingWithCallKit] Report incoming call');
     const uuid = props.ios_callUUID;
     const remoteUser = props.remoteUser;
     const directCall = await SendbirdCalls.getDirectCall(props.callId);
 
-    // Display on native side for app termination
-    RNCallKeep.displayIncomingCall(
-      uuid,
-      remoteUser.userId,
-      remoteUser.nickname ?? 'Unknown',
-      'generic',
-      props.isVideoCall,
-    );
-
-    // Accept only one ongoing call
-    const onGoingCalls = await SendbirdCalls.getOngoingCalls();
-    if (onGoingCalls.length > 1) {
-      AppLogger.warn('Ongoing calls:', onGoingCalls.length);
-      directCall.end();
-      RNCallKeep.rejectCall(uuid);
-      return;
-    }
-
     const unsubscribeCallKit = setupCallKitListeners();
     const unsubscribeDirectCall = directCall.addListener({
       onEnded({ callLog }) {
-        AppLogger.warn('onEnded with callkit');
+        AppLogger.debug('[startRingingWithCallKit]', 'onEnded');
         RNCallKeep.endAllCalls();
         if (callLog?.endedBy?.userId === remoteUser.userId) {
           RNCallKeep.reportEndCallWithUUID(uuid, 2);
@@ -90,5 +72,22 @@ export const startRingingWithCallKit = async (props: DirectCallProperties) => {
         unsubscribeCallKit();
       },
     });
+
+    // Accept only one ongoing call
+    const onGoingCalls = await SendbirdCalls.getOngoingCalls();
+    if (onGoingCalls.length > 1 || directCall.isEnded) {
+      AppLogger.warn('[startRingingWithCallKit] Ongoing calls:', onGoingCalls.length);
+      directCall.end();
+      RNCallKeep.rejectCall(uuid);
+      return;
+    }
+
+    RNCallKeep.displayIncomingCall(
+      uuid,
+      remoteUser.userId,
+      remoteUser.nickname ?? 'Unknown',
+      'generic',
+      props.isVideoCall,
+    );
   }
 };

@@ -61,7 +61,7 @@ object CallsUtils {
         is String -> jsMap.putString(key, value)
         is Double -> jsMap.putDouble(key, value)
         is Float -> jsMap.putDouble(key, value.toDouble())
-        is Long -> jsMap.putInt(key, value.toInt())
+        is Long -> jsMap.putDouble(key, value.toDouble())
         is Int -> jsMap.putInt(key, value)
 
         is Map<*, *> -> jsMap.putMap(key, convertToJsMap(value))
@@ -82,7 +82,7 @@ object CallsUtils {
         is String -> jsArr.pushString(value)
         is Double -> jsArr.pushDouble(value)
         is Float -> jsArr.pushDouble(value.toDouble())
-        is Long -> jsArr.pushInt(value.toInt())
+        is Long -> jsArr.pushDouble(value.toDouble())
         is Int -> jsArr.pushInt(value)
 
         is Map<*, *> -> jsArr.pushMap(convertToJsMap(value))

@@ -65,6 +65,25 @@ extension RNSendbirdCalls {
     }
 }
 
+// MARK: Queries
+extension RNSendbirdCalls {
+    @objc func createDirectCallLogListQuery(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.createDirectCallLogListQuery(params, Promise(resolve,reject))
+    }
+    
+    @objc func createRoomListQuery(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.createRoomListQuery(params, Promise(resolve,reject))
+    }
+    
+    @objc func queryNext(_ queryKey: String, _ type: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.queryNext(queryKey, type, Promise(resolve,reject))
+    }
+    
+    @objc func queryRelease(_ querKey: String) {
+        module.queryRelease(querKey)
+    }
+}
+
 // MARK: Common
 extension RNSendbirdCalls {
     @objc func initialize(_ appId: String) -> Bool {
