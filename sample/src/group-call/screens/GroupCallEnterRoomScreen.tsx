@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
-import { Room, SendbirdCalls } from '@sendbird/calls-react-native';
+import { EnterParams, Room, SendbirdCalls } from '@sendbird/calls-react-native';
 
 import SBButton from '../../shared/components/SBButton';
+import SBIcon from '../../shared/components/SBIcon';
 import SBText from '../../shared/components/SBText';
 import { useLayoutEffectAsync } from '../../shared/hooks/useEffectAsync';
 import Palette from '../../shared/styles/palette';
@@ -20,6 +21,7 @@ const GroupCallEnterRoomScreen = () => {
   } = useGroupNavigation<GroupRoutes.ENTER_ROOM>();
 
   const [room, setRoom] = useState<Room>();
+  const [enterParam, setEnterParam] = useState<EnterParams>({ audioEnabled: false, videoEnabled: false });
 
   useLayoutEffectAsync(async () => {
     try {
@@ -38,15 +40,25 @@ const GroupCallEnterRoomScreen = () => {
       <View style={styles.view}>{/* Video View */}</View>
 
       <View style={styles.option}>
-        {/* TODO: add checkbox */}
+        <Pressable
+          style={styles.check}
+          onPress={() => setEnterParam((prev) => ({ ...prev, audioEnabled: !prev.audioEnabled }))}
+        >
+          <SBIcon icon={enterParam.audioEnabled ? 'CheckboxOn' : 'CheckboxOff'} />
+        </Pressable>
         <SBText subtitle2>Mute my audio</SBText>
       </View>
       <View style={styles.option}>
-        {/* TODO: add checkbox */}
+        <Pressable
+          style={styles.check}
+          onPress={() => setEnterParam((prev) => ({ ...prev, videoEnabled: !prev.videoEnabled }))}
+        >
+          <SBIcon icon={enterParam.videoEnabled ? 'CheckboxOn' : 'CheckboxOff'} />
+        </Pressable>
         <SBText subtitle2>Turn off my video</SBText>
       </View>
 
-      <SBButton style={styles.button} disabled={!room} onPress={() => room?.enter()}>
+      <SBButton style={styles.button} disabled={!room} onPress={() => room?.enter(enterParam)}>
         {'Enter'}
       </SBButton>
     </View>
@@ -67,7 +79,11 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   option: {
+    flexDirection: 'row',
     marginBottom: 14,
+  },
+  check: {
+    marginRight: 8,
   },
   button: {
     height: 48,
