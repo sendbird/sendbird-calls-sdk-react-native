@@ -1,7 +1,7 @@
 package com.sendbird.calls.reactnative.utils
 
 import android.app.ActivityManager
-import android.app.ActivityManager.*
+import android.app.ActivityManager.RunningAppProcessInfo
 import android.content.Context
 import android.util.Log
 import com.facebook.react.bridge.*
@@ -9,6 +9,7 @@ import com.facebook.react.common.LifecycleState
 import com.sendbird.calls.*
 import com.sendbird.calls.reactnative.RNCallsInternalError
 import com.sendbird.calls.reactnative.extension.asString
+import com.sendbird.calls.reactnative.extension.rejectCalls
 import com.sendbird.calls.reactnative.module.CallsModule
 import com.sendbird.calls.reactnative.view.BaseVideoView
 
@@ -20,23 +21,22 @@ object CallsUtils {
             Log.e(CallsModule.NAME, "[CallsUtils.safeRun] Catch error -> $e")
         }
     }
+    fun safeRun(promise: Promise, fn: () -> Unit) {
+        try {
+            fn()
+        } catch (e: Throwable) {
+            when(e){
+                is SendBirdException -> promise.rejectCalls(e)
+                is RNCallsInternalError -> promise.rejectCalls(e)
+                else -> promise.reject(e)
+            }
+        }
+    }
     fun <T> safeGet(fn: () -> T): T? {
         return try {
             fn()
         } catch (e: Throwable){
             null
-        }
-    }
-    fun safePromiseRejection(promise: Promise, from: String?, completion: () -> Any?) {
-        try {
-            completion()
-        } catch (e: Throwable) {
-            Log.e(CallsModule.NAME, "[CallsUtils.safePromiseRejection] Catch error -> $e")
-            when (e) {
-                is SendBirdException -> promise.reject(e.code.toString(), e.message, e)
-                is RNCallsInternalError -> promise.reject(e.code, e.message, e)
-                else -> promise.reject(RNCallsInternalError(from, RNCallsInternalError.Type.UNKNOWN))
-            }
         }
     }
 
@@ -45,14 +45,6 @@ object CallsUtils {
     }
     fun findVideoView(context: ReactContext, viewId: Int, from: String?): BaseVideoView {
         return context.currentActivity?.findViewById(viewId) ?: throw RNCallsInternalError(from, RNCallsInternalError.Type.NOT_FOUND_VIDEO_VIEW)
-    }
-
-    /** Completion utils **/
-    fun completionWithPromise(e: SendBirdException?, promise: Promise) {
-        when {
-            e !== null -> promise.reject(e)
-            else -> promise.resolve(null)
-        }
     }
 
     /** Data conversion utils **/
@@ -223,20 +215,20 @@ object CallsUtils {
     fun convertParticipantToJsMap(participant: Participant?) = when(participant) {
         null -> null
         else -> convertToJsMap(mapOf(
-        "participantId" to participant.participantId,
-        "user" to convertUserToJsMap(participant.user),
-        "state" to participant.state.asString(),
+            "participantId" to participant.participantId,
+            "user" to convertUserToJsMap(participant.user),
+            "state" to participant.state.asString(),
 
-        "enteredAt" to participant.enteredAt,
-        "exitedAt" to (participant.exitedAt ?: 0),
-        "duration" to (participant.duration ?: 0),
+            "enteredAt" to participant.enteredAt,
+            "exitedAt" to (participant.exitedAt ?: 0),
+            "duration" to (participant.duration ?: 0),
 
-        "isAudioEnabled" to participant.isAudioEnabled,
-        "isVideoEnabled" to participant.isVideoEnabled,
+            "isAudioEnabled" to participant.isAudioEnabled,
+            "isVideoEnabled" to participant.isVideoEnabled,
 
-        "updatedAt" to participant.updatedAt,
+            "updatedAt" to participant.updatedAt,
 //        "videoView" to participant.videoView, // TODO: SendBirdVideoView
-    ))
+        ))
     }
 
     fun convertRoomToJsMap(room: Room?) = when(room) {

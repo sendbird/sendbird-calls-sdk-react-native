@@ -1,17 +1,23 @@
 package com.sendbird.calls.reactnative.module
 
 import android.util.Log
-import com.facebook.react.bridge.*
+import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReadableMap
 import com.sendbird.calls.*
 import com.sendbird.calls.reactnative.RNCallsInternalError
+import com.sendbird.calls.reactnative.extension.rejectCalls
 import com.sendbird.calls.reactnative.utils.CallsUtils
 
 class CallsCommonModule(private val root: CallsModule): CommonModule {
     override fun getCurrentUser(promise: Promise) {
         Log.d(CallsModule.NAME, "[CommonModule] getCurrentUser()")
-        val user = SendBirdCall.currentUser
-        if(user == null) promise.resolve(null)
-        else promise.resolve(CallsUtils.convertUserToJsMap(user))
+        SendBirdCall.currentUser
+            ?.let {
+                promise.resolve(CallsUtils.convertUserToJsMap(it))
+            }
+            ?: run {
+                promise.resolve(null)
+            }
     }
 
     override fun getOngoingCalls(promise: Promise) {
@@ -22,8 +28,13 @@ class CallsCommonModule(private val root: CallsModule): CommonModule {
 
     override fun getDirectCall(callId: String, promise: Promise) {
         Log.d(CallsModule.NAME, "[CommonModule] getDirectCall($callId)")
-        val call = SendBirdCall.getCall(callId) ?: return promise.reject(RNCallsInternalError("common/getDirectCall", RNCallsInternalError.Type.NOT_FOUND_DIRECT_CALL))
-        promise.resolve(CallsUtils.convertDirectCallToJsMap(call))
+        SendBirdCall.getCall(callId)
+            ?.let {
+                promise.resolve(CallsUtils.convertDirectCallToJsMap(it))
+            }
+            ?: run {
+                promise.rejectCalls(RNCallsInternalError("common/getDirectCall", RNCallsInternalError.Type.NOT_FOUND_DIRECT_CALL))
+            }
     }
 
     override fun initialize(appId: String): Boolean {
@@ -33,99 +44,143 @@ class CallsCommonModule(private val root: CallsModule): CommonModule {
 
     override fun authenticate(userId: String, accessToken: String?, promise: Promise) {
         Log.d(CallsModule.NAME, "[CommonModule] authenticate($userId, $accessToken)")
-        val authParams = AuthenticateParams(userId).setAccessToken(accessToken)
-        SendBirdCall.authenticate(authParams) { user, e ->
-            if (user == null || e !== null) promise.reject(e)
-            else promise.resolve(CallsUtils.convertUserToJsMap(user))
+        val authParams = AuthenticateParams(userId).apply {
+            setAccessToken(accessToken)
+        }
+        SendBirdCall.authenticate(authParams) { user, error ->
+            error?.let {
+                promise.rejectCalls(it)
+            }
+            user?.let {
+                promise.resolve(CallsUtils.convertUserToJsMap(it))
+            }
         }
     }
 
     override fun deauthenticate(promise: Promise) {
         Log.d(CallsModule.NAME, "[CommonModule] deauthenticate()")
-        SendBirdCall.deauthenticate {
-            CallsUtils.completionWithPromise(it, promise)
+        SendBirdCall.deauthenticate { error ->
+            error
+                ?.let {
+                    promise.rejectCalls(it)
+                }
+                ?: run {
+                    promise.resolve(null)
+                }
         }
     }
 
     override fun registerPushToken(token: String, unique: Boolean, promise: Promise) {
         Log.d(CallsModule.NAME, "[CommonModule] registerPushToken($token)")
-        SendBirdCall.registerPushToken(token, unique) {
-            CallsUtils.completionWithPromise(it, promise)
+        SendBirdCall.registerPushToken(token, unique) { error ->
+            error
+                ?.let {
+                    promise.rejectCalls(it)
+                }
+                ?: run {
+                    promise.resolve(null)
+                }
         }
     }
 
     override fun unregisterPushToken(token: String, promise: Promise) {
         Log.d(CallsModule.NAME, "[CommonModule] unregisterPushToken($token)")
-        SendBirdCall.unregisterPushToken(token) {
-            CallsUtils.completionWithPromise(it, promise)
+        SendBirdCall.unregisterPushToken(token) { error ->
+            error
+                ?.let {
+                    promise.rejectCalls(it)
+                }
+                ?: run {
+                    promise.resolve(null)
+                }
         }
     }
 
     override fun dial(calleeId: String, isVideoCall: Boolean, options: ReadableMap, promise: Promise) {
         Log.d(CallsModule.NAME, "[CommonModule] dial($calleeId)")
+        Log.d(CallsModule.NAME, "[CommonModule] dial options -> ${options.toHashMap()}")
         val from = "common/dial"
-        CallsUtils.safePromiseRejection(promise, from) {
-            Log.d(CallsModule.NAME, "[CommonModule] dial options -> ${options.toHashMap()}")
 
-            val localVideoViewId = CallsUtils.safeGet { options.getInt("localVideoViewId") }
-            val remoteVideoViewId = CallsUtils.safeGet { options.getInt("remoteVideoViewId") }
-            val channelUrl = CallsUtils.safeGet { options.getString("channelUrl") }
+        val localVideoViewId = CallsUtils.safeGet { options.getInt("localVideoViewId") }
+        val remoteVideoViewId = CallsUtils.safeGet { options.getInt("remoteVideoViewId") }
+        val channelUrl = CallsUtils.safeGet { options.getString("channelUrl") }
+        val audioEnabled = CallsUtils.safeGet { options.getBoolean("audioEnabled") }
+        val videoEnabled = CallsUtils.safeGet { options.getBoolean("videoEnabled") }
+        val frontCamera = CallsUtils.safeGet { options.getBoolean("frontCamera") }
 
-            val audioEnabled = options.getBoolean("audioEnabled")
-            val videoEnabled = options.getBoolean("videoEnabled")
-            val frontCamera = options.getBoolean("frontCamera")
-
-            val dialPrams = DialParams(calleeId).apply {
-                setVideoCall(isVideoCall)
-                setCallOptions(CallOptions().apply {
-                    if(localVideoViewId != null) setLocalVideoView(CallsUtils.findVideoView(root.reactContext, localVideoViewId, from).getSurface())
-                    if(remoteVideoViewId != null) setRemoteVideoView(CallsUtils.findVideoView(root.reactContext, remoteVideoViewId, from).getSurface())
-                    if(channelUrl != null) setSendBirdChatOptions(SendBirdChatOptions().setChannelUrl(channelUrl))
-                    setAudioEnabled(audioEnabled)
-                    setVideoEnabled(videoEnabled)
-                    setFrontCameraAsDefault(frontCamera)
-                })
-            }
-
-            SendBirdCall.dial(dialPrams) { directCall: DirectCall?, error: SendBirdException? ->
-                if(error != null) throw error
-                if(directCall != null) {
-                    directCall.setListener(root.directCallModule)
-                    promise.resolve(CallsUtils.convertDirectCallToJsMap(directCall))
+        val dialPrams = DialParams(calleeId).apply {
+            setVideoCall(isVideoCall)
+            setCallOptions(CallOptions().apply {
+                localVideoViewId?.let {
+                    val surface = CallsUtils.findVideoView(root.reactContext, it, from).getSurface()
+                    setLocalVideoView(surface)
                 }
+                remoteVideoViewId?.let {
+                    val surface = CallsUtils.findVideoView(root.reactContext, it, from).getSurface()
+                    setRemoteVideoView(surface)
+                }
+                audioEnabled?.let {
+                    setAudioEnabled(it)
+                }
+                videoEnabled?.let {
+                    setVideoEnabled(it)
+                }
+                frontCamera?.let {
+                    setFrontCameraAsDefault(it)
+                }
+            })
+            channelUrl?.let {
+                val chatOptions = SendBirdChatOptions().apply {
+                    setChannelUrl(it)
+                }
+                setSendBirdChatOptions(chatOptions)
+            }
+        }
+
+        SendBirdCall.dial(dialPrams) { call, error ->
+            error?.let {
+                promise.rejectCalls(it)
+            }
+            call?.let {
+                it.setListener(root.directCallModule)
+                promise.resolve(CallsUtils.convertDirectCallToJsMap(it))
             }
         }
     }
 
     override fun createRoom(roomType: String, promise: Promise) {
         Log.d(CallsModule.NAME, "[CommonModule] createRoom($roomType)")
-        val from = "common/createRoom"
-        CallsUtils.safePromiseRejection(promise, from) {
-            val params = RoomParams(RoomType.valueOf(roomType.uppercase()))
-            SendBirdCall.createRoom(params) { room: Room?, error: SendBirdException? ->
-                if(error != null) throw error
-                if(room != null) promise.resolve(CallsUtils.convertRoomToJsMap(room))
+        val params = RoomParams(RoomType.valueOf(roomType.uppercase()))
+        SendBirdCall.createRoom(params) { room, error ->
+            error?.let {
+                promise.rejectCalls(it)
+            }
+            room?.let {
+                promise.resolve(CallsUtils.convertRoomToJsMap(it))
             }
         }
     }
 
     override fun fetchRoomById(roomId: String, promise: Promise) {
         Log.d(CallsModule.NAME, "[CommonModule] fetchRoomById($roomId)")
-        val from = "common/fetchRoomById"
-        CallsUtils.safePromiseRejection(promise, from) {
-            SendBirdCall.fetchRoomById(roomId) { room: Room?, error: SendBirdException? ->
-                if (error != null) promise.reject(error) // TODO: check throw error
-                if (room != null) promise.resolve(CallsUtils.convertRoomToJsMap(room))
+        SendBirdCall.fetchRoomById(roomId) { room, error ->
+            error?.let {
+                promise.rejectCalls(it)
+            }
+            room?.let {
+                promise.resolve(CallsUtils.convertRoomToJsMap(it))
             }
         }
     }
 
     override fun getCachedRoomById(roomId: String , promise: Promise) {
         Log.d(CallsModule.NAME, "[CommonModule] getCachedRoomById($roomId)")
-        val from = "common/getCachedRoomById"
-        CallsUtils.safePromiseRejection(promise, from) {
-            val room = SendBirdCall.getCachedRoomById(roomId)
-            if (room != null) promise.resolve(CallsUtils.convertRoomToJsMap(room)) else promise.resolve(null)
-        }
+        SendBirdCall.getCachedRoomById(roomId)
+            ?.let {
+                promise.resolve(CallsUtils.convertRoomToJsMap(it))
+            }
+            ?: run {
+                promise.resolve(null)
+            }
     }
 }
