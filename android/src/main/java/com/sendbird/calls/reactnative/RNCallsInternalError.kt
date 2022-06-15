@@ -14,6 +14,7 @@ class RNCallsInternalError(from: String? = "unknown", private val type: Type) : 
         NOT_FOUND_ROOM("There is no Room"),
         NOT_FOUND_PARTICIPANT("There is no participant"),
         // others
+        NOT_FOUND_QUERY("Cannot found query"),
         UNKNOWN("Unknown error")
     }
 

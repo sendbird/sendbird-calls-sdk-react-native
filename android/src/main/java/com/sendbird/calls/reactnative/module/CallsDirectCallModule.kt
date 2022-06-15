@@ -30,11 +30,13 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule,
                 }
                 ?.let {
                     call.selectVideoDevice(it) { error ->
-                        error?.let {
-                            promise.rejectCalls(error)
-                        } ?: run {
-                            promise.resolve(null)
-                        }
+                        error
+                            ?.let {
+                                promise.rejectCalls(error)
+                            }
+                            ?: run {
+                                promise.resolve(null)
+                            }
                     }
                 }
                 ?: run {
