@@ -48,3 +48,4 @@ export * from './Platform';
 export * from './User';
 export * from './Room';
 export * from './Participant';
+export * from './Query';
