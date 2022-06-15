@@ -11,6 +11,7 @@ import SBText from '../../shared/components/SBText';
 import SBTextInput from '../../shared/components/SBTextInput';
 import Palette from '../../shared/styles/palette';
 import { AppLogger } from '../../shared/utils/logger';
+import ModalRoomId from '../components/ModalRoomId';
 import { useGroupNavigation } from '../hooks/useGroupNavigation';
 import { GroupRoutes } from '../navigations/routes';
 
@@ -29,8 +30,9 @@ const GroupCallDialScreen = () => {
   const onNavigate = async (isCreated = false) => {
     if (isCreated) {
       try {
-        const room = await SendbirdCalls.createRoom(SendbirdCalls.RoomType.SMALL_ROOM_FOR_VIDEO);
-        room.enter();
+        setVisible(true);
+        // const room = await SendbirdCalls.createRoom(SendbirdCalls.RoomType.SMALL_ROOM_FOR_VIDEO);
+        // room.enter();
         // TODO: event
       } catch (e) {
         AppLogger.log('[ERROR::createRoom]', e);
@@ -46,8 +48,15 @@ const GroupCallDialScreen = () => {
     }
   };
 
+  const [visible, setVisible] = useState<boolean>(false);
+
   return (
     <InputSafeView>
+      <ModalRoomId
+        visible={visible}
+        roomId={'5d901b6a-b725-4dfd-b479-55cd9e261aa1'}
+        onClose={() => setVisible(false)}
+      />
       <ScrollView style={styles.container}>
         <View style={styles.card}>
           <SBIcon icon={'RoomAdd'} containerStyle={{ alignItems: 'flex-start' }} />

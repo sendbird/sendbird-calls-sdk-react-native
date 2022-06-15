@@ -58,6 +58,7 @@ const IconAssets = {
   'CallVoiceIncomingFilled': require('./iconCallVoiceIncomingFilled.png'),
   'CallVoiceOutgoingFilled': require('./iconCallVoiceOutgoingFilled.png'),
   'CameraFlipIos': require('./iconCameraFlipIos.png'),
+  'Copy': require('./iconCopy.png'),
   'Decline': require('./iconDecline.png'),
   'Info': require('./iconInfo.png'),
   'Join': require('./iconJoin.png'),
