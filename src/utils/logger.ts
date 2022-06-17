@@ -8,8 +8,10 @@ const LogLevelEnum = {
   'info': 4,
   'debug': 5,
 };
+
 type LogLevel = keyof typeof LogLevelEnum;
 
+/** @internal **/
 export const getLogger = (lv: LogLevel = 'warn', title?: string) => {
   let _logLevel = __DEV__ ? lv : 'none';
   let _title = title ?? `[Calls_${Platform.OS}]`;

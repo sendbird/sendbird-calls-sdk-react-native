@@ -15,7 +15,13 @@ import type { EnterParams, RoomProperties, RoomType } from './Room';
 import type { User } from './User';
 import type { AsJSInterface } from './index';
 
+// --------------- Native interfaces ---------------
+
 type NativeModuleInterface = NativeModule & TurboModule;
+
+export type NativeConstants = {
+  NATIVE_SDK_VERSION: string;
+};
 
 export interface NativeCommonModule {
   applicationId: string;
@@ -30,6 +36,7 @@ export interface NativeCommonModule {
   deauthenticate(): Promise<void>;
   registerPushToken(token: string, unique?: boolean): Promise<void>;
   unregisterPushToken(token: string): Promise<void>;
+  // unregisterAllPushTokens(): Promise<void>;
   dial(calleeUserId: string, isVideoCall: boolean, options: CallOptions): Promise<DirectCallProperties>;
   createRoom(roomType: RoomType): Promise<RoomProperties>;
   fetchRoomById(roomId: string): Promise<RoomProperties>;
@@ -37,17 +44,23 @@ export interface NativeCommonModule {
 
   /** @platform Android **/
   handleFirebaseMessageData(data: Record<string, string>): void;
+
   /** @platform iOS **/
   registerVoIPPushToken(token: string, unique?: boolean): Promise<void>;
   /** @platform iOS **/
   unregisterVoIPPushToken(token: string): Promise<void>;
   /** @platform iOS **/
   routePickerView(): void;
+
+  // addRecordingListener
+  // removeRecordingListener
+  // removeAllRecordingListeners
 }
 
-export interface NativeDirectCallModule {
-  selectVideoDevice(callId: string, device: VideoDevice): Promise<void>;
+type CommonModule_AndroidSpecificKeys = 'handleFirebaseMessageData';
+type CommonModule_IOSSpecificKeys = 'registerVoIPPushToken' | 'unregisterVoIPPushToken' | 'routePickerView';
 
+export interface NativeDirectCallModule {
   accept(callId: string, options: CallOptions, holdActiveCall: boolean): Promise<void>;
   end(callId: string): Promise<void>;
   switchCamera(callId: string): Promise<void>;
@@ -57,6 +70,7 @@ export interface NativeDirectCallModule {
   unmuteMicrophone(callId: string): void;
   updateLocalVideoView(callId: string, videoViewId: number): void;
   updateRemoteVideoView(callId: string, videoViewId: number): void;
+  selectVideoDevice(callId: string, device: VideoDevice): Promise<void>;
 
   /** @platform Android **/
   selectAudioDevice(callId: string, device: AudioDevice): Promise<void>;
@@ -100,14 +114,16 @@ export interface SendbirdCallsNativeSpec
     NativeDirectCallModule,
     NativeGroupCallModule {}
 
-type AndroidSpecificKeys = 'handleFirebaseMessageData';
-type IOSSpecificKeys = 'registerVoIPPushToken' | 'unregisterVoIPPushToken' | 'routePickerView';
+// --------------- Javascript interfaces ---------------
+
 type PlatformSpecificInterface = AsJSInterface<
-  AsJSInterface<NativeCommonModule, 'ios', IOSSpecificKeys>,
+  AsJSInterface<NativeCommonModule, 'ios', CommonModule_IOSSpecificKeys>,
   'android',
-  AndroidSpecificKeys
+  CommonModule_AndroidSpecificKeys
 >;
+
 export interface SendbirdCallsJavascriptSpec extends PlatformSpecificInterface {
+  /** Listeners **/
   onRinging(listener: (props: DirectCallProperties) => void): void;
 
   /** Queries **/

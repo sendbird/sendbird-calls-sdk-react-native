@@ -41,7 +41,7 @@ export interface VideoDevice {
    * device id
    * @android deviceName
    * @ios uniqueId
-   * */
+   */
   deviceId: string;
   position: VideoDevicePosition;
 }

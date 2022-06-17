@@ -3,7 +3,7 @@
 /**
  * @platform iOS
  * @description AVAudioSession.RouteChangeReason {@link https://developer.apple.com/documentation/avfaudio/avaudiosession/routechangereason}
- * */
+ */
 export enum RouteChangeReason {
   /// The reason is unknown.
   unknown,
@@ -38,7 +38,7 @@ export enum RouteChangeReason {
 /**
  * @platform iOS
  * @description AVAudioSession.Port {@link https://developer.apple.com/documentation/avfaudio/avaudiosession/port}
- * */
+ */
 export enum AVAudioSessionPort {
   /** input port types **/
   /// Line level input on a dock connector
