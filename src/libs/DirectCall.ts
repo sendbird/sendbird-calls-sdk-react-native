@@ -14,8 +14,15 @@ import type NativeBinder from './NativeBinder';
 import { CallsEvent, DirectCallEventType } from './NativeBinder';
 
 export class DirectCall implements DirectCallProperties, DirectCallMethods {
+  /** @internal **/
   private static pool: Record<string, DirectCall> = {};
 
+  /** @internal **/
+  public static poolRelease() {
+    DirectCall.pool = {};
+  }
+
+  /** @internal **/
   public static get(binder: NativeBinder, props: DirectCallProperties) {
     if (!DirectCall.pool[props.callId]) DirectCall.pool[props.callId] = new DirectCall(binder, props);
     const directCall = DirectCall.pool[props.callId];
@@ -150,52 +157,52 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
       switch (type) {
         case DirectCallEventType.ON_ESTABLISHED: {
           this._startedAt = Date.now();
-          listener.onEstablished?.(data);
+          listener.onEstablished?.(this);
           break;
         }
         case DirectCallEventType.ON_CONNECTED: {
-          listener.onConnected?.(data);
+          listener.onConnected?.(this);
           break;
         }
         case DirectCallEventType.ON_RECONNECTING: {
-          listener.onReconnecting?.(data);
+          listener.onReconnecting?.(this);
           break;
         }
         case DirectCallEventType.ON_RECONNECTED: {
-          listener.onReconnected?.(data);
+          listener.onReconnected?.(this);
           break;
         }
         case DirectCallEventType.ON_ENDED: {
-          listener.onEnded?.(data);
+          listener.onEnded?.(this);
           break;
         }
         case DirectCallEventType.ON_REMOTE_AUDIO_SETTINGS_CHANGED: {
-          listener.onRemoteAudioSettingsChanged?.(data);
+          listener.onRemoteAudioSettingsChanged?.(this);
           break;
         }
         case DirectCallEventType.ON_REMOTE_VIDEO_SETTINGS_CHANGED: {
-          listener.onRemoteVideoSettingsChanged?.(data);
+          listener.onRemoteVideoSettingsChanged?.(this);
           break;
         }
         case DirectCallEventType.ON_LOCAL_VIDEO_SETTINGS_CHANGED: {
-          listener.onLocalVideoSettingsChanged?.(data);
+          listener.onLocalVideoSettingsChanged?.(this);
           break;
         }
         case DirectCallEventType.ON_REMOTE_RECORDING_STATUS_CHANGED: {
-          listener.onRemoteRecordingStatusChanged?.(data);
+          listener.onRemoteRecordingStatusChanged?.(this);
           break;
         }
         case DirectCallEventType.ON_CUSTOM_ITEMS_UPDATED: {
-          listener.onCustomItemsUpdated?.(data, additionalData?.updatedKeys ?? []);
+          listener.onCustomItemsUpdated?.(this, additionalData?.updatedKeys ?? []);
           break;
         }
         case DirectCallEventType.ON_CUSTOM_ITEMS_DELETED: {
-          listener.onCustomItemsDeleted?.(data, additionalData?.deletedKeys ?? []);
+          listener.onCustomItemsDeleted?.(this, additionalData?.deletedKeys ?? []);
           break;
         }
         case DirectCallEventType.ON_USER_HOLD_STATUS_CHANGED: {
           listener.onUserHoldStatusChanged?.(
-            data,
+            this,
             additionalData?.isLocalUser ?? false,
             additionalData?.isUserOnHold ?? false,
           );
@@ -203,7 +210,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
         }
         case DirectCallEventType.ON_AUDIO_DEVICE_CHANGED: {
           if (Platform.OS === 'android') {
-            listener.onAudioDeviceChanged?.(data, {
+            listener.onAudioDeviceChanged?.(this, {
               platform: 'android',
               data: {
                 currentAudioDevice: additionalData?.currentAudioDevice ?? null,
@@ -212,7 +219,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
             });
           }
           if (Platform.OS === 'ios') {
-            listener.onAudioDeviceChanged?.(data, {
+            listener.onAudioDeviceChanged?.(this, {
               platform: 'ios',
               data: {
                 reason: additionalData?.reason ?? RouteChangeReason.unknown,

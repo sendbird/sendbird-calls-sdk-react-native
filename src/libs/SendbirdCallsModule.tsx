@@ -150,15 +150,20 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
       return this._init(appId);
     }
   };
+
   private _init = (appId: string) => {
     this.Logger.debug('[SendbirdCalls]', 'initialize()');
 
-    this.binder.addListener(CallsEvent.DEFAULT, ({ type, data }) => {
-      if (type === DefaultEventType.ON_RINGING) {
-        this.Logger.debug('[SendbirdCalls]', 'onRinging', data.callId);
-        this._onRinging(data);
-      }
-    });
+    DirectCall.poolRelease();
+
+    if (!this.initialized) {
+      this.binder.addListener(CallsEvent.DEFAULT, ({ type, data }) => {
+        if (type === DefaultEventType.ON_RINGING) {
+          this.Logger.debug('[SendbirdCalls]', 'onRinging', data.callId);
+          this._onRinging(data);
+        }
+      });
+    }
 
     this.binder.nativeModule.initialize(appId);
     this._applicationId = appId;
@@ -189,7 +194,7 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   /**
    * Registers push token for current user.
    *
-   * on iOS, push token means APNs token.
+   * on iOS, push token means APNS token.
    * on Android, push token means FCM token.
    *
    * ```ts

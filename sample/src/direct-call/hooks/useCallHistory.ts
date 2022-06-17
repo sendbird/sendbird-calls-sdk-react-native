@@ -1,8 +1,7 @@
 import { useRef, useState } from 'react';
 
-import { DirectCallEndResult, SendbirdCalls } from '@sendbird/calls-react-native';
+import { DirectCallEndResult, DirectCallLogListQuery, SendbirdCalls } from '@sendbird/calls-react-native';
 
-import { DirectCallLogListQuery } from '../../../../src/libs/BridgedQuery';
 import { useEffectAsync } from '../../shared/hooks/useEffectAsync';
 import CallHistoryManager, { CallHistory, asHistory } from '../../shared/libs/CallHistoryManager';
 

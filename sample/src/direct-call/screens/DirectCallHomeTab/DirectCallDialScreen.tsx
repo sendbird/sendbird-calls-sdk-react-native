@@ -1,4 +1,3 @@
-import messaging from '@react-native-firebase/messaging';
 import React from 'react';
 import { Alert, Keyboard, Platform, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 
@@ -22,15 +21,6 @@ const DirectCallScreen = () => {
       default: 'test',
     }),
   });
-
-  React.useEffect(() => {
-    const listener = messaging().onMessage((message) => {
-      SendbirdCalls.android_handleFirebaseMessageData(message.data);
-    });
-    return () => {
-      listener();
-    };
-  }, []);
 
   const onNavigate = (callProps: DirectCallProperties) => {
     if (callProps.isVideoCall) {
