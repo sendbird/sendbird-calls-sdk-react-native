@@ -353,6 +353,26 @@ export interface DirectCallUser extends User {
   role: DirectCallUserRole;
 }
 
+export type CustomItemUpdateResult = {
+  updatedItems: Record<string, string>;
+  affectedKeys: string[];
+};
+
+export type CallOptions = {
+  localVideoViewId?: number;
+  remoteVideoViewId?: number;
+
+  /** For SendbirdChat integration **/
+  channelUrl?: string;
+
+  /** @default true */
+  audioEnabled?: boolean;
+  /** @default true */
+  videoEnabled?: boolean;
+  /** @default true */
+  frontCamera?: boolean;
+};
+
 export enum DirectCallEndResult {
   /** Default value of the EndResult. **/
   NONE = 'NONE',
@@ -387,26 +407,6 @@ export enum DirectCallEndResult {
   /** Unknown **/
   UNKNOWN = 'UNKNOWN',
 }
-
-export type CustomItemUpdateResult = {
-  updatedItems: Record<string, string>;
-  affectedKeys: string[];
-};
-
-export type CallOptions = {
-  localVideoViewId?: number;
-  remoteVideoViewId?: number;
-
-  /** For SendbirdChat integration **/
-  channelUrl?: string;
-
-  /** @default true */
-  audioEnabled?: boolean;
-  /** @default true */
-  videoEnabled?: boolean;
-  /** @default true */
-  frontCamera?: boolean;
-};
 
 export enum DirectCallUserRole {
   CALLER = 'CALLER',

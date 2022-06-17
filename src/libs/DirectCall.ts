@@ -211,6 +211,12 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
     },
   };
 
+  /**
+   * Add DirectCall listener.
+   * supports multiple listeners.
+   *
+   * @since 1.0.0
+   */
   public addListener = (listener: Partial<DirectCallListener>) => {
     Logger.debug('[DirectCall]', 'addListener', this.callId);
 
@@ -220,6 +226,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
           this._updateInternal(data);
           switch (type) {
             case DirectCallEventType.ON_ESTABLISHED: {
+              this._startedAt = Date.now();
               listener.onEstablished?.(data);
               break;
             }
@@ -301,51 +308,133 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
     return () => unsubscribes.forEach((fn) => fn());
   };
 
+  /**
+   * Accepts call.
+   *
+   * @since 1.0.0
+   */
   public accept = async (
     options: CallOptions = { audioEnabled: true, frontCamera: true, videoEnabled: true },
     holdActiveCall = false,
   ) => {
     await this.binder.nativeModule.accept(this.callId, options, holdActiveCall);
   };
+
+  /**
+   * Ends the call.
+   * {@link DirectCallListener.onEnded} will be called after successful ending.
+   * This listener will also be called when the remote user ends the call.
+   *
+   * @since 1.0.0
+   */
   public end = async () => {
     await this.binder.nativeModule.end(this.callId);
   };
+
+  /**
+   * Selects video device.
+   * Changes current video device asynchronously.
+   *
+   * @since 1.0.0
+   */
   public selectVideoDevice = async (device: VideoDevice) => {
     await this.binder.nativeModule.selectVideoDevice(this.callId, device);
   };
+
+  /**
+   * Selects audio device.
+   *
+   * @platform Android
+   * @since 1.0.0
+   */
   public android_selectAudioDevice = async (device: AudioDevice) => {
     await this.binder.nativeModule.selectAudioDevice(this.callId, device);
   };
+
+  /**
+   * Mutes the audio of local user.
+   * Will trigger {@link DirectCallListener.onRemoteAudioSettingsChanged} method of the remote user.
+   * If the remote user changes their audio settings, local user will be notified via same delegate method.
+   *
+   * @since 1.0.0
+   */
   public muteMicrophone = () => {
     this.binder.nativeModule.muteMicrophone(this.callId);
     // NOTE: native doesn't have onLocalAudioSettingsChanged event
     this._isLocalAudioEnabled = false;
     this._internalEvents.emit('onPropertyUpdatedManually', this);
   };
+
+  /**
+   * Unmutes the audio of local user.
+   * Will trigger {@link DirectCallListener.onRemoteAudioSettingsChanged} method of the remote user.
+   * If the remote user changes their audio settings, local user will be notified via same delegate method.
+   *
+   * @since 1.0.0
+   */
   public unmuteMicrophone = () => {
     this.binder.nativeModule.unmuteMicrophone(this.callId);
     // NOTE: native doesn't have onLocalAudioSettingsChanged event
     this._isLocalAudioEnabled = true;
     this._internalEvents.emit('onPropertyUpdatedManually', this);
   };
+
+  /**
+   * Starts local video.
+   * If the callee changes video settings,
+   * the caller is notified via the {@link DirectCallListener.onRemoteVideoSettingsChanged} listener.
+   *
+   * @since 1.0.0
+   */
   public startVideo = () => {
     this.binder.nativeModule.startVideo(this.callId);
     this._isLocalVideoEnabled = true;
     // NOTE: ios native doesn't have onLocalAudioSettingsChanged event
     Platform.OS === 'ios' && this._internalEvents.emit('onLocalVideoSettingsChanged', this);
   };
+
+  /**
+   * Stops local video.
+   * If the callee changes video settings,
+   * the caller is notified via the {@link DirectCallListener.onRemoteVideoSettingsChanged} listener.
+   *
+   * @since 1.0.0
+   */
   public stopVideo = () => {
     this.binder.nativeModule.stopVideo(this.callId);
     this._isLocalVideoEnabled = false;
     // NOTE: ios native doesn't have onLocalAudioSettingsChanged event
     Platform.OS === 'ios' && this._internalEvents.emit('onLocalVideoSettingsChanged', this);
   };
+
+  /**
+   * Toggles the selection between the front and the back camera.
+   *
+   * on Android, In case of more than two cameras, the next camera will be selected.
+   * If the last camera is already selected, the first one will be selected again.
+   *
+   * @since 1.0.0
+   */
   public switchCamera = async () => {
     await this.binder.nativeModule.switchCamera(this.callId);
   };
+
+  /**
+   * Update local video view.
+   * @see DirectCallVideoView.videoViewId
+   *
+   * @since 1.0.0
+   */
   public updateLocalVideoView = (videoViewId: number) => {
     this.binder.nativeModule.updateLocalVideoView(this.callId, videoViewId);
   };
+
+  /**
+   * Update remote video view.
+   * @see DirectCallVideoView.videoViewId
+   *
+   * @since 1.0.0
+   */
   public updateRemoteVideoView = (videoViewId: number) => {
     this.binder.nativeModule.updateRemoteVideoView(this.callId, videoViewId);
   };
