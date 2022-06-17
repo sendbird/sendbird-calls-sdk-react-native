@@ -14,12 +14,9 @@
 
 ### TODOS
 
-- [ ] enter room
-- [ ] create room
+- [ ] call view - enter room
 - [ ] call view - alone
 - [ ] call view - multiple
-- [ ] participants
-- [ ] splash
 
 ### DONE
 
@@ -28,3 +25,6 @@
 - [x] main(tab):: dial
 - [x] room infomation
 - [x] signin
+- [x] create room
+- [x] enter room
+- [x] participants
