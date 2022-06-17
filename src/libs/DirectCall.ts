@@ -36,7 +36,6 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
 
   private _binder: NativeBinder;
   private _props: DirectCallProperties;
-  private _startedAt = 0;
   private _internalEvents = {
     pool: [] as Partial<DirectCallListener>[],
     emit: (event: keyof DirectCallListener, ...args: unknown[]) => {
@@ -156,7 +155,6 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
       this._updateInternal(data);
       switch (type) {
         case DirectCallEventType.ON_ESTABLISHED: {
-          this._startedAt = Date.now();
           listener.onEstablished?.(this);
           break;
         }
