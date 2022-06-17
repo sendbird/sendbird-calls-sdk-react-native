@@ -1,30 +1,668 @@
 <!DOCTYPE html><html class="default"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>@sendbird/calls-react-native</title><meta name="description" content="Documentation for @sendbird/calls-react-native"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.body.classList.add(localStorage.getItem("tsd-theme") || "os")</script><header><div class="tsd-page-toolbar"><div class="container"><div class="table-wrap"><div class="table-cell" id="tsd-search" data-base="."><div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption">Search</label><input type="text" id="tsd-search-field"/></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">@sendbird/calls-react-native</a></div><div class="table-cell" id="tsd-widgets"><div id="tsd-filter"><a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a><div class="tsd-filter-group"><div class="tsd-select" id="tsd-filter-visibility"><span class="tsd-select-label">All</span><ul class="tsd-select-list"><li data-value="public">Public</li><li data-value="protected">Public/Protected</li><li data-value="private" class="selected">All</li></ul></div> <input type="checkbox" id="tsd-filter-inherited" checked/><label class="tsd-widget" for="tsd-filter-inherited">Inherited</label><input type="checkbox" id="tsd-filter-externals" checked/><label class="tsd-widget" for="tsd-filter-externals">Externals</label></div></div><a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a></div></div></div></div><div class="tsd-page-title"><div class="container"><h1>@sendbird/calls-react-native </h1></div></div></header><div class="container container-main"><div class="row"><div class="col-8 col-content"><div class="tsd-panel tsd-typography">
-<a href="#sendbirdcalls-react-native" id="sendbirdcalls-react-native" style="color: inherit; text-decoration: none;">
-  <h1>@sendbird/calls-react-native</h1>
+<a href="#sendbird-calls-sdk-for-react-native" id="sendbird-calls-sdk-for-react-native" style="color: inherit; text-decoration: none;">
+  <h1><a href="https://sendbird.com">Sendbird</a> Calls SDK for React-Native</h1>
 </a>
-<p>ReactNative Calls SDK</p>
-<pre><code><span class="hl-0">├─ </span><span class="hl-1">android</span><span class="hl-0">/</span><span class="hl-1">src</span><br/><span class="hl-0">│  ├─ </span><span class="hl-1">main</span><span class="hl-0">/</span><span class="hl-1">java</span><span class="hl-0">/</span><span class="hl-1">com</span><span class="hl-0">.</span><span class="hl-1">sendbird</span><span class="hl-0">.</span><span class="hl-1">calls</span><span class="hl-0">.</span><span class="hl-1">reactnative</span><br/><span class="hl-0">│  │                                ├─ </span><span class="hl-1">extension</span><span class="hl-0"> [</span><span class="hl-1">Kotlin</span><span class="hl-0"> </span><span class="hl-1">extension</span><span class="hl-0"> </span><span class="hl-1">files</span><span class="hl-0">]</span><br/><span class="hl-0">│  │                                ├─ </span><span class="hl-2">module</span><span class="hl-0"> [</span><span class="hl-1">Internal</span><span class="hl-0"> </span><span class="hl-1">calls</span><span class="hl-0"> </span><span class="hl-2">module</span><span class="hl-0"> </span><span class="hl-1">wrapper</span><span class="hl-0">]</span><br/><span class="hl-0">│  │                                ├─ </span><span class="hl-1">CallsEvents</span><span class="hl-0">.</span><span class="hl-1">kt</span><span class="hl-0"> [</span><span class="hl-1">Event</span><span class="hl-0"> </span><span class="hl-1">emitter</span><span class="hl-0"> </span><span class="hl-1">class</span><span class="hl-0">]</span><br/><span class="hl-0">│  │                                └─ </span><span class="hl-1">CallsUtils</span><span class="hl-0">.</span><span class="hl-1">kt</span><span class="hl-0"> [</span><span class="hl-1">Utility</span><span class="hl-0"> </span><span class="hl-1">class</span><span class="hl-0">]</span><br/><span class="hl-0">│  ├─ </span><span class="hl-1">newarch</span><span class="hl-0">/</span><span class="hl-1">java</span><span class="hl-0">/</span><span class="hl-1">com</span><span class="hl-0">.</span><span class="hl-1">sendbird</span><span class="hl-0">.</span><span class="hl-1">calls</span><span class="hl-0">.</span><span class="hl-1">reactnative</span><span class="hl-0"> [</span><span class="hl-1">For</span><span class="hl-0"> </span><span class="hl-1">turbo</span><span class="hl-0"> </span><span class="hl-2">module</span><span class="hl-0">, </span><span class="hl-1">not</span><span class="hl-0"> </span><span class="hl-1">available</span><span class="hl-0">]</span><br/><span class="hl-0">│  └─ </span><span class="hl-1">oldarch</span><span class="hl-0">/</span><span class="hl-1">java</span><span class="hl-0">/</span><span class="hl-1">com</span><span class="hl-0">.</span><span class="hl-1">sendbird</span><span class="hl-0">.</span><span class="hl-1">calls</span><span class="hl-0">.</span><span class="hl-1">reactnative</span><span class="hl-0"> [</span><span class="hl-1">For</span><span class="hl-0"> </span><span class="hl-1">bridge</span><span class="hl-0"> </span><span class="hl-2">module</span><span class="hl-0">, </span><span class="hl-1">available</span><span class="hl-0">]</span><br/><span class="hl-0">│                                   └─ </span><span class="hl-1">RNSendbirdCallsModule</span><span class="hl-0">.</span><span class="hl-1">kt</span><span class="hl-0"> [</span><span class="hl-1">External</span><span class="hl-0"> </span><span class="hl-1">Birdge</span><span class="hl-0"> </span><span class="hl-2">module</span><span class="hl-0">]</span><br/><span class="hl-0">├─ </span><span class="hl-1">ios</span><br/><span class="hl-0">│  ├─ </span><span class="hl-1">Extensions</span><span class="hl-0"> [</span><span class="hl-1">Swift</span><span class="hl-0"> </span><span class="hl-1">extension</span><span class="hl-0"> </span><span class="hl-1">files</span><span class="hl-0">]</span><br/><span class="hl-0">│  ├─ </span><span class="hl-1">Helpers</span><span class="hl-0"> [</span><span class="hl-1">Utility</span><span class="hl-0"> </span><span class="hl-1">files</span><span class="hl-0">]</span><br/><span class="hl-0">│  ├─ </span><span class="hl-1">Modules</span><span class="hl-0"> [</span><span class="hl-1">Internal</span><span class="hl-0"> </span><span class="hl-1">calls</span><span class="hl-0"> </span><span class="hl-2">module</span><span class="hl-0"> </span><span class="hl-1">wrapper</span><span class="hl-0">]</span><br/><span class="hl-0">│  ├─ </span><span class="hl-1">RNSendbirdCalls</span><span class="hl-0">.</span><span class="hl-1">m</span><span class="hl-0"> [</span><span class="hl-1">External</span><span class="hl-0"> </span><span class="hl-1">ObjC</span><span class="hl-0"> </span><span class="hl-1">Bridge</span><span class="hl-0"> </span><span class="hl-2">module</span><span class="hl-0">]</span><br/><span class="hl-0">│  ├─ </span><span class="hl-1">RNSendbirdCalls</span><span class="hl-0">.</span><span class="hl-1">swift</span><span class="hl-0"> [</span><span class="hl-1">External</span><span class="hl-0"> </span><span class="hl-1">Swift</span><span class="hl-0"> </span><span class="hl-1">Bridge</span><span class="hl-0"> </span><span class="hl-2">module</span><span class="hl-0">]</span><br/><span class="hl-0">│  └─ </span><span class="hl-1">RNSendbirdCalls</span><span class="hl-0">-</span><span class="hl-1">Birdging</span><span class="hl-0">-</span><span class="hl-1">Header</span><span class="hl-0">.</span><span class="hl-1">h</span><span class="hl-0"> [</span><span class="hl-1">Swift</span><span class="hl-0"> </span><span class="hl-1">ObjC</span><span class="hl-0"> </span><span class="hl-1">Bridging</span><span class="hl-0"> </span><span class="hl-1">Header</span><span class="hl-0">]</span><br/><span class="hl-0">├─ </span><span class="hl-1">src</span><br/><span class="hl-0">│  ├─ </span><span class="hl-1">__tests__</span><span class="hl-0"> [</span><span class="hl-1">Typescript</span><span class="hl-0"> </span><span class="hl-1">tests</span><span class="hl-0">]</span><br/><span class="hl-0">│  ├─ </span><span class="hl-1">libs</span><span class="hl-0"> [</span><span class="hl-1">Internal</span><span class="hl-0"> </span><span class="hl-1">calls</span><span class="hl-0"> </span><span class="hl-2">module</span><span class="hl-0">]</span><br/><span class="hl-0">│  ├─ </span><span class="hl-1">types</span><span class="hl-0"> [</span><span class="hl-1">Types</span><span class="hl-0">]</span><br/><span class="hl-0">│  ├─ </span><span class="hl-1">SendbirdCallsModule</span><span class="hl-0">.</span><span class="hl-1">tsx</span><span class="hl-0"> [</span><span class="hl-1">External</span><span class="hl-0"> </span><span class="hl-1">calls</span><span class="hl-0"> </span><span class="hl-2">module</span><span class="hl-0">]</span><br/><span class="hl-0">│  └─ </span><span class="hl-1">index</span><span class="hl-0">.</span><span class="hl-1">tsx</span><span class="hl-0"> [</span><span class="hl-1">Export</span><span class="hl-0"> </span><span class="hl-1">root</span><span class="hl-0">]</span><br/><span class="hl-0">└─ </span><span class="hl-1">sample</span><span class="hl-0"> [</span><span class="hl-1">Sample</span><span class="hl-0"> </span><span class="hl-1">app</span><span class="hl-0">]</span>
+<p><img src="https://img.shields.io/badge/iOS-11.0+-lightgray.svg" alt="iOS 11.0+"></p>
+
+<a href="#table-of-contents" id="table-of-contents" style="color: inherit; text-decoration: none;">
+  <h2>Table of contents</h2>
+</a>
+<ol>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#before-getting-started">Before getting started</a></li>
+<li><a href="#getting-started">Getting started</a></li>
+<li><a href="#configuring-the-application-for-the-sdk">Configuring the application for the SDK</a></li>
+<li><a href="#making-your-first-call">Making your first call</a></li>
+<li><a href="#implementation-guide">Implementation guide</a></li>
+<li><a href="#appendix">Appendix</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+</ol>
+<br />
+
+
+<a href="#introduction" id="introduction" style="color: inherit; text-decoration: none;">
+  <h2>Introduction</h2>
+</a>
+<p><strong>Sendbird Calls</strong> is the latest addition to our product portfolio. It enables real-time calls between users within a Sendbird application. SDKs are provided for iOS, Android, and JavaScript. Using any one of these, developers can quickly integrate voice and video call functions into their own client apps, allowing users to make and receive web-based real-time voice and video calls on the Sendbird platform.</p>
+<blockquote>
+<p>If you need any help in resolving any issues or have questions, please visit <a href="https://community.sendbird.com">our community</a></p>
+</blockquote>
+
+<a href="#how-it-works" id="how-it-works" style="color: inherit; text-decoration: none;">
+  <h3>How it works</h3>
+</a>
+<p>Sendbird Calls SDK for React-Native provides a module to make and receive voice and video calls. <strong>Direct calls</strong> in the SDK refers to one-to-one calls. To make a direct voice or video call, the caller specifies the user ID of the intended callee, and dials. Upon dialing, all of the callee’s authenticated devices will receive notifications for an incoming call. The callee then can choose to accept the call from any one of the devices. When the call is accepted, a connection is established between the devices of the caller and the callee. This marks the start of a direct call. Call participants can mute themselves, or call with either or both of the audio and video by using output devices such as speaker and microphone for audio, and front, rear camera for video. A call may be ended by either party. The <a href="https://dashboard.sendbird.com/auth/signin">Sendbird Dashboard</a> displays call logs in the Calls menu for dashboard owners and admins to review.</p>
+
+<a href="#more-about-sendbird-calls-sdk-for-react-native" id="more-about-sendbird-calls-sdk-for-react-native" style="color: inherit; text-decoration: none;">
+  <h3>More about Sendbird Calls SDK for React-Native</h3>
+</a>
+<p>Find out more about Sendbird Calls for React-Native on <a href="https://sendbird.com/docs/calls/v1/react-native/getting-started/about-calls-sdk">Calls SDK for React-Native doc</a>.</p>
+<br />
+
+
+<a href="#before-getting-started" id="before-getting-started" style="color: inherit; text-decoration: none;">
+  <h2>Before getting started</h2>
+</a>
+<p>This section shows the prerequisites you need to check to use Sendbird Calls SDK for React-Native.</p>
+
+<a href="#requirements" id="requirements" style="color: inherit; text-decoration: none;">
+  <h3>Requirements</h3>
+</a>
+<ul>
+<li>React-Native 0.60 or higher</li>
+<li>iOS 11.0 or higher</li>
+<li>Android 5.0 (API level 21) or higher</li>
+</ul>
+
+<a href="#sdk-dependencies" id="sdk-dependencies" style="color: inherit; text-decoration: none;">
+  <h3>SDK dependencies</h3>
+</a>
+<ul>
+<li><a href="https://github.com/sendbird/sendbird-calls-ios">Sendbird Calls SDK for iOS</a>, which can be integrated by <code>CocoaPods</code></li>
+<li><a href="https://github.com/sendbird/sendbird-calls-android">Sendbird Calls SDK for Android</a>, which can be integrated by <code>Gradle</code></li>
+</ul>
+<br />
+
+
+<a href="#getting-started" id="getting-started" style="color: inherit; text-decoration: none;">
+  <h2>Getting started</h2>
+</a>
+<p>This section gives you information you need to get started with Sendbird Calls SDK for React-Native.</p>
+
+<a href="#install-calls-sdk" id="install-calls-sdk" style="color: inherit; text-decoration: none;">
+  <h3>Install Calls SDK</h3>
+</a>
+
+<a href="#react-native" id="react-native" style="color: inherit; text-decoration: none;">
+  <h3>React-Native</h3>
+</a>
+<pre><code class="language-shell"><span class="hl-0">npm i @sendbird/calls-react-native</span><br/><span class="hl-0">npx pod-install</span>
+</code></pre>
+<br />
+
+
+<a href="#configuring-the-application-for-the-sdk" id="configuring-the-application-for-the-sdk" style="color: inherit; text-decoration: none;">
+  <h2>Configuring the application for the SDK</h2>
+</a>
+
+<a href="#ios" id="ios" style="color: inherit; text-decoration: none;">
+  <h2>iOS</h2>
+</a>
+
+<a href="#background-mode" id="background-mode" style="color: inherit; text-decoration: none;">
+  <h3>Background Mode</h3>
+</a>
+<p>To support background operation, VoIP-enabled apps must have <code>Background Mode</code> enabled in the <strong>Xcode Project</strong> &gt; <strong>Signing &amp; Capabilities</strong> pane. Select the checkbox for <strong>Voice over IP</strong>.</p>
+<p>To receive push notifications, the app also must have <strong>Push Notifications</strong> enabled in the <strong>Xcode Project</strong> &gt; <strong>Signing &amp; Capabilities</strong> pane.</p>
+<blockquote>
+<p>For more information about VoIP push notification and PushKit, see Apple&#39;s <a href="https://developer.apple.com/documentation/callkit">CallKit</a> and <a href="https://developer.apple.com/documentation/pushkit">PushKit</a></p>
+</blockquote>
+
+<a href="#configure-the-apps-infoplist-file" id="configure-the-apps-infoplist-file" style="color: inherit; text-decoration: none;">
+  <h3>Configure the app’s Info.plist File</h3>
+</a>
+<p>iOS requires that apps display authorization message to grant the app access to the camera and microphone.</p>
+<ul>
+<li>Microphone-enabled apps must include the <a href="https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW25">NSMicrophoneUsageDescription</a> key in the app’s <code>Info.plist</code> file.</li>
+<li>Camera-enabled apps must include the <a href="https://developer.apple.com/documentation/bundleresources/information_property_list/nscamerausagedescription">NSCameraUsageDescription</a> key in the app’s <code>Info.plist</code> file.</li>
+</ul>
+
+<a href="#android" id="android" style="color: inherit; text-decoration: none;">
+  <h2>Android</h2>
+</a>
+
+<a href="#optional-configure-proguard-to-shrink-code-and-resources" id="optional-configure-proguard-to-shrink-code-and-resources" style="color: inherit; text-decoration: none;">
+  <h3>(Optional) Configure ProGuard to shrink code and resources</h3>
+</a>
+<p>When you build your APK with <code>minifyEnabled true</code>, add the following line to the module&#39;s ProGuard rules file.</p>
+<pre><code><span class="hl-0"># </span><span class="hl-1">SendBird</span><span class="hl-0"> </span><span class="hl-1">Calls</span><span class="hl-0"> </span><span class="hl-2">SDK</span><br/><span class="hl-0">-</span><span class="hl-1">keep</span><span class="hl-0"> </span><span class="hl-3">class</span><span class="hl-0"> </span><span class="hl-4">com</span><span class="hl-0">.</span><span class="hl-4">sendbird</span><span class="hl-0">.</span><span class="hl-4">calls</span><span class="hl-0">.** { *; }</span><br/><span class="hl-0">-</span><span class="hl-1">keep</span><span class="hl-0"> </span><span class="hl-3">class</span><span class="hl-0"> </span><span class="hl-4">org</span><span class="hl-0">.</span><span class="hl-4">webrtc</span><span class="hl-0">.** { *; }</span><br/><span class="hl-0">-</span><span class="hl-1">dontwarn</span><span class="hl-0"> </span><span class="hl-1">org</span><span class="hl-0">.</span><span class="hl-1">webrtc</span><span class="hl-0">.**</span><br/><span class="hl-0">-</span><span class="hl-1">keepattributes</span><span class="hl-0"> </span><span class="hl-1">InnerClasses</span>
+</code></pre>
+<br />
+
+
+<a href="#getting-permissions" id="getting-permissions" style="color: inherit; text-decoration: none;">
+  <h2>Getting Permissions</h2>
+</a>
+<p>The SDK requires system permissions. The following permissions allow the SDK to access the microphone and use audio.</p>
+<ul>
+<li>Camera</li>
+<li>Microphone</li>
+<li>Bluetooth</li>
+</ul>
+<p>We recommend <a href="https://github.com/zoontek/react-native-permissions"><code>react-native-permissions</code></a> library</p>
+<pre><code class="language-ts"><br/><span class="hl-5">import</span><span class="hl-0"> </span><span class="hl-1">Permissions</span><span class="hl-0">, { </span><span class="hl-1">PERMISSIONS</span><span class="hl-0"> } </span><span class="hl-5">from</span><span class="hl-0"> </span><span class="hl-6">&#39;react-native-permissions&#39;</span><span class="hl-0">;</span><br/><br/><span class="hl-3">const</span><span class="hl-0"> </span><span class="hl-2">CALL_PERMISSIONS</span><span class="hl-0"> = </span><span class="hl-1">Platform</span><span class="hl-0">.</span><span class="hl-7">select</span><span class="hl-0">({</span><br/><span class="hl-0">  </span><span class="hl-1">android:</span><span class="hl-0"> [</span><span class="hl-2">PERMISSIONS</span><span class="hl-0">.</span><span class="hl-2">ANDROID</span><span class="hl-0">.</span><span class="hl-2">CAMERA</span><span class="hl-0">, </span><span class="hl-2">PERMISSIONS</span><span class="hl-0">.</span><span class="hl-2">ANDROID</span><span class="hl-0">.</span><span class="hl-2">RECORD_AUDIO</span><span class="hl-0">, </span><span class="hl-2">PERMISSIONS</span><span class="hl-0">.</span><span class="hl-2">ANDROID</span><span class="hl-0">.</span><span class="hl-2">BLUETOOTH_CONNECT</span><span class="hl-0">],</span><br/><span class="hl-0">  </span><span class="hl-1">ios:</span><span class="hl-0"> [</span><span class="hl-2">PERMISSIONS</span><span class="hl-0">.</span><span class="hl-2">IOS</span><span class="hl-0">.</span><span class="hl-2">CAMERA</span><span class="hl-0">, </span><span class="hl-2">PERMISSIONS</span><span class="hl-0">.</span><span class="hl-2">IOS</span><span class="hl-0">.</span><span class="hl-2">MICROPHONE</span><span class="hl-0">, </span><span class="hl-2">PERMISSIONS</span><span class="hl-0">.</span><span class="hl-2">IOS</span><span class="hl-0">.</span><span class="hl-2">BLUETOOTH_PERIPHERAL</span><span class="hl-0">],</span><br/><span class="hl-0">  </span><span class="hl-1">default:</span><span class="hl-0"> [],</span><br/><span class="hl-0">});</span><br/><br/><span class="hl-3">const</span><span class="hl-0"> </span><span class="hl-2">result</span><span class="hl-0"> = </span><span class="hl-5">await</span><span class="hl-0"> </span><span class="hl-1">Permissions</span><span class="hl-0">.</span><span class="hl-7">requestMultiple</span><span class="hl-0">(</span><span class="hl-2">CALL_PERMISSIONS</span><span class="hl-0">);</span>
 </code></pre>
 
-<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
-  <h2>Installation</h2>
+<a href="#making-your-first-call" id="making-your-first-call" style="color: inherit; text-decoration: none;">
+  <h2>Making your first call</h2>
 </a>
-<pre><code class="language-sh"><span class="hl-0">npm install @sendbird/calls-react-native</span>
+<p>Follow the step-by-step instructions below to authenticate and make your first call.</p>
+
+<a href="#step-1-initialize-the-sendbirdcall-instance-in-a-client-app" id="step-1-initialize-the-sendbirdcall-instance-in-a-client-app" style="color: inherit; text-decoration: none;">
+  <h3>Step 1: Initialize the SendbirdCall instance in a client app</h3>
+</a>
+<p>As shown below, the <code>SendbirdCalls</code> instance must be initiated when a client app is launched.
+Initialize the <code>SendbirdCalls</code> instance with the <code>APP_ID</code> of the Sendbird application you would like to use to make a call.</p>
+<pre><code class="language-ts"><span class="hl-1">SendbirdCalls</span><span class="hl-0">.</span><span class="hl-7">configure</span><span class="hl-0">(</span><span class="hl-2">APP_ID</span><span class="hl-0">);</span>
+</code></pre>
+<blockquote>
+<p>Note: If another initialization with another <code>APP_ID</code> takes place, all existing data in the app will be deleted and the <code>SendBirdCall</code> instance will be initialized with the new <code>APP_ID</code>.</p>
+</blockquote>
+
+<a href="#step-2-authenticate-a-user-and-register-a-push-token" id="step-2-authenticate-a-user-and-register-a-push-token" style="color: inherit; text-decoration: none;">
+  <h3>Step 2: Authenticate a user and register a push token</h3>
+</a>
+<p>In order to make and receive calls, authenticate the user with SendBird server with the <code>SendBirdCall.authenticate(with:)</code> method and <strong>register a VoIP push token</strong> to Sendbird. Register a VoIP push token by using the <code>SendBirdCall.registerVoIPPush(token:)</code> method after authentication has completed. VoIP Push Notification will also enable receiving calls even when the app is in the background or terminated state. A valid APNS certificate also needs to be registered on the <a href="https://dashboard.sendbird.com/auth/signin">Sendbird Dashboard</a>: <strong>Application</strong> &gt; <strong>Settings</strong> &gt; <strong>Notifications</strong> &gt; <strong>Add certificate</strong>. For more details on registering push tokens, refer to <a href="https://sendbird.com/docs/calls/v1/ios/guides/remote-notifications#2-remote-push-token-registration">Calls SDK for iOS doc</a>.</p>
+<pre><code class="language-swift"><span class="hl-8">// Authenticate</span><br/><span class="hl-3">let</span><span class="hl-0"> params = </span><span class="hl-7">AuthenticateParams</span><span class="hl-0">(</span><span class="hl-7">userId</span><span class="hl-0">: userId, </span><span class="hl-7">accessToken</span><span class="hl-0">: accessToken)</span><br/><span class="hl-0">SendBirdCall.</span><span class="hl-7">authenticate</span><span class="hl-0">(</span><span class="hl-7">with</span><span class="hl-0">: params) { user, error </span><span class="hl-5">in</span><br/><span class="hl-0">    </span><span class="hl-5">guard</span><span class="hl-0"> </span><span class="hl-3">let</span><span class="hl-0"> user = user, error == </span><span class="hl-3">nil</span><span class="hl-0"> </span><span class="hl-5">else</span><span class="hl-0"> {</span><br/><span class="hl-0">        </span><span class="hl-5">return</span><br/><span class="hl-0">    }</span><br/><span class="hl-0">    </span><span class="hl-8">// The user has been authenticated successfully</span><br/><span class="hl-0">}</span><br/><br/><span class="hl-8">// Update push token</span><br/><span class="hl-3">class</span><span class="hl-0"> </span><span class="hl-4">AppDelegate</span><span class="hl-0">: PKPushRegistryDelegate {</span><br/><span class="hl-0">    </span><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">voipRegistration</span><span class="hl-0">() {</span><br/><span class="hl-0">        </span><span class="hl-3">self</span><span class="hl-0">.</span><span class="hl-1">voipRegistry</span><span class="hl-0"> = </span><span class="hl-7">PKPushRegistry</span><span class="hl-0">(</span><span class="hl-7">queue</span><span class="hl-0">: DispatchQueue.</span><span class="hl-1">main</span><span class="hl-0">)</span><br/><span class="hl-0">        </span><span class="hl-3">self</span><span class="hl-0">.</span><span class="hl-1">voipRegistry</span><span class="hl-0">?.</span><span class="hl-1">delegate</span><span class="hl-0"> = </span><span class="hl-3">self</span><br/><span class="hl-0">        </span><span class="hl-3">self</span><span class="hl-0">.</span><span class="hl-1">voipRegistry</span><span class="hl-0">?.</span><span class="hl-1">desiredPushTypes</span><span class="hl-0"> = [.</span><span class="hl-1">voIP</span><span class="hl-0">]</span><br/><span class="hl-0">    }</span><br/><br/><span class="hl-0">    ...</span><br/><span class="hl-0">    </span><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">pushRegistry</span><span class="hl-0">(</span><span class="hl-7">_</span><span class="hl-0"> </span><span class="hl-1">registry</span><span class="hl-0">: PKPushRegistry, </span><span class="hl-7">didUpdate</span><span class="hl-0"> </span><span class="hl-1">pushCredentials</span><span class="hl-0">: PKPushCredentials, </span><span class="hl-7">for</span><span class="hl-0"> </span><span class="hl-1">type</span><span class="hl-0">: PKPushType) {</span><br/><span class="hl-0">        SendBirdCall.</span><span class="hl-7">registerVoIPPush</span><span class="hl-0">(</span><span class="hl-7">token</span><span class="hl-0">: pushCredentials.</span><span class="hl-1">token</span><span class="hl-0">, </span><span class="hl-7">unique</span><span class="hl-0">: </span><span class="hl-3">true</span><span class="hl-0">) { (error) </span><span class="hl-5">in</span><br/><span class="hl-0">            </span><span class="hl-5">guard</span><span class="hl-0"> </span><span class="hl-3">let</span><span class="hl-0"> error = error </span><span class="hl-5">else</span><span class="hl-0"> {</span><br/><span class="hl-0">                </span><span class="hl-5">return</span><br/><span class="hl-0">            }</span><br/><span class="hl-0">            </span><span class="hl-8">// The Push Token has been registered successfully</span><br/><span class="hl-0">        }</span><br/><span class="hl-0">    }</span><br/><span class="hl-0">    ...</span><br/><span class="hl-0">}</span>
 </code></pre>
 
-<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
-  <h2>Usage</h2>
+<a href="#step-3-add-an-event-handler" id="step-3-add-an-event-handler" style="color: inherit; text-decoration: none;">
+  <h3>Step 3: Add an event handler</h3>
 </a>
-<pre><code class="language-js"><span class="hl-3">import</span><span class="hl-0"> { </span><span class="hl-1">multiply</span><span class="hl-0"> } </span><span class="hl-3">from</span><span class="hl-0"> </span><span class="hl-4">&quot;@sendbird/calls-react-native&quot;</span><span class="hl-0">;</span><br/><br/><span class="hl-5">// ...</span><br/><br/><span class="hl-6">const</span><span class="hl-0"> </span><span class="hl-7">result</span><span class="hl-0"> = </span><span class="hl-3">await</span><span class="hl-0"> </span><span class="hl-8">multiply</span><span class="hl-0">(</span><span class="hl-9">3</span><span class="hl-0">, </span><span class="hl-9">7</span><span class="hl-0">);</span>
+<p>The SDK provides two types of event handlers for various events that client apps may respond to: <code>SendBirdCallDelegate</code> and <code>DirectCallDelegate.</code></p>
+
+<a href="#--sendbirdcalldelegate" id="--sendbirdcalldelegate" style="color: inherit; text-decoration: none;">
+  <h4>- SendBirdCallDelegate</h4>
+</a>
+<p>Register a device-specific <code>SendBirdCallDelegate</code> event handler using the <code>SendBirdCall.addDelegate(:)</code> method. Prior to adding <code>SendBirdCallDelegate</code>, users will be unable to handle the <code>didStartRinging(:)</code> delegate event. It is recommended to add the event handler during initialization because it is a prerequisite for detecting <code>didStartRinging(:)</code> delegate event. <code>SendBirdCallDelegate</code> is removed upon app termination. The code below shows the way device-wide events such as incoming calls are handled once the <code>SendBirdCallDelegate</code> is added.</p>
+<pre><code class="language-swift"><span class="hl-0">SendBirdCall.</span><span class="hl-7">addDelegate</span><span class="hl-0">(</span><span class="hl-3">self</span><span class="hl-0">, </span><span class="hl-7">identifier</span><span class="hl-0">: UNIQUE_HANDLER_ID)</span><br/><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">didStartRinging</span><span class="hl-0">(</span><span class="hl-7">_</span><span class="hl-0"> </span><span class="hl-1">call</span><span class="hl-0">: DirectCall) {</span><br/><span class="hl-0">    </span><span class="hl-8">// Process incoming call</span><br/><span class="hl-0">}</span>
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Invoked when</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>didStartRinging()</td>
+<td>Incoming calls are received in the callee’s device.</td>
+</tr>
+</tbody></table>
+
+<a href="#--directcalldelegate" id="--directcalldelegate" style="color: inherit; text-decoration: none;">
+  <h4>- DirectCallDelegate</h4>
+</a>
+<p>Register a call-specific <code>DirectCallDelegate</code> event delegate using <code>call.delegate</code>. Responding to call-specific events, such as establishing a successful call connection, is then managed as shown below.</p>
+<pre><code class="language-swift"><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">didEstablish</span><span class="hl-0">(</span><span class="hl-7">_</span><span class="hl-0"> </span><span class="hl-1">call</span><span class="hl-0">: DirectCall)</span><br/><br/><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">didConnect</span><span class="hl-0">(</span><span class="hl-7">_</span><span class="hl-0"> </span><span class="hl-1">call</span><span class="hl-0">: DirectCall)</span><br/><br/><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">didEnd</span><span class="hl-0">(</span><span class="hl-7">_</span><span class="hl-0"> </span><span class="hl-1">call</span><span class="hl-0">: DirectCall)</span><br/><br/><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">didRemoteAudioSettingsChange</span><span class="hl-0">(</span><span class="hl-7">_</span><span class="hl-0"> </span><span class="hl-1">call</span><span class="hl-0">: DirectCall)</span><br/><br/><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">didRemoteVideoSettingsChange</span><span class="hl-0">(</span><span class="hl-7">_</span><span class="hl-0"> </span><span class="hl-1">call</span><span class="hl-0">: DirectCall)</span><br/><br/><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">didUpdateCustomItems</span><span class="hl-0">(</span><span class="hl-7">call</span><span class="hl-0">: DirectCall, </span><span class="hl-7">updatedKeys</span><span class="hl-0">: [</span><span class="hl-4">String</span><span class="hl-0">])</span><br/><br/><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">didDeleteCustomItems</span><span class="hl-0">(</span><span class="hl-7">call</span><span class="hl-0">: DirectCall, </span><span class="hl-7">deletedKeys</span><span class="hl-0">: [</span><span class="hl-4">String</span><span class="hl-0">])</span><br/><br/><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">didStartReconnecting</span><span class="hl-0">(</span><span class="hl-7">_</span><span class="hl-0"> </span><span class="hl-1">call</span><span class="hl-0">: DirectCall)</span><br/><br/><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">didReconnect</span><span class="hl-0">(</span><span class="hl-7">_</span><span class="hl-0"> </span><span class="hl-1">call</span><span class="hl-0">: DirectCall)</span><br/><br/><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">didAudioDeviceChange</span><span class="hl-0">(</span><span class="hl-7">_</span><span class="hl-0"> </span><span class="hl-1">call</span><span class="hl-0">: DirectCall, </span><span class="hl-7">session</span><span class="hl-0">: AVAudioSession, </span><span class="hl-7">previousRoute</span><span class="hl-0">: AVAudioSessionRouteDescription, </span><span class="hl-7">reason</span><span class="hl-0">: AVAudioSession.RouteChangeReason)</span>
+</code></pre>
+<br/>
+
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Invocation criteria</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>didEstablish()</td>
+<td>The callee accepted the call using the method <code>directCall.accept()</code>. However, neither the caller or callee’s devices are connected to media devices yet.</td>
+</tr>
+<tr>
+<td>didConnect()</td>
+<td>A connection is established between the caller and callee’s media devices such as microphones and speakers. The voice or video call can begin.</td>
+</tr>
+<tr>
+<td>didEnd()</td>
+<td>The call is ended on either the caller or the callee’s devices. When the <code>directCall.end()</code> method is used from either party, a call ends. directCall.end event listener is also invoked if the call is ended for other reasons. Refer to Call results in Appendix for all possible reasons for call termination.</td>
+</tr>
+<tr>
+<td>didRemoteAudioSettingsChange()</td>
+<td>The other party changed their audio settings.</td>
+</tr>
+<tr>
+<td>didRemoteVideoSettingsChange()</td>
+<td>The other party changed their video settings.</td>
+</tr>
+<tr>
+<td>didUpdateCustomItems()</td>
+<td>One or more of <code>DirectCall</code>’s custom items (metadata) have been updated.</td>
+</tr>
+<tr>
+<td>didDeleteCustomItems()</td>
+<td>One or more of <code>DirectCall</code>’s custom items (metadata) have been deleted.</td>
+</tr>
+<tr>
+<td>didStartReconnecting()</td>
+<td><code>DirectCall</code> started attempting to reconnect to the other party after a media connection disruption.</td>
+</tr>
+<tr>
+<td>didReconnect()</td>
+<td>The disrupted media connection reestablished.</td>
+</tr>
+<tr>
+<td>didAudioDeviceChange()</td>
+<td>The audio device used in the call has changed.</td>
+</tr>
+</tbody></table>
+
+<a href="#step-4-make-a-call" id="step-4-make-a-call" style="color: inherit; text-decoration: none;">
+  <h3>Step 4: Make a call</h3>
+</a>
+<p>First, prepare the <code>DialParams</code> call parameter object to initiate a call. The parameter contains the initial call configuration, such as callee’s user id, audio or video capabilities, and <code>CallOptions</code> object. Once prepared, the <code>DialParams</code> object is then passed into the <code>SendBirdCall.dial()</code> method to start the call.</p>
+<pre><code class="language-swift"><span class="hl-3">let</span><span class="hl-0"> dialParams = </span><span class="hl-7">DialParams</span><span class="hl-0">(</span><span class="hl-7">calleeId</span><span class="hl-0">: CALLEE_ID, </span><span class="hl-7">isVideoCall</span><span class="hl-0">: </span><span class="hl-3">false</span><span class="hl-0">, </span><span class="hl-7">callOptions</span><span class="hl-0">: </span><span class="hl-7">CallOptions</span><span class="hl-0">(), </span><span class="hl-7">customItems</span><span class="hl-0">: [:])</span><br/><br/><span class="hl-3">let</span><span class="hl-0"> directCall = SendBirdCall.</span><span class="hl-7">dial</span><span class="hl-0">(</span><span class="hl-7">with</span><span class="hl-0">: dialParams) { directCall, error </span><span class="hl-5">in</span><br/><span class="hl-0">    </span><span class="hl-8">//</span><br/><span class="hl-0">}</span><br/><br/><span class="hl-0">directCall.</span><span class="hl-1">delegate</span><span class="hl-0"> = </span><span class="hl-3">self</span>
 </code></pre>
 
-<a href="#contributing" id="contributing" style="color: inherit; text-decoration: none;">
-  <h2>Contributing</h2>
+<a href="#step-5-receive-a-call" id="step-5-receive-a-call" style="color: inherit; text-decoration: none;">
+  <h3>Step 5: Receive a call</h3>
 </a>
-<p>See the <a href="CONTRIBUTING.md">contributing guide</a> to learn how to contribute to the repository and the development workflow.</p>
+<p>Register <code>SendBirdCallDelegate</code> first to receive incoming calls. Accept or decline incoming calls using the <code>directCall.accept()</code> or the <code>directCall.end()</code> methods. If the call is accepted, a media session will automatically be established by the SDK.</p>
+<p>Before accepting any calls, the <code>directCall.delegate</code> must be registered upfront in the <code>SendBirdCallDelegate</code>. Once registered, <code>DirectCallDelegate</code> enables reacting to in-call events through delegate methods.</p>
+<pre><code class="language-swift"><span class="hl-3">class</span><span class="hl-0"> </span><span class="hl-4">MyClass</span><span class="hl-0">: SendBirdCallDelegate {</span><br/><span class="hl-0">    </span><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">didStartRinging</span><span class="hl-0">(</span><span class="hl-7">_</span><span class="hl-0"> </span><span class="hl-1">call</span><span class="hl-0">: DirectCall) {</span><br/><span class="hl-0">        call.</span><span class="hl-1">delegate</span><span class="hl-0"> = </span><span class="hl-3">self</span><br/><span class="hl-0">    }</span><br/><span class="hl-0">}</span>
+</code></pre>
+<br />
 
-<a href="#license" id="license" style="color: inherit; text-decoration: none;">
-  <h2>License</h2>
+
+<a href="#implementation-guide" id="implementation-guide" style="color: inherit; text-decoration: none;">
+  <h2>Implementation guide</h2>
 </a>
-<p>MIT</p>
-</div></div><div class="col-4 col-menu menu-sticky-wrap menu-highlight"><nav class="tsd-navigation primary"><ul><li class="current"><a href="modules.html">Exports</a></li></ul></nav><nav class="tsd-navigation secondary menu-sticky"><ul><li class="tsd-kind-enum"><a href="enums/AVAudioSessionPort.html" class="tsd-kind-icon">AVAudio<wbr/>Session<wbr/>Port</a></li><li class="tsd-kind-enum"><a href="enums/AudioDeviceType.html" class="tsd-kind-icon">Audio<wbr/>Device<wbr/>Type</a></li><li class="tsd-kind-enum"><a href="enums/CallsEvent.html" class="tsd-kind-icon">Calls<wbr/>Event</a></li><li class="tsd-kind-enum"><a href="enums/DefaultEventType.html" class="tsd-kind-icon">Default<wbr/>Event<wbr/>Type</a></li><li class="tsd-kind-enum"><a href="enums/DirectCallEndResult.html" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>End<wbr/>Result</a></li><li class="tsd-kind-enum"><a href="enums/DirectCallEventType.html" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>Event<wbr/>Type</a></li><li class="tsd-kind-enum"><a href="enums/DirectCallUserRole.html" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>User<wbr/>Role</a></li><li class="tsd-kind-enum"><a href="enums/GroupCallEventType.html" class="tsd-kind-icon">Group<wbr/>Call<wbr/>Event<wbr/>Type</a></li><li class="tsd-kind-enum"><a href="enums/NativeQueryType.html" class="tsd-kind-icon">Native<wbr/>Query<wbr/>Type</a></li><li class="tsd-kind-enum"><a href="enums/ParticipantState.html" class="tsd-kind-icon">Participant<wbr/>State</a></li><li class="tsd-kind-enum"><a href="enums/RecordingStatus.html" class="tsd-kind-icon">Recording<wbr/>Status</a></li><li class="tsd-kind-enum"><a href="enums/RecordingType.html" class="tsd-kind-icon">Recording<wbr/>Type</a></li><li class="tsd-kind-enum"><a href="enums/RoomState.html" class="tsd-kind-icon">Room<wbr/>State</a></li><li class="tsd-kind-enum"><a href="enums/RoomType.html" class="tsd-kind-icon">Room<wbr/>Type</a></li><li class="tsd-kind-enum"><a href="enums/RouteChangeReason.html" class="tsd-kind-icon">Route<wbr/>Change<wbr/>Reason</a></li><li class="tsd-kind-enum"><a href="enums/VideoDevicePosition.html" class="tsd-kind-icon">Video<wbr/>Device<wbr/>Position</a></li><li class="tsd-kind-class"><a href="classes/DirectCall.html" class="tsd-kind-icon">Direct<wbr/>Call</a></li><li class="tsd-kind-class"><a href="classes/DirectCallLogListQuery.html" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>Log<wbr/>List<wbr/>Query</a></li><li class="tsd-kind-class"><a href="classes/DirectCallVideoView.html" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>Video<wbr/>View</a></li><li class="tsd-kind-class"><a href="classes/InternalSendbirdCallsModule.html" class="tsd-kind-icon">Internal<wbr/>Sendbird<wbr/>Calls<wbr/>Module</a></li><li class="tsd-kind-class"><a href="classes/Room.html" class="tsd-kind-icon">Room</a></li><li class="tsd-kind-class"><a href="classes/RoomListQuery.html" class="tsd-kind-icon">Room<wbr/>List<wbr/>Query</a></li><li class="tsd-kind-interface"><a href="interfaces/DirectCallListener.html" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>Listener</a></li><li class="tsd-kind-interface"><a href="interfaces/DirectCallLog.html" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>Log</a></li><li class="tsd-kind-interface"><a href="interfaces/DirectCallMethods.html" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>Methods</a></li><li class="tsd-kind-interface"><a href="interfaces/DirectCallProperties.html" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>Properties</a></li><li class="tsd-kind-interface"><a href="interfaces/DirectCallUser.html" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>User</a></li><li class="tsd-kind-interface"><a href="interfaces/DirectCallVideoViewProps.html" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>Video<wbr/>View<wbr/>Props</a></li><li class="tsd-kind-interface"><a href="interfaces/GroupCallMethods.html" class="tsd-kind-icon">Group<wbr/>Call<wbr/>Methods</a></li><li class="tsd-kind-interface"><a href="interfaces/NativeCommonModule.html" class="tsd-kind-icon">Native<wbr/>Common<wbr/>Module</a></li><li class="tsd-kind-interface"><a href="interfaces/NativeDirectCallModule.html" class="tsd-kind-icon">Native<wbr/>Direct<wbr/>Call<wbr/>Module</a></li><li class="tsd-kind-interface"><a href="interfaces/NativeGroupCallModule.html" class="tsd-kind-icon">Native<wbr/>Group<wbr/>Call<wbr/>Module</a></li><li class="tsd-kind-interface"><a href="interfaces/NativeQueries.html" class="tsd-kind-icon">Native<wbr/>Queries</a></li><li class="tsd-kind-interface"><a href="interfaces/Participant.html" class="tsd-kind-icon">Participant</a></li><li class="tsd-kind-interface"><a href="interfaces/Query.html" class="tsd-kind-icon">Query</a></li><li class="tsd-kind-interface"><a href="interfaces/RoomListener.html" class="tsd-kind-icon">Room<wbr/>Listener</a></li><li class="tsd-kind-interface"><a href="interfaces/RoomProperties.html" class="tsd-kind-icon">Room<wbr/>Properties</a></li><li class="tsd-kind-interface"><a href="interfaces/SendbirdCallListener.html" class="tsd-kind-icon">Sendbird<wbr/>Call<wbr/>Listener</a></li><li class="tsd-kind-interface"><a href="interfaces/SendbirdCallsJavascriptSpec.html" class="tsd-kind-icon">Sendbird<wbr/>Calls<wbr/>Javascript<wbr/>Spec</a></li><li class="tsd-kind-interface"><a href="interfaces/SendbirdCallsNativeSpec.html" class="tsd-kind-icon">Sendbird<wbr/>Calls<wbr/>Native<wbr/>Spec</a></li><li class="tsd-kind-interface"><a href="interfaces/User.html" class="tsd-kind-icon">User</a></li><li class="tsd-kind-interface"><a href="interfaces/VideoDevice.html" class="tsd-kind-icon">Video<wbr/>Device</a></li><li class="tsd-kind-type-alias"><a href="modules.html#AudioDevice" class="tsd-kind-icon">Audio<wbr/>Device</a></li><li class="tsd-kind-type-alias"><a href="modules.html#AudioDeviceChangedInfo" class="tsd-kind-icon">Audio<wbr/>Device<wbr/>Changed<wbr/>Info</a></li><li class="tsd-kind-type-alias"><a href="modules.html#AudioDeviceRoute" class="tsd-kind-icon">Audio<wbr/>Device<wbr/>Route</a></li><li class="tsd-kind-type-alias"><a href="modules.html#CallOptions" class="tsd-kind-icon">Call<wbr/>Options</a></li><li class="tsd-kind-type-alias"><a href="modules.html#CustomItemUpdateResult" class="tsd-kind-icon">Custom<wbr/>Item<wbr/>Update<wbr/>Result</a></li><li class="tsd-kind-type-alias"><a href="modules.html#DirectCallLogQueryParams" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>Log<wbr/>Query<wbr/>Params</a></li><li class="tsd-kind-type-alias"><a href="modules.html#EnterParams" class="tsd-kind-icon">Enter<wbr/>Params</a></li><li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#NativeQueryCreator" class="tsd-kind-icon">Native<wbr/>Query<wbr/>Creator</a></li><li class="tsd-kind-type-alias"><a href="modules.html#NativeQueryKey" class="tsd-kind-icon">Native<wbr/>Query<wbr/>Key</a></li><li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#NativeQueryResult" class="tsd-kind-icon">Native<wbr/>Query<wbr/>Result</a></li><li class="tsd-kind-type-alias"><a href="modules.html#Port" class="tsd-kind-icon">Port</a></li><li class="tsd-kind-type-alias"><a href="modules.html#RecordingOptions" class="tsd-kind-icon">Recording<wbr/>Options</a></li><li class="tsd-kind-type-alias"><a href="modules.html#RoomListQueryParams" class="tsd-kind-icon">Room<wbr/>List<wbr/>Query<wbr/>Params</a></li><li class="tsd-kind-variable"><a href="modules.html#Logger" class="tsd-kind-icon">Logger</a></li><li class="tsd-kind-variable"><a href="modules.html#SendbirdCalls" class="tsd-kind-icon">Sendbird<wbr/>Calls</a></li><li class="tsd-kind-function"><a href="modules.html#getLogger" class="tsd-kind-icon">get<wbr/>Logger</a></li></ul></nav></div></div></div><footer class="with-border-bottom"><div class="container"><h2>Legend</h2><div class="tsd-legend-group"><ul class="tsd-legend"><li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li><li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li><li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li><li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li><li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li></ul></div><h2>Settings</h2><p>Theme <select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></p></div></footer><div class="container tsd-generator"><p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div><div class="overlay"></div><script src="assets/main.js"></script></body></html>
+
+<a href="#make-a-call" id="make-a-call" style="color: inherit; text-decoration: none;">
+  <h3>Make a call</h3>
+</a>
+<p>First, prepare the <code>DialParams</code> call parameter object to initiate a call. The parameter contains the initial call configuration, such as callee’s user id, audio or video capabilities, and <code>CallOptions</code> object. Once prepared, the <code>DialParams</code> object is then passed into the <code>SendBirdCall.dial()</code> method to start the call.</p>
+<pre><code class="language-swift"><span class="hl-3">let</span><span class="hl-0"> dialParams = </span><span class="hl-7">DialParams</span><span class="hl-0">(</span><span class="hl-7">calleeId</span><span class="hl-0">: CALLEE_ID, </span><span class="hl-7">isVideoCall</span><span class="hl-0">: </span><span class="hl-3">false</span><span class="hl-0">, </span><span class="hl-7">callOptions</span><span class="hl-0">: </span><span class="hl-7">CallOptions</span><span class="hl-0">(), </span><span class="hl-7">customItems</span><span class="hl-0">: [:])</span><br/><br/><span class="hl-3">let</span><span class="hl-0"> directCall = SendBirdCall.</span><span class="hl-7">dial</span><span class="hl-0">(</span><span class="hl-7">with</span><span class="hl-0">: dialParams) { directCall, error </span><span class="hl-5">in</span><br/><span class="hl-0">    </span><span class="hl-8">//</span><br/><span class="hl-0">}</span><br/><br/><span class="hl-0">directCall.</span><span class="hl-1">delegate</span><span class="hl-0"> = </span><span class="hl-3">self</span>
+</code></pre>
+
+<a href="#receive-a-call" id="receive-a-call" style="color: inherit; text-decoration: none;">
+  <h3>Receive a call</h3>
+</a>
+<p>Register <code>SendBirdCallDelegate</code> first to receive incoming calls. Accept or decline incoming calls using the <code>directCall.accept()</code> or the <code>directCall.end()</code> methods. If the call is accepted, a media session will automatically be established by the SDK.</p>
+<p>Before accepting any calls, the <code>directCall.delegate</code> must be registered upfront in the <code>SendBirdCallDelegate</code>. Once registered, <code>DirectCallDelegate</code> enables reacting to in-call events through delegate methods.</p>
+<pre><code class="language-swift"><span class="hl-3">class</span><span class="hl-0"> </span><span class="hl-4">MyClass</span><span class="hl-0">: SendBirdCallDelegate {</span><br/><span class="hl-0">    </span><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">didStartRinging</span><span class="hl-0">(</span><span class="hl-7">_</span><span class="hl-0"> </span><span class="hl-1">call</span><span class="hl-0">: DirectCall) {</span><br/><span class="hl-0">        call.</span><span class="hl-1">delegate</span><span class="hl-0"> = </span><span class="hl-3">self</span><br/><span class="hl-0">    }</span><br/><span class="hl-0">}</span>
+</code></pre>
+<p>When the app is in the foreground, incoming call events are received through the SDK’s persistent internal server connection. However, when the app is terminated or in the background, incoming calls are received through PushKit. PushKit messages received by the <code>SendBirdCall</code> must be delivered to the <code>SendBirdCall.pushRegistry(_:didReceiveIncomingPushWith:for:)</code> method.</p>
+<pre><code class="language-swift"><span class="hl-3">class</span><span class="hl-0"> </span><span class="hl-4">MyClass</span><span class="hl-0">: PKPushRegistryDelegate {</span><br/><span class="hl-0">    </span><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">pushRegistry</span><span class="hl-0">(</span><span class="hl-7">_</span><span class="hl-0"> </span><span class="hl-1">registry</span><span class="hl-0">: PKPushRegistry, </span><span class="hl-7">didReceiveIncomingPushWith</span><span class="hl-0"> </span><span class="hl-1">payload</span><span class="hl-0">: PKPushPayload, </span><span class="hl-7">for</span><span class="hl-0"> </span><span class="hl-1">type</span><span class="hl-0">: PKPushType, </span><span class="hl-7">completion</span><span class="hl-0">: </span><span class="hl-3">@escaping</span><span class="hl-0"> () -&gt; </span><span class="hl-4">Void</span><span class="hl-0">) {</span><br/><span class="hl-0">        SendBirdCall.</span><span class="hl-7">pushRegistry</span><span class="hl-0">(registry, </span><span class="hl-7">didReceiveIncomingPushWith</span><span class="hl-0">: payload, </span><span class="hl-7">for</span><span class="hl-0">: type) { uuid </span><span class="hl-5">in</span><br/><br/><span class="hl-0">            </span><span class="hl-8">// IMPORTANT: Incoming calls MUST be reported when receiving a pushkit push.</span><br/><span class="hl-0">            </span><span class="hl-3">let</span><span class="hl-0"> provider = </span><span class="hl-7">CXProvider</span><span class="hl-0">(</span><span class="hl-7">configuration</span><span class="hl-0">: CXProviderConfiguration)</span><br/><span class="hl-0">            </span><span class="hl-3">let</span><span class="hl-0"> update = </span><span class="hl-7">CXCallUpdate</span><span class="hl-0">()</span><br/><span class="hl-0">            update.</span><span class="hl-1">remoteHandle</span><span class="hl-0"> = </span><span class="hl-7">CXHandle</span><span class="hl-0">(</span><span class="hl-7">type</span><span class="hl-0">: .</span><span class="hl-1">generic</span><span class="hl-0">, </span><span class="hl-7">value</span><span class="hl-0">: HANDLE_VALUE)</span><br/><span class="hl-0">            provider.</span><span class="hl-7">reportNewIncomingCall</span><span class="hl-0">(</span><span class="hl-7">with</span><span class="hl-0">: uuid, </span><span class="hl-7">update</span><span class="hl-0">: update) { error </span><span class="hl-5">in</span><br/><span class="hl-0">                </span><span class="hl-7">completion</span><span class="hl-0">()</span><br/><span class="hl-0">            })</span><br/><span class="hl-0">        }</span><br/><span class="hl-0">    }</span><br/><span class="hl-0">}</span>
+</code></pre>
+
+<a href="#handle-a-current-call" id="handle-a-current-call" style="color: inherit; text-decoration: none;">
+  <h3>Handle a current call</h3>
+</a>
+<p>During an ongoing call, a caller may mute or unmute their microphone by using the <code>directCall.muteMicrophone()</code> or <code>directCall.unmuteMicrophone()</code> methods.
+<code>DirectCallDelegate.didRemoteAudioSettingsChange()</code> delegate method will notify any changes that a remote user makes on audio settings to the local user.</p>
+<p>The caller may start or stop video using the <code>directCall.startVideo()</code> or <code>directCall.stopVideo()</code> methods. If the remote user changes the video settings, the local user will be notified through the <code>DirectCallDelegate.didRemoteVideoSettingsChange()</code> listener. The current video device can be changed by using the <code>directCall.selectVideoDevice(_:completionHandler)</code>.</p>
+<pre><code class="language-swift"><span class="hl-8">// mute my microphone</span><br/><span class="hl-0">call.</span><span class="hl-7">muteMicrophone</span><span class="hl-0">();</span><br/><br/><span class="hl-8">// unmute my microphone</span><br/><span class="hl-0">call.</span><span class="hl-7">unmuteMicrophone</span><span class="hl-0">();</span><br/><br/><span class="hl-8">// starts to show video</span><br/><span class="hl-0">directCall.</span><span class="hl-7">startVideo</span><span class="hl-0">();</span><br/><br/><span class="hl-8">// stops showing video</span><br/><span class="hl-0">directCall.</span><span class="hl-7">stopVideo</span><span class="hl-0">();</span><br/><br/><span class="hl-8">// changes current video device</span><br/><span class="hl-0">directCall.</span><span class="hl-7">selectVideoDevice</span><span class="hl-0">(videoDevice) { error </span><span class="hl-5">in</span><br/><span class="hl-0">    </span><span class="hl-8">// handle error</span><br/><span class="hl-0">}</span><br/><br/><span class="hl-8">// receives the event</span><br/><span class="hl-3">class</span><span class="hl-0"> </span><span class="hl-4">MyClass</span><span class="hl-0">: DirectCallDelegate {</span><br/><span class="hl-0">    ...</span><br/><span class="hl-0">    </span><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">didRemoteAudioSettingsChange</span><span class="hl-0">(</span><span class="hl-7">_</span><span class="hl-0"> </span><span class="hl-1">call</span><span class="hl-0">: DirectCall) {</span><br/><span class="hl-0">        </span><span class="hl-5">if</span><span class="hl-0"> call.</span><span class="hl-1">isRemoteAudioEnabled</span><span class="hl-0"> {</span><br/><span class="hl-0">            </span><span class="hl-8">// The peer has been unmuted.</span><br/><span class="hl-0">        } </span><span class="hl-5">else</span><span class="hl-0"> {</span><br/><span class="hl-0">            </span><span class="hl-8">// The peer has been muted.</span><br/><span class="hl-0">        }</span><br/><span class="hl-0">    }</span><br/><br/><span class="hl-0">    </span><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">didRemoteVideoSettingsChange</span><span class="hl-0">(</span><span class="hl-7">_</span><span class="hl-0"> </span><span class="hl-1">call</span><span class="hl-0">: DirectCall) {</span><br/><span class="hl-0">        </span><span class="hl-5">if</span><span class="hl-0"> call.</span><span class="hl-1">isRemoteVideoEnabled</span><span class="hl-0"> {</span><br/><span class="hl-0">            </span><span class="hl-8">// The peer has been unmuted.</span><br/><span class="hl-0">        } </span><span class="hl-5">else</span><span class="hl-0"> {</span><br/><span class="hl-0">            </span><span class="hl-8">// The peer has been muted.</span><br/><span class="hl-0">        }</span><br/><span class="hl-0">    }</span><br/><span class="hl-0">    ...</span><br/><span class="hl-0">}</span>
+</code></pre>
+
+<a href="#end-a-call" id="end-a-call" style="color: inherit; text-decoration: none;">
+  <h3>End a call</h3>
+</a>
+<p>A caller may end a call using the <code>directCall.end()</code> method. The event will then be processed through the <code>DirectCallDelegate.didEnd(call:)</code> delegate. This delegate is also triggered if the remote user ends the call.</p>
+<pre><code class="language-swift"><span class="hl-8">// End a call</span><br/><span class="hl-0">call.</span><span class="hl-1">end</span><span class="hl-0">();</span><br/><br/><span class="hl-8">// receives the event</span><br/><span class="hl-3">class</span><span class="hl-0"> </span><span class="hl-4">MyClass</span><span class="hl-0">: DirectCallDelegate {</span><br/><span class="hl-0">    ...</span><br/><span class="hl-0">    </span><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">didEnd</span><span class="hl-0">(</span><span class="hl-7">_</span><span class="hl-0"> </span><span class="hl-1">call</span><span class="hl-0">: DirectCall) {</span><br/><span class="hl-0">        </span><span class="hl-8">// Consider releasing or destroying call-related view from here.</span><br/><span class="hl-0">    }</span><br/><span class="hl-0">    ...</span><br/><span class="hl-0">}</span>
+</code></pre>
+
+<a href="#deauthenticate-a-user-and-unregister-a-voip-push-token" id="deauthenticate-a-user-and-unregister-a-voip-push-token" style="color: inherit; text-decoration: none;">
+  <h3>Deauthenticate a user and unregister a VoIP push token</h3>
+</a>
+
+<a href="#--deauthenticate-a-user" id="--deauthenticate-a-user" style="color: inherit; text-decoration: none;">
+  <h4>- Deauthenticate a user</h4>
+</a>
+<p>When users log out of their call client apps, they must be deauthenticated with <code>SendBirdCall.deauthenticate(voipPushToken:completionHandler:)</code> method. Failing to include the VoIP push token will result in the logged-out user continually receiving incoming calls despite the app being closed.</p>
+<pre><code class="language-swift"><span class="hl-3">class</span><span class="hl-0"> </span><span class="hl-4">MyClass</span><span class="hl-0"> {</span><br/><span class="hl-0">    </span><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">signOut</span><span class="hl-0">() {</span><br/><span class="hl-0">        SendBirdCall.</span><span class="hl-7">deauthenticate</span><span class="hl-0">(</span><span class="hl-7">voipPushToken</span><span class="hl-0">: myVoIPPushToken) { error </span><span class="hl-5">in</span><br/><span class="hl-0">            </span><span class="hl-5">guard</span><span class="hl-0"> error == </span><span class="hl-3">nil</span><span class="hl-0"> </span><span class="hl-5">else</span><span class="hl-0"> {</span><br/><span class="hl-0">                </span><span class="hl-8">// handle error</span><br/><span class="hl-0">                </span><span class="hl-5">return</span><br/><span class="hl-0">            }</span><br/><br/><span class="hl-0">            </span><span class="hl-8">// ...</span><br/><span class="hl-0">        }</span><br/><span class="hl-0">    }</span><br/><span class="hl-0">}</span>
+</code></pre>
+
+<a href="#--unregister-one-or-all-voip-push-tokens" id="--unregister-one-or-all-voip-push-tokens" style="color: inherit; text-decoration: none;">
+  <h4>- Unregister one or all VoIP push tokens</h4>
+</a>
+<p>Users will no longer receive call notifications after the VoIP push token has been unregistered through the <code>unregisterVoIPPush(token:completionHandler:)</code> method. To stop sending notifications to all of the user’s logged in devices, call the <code>unregisterAllVoIPPushTokens(completionHandler:)</code> method.</p>
+<pre><code class="language-swift"><span class="hl-3">class</span><span class="hl-0"> </span><span class="hl-4">MyClass</span><span class="hl-0"> {</span><br/><span class="hl-0">    </span><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">removeVoIPPushToken</span><span class="hl-0">() {</span><br/><span class="hl-0">        SendBirdCall.</span><span class="hl-7">unregisterVoIPPush</span><span class="hl-0">(</span><span class="hl-7">token</span><span class="hl-0">: myVoIPPushToken) { error </span><span class="hl-5">in</span><br/><span class="hl-0">        </span><span class="hl-5">guard</span><span class="hl-0"> error == </span><span class="hl-3">nil</span><span class="hl-0"> </span><span class="hl-5">else</span><span class="hl-0"> { </span><span class="hl-5">return</span><span class="hl-0"> }</span><br/><span class="hl-0">        </span><span class="hl-8">// Unregistered successfully</span><br/><span class="hl-0">    }</span><br/><br/><span class="hl-0">    </span><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">removeAllOfVoIPPushTokens</span><span class="hl-0">() {</span><br/><span class="hl-0">        </span><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">unregisterAllVoIPPushTokens</span><span class="hl-0">(</span><span class="hl-7">completionHandler</span><span class="hl-0">: ErrorHandler?) {</span><br/><span class="hl-0">            </span><span class="hl-5">guard</span><span class="hl-0"> error == </span><span class="hl-3">nil</span><span class="hl-0"> </span><span class="hl-5">else</span><span class="hl-0"> { </span><span class="hl-5">return</span><span class="hl-0"> }</span><br/><span class="hl-0">            </span><span class="hl-8">// Unregistered all push tokens successfully</span><br/><span class="hl-0">        }</span><br/><span class="hl-0">    }</span><br/><span class="hl-0">}</span>
+</code></pre>
+
+<a href="#mirror-a-sendbirdvideoview" id="mirror-a-sendbirdvideoview" style="color: inherit; text-decoration: none;">
+  <h3>Mirror a SendBirdVideoView</h3>
+</a>
+<p>You can set the current user’s local video view as mirrored or reversed when the camera is facing the user. In <code>UIView</code>, this can be easily done using the <code>CGAffineTransform(scaleX:y:)</code> method as shown below:</p>
+<pre><code class="language-swift"><span class="hl-8">// localSBView is SendBirdVideoView object</span><br/><span class="hl-0">localSBView.</span><span class="hl-1">transform</span><span class="hl-0"> = </span><span class="hl-7">CGAffineTransform</span><span class="hl-0">(</span><span class="hl-7">scaleX</span><span class="hl-0">: </span><span class="hl-9">-1.0</span><span class="hl-0">, </span><span class="hl-7">y</span><span class="hl-0">: </span><span class="hl-9">1.0</span><span class="hl-0">)</span>
+</code></pre>
+<p>If you want to reverse the local video view when the user switches the camera from front to back and vice versa, use the following method:</p>
+<pre><code class="language-swift"><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">mirrorLocalVideoView</span><span class="hl-0">(</span><span class="hl-7">isEnabled</span><span class="hl-0">: </span><span class="hl-4">Bool</span><span class="hl-0">) {</span><br/><span class="hl-0">    </span><span class="hl-5">guard</span><span class="hl-0"> </span><span class="hl-3">let</span><span class="hl-0"> localSBView = </span><span class="hl-3">self</span><span class="hl-0">.</span><span class="hl-1">localVideoView</span><span class="hl-0">?.</span><span class="hl-1">subviews</span><span class="hl-0">.</span><span class="hl-1">first</span><span class="hl-0"> </span><span class="hl-5">else</span><span class="hl-0"> { </span><span class="hl-5">return</span><span class="hl-0"> }</span><br/><span class="hl-0">    </span><span class="hl-5">switch</span><span class="hl-0"> isEnabled {</span><br/><span class="hl-0">        </span><span class="hl-8">// Show Mirrored view</span><br/><span class="hl-0">        </span><span class="hl-5">case</span><span class="hl-0"> </span><span class="hl-3">true</span><span class="hl-0">: localSBView.</span><span class="hl-1">transform</span><span class="hl-0"> = </span><span class="hl-7">CGAffineTransform</span><span class="hl-0">(</span><span class="hl-7">scaleX</span><span class="hl-0">: </span><span class="hl-9">-1.0</span><span class="hl-0">, </span><span class="hl-7">y</span><span class="hl-0">: </span><span class="hl-9">1.0</span><span class="hl-0">)</span><br/><span class="hl-0">        </span><span class="hl-8">// Show original view</span><br/><span class="hl-0">        </span><span class="hl-5">case</span><span class="hl-0"> </span><span class="hl-3">false</span><span class="hl-0">: localSBView.</span><span class="hl-1">transform</span><span class="hl-0"> = </span><span class="hl-7">CGAffineTransform</span><span class="hl-0">(</span><span class="hl-7">scaleX</span><span class="hl-0">: </span><span class="hl-9">1.0</span><span class="hl-0">, </span><span class="hl-7">y</span><span class="hl-0">: </span><span class="hl-9">1.0</span><span class="hl-0">)</span><br/><span class="hl-0">    }</span><br/><span class="hl-0">}</span><br/><br/><br/><span class="hl-8">// Flipping camera</span><br/><span class="hl-3">self</span><span class="hl-0">.</span><span class="hl-1">call</span><span class="hl-0">.</span><span class="hl-7">selectVideoDevice</span><span class="hl-0">(oppositeCamera) { error </span><span class="hl-5">in</span><br/><span class="hl-0">    </span><span class="hl-5">guard</span><span class="hl-0"> error == </span><span class="hl-3">nil</span><span class="hl-0"> </span><span class="hl-5">else</span><span class="hl-0"> { </span><span class="hl-5">return</span><span class="hl-0"> }</span><br/><br/><span class="hl-0">    DispatchQueue.</span><span class="hl-1">main</span><span class="hl-0">.</span><span class="hl-1">async</span><span class="hl-0"> { [</span><span class="hl-3">weak</span><span class="hl-0"> </span><span class="hl-3">self</span><span class="hl-0">] </span><span class="hl-5">in</span><br/><span class="hl-0">        </span><span class="hl-5">guard</span><span class="hl-0"> </span><span class="hl-3">let</span><span class="hl-0"> </span><span class="hl-3">self</span><span class="hl-0"> = </span><span class="hl-3">self</span><span class="hl-0"> </span><span class="hl-5">else</span><span class="hl-0"> { </span><span class="hl-5">return</span><span class="hl-0"> }</span><br/><span class="hl-0">        </span><span class="hl-5">switch</span><span class="hl-0"> oppositeCamera.</span><span class="hl-1">position</span><span class="hl-0"> {</span><br/><span class="hl-0">            </span><span class="hl-5">case</span><span class="hl-0"> .</span><span class="hl-1">front</span><span class="hl-0">: </span><span class="hl-3">self</span><span class="hl-0">.</span><span class="hl-7">mirrorLocalVideoView</span><span class="hl-0">(</span><span class="hl-7">isEnabled</span><span class="hl-0">: </span><span class="hl-3">true</span><span class="hl-0">)</span><br/><span class="hl-0">            </span><span class="hl-5">case</span><span class="hl-0"> .</span><span class="hl-1">back</span><span class="hl-0">: </span><span class="hl-3">self</span><span class="hl-0">.</span><span class="hl-7">mirrorLocalVideoView</span><span class="hl-0">(</span><span class="hl-7">isEnabled</span><span class="hl-0">: </span><span class="hl-3">false</span><span class="hl-0">)</span><br/><span class="hl-0">            </span><span class="hl-5">default</span><span class="hl-0">: </span><span class="hl-5">return</span><br/><span class="hl-0">        }</span><br/><span class="hl-0">    }</span><br/><span class="hl-0">}</span>
+</code></pre>
+
+<a href="#retrieve-a-call-information" id="retrieve-a-call-information" style="color: inherit; text-decoration: none;">
+  <h3>Retrieve a call information</h3>
+</a>
+<p>The local or remote user’s information is available via the <code>directCall.localUser</code> and <code>directCall.remoteUser</code> properties.</p>
+
+<a href="#retrieve-call-history" id="retrieve-call-history" style="color: inherit; text-decoration: none;">
+  <h3>Retrieve call history</h3>
+</a>
+<p>Sendbird server automatically stores details of calls, which can be retrieved later to display call history for users. A user’s call history is available through a <code>SendBirdCall.DirectCallLogListQuery</code> instance.</p>
+<pre><code class="language-swift"><span class="hl-3">let</span><span class="hl-0"> params = DirectCallLogListQuery.</span><span class="hl-7">Params</span><span class="hl-0">()</span><br/><span class="hl-3">let</span><span class="hl-0"> query = SendBirdCall.</span><span class="hl-7">createDirectCallLogListQuery</span><span class="hl-0">(</span><span class="hl-7">with</span><span class="hl-0">: params)</span><br/><br/><span class="hl-0">query.</span><span class="hl-7">next</span><span class="hl-0">(</span><span class="hl-7">completionHandler</span><span class="hl-0">: { [</span><span class="hl-3">weak</span><span class="hl-0"> query] callLogs, error </span><span class="hl-5">in</span><br/><span class="hl-0">    </span><span class="hl-5">if</span><span class="hl-0"> query?.</span><span class="hl-1">hasNext</span><span class="hl-0"> == </span><span class="hl-3">true</span><span class="hl-0">, query?.</span><span class="hl-1">isLoading</span><span class="hl-0"> == </span><span class="hl-3">false</span><span class="hl-0"> {</span><br/><span class="hl-0">        </span><span class="hl-8">// query.next() can be called once more.</span><br/><span class="hl-0">        </span><span class="hl-8">// If a user wants to fetch more call logs.</span><br/><span class="hl-0">    }</span><br/><span class="hl-0">})</span>
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>next()</td>
+<td>Used to query the call history from Sendbird Calls server.</td>
+</tr>
+<tr>
+<td>hasNext</td>
+<td>If <strong>true</strong>, there are additional call history entries yet to be retrieved.</td>
+</tr>
+<tr>
+<td>isLoading</td>
+<td>If <strong>true</strong>, the call history is being retrieved from the server.</td>
+</tr>
+<tr>
+<td>limit</td>
+<td>Specifies the number of call history entries to return at once.</td>
+</tr>
+<tr>
+<td>myRole</td>
+<td>Returns the call history of the specified role. For example, the <code>params.myRole = .callee</code> returns only the callee’s call history.)</td>
+</tr>
+<tr>
+<td>endResults</td>
+<td>Filters the results based on the call end result such as <code>.completed</code>,<code>.noAnswer</code>, etc. If multiple values are specified, they are processed as an <code>OR</code> condition. For example, for <code>add(endResult:.noAnswer)</code>, only the history entries that resulted in <code>.noAnswer</code> will be returned.</td>
+</tr>
+</tbody></table>
+
+<a href="#timeout-options" id="timeout-options" style="color: inherit; text-decoration: none;">
+  <h3>Timeout options</h3>
+</a>
+<p>The following table lists a set of methods of the <code>SendBirdCall</code> class.</p>
+<pre><code class="language-swift"><span class="hl-0">SendBirdCall.</span><span class="hl-7">setRingingTimeout</span><span class="hl-0">(</span><span class="hl-9">30</span><span class="hl-0">)</span><br/><br/><span class="hl-0">SendBirdCall.</span><span class="hl-7">setCallConnectionTimeout</span><span class="hl-0">(</span><span class="hl-9">30</span><span class="hl-0">)</span>
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>setRingingTimeout(_:)</td>
+<td>Sets the time limit for an unanswered call in seconds. The default value is <strong>60</strong> seconds.</td>
+</tr>
+<tr>
+<td>setCallConnectionTimeout(_:)</td>
+<td>Sets the time limit in seconds for a connecting call. The default value is <strong>60</strong> seconds.</td>
+</tr>
+</tbody></table>
+
+<a href="#sound-effects" id="sound-effects" style="color: inherit; text-decoration: none;">
+  <h3>Sound effects</h3>
+</a>
+
+<a href="#--sound-types" id="--sound-types" style="color: inherit; text-decoration: none;">
+  <h4>- Sound types</h4>
+</a>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>dialing</td>
+<td>Refers to a sound that is played on a caller’s side when the caller makes a call to a callee.</td>
+</tr>
+<tr>
+<td>ringing</td>
+<td>Refers to a sound that is played on a callee’s side when receiving a call.</td>
+</tr>
+<tr>
+<td>reconnecting</td>
+<td>Refers to a sound that is played when a connection is lost, but immediately tries to reconnect. Users are also allowed to customize the ringtone.</td>
+</tr>
+<tr>
+<td>reconnnected</td>
+<td>Refers to a sound that is played when a connection is re-established.</td>
+</tr>
+</tbody></table>
+
+<a href="#add-sound" id="add-sound" style="color: inherit; text-decoration: none;">
+  <h3>Add sound</h3>
+</a>
+
+<a href="#--adddirectcallsound_fortype" id="--adddirectcallsound_fortype" style="color: inherit; text-decoration: none;">
+  <h4>- addDirectCallSound(_:forType:)</h4>
+</a>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>addDirectCallSound(_:forType:)</td>
+<td>Adds a specific sound such as a ringtone and an alert tone to a direct call with URL. If you use a bundle to play sound, use the <code>addDirectCallSound(_:bundle:forType:)</code> method below instead.</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>url</td>
+<td>string</td>
+<td>Specifies the URL of your audio file.</td>
+</tr>
+<tr>
+<td>forType</td>
+<td>SoundType</td>
+<td>Specifies the sound type to be used according to the event.</td>
+</tr>
+</tbody></table>
+
+<a href="#--adddirectcallsound_bundlefortype" id="--adddirectcallsound_bundlefortype" style="color: inherit; text-decoration: none;">
+  <h4>- addDirectCallSound(_:bundle:forType:)</h4>
+</a>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>addDirectCallSound(_:bundle:forType:)</td>
+<td>Adds a specific sound such as a ringtone and an alert tone to a direct call with its file name and bundle.</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>name</td>
+<td>String</td>
+<td>Specifies the name of the audio file. Make sure to specify a file extension as well. For example: dialing.mp3</td>
+</tr>
+<tr>
+<td>bundle</td>
+<td>Bundle</td>
+<td>Specifies the bundle object. The default is the main bundle.</td>
+</tr>
+<tr>
+<td>forType</td>
+<td>SoundType</td>
+<td>Specifies the sound type to be used according to the event.</td>
+</tr>
+</tbody></table>
+
+<a href="#remove-sound" id="remove-sound" style="color: inherit; text-decoration: none;">
+  <h3>Remove sound</h3>
+</a>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>removeDirectCallSound(forType: )</td>
+<td>Removes a specific sound from a direct call.</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>forType</td>
+<td>SoundType</td>
+<td>Specifies the sound type to be used according to the event.</td>
+</tr>
+</tbody></table>
+<br />
+
+
+<a href="#appendix" id="appendix" style="color: inherit; text-decoration: none;">
+  <h2>Appendix</h2>
+</a>
+
+<a href="#callback-and-delegate-thread-handling" id="callback-and-delegate-thread-handling" style="color: inherit; text-decoration: none;">
+  <h3>Callback and delegate thread handling</h3>
+</a>
+<p>Callbacks may be designated to run on specific background threads to keep main threads undisturbed. To specify a thread, run <code>SendBirdCall.executeOn(queue: CUSTOM_QUEUE)</code>. Otherwise, <code>SendBirdCall</code> will run asynchronously on <code>DispatchQueue.main</code>.</p>
+<blockquote>
+<p>However, because VoIP PushKit <strong>requires</strong> immediate and synchronous handling of callbacks, <code>SendBirdCallDelegate.didStartRinging(_)</code> and completion handler of <code>SendBirdCall.pushRegistry(_:didReceiveIncomingPushWith:for:completion:)</code> will run synchronously on the threads that called them. In other words, only these two processes will not run on the thread specified in <code>SendBirdCall.executeOn(queue:)</code>.</p>
+</blockquote>
+<pre><code class="language-swift"><span class="hl-3">class</span><span class="hl-0"> </span><span class="hl-4">AppDelegate</span><span class="hl-0">: UIResponder, UIApplicationDelegate {</span><br/><br/><span class="hl-0">    </span><span class="hl-3">let</span><span class="hl-0"> callbackQueue = </span><span class="hl-7">DispatchQueue</span><span class="hl-0">(</span><span class="hl-7">label</span><span class="hl-0">: QUEUE_LABEL)</span><br/><br/><span class="hl-0">    </span><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">application</span><span class="hl-0">(</span><span class="hl-7">_</span><span class="hl-0"> </span><span class="hl-1">application</span><span class="hl-0">: UIApplication, </span><span class="hl-7">didFinishLaunchingWithOptions</span><span class="hl-0"> </span><span class="hl-1">launchOptions</span><span class="hl-0">: [UIApplication.LaunchOptionsKey: </span><span class="hl-4">Any</span><span class="hl-0">]?) -&gt; </span><span class="hl-4">Bool</span><span class="hl-0"> {</span><br/><br/><span class="hl-0">        </span><span class="hl-8">// Set specific callback queue.</span><br/><span class="hl-0">        SendBirdCall.</span><span class="hl-7">executeOn</span><span class="hl-0">(</span><span class="hl-7">queue</span><span class="hl-0">: </span><span class="hl-3">self</span><span class="hl-0">.</span><span class="hl-1">callbackQueue</span><span class="hl-0">)</span><br/><br/><span class="hl-0">        ...</span><br/><span class="hl-0">    }</span><br/><span class="hl-0">}</span><br/><br/><span class="hl-3">extension</span><span class="hl-0"> </span><span class="hl-4">AppDelegate</span><span class="hl-0">: SendBirdCallDelegate {</span><br/><br/><span class="hl-0">    </span><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">didStartRinging</span><span class="hl-0">(</span><span class="hl-7">_</span><span class="hl-0"> </span><span class="hl-1">call</span><span class="hl-0">: DirectCall) {</span><br/><span class="hl-0">    </span><span class="hl-8">// This delegate may not be executed on the thread set by SendBirdCall.executeOn(queue:).</span><br/><span class="hl-0">        ...</span><br/><span class="hl-0">    }</span><br/><br/><span class="hl-0">}</span><br/><br/><span class="hl-3">extension</span><span class="hl-0"> </span><span class="hl-4">AppDelegate</span><span class="hl-0">: DirectCallDelegate {</span><br/><br/><span class="hl-0">    </span><span class="hl-8">// Runs on the custom thread.</span><br/><span class="hl-0">    </span><span class="hl-8">// In this sample code, runs on the callbackQueue above.</span><br/><span class="hl-0">    </span><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">didEstablish</span><span class="hl-0">(</span><span class="hl-7">_</span><span class="hl-0"> </span><span class="hl-1">call</span><span class="hl-0">: DirectCall) { ... }</span><br/><span class="hl-0">    </span><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">didConnect</span><span class="hl-0">(</span><span class="hl-7">_</span><span class="hl-0"> </span><span class="hl-1">call</span><span class="hl-0">: DirectCall) { ... }</span><br/><span class="hl-0">    </span><span class="hl-3">func</span><span class="hl-0"> </span><span class="hl-7">didEnd</span><span class="hl-0">(</span><span class="hl-7">_</span><span class="hl-0"> </span><span class="hl-1">call</span><span class="hl-0">: DirectCall) { ... }</span><br/><br/><span class="hl-0">    ...</span><br/><span class="hl-0">}</span>
+</code></pre>
+
+<a href="#call-relay-protocol" id="call-relay-protocol" style="color: inherit; text-decoration: none;">
+  <h3>Call relay protocol</h3>
+</a>
+<p>Sendbird Calls is based on WebRTC to enable real-time calls between users with P2P connections, but sometimes connectivity issues may occur for users due to network policies that won’t allow WebRTC communications through Firewalls and NATs (Network Address Translators). For this, Sendbird Calls uses two different types of protocols, <strong>Session Traversal Utilities for NAT (STUN)</strong> and <strong>Traversal Using Relays around NAT (TURN)</strong>. <strong>STUN</strong> and <strong>TURN</strong> are protocols that support establishing a connection between users.</p>
+<blockquote>
+<p><strong>Note</strong>: See our <a href="https://github.com/sendbird/guidelines-calls/tree/master/Recommendation%20on%20firewall%20configuration">GitHub page</a> to learn about the requirements and how to use the Calls SDKs behind a firewall.</p>
+</blockquote>
+<hr>
+
+<a href="#how-stun-and-turn-works" id="how-stun-and-turn-works" style="color: inherit; text-decoration: none;">
+  <h4>How STUN and TURN works</h4>
+</a>
+<p>Session Traversal Utilities for NAT (STUN) is a protocol that helps hosts to discover the presence of a NAT and the IP address, which eventually makes the connection between two endpoints. Traversal Using Relays around NAT (TURN) is a protocol that serves as a relay extension for data between two parties.</p>
+<p>Sendbird Calls first try to make a P2P connection directly using the Calls SDK. If a user is behind a NAT/Firewall, Calls will discover the host&#39;s public IP address as a location to establish connection using STUN. In most cases, STUN server is only used during the connection setup and once the session has been established, media will flow directly between two users. If the NAT/Firewall still won&#39;t allow the two users to connect directly, TURN server will be used to make a connection to relay the media data between two users. Most of the WebRTC traffic is connected with STUN.</p>
+
+<a href="#call-results" id="call-results" style="color: inherit; text-decoration: none;">
+  <h3>Call results</h3>
+</a>
+<table>
+<thead>
+<tr>
+<th>EndResult</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>noAnswer</td>
+<td>The callee failed to either accept or decline the call within a specific amount of time.</td>
+</tr>
+<tr>
+<td>canceled</td>
+<td>The caller canceled the call before the callee could accept or decline.</td>
+</tr>
+<tr>
+<td>declined</td>
+<td>The callee declined the call.</td>
+</tr>
+<tr>
+<td>completed</td>
+<td>The call ended after either party ended it.</td>
+</tr>
+<tr>
+<td>timedOut</td>
+<td>Sendbird server failed to establish a media session between the caller and callee within a specific amount of time.</td>
+</tr>
+<tr>
+<td>connectionLost</td>
+<td>The data stream from either the caller or the callee has stopped due to a <code>WebRTC</code> connection issue.</td>
+</tr>
+<tr>
+<td>dialFailed</td>
+<td>The <code>dial()</code> method call has failed.</td>
+</tr>
+<tr>
+<td>acceptFailed</td>
+<td>The <code>accept()</code> method call has failed.</td>
+</tr>
+<tr>
+<td>otherDeviceAccepted</td>
+<td>The incoming call was accepted on a different device. This device received an incoming call notification, but the call ended when a different device accepted it.</td>
+</tr>
+</tbody></table>
+
+<a href="#encoding-configurations" id="encoding-configurations" style="color: inherit; text-decoration: none;">
+  <h3>Encoding Configurations</h3>
+</a>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Value</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Frames per second</td>
+<td>24 fps</td>
+<td></td>
+</tr>
+<tr>
+<td>Maximum resolution</td>
+<td>720p</td>
+<td>1280x720 px; standard HD</td>
+</tr>
+<tr>
+<td>Audio Codec</td>
+<td>OPUS</td>
+<td></td>
+</tr>
+<tr>
+<td>Video Codec</td>
+<td>H.264, VP8</td>
+<td>H.264 is used between iOS devices as a default codec.</td>
+</tr>
+</tbody></table>
+
+<a href="#ios-sdk-sizes" id="ios-sdk-sizes" style="color: inherit; text-decoration: none;">
+  <h3>iOS SDK Sizes</h3>
+</a>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Raw Files</th>
+<th>Compiled Size</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Calls SDK (1.7.0)</td>
+<td>77.1 MB</td>
+<td>2.32 MB</td>
+</tr>
+<tr>
+<td>WebRTC SDK (1.3.0)</td>
+<td>1.18 GB</td>
+<td>6.32 MB</td>
+</tr>
+</tbody></table>
+<p>(Xcode 12.3, Any iOS Device (arm64))</p>
+<p><em>- Last Updated: June 18th, 2021</em></p>
+<br />
+</div></div><div class="col-4 col-menu menu-sticky-wrap menu-highlight"><nav class="tsd-navigation primary"><ul><li class="current"><a href="modules.html">Exports</a></li></ul></nav><nav class="tsd-navigation secondary menu-sticky"><ul><li class="tsd-kind-enum"><a href="enums/AVAudioSessionPort.html" class="tsd-kind-icon">AVAudio<wbr/>Session<wbr/>Port</a></li><li class="tsd-kind-enum"><a href="enums/AudioDeviceType.html" class="tsd-kind-icon">Audio<wbr/>Device<wbr/>Type</a></li><li class="tsd-kind-enum"><a href="enums/CallsEvent.html" class="tsd-kind-icon">Calls<wbr/>Event</a></li><li class="tsd-kind-enum"><a href="enums/DefaultEventType.html" class="tsd-kind-icon">Default<wbr/>Event<wbr/>Type</a></li><li class="tsd-kind-enum"><a href="enums/DirectCallEndResult.html" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>End<wbr/>Result</a></li><li class="tsd-kind-enum"><a href="enums/DirectCallEventType.html" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>Event<wbr/>Type</a></li><li class="tsd-kind-enum"><a href="enums/DirectCallUserRole.html" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>User<wbr/>Role</a></li><li class="tsd-kind-enum"><a href="enums/GroupCallEventType.html" class="tsd-kind-icon">Group<wbr/>Call<wbr/>Event<wbr/>Type</a></li><li class="tsd-kind-enum"><a href="enums/NativeQueryType.html" class="tsd-kind-icon">Native<wbr/>Query<wbr/>Type</a></li><li class="tsd-kind-enum"><a href="enums/ParticipantState.html" class="tsd-kind-icon">Participant<wbr/>State</a></li><li class="tsd-kind-enum"><a href="enums/RecordingStatus.html" class="tsd-kind-icon">Recording<wbr/>Status</a></li><li class="tsd-kind-enum"><a href="enums/RecordingType.html" class="tsd-kind-icon">Recording<wbr/>Type</a></li><li class="tsd-kind-enum"><a href="enums/RoomState.html" class="tsd-kind-icon">Room<wbr/>State</a></li><li class="tsd-kind-enum"><a href="enums/RoomType.html" class="tsd-kind-icon">Room<wbr/>Type</a></li><li class="tsd-kind-enum"><a href="enums/RouteChangeReason.html" class="tsd-kind-icon">Route<wbr/>Change<wbr/>Reason</a></li><li class="tsd-kind-enum"><a href="enums/VideoDevicePosition.html" class="tsd-kind-icon">Video<wbr/>Device<wbr/>Position</a></li><li class="tsd-kind-class"><a href="classes/DirectCall.html" class="tsd-kind-icon">Direct<wbr/>Call</a></li><li class="tsd-kind-class"><a href="classes/DirectCallLogListQuery.html" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>Log<wbr/>List<wbr/>Query</a></li><li class="tsd-kind-class"><a href="classes/DirectCallVideoView.html" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>Video<wbr/>View</a></li><li class="tsd-kind-class"><a href="classes/Room.html" class="tsd-kind-icon">Room</a></li><li class="tsd-kind-class"><a href="classes/RoomListQuery.html" class="tsd-kind-icon">Room<wbr/>List<wbr/>Query</a></li><li class="tsd-kind-class"><a href="classes/SendbirdCallsModule.html" class="tsd-kind-icon">Sendbird<wbr/>Calls<wbr/>Module</a></li><li class="tsd-kind-interface"><a href="interfaces/DirectCallListener.html" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>Listener</a></li><li class="tsd-kind-interface"><a href="interfaces/DirectCallLog.html" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>Log</a></li><li class="tsd-kind-interface"><a href="interfaces/DirectCallMethods.html" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>Methods</a></li><li class="tsd-kind-interface"><a href="interfaces/DirectCallProperties.html" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>Properties</a></li><li class="tsd-kind-interface"><a href="interfaces/DirectCallUser.html" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>User</a></li><li class="tsd-kind-interface"><a href="interfaces/DirectCallVideoViewProps.html" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>Video<wbr/>View<wbr/>Props</a></li><li class="tsd-kind-interface"><a href="interfaces/GroupCallMethods.html" class="tsd-kind-icon">Group<wbr/>Call<wbr/>Methods</a></li><li class="tsd-kind-interface"><a href="interfaces/NativeCommonModule.html" class="tsd-kind-icon">Native<wbr/>Common<wbr/>Module</a></li><li class="tsd-kind-interface"><a href="interfaces/NativeDirectCallModule.html" class="tsd-kind-icon">Native<wbr/>Direct<wbr/>Call<wbr/>Module</a></li><li class="tsd-kind-interface"><a href="interfaces/NativeGroupCallModule.html" class="tsd-kind-icon">Native<wbr/>Group<wbr/>Call<wbr/>Module</a></li><li class="tsd-kind-interface"><a href="interfaces/NativeQueries.html" class="tsd-kind-icon">Native<wbr/>Queries</a></li><li class="tsd-kind-interface"><a href="interfaces/Participant.html" class="tsd-kind-icon">Participant</a></li><li class="tsd-kind-interface"><a href="interfaces/Query.html" class="tsd-kind-icon">Query</a></li><li class="tsd-kind-interface"><a href="interfaces/RoomListener.html" class="tsd-kind-icon">Room<wbr/>Listener</a></li><li class="tsd-kind-interface"><a href="interfaces/RoomProperties.html" class="tsd-kind-icon">Room<wbr/>Properties</a></li><li class="tsd-kind-interface"><a href="interfaces/SendbirdCallListener.html" class="tsd-kind-icon">Sendbird<wbr/>Call<wbr/>Listener</a></li><li class="tsd-kind-interface"><a href="interfaces/SendbirdCallsJavascriptSpec.html" class="tsd-kind-icon">Sendbird<wbr/>Calls<wbr/>Javascript<wbr/>Spec</a></li><li class="tsd-kind-interface"><a href="interfaces/SendbirdCallsNativeSpec.html" class="tsd-kind-icon">Sendbird<wbr/>Calls<wbr/>Native<wbr/>Spec</a></li><li class="tsd-kind-interface"><a href="interfaces/User.html" class="tsd-kind-icon">User</a></li><li class="tsd-kind-interface"><a href="interfaces/VideoDevice.html" class="tsd-kind-icon">Video<wbr/>Device</a></li><li class="tsd-kind-type-alias"><a href="modules.html#AudioDevice" class="tsd-kind-icon">Audio<wbr/>Device</a></li><li class="tsd-kind-type-alias"><a href="modules.html#AudioDeviceChangedInfo" class="tsd-kind-icon">Audio<wbr/>Device<wbr/>Changed<wbr/>Info</a></li><li class="tsd-kind-type-alias"><a href="modules.html#AudioDeviceRoute" class="tsd-kind-icon">Audio<wbr/>Device<wbr/>Route</a></li><li class="tsd-kind-type-alias"><a href="modules.html#CallOptions" class="tsd-kind-icon">Call<wbr/>Options</a></li><li class="tsd-kind-type-alias"><a href="modules.html#CustomItemUpdateResult" class="tsd-kind-icon">Custom<wbr/>Item<wbr/>Update<wbr/>Result</a></li><li class="tsd-kind-type-alias"><a href="modules.html#DirectCallLogQueryParams" class="tsd-kind-icon">Direct<wbr/>Call<wbr/>Log<wbr/>Query<wbr/>Params</a></li><li class="tsd-kind-type-alias"><a href="modules.html#EnterParams" class="tsd-kind-icon">Enter<wbr/>Params</a></li><li class="tsd-kind-type-alias"><a href="modules.html#NativeConstants" class="tsd-kind-icon">Native<wbr/>Constants</a></li><li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#NativeQueryCreator" class="tsd-kind-icon">Native<wbr/>Query<wbr/>Creator</a></li><li class="tsd-kind-type-alias"><a href="modules.html#NativeQueryKey" class="tsd-kind-icon">Native<wbr/>Query<wbr/>Key</a></li><li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#NativeQueryResult" class="tsd-kind-icon">Native<wbr/>Query<wbr/>Result</a></li><li class="tsd-kind-type-alias"><a href="modules.html#Port" class="tsd-kind-icon">Port</a></li><li class="tsd-kind-type-alias"><a href="modules.html#RecordingOptions" class="tsd-kind-icon">Recording<wbr/>Options</a></li><li class="tsd-kind-type-alias"><a href="modules.html#RoomListQueryParams" class="tsd-kind-icon">Room<wbr/>List<wbr/>Query<wbr/>Params</a></li><li class="tsd-kind-variable"><a href="modules.html#Logger" class="tsd-kind-icon">Logger</a></li><li class="tsd-kind-variable"><a href="modules.html#SendbirdCalls" class="tsd-kind-icon">Sendbird<wbr/>Calls</a></li></ul></nav></div></div></div><footer class="with-border-bottom"><div class="container"><h2>Legend</h2><div class="tsd-legend-group"><ul class="tsd-legend"><li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li><li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li><li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li><li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li></ul></div><h2>Settings</h2><p>Theme <select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></p></div></footer><div class="container tsd-generator"><p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div><div class="overlay"></div><script src="assets/main.js"></script></body></html>
