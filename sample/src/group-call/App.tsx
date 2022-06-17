@@ -9,6 +9,7 @@ import { GroupRoutes } from './navigations/routes';
 import GroupCallEnterRoomScreen from './screens/GroupCallEnterRoomScreen';
 import GroupCallParticipantsScreen from './screens/GroupCallParticipantsScreen';
 import GroupCallRoomInfoScreen from './screens/GroupCallRoomInfoScreen';
+import GroupCallRoomScreen from './screens/GroupCallRoomScreen';
 import GroupCallSignInScreen from './screens/GroupCallSignInScreen';
 
 const Stack = createNativeStackNavigator();
@@ -27,6 +28,7 @@ const GroupCallApp = () => {
             component={GroupCallEnterRoomScreen}
             options={{ header: () => <Header title="Enter room" headerLeftType={HeaderLeftTypes.CANCEL} /> }}
           />
+          <Stack.Screen name={GroupRoutes.ROOM} component={GroupCallRoomScreen} options={{ headerShown: false }} />
           <Stack.Screen
             name={GroupRoutes.ROOM_INFO}
             component={GroupCallRoomInfoScreen}

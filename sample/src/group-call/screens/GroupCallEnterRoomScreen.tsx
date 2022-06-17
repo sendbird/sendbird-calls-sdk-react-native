@@ -14,7 +14,7 @@ import { GroupRoutes } from '../navigations/routes';
 
 const GroupCallEnterRoomScreen = () => {
   const {
-    navigation: { /*navigate,*/ goBack },
+    navigation: { replace, goBack },
     route: {
       params: { roomId },
     },
@@ -26,14 +26,24 @@ const GroupCallEnterRoomScreen = () => {
   useLayoutEffectAsync(async () => {
     try {
       const room = await SendbirdCalls.getCachedRoomById(roomId);
-      AppLogger.log('getCachedRoomById', room);
       if (room === null) throw Error(`The room(${roomId}) is not exists`);
       setRoom(room);
     } catch (e) {
-      AppLogger.log('[ERROR::getCachedRoomById]', e);
+      AppLogger.log('[ERROR] EnterRoomScreen getCachedRoomById', e);
       goBack();
     }
   }, []);
+
+  const enterRoom = async () => {
+    try {
+      if (room) {
+        await room.enter(enterParam);
+        replace(GroupRoutes.ROOM, { roomId: room.roomId });
+      }
+    } catch (e) {
+      AppLogger.log('[ERROR] EnterRoomScreen enter', e);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -58,7 +68,7 @@ const GroupCallEnterRoomScreen = () => {
         <SBText subtitle2>Turn off my video</SBText>
       </View>
 
-      <SBButton style={styles.button} disabled={!room} onPress={() => room?.enter(enterParam)}>
+      <SBButton style={styles.button} disabled={!room} onPress={enterRoom}>
         {'Enter'}
       </SBButton>
     </View>
