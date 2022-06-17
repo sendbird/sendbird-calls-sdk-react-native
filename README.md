@@ -1,8 +1,10 @@
 # [Sendbird](https://sendbird.com) Calls SDK for React-Native
 
-<img src="https://img.shields.io/badge/React Native-0.60+-black?logo=react" alt="RN 0.60+" />
-<img src="https://img.shields.io/badge/iOS-11+-lightgray?logo=apple" alt="iOS 11.0+" />
+<span>
+<img src="https://img.shields.io/badge/React Native-0.60+-black?logo=react" alt="RN 0.60+" >
+<img src="https://img.shields.io/badge/iOS-11+-lightgray?logo=apple" alt="iOS 11.0+" >
 <img src="https://img.shields.io/badge/Android-21+-green?logo=android" alt="Android 21.0+" />
+</span>
 
 ## Table of contents
 
