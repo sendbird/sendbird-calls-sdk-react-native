@@ -439,7 +439,7 @@ PODS:
     - React-Core
   - sendbird-calls-react-native (0.1.0):
     - React-Core
-    - SendBirdCalls (~> 1.9.4)
+    - SendBirdCalls (= 1.9.4)
   - SendBirdCalls (1.9.4):
     - SendBirdWebRTC (~> 1.5.0)
   - SendBirdWebRTC (1.5.0)
@@ -702,7 +702,7 @@ SPEC CHECKSUMS:
   RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796
   RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
   RNVoipPushNotification: 14bb5a389588ea1cbee4706a55df99950687fd6d
-  sendbird-calls-react-native: 244f4e49790ca7c6ded3e34249216f80277fa191
+  sendbird-calls-react-native: 522397ddb0a2d4c468c9837b0916a85a418126e1
   SendBirdCalls: 7ecc15b7712f435bdc7e86ced5feee158266a464
   SendBirdWebRTC: 0ef66b6e6b2f73b307d1e4fe63ce36ab3f0b2518
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
