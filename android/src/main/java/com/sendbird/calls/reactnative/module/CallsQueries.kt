@@ -13,7 +13,7 @@ enum class QueryType {
     ROOM_LIST
 }
 
-class CallsQueries {
+class CallsQueries(private val root: CallsModule) {
     val directCallLogQueries = mutableMapOf<String, DirectCallLogListQuery>()
     val roomListQueries = mutableMapOf<String, RoomListQuery>()
 
@@ -131,7 +131,10 @@ class CallsQueries {
                                 ?: run {
                                     promise.resolve(CallsUtils.convertToJsMap(mapOf(
                                         "hasNext" to this.hasNext(),
-                                        "result" to list.map { CallsUtils.convertRoomToJsMap(it) }
+                                        "result" to list.map {
+                                            it.addListener(it.roomId, CallsGroupCallListener(root, it))
+                                            CallsUtils.convertRoomToJsMap(it)
+                                        }
                                     )))
                                 }
                         }

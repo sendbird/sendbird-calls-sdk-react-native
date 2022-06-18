@@ -11,22 +11,22 @@ export interface RoomListener {
   onError: (e: Error, participant?: Participant) => void;
 
   /** Called when a participant is entered the room **/
-  onRemoteParticipantEntered: (participant: Participant) => void; // TODO: update to RemoteParticipant
+  onRemoteParticipantEntered: (participant: Participant) => void;
 
   /** Called when a participant is exited the room **/
-  onRemoteParticipantExited: (participant: Participant) => void; // TODO: update to RemoteParticipant
+  onRemoteParticipantExited: (participant: Participant) => void;
 
   /** Called when ... **/
-  onRemoteParticipantStreamStarted: (participant: Participant) => void; // TODO: update to RemoteParticipant
+  onRemoteParticipantStreamStarted: (participant: Participant) => void;
 
   /** Called when the audio device is changed **/
-  onAudioDeviceChanged: (availableAudioDevices: AudioDevice[], currentAudioDevice?: AudioDevice) => void;
+  onAudioDeviceChanged: (currentAudioDevice: AudioDevice | null, availableAudioDevices: AudioDevice[]) => void;
 
   /** Called when video settings of the remote participant are changed **/
-  onRemoteVideoSettingsChanged: (participant: Participant) => void; // TODO: update to RemoteParticipant
+  onRemoteVideoSettingsChanged: (participant: Participant) => void;
 
   /** Called when audio settings of the remote participant are changed **/
-  onRemoteAudioSettingsChanged: (participant: Participant) => void; // TODO: update to RemoteParticipant
+  onRemoteAudioSettingsChanged: (participant: Participant) => void;
 
   /** Called when the custom items of the call are updated. **/
   onCustomItemsUpdated: (updatedKeys: string[]) => void;
@@ -55,7 +55,7 @@ export interface RoomProperties {
 type JSGroupCallModule = AsJSGroupCall<NativeGroupCallModule>; // TODO: check platform specific func
 
 export interface GroupCallMethods extends JSGroupCallModule {
-  removeAllEventListeners(): void;
+  addListener(listener: Partial<RoomListener>): () => void;
 }
 
 export enum RoomType {

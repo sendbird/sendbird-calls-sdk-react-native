@@ -155,6 +155,7 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
     this.Logger.debug('[SendbirdCalls]', 'initialize()');
 
     DirectCall.poolRelease();
+    Room.poolRelease();
 
     if (!this.initialized) {
       this.binder.addListener(CallsEvent.DEFAULT, ({ type, data }) => {
@@ -243,7 +244,7 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
    * @since 1.0.0
    */
   public createRoom(roomType: RoomType): Promise<Room> {
-    return this.binder.nativeModule.createRoom(roomType).then((props) => new Room(this.binder, props));
+    return this.binder.nativeModule.createRoom(roomType).then((props) => Room.get(this.binder, props));
   }
 
   /**
@@ -252,7 +253,7 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
    * @since 1.0.0
    */
   public fetchRoomById(roomId: string): Promise<Room> {
-    return this.binder.nativeModule.fetchRoomById(roomId).then((props) => new Room(this.binder, props));
+    return this.binder.nativeModule.fetchRoomById(roomId).then((props) => Room.get(this.binder, props));
   }
 
   /**
@@ -263,7 +264,7 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   public getCachedRoomById(roomId: string): Promise<Room | null> {
     return this.binder.nativeModule
       .getCachedRoomById(roomId)
-      .then((props) => (props ? new Room(this.binder, props) : null));
+      .then((props) => (props ? Room.get(this.binder, props) : null));
   }
 
   /**

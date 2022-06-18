@@ -30,19 +30,19 @@ const GroupCallDialScreen = () => {
     if (isCreated) {
       try {
         const room = await SendbirdCalls.createRoom(SendbirdCalls.RoomType.SMALL_ROOM_FOR_VIDEO);
-        AppLogger.log('createRoom', room);
-        room.enter();
-        // TODO: event
+        AppLogger.log('DialScreen createRoom', room.roomId);
+        await room.enter();
+        navigate(GroupRoutes.ROOM, { roomId: room.roomId });
       } catch (e) {
-        AppLogger.log('[ERROR] createRoom]', e);
+        AppLogger.log('[ERROR] DialScreen createRoom', e);
       }
     } else {
       try {
         const room = await SendbirdCalls.fetchRoomById(roomId);
-        AppLogger.log('fetchRoomById', room);
+        AppLogger.log('DialScreen fetchRoomById', room);
         navigate(GroupRoutes.ENTER_ROOM, { roomId });
       } catch (e) {
-        AppLogger.log('[ERROR] fetchRoomById]', e);
+        AppLogger.log('[ERROR] DialScreen fetchRoomById', e);
       }
     }
   };
