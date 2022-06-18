@@ -24,7 +24,10 @@ const GroupCallRoomScreen = () => {
     try {
       const room = await SendbirdCalls.getCachedRoomById(roomId);
       if (room === null) throw Error(`The room(${roomId}) is not exists`);
-      room.addListener({
+      const unsubscribe = room.addListener({
+      // ...
+      // useLayoutEffect clean-up
+      return () => unsubscribe();
         onRemoteParticipantEntered(participant) {
           AppLogger.log('RoomScreen onRemoteParticipantEntered', participant);
         },
