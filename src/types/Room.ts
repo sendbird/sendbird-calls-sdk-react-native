@@ -49,7 +49,7 @@ export interface RoomProperties {
   currentAudioDevice: AudioDevice | null;
 
   createdAt: number;
-  createdBy: number;
+  createdBy: string;
 }
 
 type JSGroupCallModule = AsJSGroupCall<NativeGroupCallModule>; // TODO: check platform specific func
