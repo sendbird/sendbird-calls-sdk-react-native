@@ -53,7 +53,7 @@ const RoomFooter = ({ room }: { room: Room }) => {
           hitSlop={10}
           onPress={() => {
             const { localParticipant } = room;
-            localParticipant?.isAudioEnabled ? localParticipant?.stopVideo() : localParticipant?.startVideo();
+            localParticipant?.isVideoEnabled ? localParticipant?.stopVideo() : localParticipant?.startVideo();
           }}
         >
           <SBIcon icon={room.localParticipant?.isVideoEnabled ? 'btnVideoOff' : 'btnVideoOffSelected'} size={48} />

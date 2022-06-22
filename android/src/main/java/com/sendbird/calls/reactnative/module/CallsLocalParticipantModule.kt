@@ -15,9 +15,6 @@ class CallsLocalParticipantModule: LocalParticipantModule {
         Log.d(CallsModule.NAME, "[LocalParticipantModule] $from")
         CallsUtils.safeRun {
             CallsUtils.findRoom(roomId, from).localParticipant?.muteMicrophone()
-                ?.run {
-                    Log.e(CallsModule.NAME, "[GroupCallModule] $from -> ${errorMessage(roomId)}")
-                }
         }
     }
 
@@ -26,9 +23,6 @@ class CallsLocalParticipantModule: LocalParticipantModule {
         Log.d(CallsModule.NAME, "[LocalParticipantModule] $from")
         CallsUtils.safeRun {
             CallsUtils.findRoom(roomId, from).localParticipant?.unmuteMicrophone()
-                ?.run {
-                    Log.e(CallsModule.NAME, "[GroupCallModule] $from -> ${errorMessage(roomId)}")
-                }
         }
     }
 
@@ -37,9 +31,6 @@ class CallsLocalParticipantModule: LocalParticipantModule {
         Log.d(CallsModule.NAME, "[LocalParticipantModule] $from")
         CallsUtils.safeRun {
             CallsUtils.findRoom(roomId, from).localParticipant?.stopVideo()
-                ?.run {
-                    Log.e(CallsModule.NAME, "[GroupCallModule] $from -> ${errorMessage(roomId)}")
-                }
         }
     }
 
@@ -48,9 +39,6 @@ class CallsLocalParticipantModule: LocalParticipantModule {
         Log.d(CallsModule.NAME, "[LocalParticipantModule] $from")
         CallsUtils.safeRun {
             CallsUtils.findRoom(roomId, from).localParticipant?.startVideo()
-                ?.run {
-                    Log.e(CallsModule.NAME, "[GroupCallModule] $from -> ${errorMessage(roomId)}")
-                }
         }
     }
 
@@ -66,9 +54,6 @@ class CallsLocalParticipantModule: LocalParticipantModule {
                     ?: run {
                         promise.resolve(null)
                     }
-            }
-            ?.run {
-                Log.e(CallsModule.NAME, "[GroupCallModule] $from -> ${errorMessage(roomId)}")
             }
         }
     }

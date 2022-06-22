@@ -97,6 +97,18 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     @ReactMethod
     override fun exit(roomId: String) = module.exit(roomId)
 
+    /** GroupCall - LocalParticipant **/
+    @ReactMethod
+    override fun localMuteMicrophone(roomId: String) = module.localMuteMicrophone(roomId)
+    @ReactMethod
+    override fun localUnmuteMicrophone(roomId: String) = module.localUnmuteMicrophone(roomId)
+    @ReactMethod
+    override fun localStopVideo(roomId: String) = module.localStopVideo(roomId)
+    @ReactMethod
+    override fun localStartVideo(roomId: String) = module.localStartVideo(roomId)
+    @ReactMethod
+    override fun localSwitchCamera(roomId: String, promise: Promise) = module.localSwitchCamera(roomId, promise)
+
     /** Queries **/
     @ReactMethod
     fun createDirectCallLogListQuery(params: ReadableMap, promise: Promise) = module.createDirectCallLogListQuery(params, promise)
