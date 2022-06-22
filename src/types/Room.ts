@@ -1,6 +1,6 @@
 import type { AudioDevice } from './Media';
 import type { NativeGroupCallModule } from './NativeModule';
-import type { Participant } from './Participant';
+import type { ParticipantProperties } from './Participant';
 import type { AsJSGroupCall } from './index';
 
 export interface RoomListener {
@@ -8,25 +8,25 @@ export interface RoomListener {
   onDeleted: () => void;
 
   /** Called when ... **/
-  onError: (e: Error, participant?: Participant) => void;
+  onError: (e: Error, participant?: ParticipantProperties) => void;
 
   /** Called when a participant is entered the room **/
-  onRemoteParticipantEntered: (participant: Participant) => void;
+  onRemoteParticipantEntered: (participant: ParticipantProperties) => void;
 
   /** Called when a participant is exited the room **/
-  onRemoteParticipantExited: (participant: Participant) => void;
+  onRemoteParticipantExited: (participant: ParticipantProperties) => void;
 
   /** Called when ... **/
-  onRemoteParticipantStreamStarted: (participant: Participant) => void;
+  onRemoteParticipantStreamStarted: (participant: ParticipantProperties) => void;
 
   /** Called when the audio device is changed **/
   onAudioDeviceChanged: (currentAudioDevice: AudioDevice | null, availableAudioDevices: AudioDevice[]) => void;
 
   /** Called when video settings of the remote participant are changed **/
-  onRemoteVideoSettingsChanged: (participant: Participant) => void;
+  onRemoteVideoSettingsChanged: (participant: ParticipantProperties) => void;
 
   /** Called when audio settings of the remote participant are changed **/
-  onRemoteAudioSettingsChanged: (participant: Participant) => void;
+  onRemoteAudioSettingsChanged: (participant: ParticipantProperties) => void;
 
   /** Called when the custom items of the call are updated. **/
   onCustomItemsUpdated: (updatedKeys: string[]) => void;
@@ -41,9 +41,9 @@ export interface RoomProperties {
   type: RoomType;
   customItems: Record<string, string>;
 
-  participants: Participant[];
-  localParticipant: Participant;
-  remoteParticipants: Participant[];
+  participants: ParticipantProperties[];
+  localParticipant: ParticipantProperties | null;
+  remoteParticipants: ParticipantProperties[];
 
   availableAudioDevices: AudioDevice[];
   currentAudioDevice: AudioDevice | null;

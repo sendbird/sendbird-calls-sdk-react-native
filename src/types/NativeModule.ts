@@ -97,6 +97,14 @@ export interface NativeGroupCallModule {
   exit(roomId: string): void;
 }
 
+export interface NativeLocalParticipantModule {
+  localMuteMicrophone(roomId: string): void;
+  localUnmuteMicrophone(roomId: string): void;
+  localStopVideo(roomId: string): void;
+  localStartVideo(roomId: string): void;
+  localSwitchCamera(roomId: string): Promise<void>;
+}
+
 export interface NativeQueries {
   createDirectCallLogListQuery: NativeQueryCreator<DirectCallLogQueryParams>;
   createRoomListQuery: NativeQueryCreator<RoomListQueryParams>;
@@ -112,7 +120,8 @@ export interface SendbirdCallsNativeSpec
     NativeQueries,
     NativeCommonModule,
     NativeDirectCallModule,
-    NativeGroupCallModule {}
+    NativeGroupCallModule,
+    NativeLocalParticipantModule {}
 
 // --------------- Javascript interfaces ---------------
 

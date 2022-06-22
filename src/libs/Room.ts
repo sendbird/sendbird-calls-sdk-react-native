@@ -1,5 +1,6 @@
 import type { EnterParams, GroupCallMethods, RoomListener, RoomProperties } from '../types';
 import { Logger } from '../utils/logger';
+import { LocalParticipant } from './LocalParticipant';
 import type NativeBinder from './NativeBinder';
 import { CallsEvent, GroupCallEventType } from './NativeBinder';
 import { SendbirdError } from './SendbirdError';
@@ -23,10 +24,12 @@ export class Room implements RoomProperties, GroupCallMethods {
   constructor(binder: NativeBinder, props: RoomProperties) {
     this._binder = binder;
     this._props = props;
+    this._localParticipant = null;
   }
 
   private _binder: NativeBinder;
   private _props: RoomProperties;
+  private _localParticipant: LocalParticipant | null;
   private _internalEvents = {
     pool: [] as Partial<RoomListener>[],
     emit: (event: keyof RoomListener, ...args: unknown[]) => {
@@ -42,6 +45,7 @@ export class Room implements RoomProperties, GroupCallMethods {
     },
   };
   private _updateInternal(props: RoomProperties) {
+    this._localParticipant = LocalParticipant.get(this._binder, props.localParticipant, this.roomId);
     this._props = props;
     return this;
   }
@@ -62,7 +66,7 @@ export class Room implements RoomProperties, GroupCallMethods {
     return this._props.participants;
   }
   public get localParticipant() {
-    return this._props.localParticipant;
+    return this._localParticipant;
   }
   public get remoteParticipants() {
     return this._props.remoteParticipants;

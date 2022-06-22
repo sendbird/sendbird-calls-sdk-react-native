@@ -1,6 +1,6 @@
 import type { User } from './User';
 
-export interface Participant {
+export interface ParticipantProperties {
   participantId: string;
   user: User;
   state: ParticipantState;
@@ -13,6 +13,14 @@ export interface Participant {
   isVideoEnabled: boolean;
 
   updatedAt: number;
+}
+
+export interface LocalParticipantMethods {
+  muteMicrophone(): void;
+  unmuteMicrophone(): void;
+  stopVideo(): void;
+  startVideo(): void;
+  switchCamera(): Promise<void>;
 }
 
 export enum ParticipantState {
