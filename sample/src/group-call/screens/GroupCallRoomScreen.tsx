@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pressable, StatusBar, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -9,6 +9,7 @@ import SBText from '../../shared/components/SBText';
 import { useLayoutEffectAsync } from '../../shared/hooks/useEffectAsync';
 import Palette from '../../shared/styles/palette';
 import { AppLogger } from '../../shared/utils/logger';
+import ModalRoomId from '../components/ModalRoomId';
 import { useGroupNavigation } from '../hooks/useGroupNavigation';
 import { GroupRoutes } from '../navigations/routes';
 
@@ -16,12 +17,13 @@ const GroupCallRoomScreen = () => {
   const {
     navigation: { navigate, goBack },
     route: {
-      params: { roomId },
+      params: { roomId, isCreated },
     },
   } = useGroupNavigation<GroupRoutes.ROOM>();
   const { top, bottom } = useSafeAreaInsets();
 
   const [room, setRoom] = useState<Room>();
+  const [visible, setVisible] = useState(isCreated ?? false);
 
   useLayoutEffectAsync(async () => {
     try {
@@ -54,6 +56,7 @@ const GroupCallRoomScreen = () => {
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={Palette.background500} barStyle={'light-content'} />
+      <ModalRoomId roomId={roomId} visible={visible} onClose={() => setVisible(false)} />
 
       <View style={[styles.header, { paddingTop: top }]}>
         <Pressable

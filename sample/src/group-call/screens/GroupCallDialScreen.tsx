@@ -32,7 +32,7 @@ const GroupCallDialScreen = () => {
         const room = await SendbirdCalls.createRoom(SendbirdCalls.RoomType.SMALL_ROOM_FOR_VIDEO);
         AppLogger.log('DialScreen createRoom', room.roomId);
         await room.enter();
-        navigate(GroupRoutes.ROOM, { roomId: room.roomId });
+        navigate(GroupRoutes.ROOM, { roomId: room.roomId, isCreated: true });
       } catch (e) {
         AppLogger.log('[ERROR] DialScreen createRoom', e);
       }
@@ -49,7 +49,7 @@ const GroupCallDialScreen = () => {
 
   return (
     <InputSafeView>
-      <ScrollView style={styles.container}>
+      <ScrollView style={styles.container} keyboardShouldPersistTaps={'always'}>
         <View style={styles.card}>
           <SBIcon icon={'RoomAdd'} containerStyle={{ alignItems: 'flex-start' }} />
           <SBText h1 style={styles.title}>

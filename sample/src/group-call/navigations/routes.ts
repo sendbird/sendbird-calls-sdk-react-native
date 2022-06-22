@@ -40,7 +40,7 @@ export type GroupRouteWithParams =
     }
   | {
       route: GroupRoutes.ROOM;
-      params: { roomId: string };
+      params: { roomId: string; isCreated?: boolean };
     }
   | {
       route: GroupRoutes.ENTER_ROOM;
