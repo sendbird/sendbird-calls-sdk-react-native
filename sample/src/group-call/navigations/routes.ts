@@ -32,7 +32,7 @@ export type GroupRouteWithParams =
     }
   | {
       route: GroupRoutes.SETTINGS;
-      params: undefined;
+      params: { roomId?: string };
     }
   | {
       route: GroupRoutes.APP_INFO;

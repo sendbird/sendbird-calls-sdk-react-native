@@ -89,7 +89,7 @@ const GroupCallRoomScreen = () => {
       <View style={styles.view}>{/* Video View */}</View>
 
       <View style={[styles.footer, { paddingBottom: bottom }]}>
-        <Pressable hitSlop={10} onPress={() => navigate(GroupRoutes.SETTINGS)}>
+        <Pressable hitSlop={10} onPress={() => navigate(GroupRoutes.SETTINGS, { roomId })}>
           <SBIcon icon={'Settings'} size={20} color={Palette.background50} />
           <SBText caption2 color={Palette.onBackgroundDark01} style={{ marginTop: 4 }}>
             {'Settings'}
