@@ -71,6 +71,7 @@ const DirectCallSignInScreen = () => {
   return (
     <ScrollView
       contentContainerStyle={{ backgroundColor: 'white', flex: 1, paddingVertical: 12, paddingHorizontal: 16 }}
+      keyboardShouldPersistTaps={'always'}
     >
       <SignInForm {...state} hideApplicationId onChange={setState} onSubmit={onSignIn} />
     </ScrollView>
