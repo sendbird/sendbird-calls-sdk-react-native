@@ -2,16 +2,14 @@ import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Room } from '@sendbird/calls-react-native';
-
 import SBIcon from '../../shared/components/SBIcon';
 import SBText from '../../shared/components/SBText';
 import Palette from '../../shared/styles/palette';
-import { AppLogger } from '../../shared/utils/logger';
+import { useGroupCallRoom } from '../hooks/useGroupCallRoom';
 import { useGroupNavigation } from '../hooks/useGroupNavigation';
 import { GroupRoutes } from '../navigations/routes';
 
-const RoomHeader = ({ room }: { room: Room }) => {
+const RoomHeader = () => {
   const {
     navigation: { navigate },
     route: {
@@ -20,6 +18,7 @@ const RoomHeader = ({ room }: { room: Room }) => {
   } = useGroupNavigation<GroupRoutes.ROOM>();
 
   const { top } = useSafeAreaInsets();
+  const { room, flipCameraFrontAndBack } = useGroupCallRoom(roomId);
 
   return (
     <View style={[styles.container, { paddingTop: top }]}>
@@ -44,16 +43,7 @@ const RoomHeader = ({ room }: { room: Room }) => {
         <Pressable style={{ marginRight: 24 }} hitSlop={10} onPress={() => /* TODO */ console.log('Speaker')}>
           <SBIcon icon="Speaker" color={Palette.background50} />
         </Pressable>
-        <Pressable
-          hitSlop={10}
-          onPress={async () => {
-            try {
-              await room.localParticipant?.switchCamera();
-            } catch (e) {
-              AppLogger.log('[ERROR] RoomScreen switchCamera', e);
-            }
-          }}
-        >
+        <Pressable hitSlop={10} onPress={flipCameraFrontAndBack}>
           <SBIcon icon="CameraFlipIos" color={Palette.background50} />
         </Pressable>
       </View>

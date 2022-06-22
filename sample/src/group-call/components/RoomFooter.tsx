@@ -2,16 +2,15 @@ import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Room } from '@sendbird/calls-react-native';
-
 import SBIcon from '../../shared/components/SBIcon';
 import SBText from '../../shared/components/SBText';
 import Palette from '../../shared/styles/palette';
 import { AppLogger } from '../../shared/utils/logger';
+import { useGroupCallRoom } from '../hooks/useGroupCallRoom';
 import { useGroupNavigation } from '../hooks/useGroupNavigation';
 import { GroupRoutes } from '../navigations/routes';
 
-const RoomFooter = ({ room }: { room: Room }) => {
+const RoomFooter = () => {
   const {
     navigation: { navigate, goBack },
     route: {
@@ -20,9 +19,11 @@ const RoomFooter = ({ room }: { room: Room }) => {
   } = useGroupNavigation<GroupRoutes.ROOM>();
   const { bottom } = useSafeAreaInsets();
 
+  const { room, toggleLocalParticipantAudio, toggleLocalParticipantVideo } = useGroupCallRoom(roomId);
+
   const exit = () => {
     AppLogger.log('RoomScreen exit');
-    room.exit();
+    room?.exit();
     goBack();
   };
 
@@ -36,27 +37,12 @@ const RoomFooter = ({ room }: { room: Room }) => {
       </Pressable>
 
       <View style={styles.icons}>
-        <Pressable
-          hitSlop={10}
-          onPress={() => {
-            const { localParticipant } = room;
-            localParticipant?.isAudioEnabled
-              ? localParticipant?.muteMicrophone()
-              : localParticipant?.unmuteMicrophone();
-          }}
-        >
-          <SBIcon icon={room.localParticipant?.isAudioEnabled ? 'btnAudioOff' : 'btnAudioOffSelected'} size={48} />
+        <Pressable hitSlop={10} onPress={toggleLocalParticipantAudio}>
+          <SBIcon icon={room?.localParticipant?.isAudioEnabled ? 'btnAudioOff' : 'btnAudioOffSelected'} size={48} />
         </Pressable>
 
-        <Pressable
-          style={{ marginHorizontal: 12 }}
-          hitSlop={10}
-          onPress={() => {
-            const { localParticipant } = room;
-            localParticipant?.isVideoEnabled ? localParticipant?.stopVideo() : localParticipant?.startVideo();
-          }}
-        >
-          <SBIcon icon={room.localParticipant?.isVideoEnabled ? 'btnVideoOff' : 'btnVideoOffSelected'} size={48} />
+        <Pressable style={{ marginHorizontal: 12 }} hitSlop={10} onPress={toggleLocalParticipantVideo}>
+          <SBIcon icon={room?.localParticipant?.isVideoEnabled ? 'btnVideoOff' : 'btnVideoOffSelected'} size={48} />
         </Pressable>
 
         <Pressable hitSlop={10} disabled={!room} onPress={exit}>
