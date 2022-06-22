@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Pressable, StatusBar, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Room, SendbirdCalls } from '@sendbird/calls-react-native';
 
-import SBButton from '../../shared/components/SBButton';
 import SBIcon from '../../shared/components/SBIcon';
 import SBText from '../../shared/components/SBText';
 import { useLayoutEffectAsync } from '../../shared/hooks/useEffectAsync';
@@ -19,6 +19,7 @@ const GroupCallRoomScreen = () => {
       params: { roomId },
     },
   } = useGroupNavigation<GroupRoutes.ROOM>();
+  const { top, bottom } = useSafeAreaInsets();
 
   const [room, setRoom] = useState<Room>();
 
@@ -54,10 +55,10 @@ const GroupCallRoomScreen = () => {
     <View style={styles.container}>
       <StatusBar backgroundColor={Palette.background500} barStyle={'light-content'} />
 
-      <View style={styles.header}>
+      <View style={[styles.header, { paddingTop: top }]}>
         <Pressable
           style={styles.roomInfo}
-          onPress={() => room && navigate(GroupRoutes.ROOM_INFO, { roomId: room?.roomId, createdBy: room?.createdBy })}
+          onPress={() => room && navigate(GroupRoutes.ROOM_INFO, { roomId, createdBy: room?.createdBy })}
         >
           <SBIcon icon="Rooms" size={19} containerStyle={styles.roomIcon} />
           <SBText
@@ -67,7 +68,7 @@ const GroupCallRoomScreen = () => {
             ellipsizeMode={'tail'}
             style={{ flex: 1, marginHorizontal: 8 }}
           >
-            {room?.roomId}
+            {roomId}
           </SBText>
           <SBIcon icon="ShevronRight" color={Palette.background50} />
         </Pressable>
@@ -84,10 +85,42 @@ const GroupCallRoomScreen = () => {
 
       <View style={styles.view}>{/* Video View */}</View>
 
-      <View>{/* bottom - settings, mute, off camera, exit, participants */}</View>
-      <SBButton disabled={!room} onPress={exit}>
-        {'EXIT'}
-      </SBButton>
+      <View style={[styles.footer, { paddingBottom: bottom }]}>
+        <Pressable hitSlop={10} onPress={() => navigate(GroupRoutes.SETTINGS)}>
+          <SBIcon icon={'Settings'} size={20} color={Palette.background50} />
+          <SBText caption2 color={Palette.onBackgroundDark01} style={{ marginTop: 4 }}>
+            {'Settings'}
+          </SBText>
+        </Pressable>
+
+        <View style={styles.fotterIcons}>
+          <Pressable hitSlop={10} onPress={() => /* TODO */ console.log('Audio On/Off')}>
+            <SBIcon icon={room?.localParticipant.isAudioEnabled ? 'btnAudioOff' : 'btnAudioOffSelected'} size={48} />
+          </Pressable>
+
+          <Pressable
+            style={{ marginHorizontal: 12 }}
+            hitSlop={10}
+            onPress={() => /* TODO */ console.log('Video On/Off')}
+          >
+            <SBIcon icon={room?.localParticipant.isVideoEnabled ? 'btnVideoOff' : 'btnVideoOffSelected'} size={48} />
+          </Pressable>
+
+          <Pressable hitSlop={10} disabled={!room} onPress={exit}>
+            <SBIcon icon={'btnCallEnd'} size={48} />
+          </Pressable>
+        </View>
+
+        <Pressable
+          hitSlop={10}
+          onPress={() => room && navigate(GroupRoutes.PARTICIPANTS, { roomId, participants: room?.participants })}
+        >
+          <SBIcon icon={'User'} size={20} color={Palette.background50} />
+          <SBText caption2 color={Palette.onBackgroundDark01} style={{ marginTop: 4 }}>
+            {'Participants'}
+          </SBText>
+        </Pressable>
+      </View>
     </View>
   );
 };
@@ -127,12 +160,21 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   view: {
-    width: '100%',
-    height: 400,
-    borderRadius: 4,
+    flex: 1,
+    backgroundColor: '#eee',
+    marginVertical: 20,
+  },
+  footer: {
+    height: 64,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
     backgroundColor: Palette.background500,
-    marginTop: 24,
-    marginBottom: 16,
+  },
+  fotterIcons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
