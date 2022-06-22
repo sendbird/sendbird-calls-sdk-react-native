@@ -3,7 +3,7 @@ package com.sendbird.calls.reactnative.module
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReadableMap
 
-interface CallsModuleStruct: CommonModule, DirectCallModule, GroupCallModule { }
+interface CallsModuleStruct: CommonModule, DirectCallModule, GroupCallModule, LocalParticipantModule { }
 
 interface CommonModule {
     fun getCurrentUser(promise: Promise)
@@ -42,4 +42,12 @@ interface DirectCallModule {
 interface GroupCallModule {
     fun enter(roomId: String, options: ReadableMap, promise: Promise)
     fun exit(roomId: String)
+}
+
+interface LocalParticipantModule {
+    fun localMuteMicrophone(roomId: String)
+    fun localUnmuteMicrophone(roomId: String)
+    fun localStopVideo(roomId: String)
+    fun localStartVideo(roomId: String)
+    fun localSwitchCamera(roomId: String, promise: Promise)
 }

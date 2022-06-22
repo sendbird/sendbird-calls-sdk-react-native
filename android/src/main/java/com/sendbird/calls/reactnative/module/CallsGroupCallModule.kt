@@ -11,7 +11,7 @@ import com.sendbird.calls.reactnative.utils.CallsUtils
 class CallsGroupCallModule: GroupCallModule {
     override fun enter(roomId: String, options: ReadableMap, promise: Promise) {
         val from = "groupCall/enter"
-        Log.d(CallsModule.NAME, "[GroupCallModule] ${from} -> roomId($roomId) options(${options.toHashMap()})")
+        Log.d(CallsModule.NAME, "[GroupCallModule] $from -> roomId($roomId) options(${options.toHashMap()})")
         SendBirdCall.getCachedRoomById(roomId)
             ?.let {
                 val audioEnabled = CallsUtils.safeGet { options.getBoolean("audioEnabled") }

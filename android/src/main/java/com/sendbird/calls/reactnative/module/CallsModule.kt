@@ -15,6 +15,7 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
     var initialized = false
     val directCallModule = CallsDirectCallModule(this)
     val groupCallModule = CallsGroupCallModule()
+    val localParticipant = CallsLocalParticipantModule()
     val commonModule = CallsCommonModule(this)
     val queries = CallsQueries(this)
 
@@ -79,6 +80,13 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
     /** GroupCall module interface**/
     override fun enter(roomId: String, options: ReadableMap, promise: Promise) = groupCallModule.enter(roomId, options, promise)
     override fun exit(roomId: String) = groupCallModule.exit(roomId)
+
+    /** LocalParticipant module interface**/
+    override fun localMuteMicrophone(roomId: String) = localParticipant.localMuteMicrophone(roomId)
+    override fun localUnmuteMicrophone(roomId: String) = localParticipant.localUnmuteMicrophone(roomId)
+    override fun localStopVideo(roomId: String) = localParticipant.localStopVideo(roomId)
+    override fun localStartVideo(roomId: String) = localParticipant.localStartVideo(roomId)
+    override fun localSwitchCamera(roomId: String, promise: Promise) = localParticipant.localSwitchCamera(roomId, promise)
 
     /** Queries **/
     fun createDirectCallLogListQuery(params: ReadableMap, promise: Promise) = queries.createDirectCallLogListQuery(params, promise)
