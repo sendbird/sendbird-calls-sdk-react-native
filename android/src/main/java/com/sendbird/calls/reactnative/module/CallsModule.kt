@@ -15,7 +15,6 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
     var initialized = false
     val directCallModule = CallsDirectCallModule(this)
     val groupCallModule = CallsGroupCallModule()
-    val localParticipant = CallsLocalParticipantModule()
     val commonModule = CallsCommonModule(this)
     val queries = CallsQueries(this)
 
@@ -64,29 +63,23 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
     override fun fetchRoomById(roomId: String, promise: Promise) = commonModule.fetchRoomById(roomId, promise)
     override fun getCachedRoomById(roomId: String, promise: Promise) = commonModule.getCachedRoomById(roomId, promise)
 
+    override fun stopVideo(isDirectCall: Boolean, identifier: String) = commonModule.stopVideo(isDirectCall, identifier)
+    override fun startVideo(isDirectCall: Boolean, identifier: String) = commonModule.startVideo(isDirectCall, identifier)
+    override fun muteMicrophone(isDirectCall: Boolean, identifier: String) = commonModule.muteMicrophone(isDirectCall, identifier)
+    override fun unmuteMicrophone(isDirectCall: Boolean, identifier: String) = commonModule.unmuteMicrophone(isDirectCall, identifier)
+    override fun switchCamera(isDirectCall: Boolean, identifier: String, promise: Promise) = commonModule.switchCamera(isDirectCall, identifier, promise)
+    override fun selectAudioDevice(isDirectCall: Boolean, identifier: String, device: String, promise: Promise) = commonModule.selectAudioDevice(isDirectCall, identifier, device, promise)
+
     /** DirectCall module interface**/
     override fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise)= directCallModule.selectVideoDevice(callId, device, promise)
-    override fun selectAudioDevice(callId: String, device: String, promise: Promise)= directCallModule.selectAudioDevice(callId, device, promise)
     override fun accept(callId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise) = directCallModule.accept(callId, options, holdActiveCall, promise)
     override fun end(callId: String, promise: Promise)= directCallModule.end(callId, promise)
-    override fun switchCamera(callId: String, promise: Promise)= directCallModule.switchCamera(callId, promise)
-    override fun startVideo(callId: String)= directCallModule.startVideo(callId)
-    override fun stopVideo(callId: String)= directCallModule.stopVideo(callId)
-    override fun muteMicrophone(callId: String)= directCallModule.muteMicrophone(callId)
-    override fun unmuteMicrophone(callId: String)= directCallModule.unmuteMicrophone(callId)
     override fun updateLocalVideoView(callId: String, videoViewId: Int)= directCallModule.updateLocalVideoView(callId, videoViewId)
     override fun updateRemoteVideoView(callId: String, videoViewId: Int)= directCallModule.updateRemoteVideoView(callId, videoViewId)
 
     /** GroupCall module interface**/
     override fun enter(roomId: String, options: ReadableMap, promise: Promise) = groupCallModule.enter(roomId, options, promise)
     override fun exit(roomId: String) = groupCallModule.exit(roomId)
-
-    /** LocalParticipant module interface**/
-    override fun localMuteMicrophone(roomId: String) = localParticipant.localMuteMicrophone(roomId)
-    override fun localUnmuteMicrophone(roomId: String) = localParticipant.localUnmuteMicrophone(roomId)
-    override fun localStopVideo(roomId: String) = localParticipant.localStopVideo(roomId)
-    override fun localStartVideo(roomId: String) = localParticipant.localStartVideo(roomId)
-    override fun localSwitchCamera(roomId: String, promise: Promise) = localParticipant.localSwitchCamera(roomId, promise)
 
     /** Queries **/
     fun createDirectCallLogListQuery(params: ReadableMap, promise: Promise) = queries.createDirectCallLogListQuery(params, promise)

@@ -3,7 +3,7 @@ package com.sendbird.calls.reactnative.module
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReadableMap
 
-interface CallsModuleStruct: CommonModule, DirectCallModule, GroupCallModule, LocalParticipantModule { }
+interface CallsModuleStruct: CommonModule, DirectCallModule, GroupCallModule { }
 
 interface CommonModule {
     fun getCurrentUser(promise: Promise)
@@ -23,18 +23,19 @@ interface CommonModule {
     fun createRoom(roomType: String, promise: Promise)
     fun fetchRoomById(roomId: String, promise: Promise)
     fun getCachedRoomById(roomId: String, promise: Promise)
+
+    fun muteMicrophone(isDirectCall: Boolean, identifier: String)
+    fun unmuteMicrophone(isDirectCall: Boolean, identifier: String)
+    fun stopVideo(isDirectCall: Boolean, identifier: String)
+    fun startVideo(isDirectCall: Boolean, identifier: String)
+    fun switchCamera(isDirectCall: Boolean, identifier: String, promise: Promise)
+    fun selectAudioDevice(isDirectCall: Boolean, identifier: String, device: String, promise: Promise)
 }
 
 interface DirectCallModule {
     fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise)
-    fun selectAudioDevice(callId: String, device: String, promise: Promise)
     fun accept(callId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise)
     fun end(callId: String, promise: Promise)
-    fun switchCamera(callId: String, promise: Promise)
-    fun startVideo(callId: String)
-    fun stopVideo(callId: String)
-    fun muteMicrophone(callId: String)
-    fun unmuteMicrophone(callId: String)
     fun updateLocalVideoView(callId: String, videoViewId: Int)
     fun updateRemoteVideoView(callId: String, videoViewId: Int)
 }
@@ -42,12 +43,4 @@ interface DirectCallModule {
 interface GroupCallModule {
     fun enter(roomId: String, options: ReadableMap, promise: Promise)
     fun exit(roomId: String)
-}
-
-interface LocalParticipantModule {
-    fun localMuteMicrophone(roomId: String)
-    fun localUnmuteMicrophone(roomId: String)
-    fun localStopVideo(roomId: String)
-    fun localStartVideo(roomId: String)
-    fun localSwitchCamera(roomId: String, promise: Promise)
 }

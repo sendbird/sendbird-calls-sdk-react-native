@@ -185,4 +185,110 @@ class CallsCommonModule(private val root: CallsModule): CommonModule {
                 promise.resolve(null)
             }
     }
+
+    override fun muteMicrophone(isDirectCall: Boolean, identifier: String) {
+        val from = "${if(isDirectCall) "directCall" else "groupCall"}/muteMicrophone"
+        Log.d(CallsModule.NAME, "[CommonModule] $from -> ${if(isDirectCall) "Call" else "Room"}($identifier)")
+
+        CallsUtils.safeRun {
+            when(isDirectCall) {
+                true -> CallsUtils.findDirectCall(identifier, from).muteMicrophone()
+                else -> CallsUtils.findRoom(identifier, from).localParticipant?.muteMicrophone()
+            }
+        }
+    }
+
+    override fun unmuteMicrophone(isDirectCall: Boolean, identifier: String) {
+        val from = "${if(isDirectCall) "directCall" else "groupCall"}/unmuteMicrophone"
+        Log.d(CallsModule.NAME, "[CommonModule] $from -> ${if(isDirectCall) "Call" else "Room"}($identifier)")
+
+        CallsUtils.safeRun {
+            when(isDirectCall) {
+                true -> CallsUtils.findDirectCall(identifier, from).unmuteMicrophone()
+                else -> CallsUtils.findRoom(identifier, from).localParticipant?.unmuteMicrophone()
+            }
+        }
+    }
+
+    override fun stopVideo(isDirectCall: Boolean, identifier: String) {
+        val from = "${if(isDirectCall) "directCall" else "groupCall"}/stopVideo"
+        Log.d(CallsModule.NAME, "[CommonModule] $from -> ${if(isDirectCall) "Call" else "Room"}($identifier)")
+
+        CallsUtils.safeRun {
+            when(isDirectCall) {
+                true -> CallsUtils.findDirectCall(identifier, from).stopVideo()
+                else -> CallsUtils.findRoom(identifier, from).localParticipant?.stopVideo()
+            }
+        }
+    }
+
+    override fun startVideo(isDirectCall: Boolean, identifier: String) {
+        val from = "${if(isDirectCall) "directCall" else "groupCall"}/startVideo"
+        Log.d(CallsModule.NAME, "[CommonModule] $from -> ${if(isDirectCall) "Call" else "Room"}($identifier)")
+
+        CallsUtils.safeRun {
+            when(isDirectCall) {
+                true -> CallsUtils.findDirectCall(identifier, from).startVideo()
+                else -> CallsUtils.findRoom(identifier, from).localParticipant?.startVideo()
+            }
+        }
+    }
+
+    override fun switchCamera(isDirectCall: Boolean, identifier: String, promise: Promise) {
+        val from = "${if(isDirectCall) "directCall" else "groupCall"}/switchCamera"
+        Log.d(CallsModule.NAME, "[CommonModule] $from -> ${if(isDirectCall) "Call" else "Room"}($identifier)")
+
+        CallsUtils.safeRun {
+            when(isDirectCall) {
+                true -> CallsUtils.findDirectCall(identifier, from).switchCamera { error ->
+                    error
+                        ?.let {
+                            promise.rejectCalls(it)
+                        }
+                        ?: run {
+                            promise.resolve(null)
+                        }
+                }
+                else -> CallsUtils.findRoom(identifier, from).localParticipant?.switchCamera { error ->
+                    error
+                        ?.let {
+                            promise.rejectCalls(it)
+                        }
+                        ?: run {
+                            promise.resolve(null)
+                        }
+                }
+            }
+        }
+    }
+
+    override fun selectAudioDevice(isDirectCall: Boolean, identifier: String, device: String, promise: Promise) {
+        val from = "${if(isDirectCall) "directCall" else "groupCall"}/switchCamera"
+        Log.d(CallsModule.NAME, "[CommonModule] $from -> ${if(isDirectCall) "Call" else "Room"}($identifier)")
+
+        CallsUtils.safeRun {
+            val audioDevice = AudioDevice.valueOf(device)
+
+            when(isDirectCall) {
+                true -> CallsUtils.findDirectCall(identifier, from).selectAudioDevice(audioDevice) { error ->
+                    error
+                        ?.let {
+                            promise.rejectCalls(it)
+                        }
+                        ?: run {
+                            promise.resolve(null)
+                        }
+                }
+                else -> CallsUtils.findRoom(identifier, from).selectAudioDevice(audioDevice) { error ->
+                    error
+                        ?.let {
+                            promise.rejectCalls(it)
+                        }
+                        ?: run {
+                            promise.resolve(null)
+                        }
+                }
+            }
+        }
+    }
 }

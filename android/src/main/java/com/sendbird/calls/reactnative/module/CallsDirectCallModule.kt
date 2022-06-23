@@ -45,23 +45,6 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule,
         }
     }
 
-    override fun selectAudioDevice(callId: String, device: String, promise: Promise) {
-        CallsUtils.safeRun(promise) {
-            val from = "directCall/selectAudioDevice"
-            val call = CallsUtils.findDirectCall(callId, from)
-            val audioDevice = AudioDevice.valueOf(device)
-            call.selectAudioDevice(audioDevice) { error ->
-                error
-                    ?.let {
-                        promise.rejectCalls(it)
-                    }
-                    ?: run {
-                        promise.resolve(null)
-                    }
-            }
-        }
-    }
-
     override fun accept(callId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise) {
         Log.d(CallsModule.NAME, "[DirectCallModule] accept() -> $callId")
         Log.d(CallsModule.NAME, "[DirectCallModule] accept options -> ${options.toHashMap()}")
@@ -111,59 +94,6 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule,
             val from = "directCall/end"
             CallsUtils.findDirectCall(callId, from).end()
             promise.resolve(null)
-        }
-    }
-
-    override fun switchCamera(callId: String, promise: Promise) {
-        Log.d(CallsModule.NAME, "[DirectCallModule] switchCamera() -> $callId")
-
-        CallsUtils.safeRun(promise) {
-            val from = "directCall/switchCamera"
-            CallsUtils.findDirectCall(callId, from).switchCamera { error ->
-                error
-                    ?.let {
-                        promise.rejectCalls(it)
-                    }
-                    ?: run {
-                        promise.resolve(null)
-                    }
-            }
-        }
-    }
-
-    override fun startVideo(callId: String) {
-        Log.d(CallsModule.NAME, "[DirectCallModule] startVideo() -> $callId")
-
-        CallsUtils.safeRun {
-            val call = CallsUtils.findDirectCall(callId,"directCall/startVideo")
-            call.startVideo()
-        }
-    }
-
-    override fun stopVideo(callId: String) {
-        Log.d(CallsModule.NAME, "[DirectCallModule] stopVideo() -> $callId")
-
-        CallsUtils.safeRun {
-            val call = CallsUtils.findDirectCall(callId, "directCall/stopVideo")
-            call.stopVideo()
-        }
-    }
-
-    override fun muteMicrophone(callId: String) {
-        Log.d(CallsModule.NAME, "[DirectCallModule] muteMicrophone() -> $callId")
-
-        CallsUtils.safeRun {
-            val call = CallsUtils.findDirectCall(callId, "directCall/muteMicrophone")
-            call.muteMicrophone()
-        }
-    }
-
-    override fun unmuteMicrophone(callId: String) {
-        Log.d(CallsModule.NAME, "[DirectCallModule] unmuteMicrophone() -> $callId")
-
-        CallsUtils.safeRun {
-            val call = CallsUtils.findDirectCall(callId, "directCall/unmuteMicrophone")
-            call.unmuteMicrophone()
         }
     }
 

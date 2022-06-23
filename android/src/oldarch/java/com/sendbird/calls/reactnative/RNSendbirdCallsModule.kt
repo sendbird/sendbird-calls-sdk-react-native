@@ -66,26 +66,26 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     override fun fetchRoomById(roomId: String, promise: Promise) = module.fetchRoomById(roomId, promise)
     @ReactMethod
     override fun getCachedRoomById(roomId: String, promise: Promise) = module.getCachedRoomById(roomId, promise)
+    @ReactMethod
+    override fun muteMicrophone(isDirectCall: Boolean, identifier: String) = module.muteMicrophone(isDirectCall, identifier)
+    @ReactMethod
+    override fun unmuteMicrophone(isDirectCall: Boolean, identifier: String) = module.unmuteMicrophone(isDirectCall, identifier)
+    @ReactMethod
+    override fun stopVideo(isDirectCall: Boolean, identifier: String) = module.stopVideo(isDirectCall, identifier)
+    @ReactMethod
+    override fun startVideo(isDirectCall: Boolean, identifier: String) = module.startVideo(isDirectCall, identifier)
+    @ReactMethod
+    override fun switchCamera(isDirectCall: Boolean, identifier: String, promise: Promise) = module.switchCamera(isDirectCall, identifier, promise)
+    @ReactMethod
+    override fun selectAudioDevice(isDirectCall: Boolean, identifier: String, device: String, promise: Promise) = module.selectAudioDevice(isDirectCall, identifier, device, promise)
 
     /** DirectCall **/
     @ReactMethod
     override fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise) = module.selectVideoDevice(callId, device, promise)
     @ReactMethod
-    override fun selectAudioDevice(callId: String, device: String, promise: Promise) = module.selectAudioDevice(callId, device, promise)
-    @ReactMethod
     override fun accept(callId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise) = module.accept(callId, options, holdActiveCall, promise)
     @ReactMethod
     override fun end(callId: String, promise: Promise) = module.end(callId, promise)
-    @ReactMethod
-    override fun switchCamera(callId: String, promise: Promise) = module.switchCamera(callId, promise)
-    @ReactMethod
-    override fun startVideo(callId: String) = module.startVideo(callId)
-    @ReactMethod
-    override fun stopVideo(callId: String) = module.stopVideo(callId)
-    @ReactMethod
-    override fun muteMicrophone(callId: String) = module.muteMicrophone(callId)
-    @ReactMethod
-    override fun unmuteMicrophone(callId: String) = module.unmuteMicrophone(callId)
     @ReactMethod
     override fun updateLocalVideoView(callId: String, videoViewId: Int) = module.updateLocalVideoView(callId, videoViewId)
     @ReactMethod
@@ -96,18 +96,6 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     override fun enter(roomId: String, options: ReadableMap, promise: Promise) = module.enter(roomId, options, promise)
     @ReactMethod
     override fun exit(roomId: String) = module.exit(roomId)
-
-    /** GroupCall - LocalParticipant **/
-    @ReactMethod
-    override fun localMuteMicrophone(roomId: String) = module.localMuteMicrophone(roomId)
-    @ReactMethod
-    override fun localUnmuteMicrophone(roomId: String) = module.localUnmuteMicrophone(roomId)
-    @ReactMethod
-    override fun localStopVideo(roomId: String) = module.localStopVideo(roomId)
-    @ReactMethod
-    override fun localStartVideo(roomId: String) = module.localStartVideo(roomId)
-    @ReactMethod
-    override fun localSwitchCamera(roomId: String, promise: Promise) = module.localSwitchCamera(roomId, promise)
 
     /** Queries **/
     @ReactMethod
