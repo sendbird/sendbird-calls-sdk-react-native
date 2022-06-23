@@ -42,31 +42,38 @@ export const useGroupCallRoom = (roomId: string) => {
           },
 
           onDeleted() {
-            console.log('onDeleted : ', room?.roomId);
+            // TODO: delete AppLogger and add code
+            AppLogger.log('useGroupCallRoom :: onDeleted : ', room?.roomId);
           },
           onError(e: Error, participant?: ParticipantProperties) {
-            console.log('onError : ', e, participant);
+            // TODO: delete AppLogger and add code
+            AppLogger.log('useGroupCallRoom :: onError : ', e, participant);
           },
 
           /* Remote Participant */
           onRemoteParticipantEntered(participant: ParticipantProperties) {
-            console.log('onRemoteParticipantEntered : ', participant);
+            // TODO: delete AppLogger and add code
+            AppLogger.log('useGroupCallRoom :: onRemoteParticipantEntered : ', participant);
             forceUpdate();
           },
           onRemoteParticipantExited(participant: ParticipantProperties) {
-            console.log('onRemoteParticipantExited : ', participant);
+            // TODO: delete AppLogger and add code
+            AppLogger.log('useGroupCallRoom :: onRemoteParticipantExited : ', participant);
             forceUpdate();
           },
           onRemoteParticipantStreamStarted(participant: ParticipantProperties) {
-            console.log('onRemoteParticipantStreamStarted : ', participant);
+            // TODO: delete AppLogger and add code
+            AppLogger.log('useGroupCallRoom :: onRemoteParticipantStreamStarted : ', participant);
             forceUpdate();
           },
           onRemoteVideoSettingsChanged(participant: ParticipantProperties) {
-            console.log('onRemoteVideoSettingsChanged : ', participant);
+            // TODO: delete AppLogger and add code
+            AppLogger.log('useGroupCallRoom :: onRemoteVideoSettingsChanged : ', participant);
             forceUpdate();
           },
           onRemoteAudioSettingsChanged(participant: ParticipantProperties) {
-            console.log('onRemoteAudioSettingsChanged : ', participant);
+            // TODO: delete AppLogger and add code
+            AppLogger.log('useGroupCallRoom :: onRemoteAudioSettingsChanged : ', participant);
             forceUpdate();
           },
 
@@ -78,16 +85,19 @@ export const useGroupCallRoom = (roomId: string) => {
               setCurrentAudioDeviceIOS(route);
             }
 
-            console.log('onAudioDeviceChanged : ', currentAudioDevice, availableAudioDevices);
+            // TODO: delete AppLogger and add code
+            AppLogger.log('useGroupCallRoom :: onAudioDeviceChanged : ', currentAudioDevice, availableAudioDevices);
             forceUpdate();
           },
 
           onCustomItemsUpdated(updatedKeys: string[]) {
-            console.log('updatedKeys : ', updatedKeys);
+            // TODO: delete AppLogger and add code
+            AppLogger.log('useGroupCallRoom :: updatedKeys : ', updatedKeys);
             forceUpdate();
           },
           onCustomItemsDeleted(deletedKeys: string[]) {
-            console.log('deletedKeys : ', deletedKeys);
+            // TODO: delete AppLogger and add code
+            AppLogger.log('useGroupCallRoom :: deletedKeys : ', deletedKeys);
             forceUpdate();
           },
         })

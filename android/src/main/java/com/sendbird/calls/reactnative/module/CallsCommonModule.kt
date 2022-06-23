@@ -238,7 +238,7 @@ class CallsCommonModule(private val root: CallsModule): CommonModule {
         val from = "${if(isDirectCall) "directCall" else "groupCall"}/switchCamera"
         Log.d(CallsModule.NAME, "[CommonModule] $from -> ${if(isDirectCall) "Call" else "Room"}($identifier)")
 
-        CallsUtils.safeRun {
+        CallsUtils.safeRun(promise) {
             when(isDirectCall) {
                 true -> CallsUtils.findDirectCall(identifier, from).switchCamera { error ->
                     error
