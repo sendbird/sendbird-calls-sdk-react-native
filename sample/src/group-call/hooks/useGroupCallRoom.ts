@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
-import { AudioDevice, ParticipantProperties, Room, SendbirdCalls } from '@sendbird/calls-react-native';
+import type { AudioDevice, AudioDeviceRoute, ParticipantProperties, Room } from '@sendbird/calls-react-native';
+import { SendbirdCalls } from '@sendbird/calls-react-native';
 
 import { useEffectAsync } from '../../shared/hooks/useEffectAsync';
 import { AppLogger } from '../../shared/utils/logger';
@@ -11,6 +12,7 @@ export const useGroupCallRoom = (roomId: string) => {
 
   const [room, setRoom] = useState<Room | null>(null);
   const [isFetched, setIsFetched] = useState(false);
+  const [currentAudioDeviceIOS, setCurrentAudioDeviceIOS] = useState<AudioDeviceRoute>({ inputs: [], outputs: [] });
 
   const toggleLocalParticipantAudio = () => {
     room?.localParticipant?.isAudioEnabled
@@ -69,6 +71,13 @@ export const useGroupCallRoom = (roomId: string) => {
           },
 
           onAudioDeviceChanged(currentAudioDevice: AudioDevice | null, availableAudioDevices: AudioDevice[]) {
+            // TODO: setCurrentAudioDeviceIOS
+            const todoFlag = false;
+            if (todoFlag) {
+              const route = { inputs: [], outputs: [] };
+              setCurrentAudioDeviceIOS(route);
+            }
+
             console.log('onAudioDeviceChanged : ', currentAudioDevice, availableAudioDevices);
             forceUpdate();
           },
@@ -88,5 +97,12 @@ export const useGroupCallRoom = (roomId: string) => {
     return unsubscribe;
   }, []);
 
-  return { room, isFetched, toggleLocalParticipantAudio, toggleLocalParticipantVideo, flipCameraFrontAndBack };
+  return {
+    room,
+    isFetched,
+    currentAudioDeviceIOS,
+    toggleLocalParticipantAudio,
+    toggleLocalParticipantVideo,
+    flipCameraFrontAndBack,
+  };
 };

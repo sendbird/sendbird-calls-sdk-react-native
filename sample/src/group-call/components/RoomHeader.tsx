@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { AudioDeviceSelectModal } from '../../shared/components/AudioDeviceButton';
 import SBIcon from '../../shared/components/SBIcon';
 import SBText from '../../shared/components/SBText';
 import Palette from '../../shared/styles/palette';
@@ -19,6 +20,8 @@ const RoomHeader = () => {
 
   const { top } = useSafeAreaInsets();
   const { room, flipCameraFrontAndBack } = useGroupCallRoom(roomId);
+
+  const [visible, setVisible] = useState(false);
 
   return (
     <View style={[styles.container, { paddingTop: top }]}>
@@ -40,13 +43,23 @@ const RoomHeader = () => {
       </Pressable>
 
       <View style={styles.right}>
-        <Pressable style={{ marginRight: 24 }} hitSlop={10} onPress={() => /* TODO */ console.log('Speaker')}>
+        <Pressable style={{ marginRight: 24 }} hitSlop={10} onPress={() => setVisible(true)}>
           <SBIcon icon="Speaker" color={Palette.background50} />
         </Pressable>
         <Pressable hitSlop={10} onPress={flipCameraFrontAndBack}>
           <SBIcon icon="CameraFlipIos" color={Palette.background50} />
         </Pressable>
       </View>
+
+      <AudioDeviceSelectModal
+        currentDevice={room?.currentAudioDevice}
+        devices={room?.availableAudioDevices ?? []}
+        visible={visible}
+        onSelect={async (device) => {
+          setVisible(false);
+          device && (await room?.selectAudioDevice(device));
+        }}
+      />
     </View>
   );
 };
