@@ -6,6 +6,7 @@ import com.facebook.react.bridge.WritableNativeArray
 import com.sendbird.calls.*
 import com.sendbird.calls.reactnative.RNCallsInternalError
 import com.sendbird.calls.reactnative.extension.rejectCalls
+import com.sendbird.calls.reactnative.module.listener.CallsGroupCallListener
 import com.sendbird.calls.reactnative.utils.CallsUtils
 
 enum class QueryType {

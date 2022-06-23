@@ -23,24 +23,31 @@ interface CommonModule {
     fun createRoom(roomType: String, promise: Promise)
     fun fetchRoomById(roomId: String, promise: Promise)
     fun getCachedRoomById(roomId: String, promise: Promise)
-
-    fun muteMicrophone(isDirectCall: Boolean, identifier: String)
-    fun unmuteMicrophone(isDirectCall: Boolean, identifier: String)
-    fun stopVideo(isDirectCall: Boolean, identifier: String)
-    fun startVideo(isDirectCall: Boolean, identifier: String)
-    fun switchCamera(isDirectCall: Boolean, identifier: String, promise: Promise)
-    fun selectAudioDevice(isDirectCall: Boolean, identifier: String, device: String, promise: Promise)
 }
 
-interface DirectCallModule {
-    fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise)
+interface DirectCallModule: MediaDeviceControl {
     fun accept(callId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise)
     fun end(callId: String, promise: Promise)
     fun updateLocalVideoView(callId: String, videoViewId: Int)
     fun updateRemoteVideoView(callId: String, videoViewId: Int)
 }
 
-interface GroupCallModule {
+interface GroupCallModule: MediaDeviceControl {
     fun enter(roomId: String, options: ReadableMap, promise: Promise)
     fun exit(roomId: String)
+}
+
+enum class ModuleType {
+    DIRECT_CALL,
+    GROUP_CALL
+}
+
+interface MediaDeviceControl {
+    fun muteMicrophone(type: String, identifier: String)
+    fun unmuteMicrophone(type: String, identifier: String)
+    fun stopVideo(type: String, identifier: String)
+    fun startVideo(type: String, identifier: String)
+    fun switchCamera(type: String, identifier: String, promise: Promise)
+    fun selectAudioDevice(type: String, identifier: String, device: String, promise: Promise)
+    fun selectVideoDevice(type: String, identifier: String, device: ReadableMap, promise: Promise)
 }

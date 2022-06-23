@@ -1,10 +1,11 @@
-package com.sendbird.calls.reactnative.module
+package com.sendbird.calls.reactnative.module.listener
 
 import android.util.Log
 import com.facebook.react.bridge.Arguments
 import com.sendbird.calls.*
 import com.sendbird.calls.reactnative.CallsEvents
 import com.sendbird.calls.reactnative.extension.asString
+import com.sendbird.calls.reactnative.module.CallsModule
 import com.sendbird.calls.reactnative.utils.CallsUtils
 
 class CallsGroupCallListener(private val root: CallsModule, private val room: Room): RoomListener {

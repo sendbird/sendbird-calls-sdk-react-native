@@ -66,22 +66,24 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     override fun fetchRoomById(roomId: String, promise: Promise) = module.fetchRoomById(roomId, promise)
     @ReactMethod
     override fun getCachedRoomById(roomId: String, promise: Promise) = module.getCachedRoomById(roomId, promise)
+
+    /** MediaDevice Control **/
     @ReactMethod
-    override fun muteMicrophone(isDirectCall: Boolean, identifier: String) = module.muteMicrophone(isDirectCall, identifier)
+    override fun muteMicrophone(type: String, identifier: String) = module.muteMicrophone(type, identifier)
     @ReactMethod
-    override fun unmuteMicrophone(isDirectCall: Boolean, identifier: String) = module.unmuteMicrophone(isDirectCall, identifier)
+    override fun unmuteMicrophone(type: String, identifier: String) = module.unmuteMicrophone(type, identifier)
     @ReactMethod
-    override fun stopVideo(isDirectCall: Boolean, identifier: String) = module.stopVideo(isDirectCall, identifier)
+    override fun stopVideo(type: String, identifier: String) = module.stopVideo(type, identifier)
     @ReactMethod
-    override fun startVideo(isDirectCall: Boolean, identifier: String) = module.startVideo(isDirectCall, identifier)
+    override fun startVideo(type: String, identifier: String) = module.startVideo(type, identifier)
     @ReactMethod
-    override fun switchCamera(isDirectCall: Boolean, identifier: String, promise: Promise) = module.switchCamera(isDirectCall, identifier, promise)
+    override fun switchCamera(type: String, identifier: String, promise: Promise) = module.switchCamera(type, identifier, promise)
     @ReactMethod
-    override fun selectAudioDevice(isDirectCall: Boolean, identifier: String, device: String, promise: Promise) = module.selectAudioDevice(isDirectCall, identifier, device, promise)
+    override fun selectAudioDevice(type: String, identifier: String, device: String, promise: Promise) = module.selectAudioDevice(type, identifier, device, promise)
+    @ReactMethod
+    override fun selectVideoDevice(type: String, identifier: String, device: ReadableMap, promise: Promise) = module.selectVideoDevice(type, identifier, device, promise)
 
     /** DirectCall **/
-    @ReactMethod
-    override fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise) = module.selectVideoDevice(callId, device, promise)
     @ReactMethod
     override fun accept(callId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise) = module.accept(callId, options, holdActiveCall, promise)
     @ReactMethod
