@@ -98,7 +98,7 @@ export class Room implements RoomProperties, GroupCallMethods {
   }
 
   /**
-   * Add GroupCall listener.
+   * Add GroupCall Room listener.
    * supports multiple listeners.
    *
    * @since 1.0.0
@@ -169,7 +169,9 @@ export class Room implements RoomProperties, GroupCallMethods {
   };
 
   /**
-   * Enter room
+   * Enter the room
+   * Will trigger {@link RoomListener.onRemoteParticipantEntered} method of remote participants after successfully entering the room.
+   * If a remote participant entered the room, the local user will be notified via the same method.
    *
    * @since 1.0.0
    */
@@ -178,7 +180,9 @@ export class Room implements RoomProperties, GroupCallMethods {
   };
 
   /**
-   * Exit room
+   * Exit from the room
+   * Will trigger {@link RoomListener.onRemoteParticipantExited} method of remote participants after successfully exiting the room.
+   * If a remote participant exited the room, the local user will be notified via the same method.
    *
    * @since 1.0.0
    */
@@ -186,6 +190,13 @@ export class Room implements RoomProperties, GroupCallMethods {
     this._binder.nativeModule.exit(this.roomId);
   }
 
+  /**
+   * Selects audio device
+   * Changes current audio device asynchronously.
+   * Will trigger {@link RoomListener.onAudioDeviceChanged} method of the local participant after successfully changing the audio device.
+   *
+   * @since 1.0.0
+   */
   public selectAudioDevice = async (device: AudioDevice) => {
     return await this._binder.nativeModule.selectAudioDevice(this._isDirectCall, this.roomId, device);
   };

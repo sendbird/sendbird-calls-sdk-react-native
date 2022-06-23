@@ -68,6 +68,13 @@ export class LocalParticipant implements ParticipantProperties, LocalParticipant
     return this._props.updatedAt;
   }
 
+  /**
+   * Mutes the audio of the local user.
+   * Will trigger {@link RoomListener.onRemoteAudioSettingsChanged} method of remote participants.
+   * If the remote user changes their audio settings, the local user will be notified via the same method.
+   *
+   * @since 1.0.0
+   */
   public muteMicrophone = () => {
     this._binder.nativeModule.muteMicrophone(this._isDirectCall, this._roomId);
 
@@ -75,6 +82,14 @@ export class LocalParticipant implements ParticipantProperties, LocalParticipant
     this._props.isAudioEnabled = false;
     this._internalEvents.emit('onPropertyUpdatedManually', this);
   };
+
+  /**
+   * Unmutes the audio of the local user.
+   * Will trigger {@link RoomListener.onRemoteAudioSettingsChanged} method of remote participants.
+   * If the remote user changes their audio settings, the local user will be notified via the same method.
+   *
+   * @since 1.0.0
+   */
   public unmuteMicrophone = () => {
     this._binder.nativeModule.unmuteMicrophone(this._isDirectCall, this._roomId);
 
@@ -83,6 +98,13 @@ export class LocalParticipant implements ParticipantProperties, LocalParticipant
     this._internalEvents.emit('onPropertyUpdatedManually', this);
   };
 
+  /**
+   * Unmutes the audio of the local user.
+   * Will trigger {@link RoomListener.onRemoteVideoSettingsChanged} method of remote participants.
+   * If the remote user changes their video settings, the local user will be notified via the same method.
+   *
+   * @since 1.0.0
+   */
   public stopVideo = () => {
     this._binder.nativeModule.stopVideo(this._isDirectCall, this._roomId);
 
@@ -90,6 +112,14 @@ export class LocalParticipant implements ParticipantProperties, LocalParticipant
     this._props.isVideoEnabled = false;
     this._internalEvents.emit('onPropertyUpdatedManually', this);
   };
+
+  /**
+   * Unmutes the audio of the local user.
+   * Will trigger {@link RoomListener.onRemoteVideoSettingsChanged} method of remote participants.
+   * If the remote user changes their video settings, the local user will be notified via the same method.
+   *
+   * @since 1.0.0
+   */
   public startVideo = () => {
     this._binder.nativeModule.startVideo(this._isDirectCall, this._roomId);
 
@@ -98,6 +128,14 @@ export class LocalParticipant implements ParticipantProperties, LocalParticipant
     this._internalEvents.emit('onPropertyUpdatedManually', this);
   };
 
+  /**
+   * Toggles the selection between the front and the back camera.
+   *
+   * on Android, In case of more than two cameras, the next camera will be selected.
+   * If the last camera is already selected, the first one will be selected again.
+   *
+   * @since 1.0.0
+   */
   public switchCamera = async () => {
     return await this._binder.nativeModule.switchCamera(this._isDirectCall, this._roomId);
   };
