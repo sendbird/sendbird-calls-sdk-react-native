@@ -1,9 +1,17 @@
 import type { AudioDevice } from './Media';
 import type { NativeGroupCallModule } from './NativeModule';
 import type { ParticipantProperties } from './Participant';
-import type { AsJSGroupCall } from './index';
+import type { AsJSCommonControl, AsJSGroupCall } from './index';
 
 export interface RoomListener {
+  /**
+   * Called when the update properties internally on Javascript side
+   *
+   * @platform Javascript
+   * @since 1.0.0
+   */
+  onPropertyUpdatedManually: (room: RoomProperties) => void;
+
   /** Called when the room is deleted **/
   onDeleted: () => void;
 
@@ -52,7 +60,7 @@ export interface RoomProperties {
   createdBy: string;
 }
 
-type JSGroupCallModule = AsJSGroupCall<NativeGroupCallModule>; // TODO: check platform specific func
+type JSGroupCallModule = AsJSGroupCall<AsJSCommonControl<NativeGroupCallModule>>; // TODO: check platform specific func
 
 export interface GroupCallMethods extends JSGroupCallModule {
   addListener(listener: Partial<RoomListener>): () => void;

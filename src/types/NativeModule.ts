@@ -57,23 +57,28 @@ export interface NativeCommonModule {
   // removeAllRecordingListeners
 }
 
+export interface NativeCommonUserInteractModule {
+  muteMicrophone(isDirectCall: boolean, identifier: string): void;
+  unmuteMicrophone(isDirectCall: boolean, identifier: string): void;
+  stopVideo(isDirectCall: boolean, identifier: string): void;
+  startVideo(isDirectCall: boolean, identifier: string): void;
+  switchCamera(isDirectCall: boolean, identifier: string): Promise<void>;
+}
+
+export interface NativeCommonDeviceControlModule {
+  /** @platform Android **/
+  selectAudioDevice(isDirectCall: boolean, identifier: string, device: AudioDevice): Promise<void>;
+}
+
 type CommonModule_AndroidSpecificKeys = 'handleFirebaseMessageData';
 type CommonModule_IOSSpecificKeys = 'registerVoIPPushToken' | 'unregisterVoIPPushToken' | 'routePickerView';
 
-export interface NativeDirectCallModule {
+export interface NativeDirectCallModule extends NativeCommonUserInteractModule, NativeCommonDeviceControlModule {
   accept(callId: string, options: CallOptions, holdActiveCall: boolean): Promise<void>;
   end(callId: string): Promise<void>;
-  switchCamera(callId: string): Promise<void>;
-  startVideo(callId: string): void;
-  stopVideo(callId: string): void;
-  muteMicrophone(callId: string): void;
-  unmuteMicrophone(callId: string): void;
   updateLocalVideoView(callId: string, videoViewId: number): void;
   updateRemoteVideoView(callId: string, videoViewId: number): void;
   selectVideoDevice(callId: string, device: VideoDevice): Promise<void>;
-
-  /** @platform Android **/
-  selectAudioDevice(callId: string, device: AudioDevice): Promise<void>;
 
   /** Not implemented yet belows **/
   // hold(callId:string): Promise<void>;
@@ -92,17 +97,9 @@ export interface NativeDirectCallModule {
   // stopScreenShare(callId:string): Promise<void>;
 }
 
-export interface NativeGroupCallModule {
+export interface NativeGroupCallModule extends NativeCommonDeviceControlModule {
   enter(roomId: string, options: EnterParams): Promise<void>;
   exit(roomId: string): void;
-}
-
-export interface NativeLocalParticipantModule {
-  localMuteMicrophone(roomId: string): void;
-  localUnmuteMicrophone(roomId: string): void;
-  localStopVideo(roomId: string): void;
-  localStartVideo(roomId: string): void;
-  localSwitchCamera(roomId: string): Promise<void>;
 }
 
 export interface NativeQueries {
@@ -121,7 +118,7 @@ export interface SendbirdCallsNativeSpec
     NativeCommonModule,
     NativeDirectCallModule,
     NativeGroupCallModule,
-    NativeLocalParticipantModule {}
+    NativeCommonUserInteractModule {}
 
 // --------------- Javascript interfaces ---------------
 

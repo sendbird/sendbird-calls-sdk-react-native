@@ -32,8 +32,10 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
   constructor(binder: NativeBinder, props: DirectCallProperties) {
     this._binder = binder;
     this._props = props;
+    this._isDirectCall = true;
   }
 
+  private _isDirectCall: boolean;
   private _binder: NativeBinder;
   private _props: DirectCallProperties;
   private _internalEvents = {
@@ -275,7 +277,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
    * @since 1.0.0
    */
   public android_selectAudioDevice = async (device: AudioDevice) => {
-    await this._binder.nativeModule.selectAudioDevice(this.callId, device);
+    await this._binder.nativeModule.selectAudioDevice(this._isDirectCall, this.callId, device);
   };
 
   /**
@@ -286,7 +288,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
    * @since 1.0.0
    */
   public muteMicrophone = () => {
-    this._binder.nativeModule.muteMicrophone(this.callId);
+    this._binder.nativeModule.muteMicrophone(this._isDirectCall, this.callId);
 
     // NOTE: native doesn't have onLocalAudioSettingsChanged event
     this._props.isLocalAudioEnabled = false;
@@ -301,7 +303,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
    * @since 1.0.0
    */
   public unmuteMicrophone = () => {
-    this._binder.nativeModule.unmuteMicrophone(this.callId);
+    this._binder.nativeModule.unmuteMicrophone(this._isDirectCall, this.callId);
 
     // NOTE: native doesn't have onLocalAudioSettingsChanged event
     this._props.isLocalAudioEnabled = true;
@@ -316,7 +318,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
    * @since 1.0.0
    */
   public startVideo = () => {
-    this._binder.nativeModule.startVideo(this.callId);
+    this._binder.nativeModule.startVideo(this._isDirectCall, this.callId);
     this._props.isLocalVideoEnabled = true;
 
     // NOTE: ios native doesn't have onLocalAudioSettingsChanged event
@@ -331,7 +333,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
    * @since 1.0.0
    */
   public stopVideo = () => {
-    this._binder.nativeModule.stopVideo(this.callId);
+    this._binder.nativeModule.stopVideo(this._isDirectCall, this.callId);
     this._props.isLocalVideoEnabled = false;
 
     // NOTE: ios native doesn't have onLocalAudioSettingsChanged event
@@ -347,7 +349,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
    * @since 1.0.0
    */
   public switchCamera = async () => {
-    await this._binder.nativeModule.switchCamera(this.callId);
+    await this._binder.nativeModule.switchCamera(this._isDirectCall, this.callId);
   };
 
   /**

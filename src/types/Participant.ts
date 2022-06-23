@@ -1,4 +1,5 @@
 import type { User } from './User';
+import { AsJSCommonControl, NativeCommonUserInteractModule } from './index';
 
 export interface ParticipantProperties {
   participantId: string;
@@ -15,13 +16,10 @@ export interface ParticipantProperties {
   updatedAt: number;
 }
 
-export interface LocalParticipantMethods {
-  muteMicrophone(): void;
-  unmuteMicrophone(): void;
-  stopVideo(): void;
-  startVideo(): void;
-  switchCamera(): Promise<void>;
-}
+type JSLocalParticipantModule = AsJSCommonControl<NativeCommonUserInteractModule>;
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface LocalParticipantMethods extends JSLocalParticipantModule {}
 
 export enum ParticipantState {
   ENTERED = 'ENTERED',

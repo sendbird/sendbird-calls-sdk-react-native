@@ -32,6 +32,13 @@ export type AsJSInterface<T, Platform extends PlatformPrefix, Keys extends keyof
 };
 
 /** @internal **/
+export type AsJSCommonControl<T> = {
+  [key in keyof T]: T[key] extends (isDirectCall: boolean, identifier: string, ...args: infer Args) => infer R
+    ? (...args: Args) => R
+    : T[key];
+};
+
+/** @internal **/
 export type AsJSDirectCall<T> = {
   [key in keyof T]: T[key] extends (callId: string, ...args: infer Args) => infer R ? (...args: Args) => R : T[key];
 };

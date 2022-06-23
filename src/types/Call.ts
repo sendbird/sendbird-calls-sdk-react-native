@@ -1,7 +1,7 @@
 import type { AudioDevice, AudioDeviceChangedInfo, RecordingStatus, VideoDevice } from './Media';
 import type { NativeDirectCallModule } from './NativeModule';
 import type { User } from './User';
-import type { AsJSDirectCall, AsJSInterface } from './index';
+import type { AsJSCommonControl, AsJSDirectCall, AsJSInterface } from './index';
 
 export interface SendbirdCallListener {
   /**
@@ -326,7 +326,11 @@ export interface DirectCallProperties {
 }
 
 /** DirectCall */
-type JSDirectCallModule = AsJSInterface<AsJSDirectCall<NativeDirectCallModule>, 'android', 'selectAudioDevice'>;
+type JSDirectCallModule = AsJSInterface<
+  AsJSCommonControl<AsJSDirectCall<NativeDirectCallModule>>,
+  'android',
+  'selectAudioDevice'
+>;
 
 export interface DirectCallMethods extends JSDirectCallModule {
   addListener(listener: Partial<DirectCallListener>): () => void;

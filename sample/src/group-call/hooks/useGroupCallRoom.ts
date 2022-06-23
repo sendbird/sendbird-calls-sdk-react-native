@@ -16,11 +16,9 @@ export const useGroupCallRoom = (roomId: string) => {
     room?.localParticipant?.isAudioEnabled
       ? room.localParticipant.muteMicrophone()
       : room?.localParticipant?.unmuteMicrophone();
-    forceUpdate();
   };
   const toggleLocalParticipantVideo = () => {
     room?.localParticipant?.isVideoEnabled ? room.localParticipant.stopVideo() : room?.localParticipant?.startVideo();
-    forceUpdate();
   };
   const flipCameraFrontAndBack = async () => {
     try {
@@ -37,6 +35,10 @@ export const useGroupCallRoom = (roomId: string) => {
 
     const unsubscribe = room
       ? room?.addListener({
+          onPropertyUpdatedManually() {
+            forceUpdate();
+          },
+
           onDeleted() {
             console.log('onDeleted : ', room?.roomId);
           },

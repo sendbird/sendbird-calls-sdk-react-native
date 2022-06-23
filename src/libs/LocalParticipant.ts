@@ -1,23 +1,38 @@
-import type { LocalParticipantMethods, ParticipantProperties } from '../types';
+import type { LocalParticipantMethods, ParticipantProperties, RoomListener } from '../types';
 import type NativeBinder from './NativeBinder';
+import { InternalEvents } from './Room';
 
 export class LocalParticipant implements ParticipantProperties, LocalParticipantMethods {
   /** @internal **/
-  public static get(binder: NativeBinder, props: ParticipantProperties | null, roomId: string) {
+  public static get(
+    binder: NativeBinder,
+    internalEvents: InternalEvents<RoomListener>,
+    props: ParticipantProperties | null,
+    roomId: string,
+  ) {
     if (!props) return null;
 
-    const localParticipant = new LocalParticipant(binder, props, roomId);
+    const localParticipant = new LocalParticipant(binder, internalEvents, props, roomId);
     return localParticipant._updateInternal(props);
   }
 
-  constructor(binder: NativeBinder, props: ParticipantProperties, roomId: string) {
+  constructor(
+    binder: NativeBinder,
+    internalEvents: InternalEvents<RoomListener>,
+    props: ParticipantProperties,
+    roomId: string,
+  ) {
     this._binder = binder;
+    this._internalEvents = internalEvents;
     this._props = props;
     this._roomId = roomId;
+    this._isDirectCall = false;
   }
 
+  private _isDirectCall: boolean;
   private _binder: NativeBinder;
   private _props: ParticipantProperties;
+  private _internalEvents: InternalEvents<RoomListener>;
   private _roomId: string;
 
   private _updateInternal(props: ParticipantProperties) {
@@ -54,24 +69,36 @@ export class LocalParticipant implements ParticipantProperties, LocalParticipant
   }
 
   public muteMicrophone = () => {
-    this._binder.nativeModule.localMuteMicrophone(this._roomId);
+    this._binder.nativeModule.muteMicrophone(this._isDirectCall, this._roomId);
+
+    // NOTE: native doesn't have onLocalAudioSettingsChanged event
     this._props.isAudioEnabled = false;
+    this._internalEvents.emit('onPropertyUpdatedManually', this);
   };
   public unmuteMicrophone = () => {
-    this._binder.nativeModule.localUnmuteMicrophone(this._roomId);
+    this._binder.nativeModule.unmuteMicrophone(this._isDirectCall, this._roomId);
+
+    // NOTE: native doesn't have onLocalAudioSettingsChanged event
     this._props.isAudioEnabled = true;
+    this._internalEvents.emit('onPropertyUpdatedManually', this);
   };
 
   public stopVideo = () => {
-    this._binder.nativeModule.localStopVideo(this._roomId);
+    this._binder.nativeModule.stopVideo(this._isDirectCall, this._roomId);
+
+    // NOTE: native doesn't have onLocalAudioSettingsChanged event
     this._props.isVideoEnabled = false;
+    this._internalEvents.emit('onPropertyUpdatedManually', this);
   };
   public startVideo = () => {
-    this._binder.nativeModule.localStartVideo(this._roomId);
+    this._binder.nativeModule.startVideo(this._isDirectCall, this._roomId);
+
+    // NOTE: native doesn't have onLocalAudioSettingsChanged event
     this._props.isVideoEnabled = true;
+    this._internalEvents.emit('onPropertyUpdatedManually', this);
   };
 
   public switchCamera = async () => {
-    return await this._binder.nativeModule.localSwitchCamera(this._roomId);
+    return await this._binder.nativeModule.switchCamera(this._isDirectCall, this._roomId);
   };
 }

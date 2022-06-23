@@ -1,9 +1,15 @@
-import type { EnterParams, GroupCallMethods, RoomListener, RoomProperties } from '../types';
+import type { AudioDevice, EnterParams, GroupCallMethods, RoomListener, RoomProperties } from '../types';
 import { Logger } from '../utils/logger';
 import { LocalParticipant } from './LocalParticipant';
 import type NativeBinder from './NativeBinder';
 import { CallsEvent, GroupCallEventType } from './NativeBinder';
 import { SendbirdError } from './SendbirdError';
+
+export interface InternalEvents<T> {
+  pool: Partial<T>[];
+  emit: (event: keyof T, ...args: unknown[]) => void;
+  add: (listener: Partial<T>) => () => void;
+}
 
 export class Room implements RoomProperties, GroupCallMethods {
   /** @internal **/
@@ -25,8 +31,10 @@ export class Room implements RoomProperties, GroupCallMethods {
     this._binder = binder;
     this._props = props;
     this._localParticipant = null;
+    this._isDirectCall = false;
   }
 
+  private _isDirectCall: boolean;
   private _binder: NativeBinder;
   private _props: RoomProperties;
   private _localParticipant: LocalParticipant | null;
@@ -45,7 +53,12 @@ export class Room implements RoomProperties, GroupCallMethods {
     },
   };
   private _updateInternal(props: RoomProperties) {
-    this._localParticipant = LocalParticipant.get(this._binder, props.localParticipant, this.roomId);
+    this._localParticipant = LocalParticipant.get(
+      this._binder,
+      this._internalEvents,
+      props.localParticipant,
+      this.roomId,
+    );
     this._props = props;
     return this;
   }
@@ -172,4 +185,8 @@ export class Room implements RoomProperties, GroupCallMethods {
   public exit() {
     this._binder.nativeModule.exit(this.roomId);
   }
+
+  public selectAudioDevice = async (device: AudioDevice) => {
+    return await this._binder.nativeModule.selectAudioDevice(this._isDirectCall, this.roomId, device);
+  };
 }
