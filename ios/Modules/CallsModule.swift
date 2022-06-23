@@ -56,7 +56,7 @@ class CallsModule: SendBirdCallDelegate {
     }
 }
 
-// MARK: Common module extension
+// MARK: CommonModule extension
 extension CallsModule: CallsCommonModuleProtocol {
     func getCurrentUser(_ promise: Promise) {
         commonModule.getCurrentUser(promise)
@@ -103,38 +103,52 @@ extension CallsModule: CallsCommonModuleProtocol {
     }
 }
 
-// MARK: - DirectCall module extension
-extension CallsModule: CallsDirectCallModuleProtocol {
-    func selectVideoDevice(_ callId: String, _ device: [String: String], _ promise: Promise) {
-        directCallModule.selectVideoDevice(callId, device, promise)
+// MARK: MediaDeviceControl extension
+extension CallsModule {
+    func switchCamera(_ type: String, _ identifier: String, _ promise: Promise) {
+        getControllableModule(type)?.switchCamera(type, identifier, promise)
     }
     
+    func startVideo(_ type: String, _ identifier: String) {
+        getControllableModule(type)?.startVideo(type, identifier)
+    }
+    
+    func stopVideo(_ type: String, _ identifier: String) {
+        getControllableModule(type)?.stopVideo(type, identifier)
+    }
+    
+    func muteMicrophone(_ type: String, _ identifier: String) {
+        getControllableModule(type)?.muteMicrophone(type, identifier)
+    }
+    
+    func unmuteMicrophone(_ type: String, _ identifier: String) {
+        getControllableModule(type)?.unmuteMicrophone(type, identifier)
+    }
+    
+    func selectVideoDevice(_ type: String, _ identifier: String, _ device: [String: String], _ promise: Promise) {
+        getControllableModule(type)?.selectVideoDevice(type, identifier, device, promise)
+    }
+    
+    private func getControllableModule(_ type: String) -> MediaDeviceControlProtocol? {
+        guard let type = ControllableModuleType(fromString: type) else { return nil }
+        
+        switch(type) {
+        case .directCall:
+            return directCallModule
+        case .groupCall:
+            return nil //groupCallModule
+        }
+    }
+}
+
+// MARK: DirectCallModule extension
+extension CallsModule: CallsDirectCallModuleProtocol {
     func accept(_ callId: String, _ options: [String : Any?], _ holdActiveCall: Bool, _ promise: Promise) {
         directCallModule.accept(callId, options, holdActiveCall, promise)
     }
     
     func end(_ callId: String, _ promise: Promise) {
         directCallModule.end(callId, promise)
-    }
-    
-    func switchCamera(_ callId: String, _ promise: Promise) {
-        directCallModule.switchCamera(callId, promise)
-    }
-    
-    func startVideo(_ callId: String) {
-        directCallModule.startVideo(callId)
-    }
-    
-    func stopVideo(_ callId: String) {
-        directCallModule.stopVideo(callId)
-    }
-    
-    func muteMicrophone(_ callId: String) {
-        directCallModule.muteMicrophone(callId)
-    }
-    
-    func unmuteMicrophone(_ callId: String) {
-        directCallModule.unmuteMicrophone(callId)
     }
     
     func updateLocalVideoView(_ callId: String, _ videoViewId: NSNumber) {
@@ -146,7 +160,7 @@ extension CallsModule: CallsDirectCallModuleProtocol {
     }
 }
 
-// MARK: - Queries extension
+// MARK: Queries extension
 extension CallsModule {
     func createDirectCallLogListQuery(_ params: [String: Any], _ promise: Promise) {
         queries.createDirectCallLogListQuery(params, promise)

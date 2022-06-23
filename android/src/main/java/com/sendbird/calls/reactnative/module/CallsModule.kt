@@ -9,6 +9,7 @@ import com.sendbird.calls.SendBirdCall
 import com.sendbird.calls.handler.CompletionHandler
 import com.sendbird.calls.handler.SendBirdCallListener
 import com.sendbird.calls.reactnative.CallsEvents
+import com.sendbird.calls.reactnative.module.listener.CallsDirectCallListener
 import com.sendbird.calls.reactnative.utils.CallsUtils
 
 class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct, SendBirdCallListener() {
@@ -38,10 +39,7 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
             CallsUtils.convertDirectCallToJsMap(call)
         )
 
-        // TODO: background -> startService
-        //  run headless js task
-
-        call.setListener(directCallModule)
+        call.setListener(CallsDirectCallListener(this))
     }
 
     /** Common module interface **/
@@ -63,16 +61,18 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
     override fun fetchRoomById(roomId: String, promise: Promise) = commonModule.fetchRoomById(roomId, promise)
     override fun getCachedRoomById(roomId: String, promise: Promise) = commonModule.getCachedRoomById(roomId, promise)
 
-    /** DirectCall module interface**/
-    override fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise)= directCallModule.selectVideoDevice(callId, device, promise)
-    override fun selectAudioDevice(callId: String, device: String, promise: Promise)= directCallModule.selectAudioDevice(callId, device, promise)
+    /** Media Device control interface **/
+    override fun stopVideo(type: String, identifier: String) = getControllableModule(type).stopVideo(type, identifier)
+    override fun startVideo(type: String, identifier: String) = getControllableModule(type).startVideo(type, identifier)
+    override fun muteMicrophone(type: String, identifier: String) = getControllableModule(type).muteMicrophone(type, identifier)
+    override fun unmuteMicrophone(type: String, identifier: String) = getControllableModule(type).unmuteMicrophone(type, identifier)
+    override fun switchCamera(type: String, identifier: String, promise: Promise) = getControllableModule(type).switchCamera(type, identifier, promise)
+    override fun selectAudioDevice(type: String, identifier: String, device: String, promise: Promise) = getControllableModule(type).selectAudioDevice(type, identifier, device, promise)
+    override fun selectVideoDevice(type: String, identifier: String, device: ReadableMap, promise: Promise)= getControllableModule(type).selectVideoDevice(type, identifier, device, promise)
+
+    /** DirectCall module interface **/
     override fun accept(callId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise) = directCallModule.accept(callId, options, holdActiveCall, promise)
     override fun end(callId: String, promise: Promise)= directCallModule.end(callId, promise)
-    override fun switchCamera(callId: String, promise: Promise)= directCallModule.switchCamera(callId, promise)
-    override fun startVideo(callId: String)= directCallModule.startVideo(callId)
-    override fun stopVideo(callId: String)= directCallModule.stopVideo(callId)
-    override fun muteMicrophone(callId: String)= directCallModule.muteMicrophone(callId)
-    override fun unmuteMicrophone(callId: String)= directCallModule.unmuteMicrophone(callId)
     override fun updateLocalVideoView(callId: String, videoViewId: Int)= directCallModule.updateLocalVideoView(callId, videoViewId)
     override fun updateRemoteVideoView(callId: String, videoViewId: Int)= directCallModule.updateRemoteVideoView(callId, videoViewId)
 
@@ -88,5 +88,10 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
 
     companion object {
         const val NAME = "RNSendbirdCalls"
+    }
+
+    private fun getControllableModule(type: String): MediaDeviceControl = when (ControllableModuleType.valueOf(type)) {
+        ControllableModuleType.DIRECT_CALL -> directCallModule
+        ControllableModuleType.GROUP_CALL -> groupCallModule
     }
 }

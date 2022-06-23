@@ -13,7 +13,7 @@ import {
 } from './Query';
 import type { EnterParams, RoomProperties, RoomType } from './Room';
 import type { User } from './User';
-import type { AsJSInterface } from './index';
+import type { AsJSInterface, AsJSMediaDeviceControl } from './index';
 
 // --------------- Native interfaces ---------------
 
@@ -36,7 +36,6 @@ export interface NativeCommonModule {
   deauthenticate(): Promise<void>;
   registerPushToken(token: string, unique?: boolean): Promise<void>;
   unregisterPushToken(token: string): Promise<void>;
-  // unregisterAllPushTokens(): Promise<void>;
   dial(calleeUserId: string, isVideoCall: boolean, options: CallOptions): Promise<DirectCallProperties>;
   createRoom(roomType: RoomType): Promise<RoomProperties>;
   fetchRoomById(roomId: string): Promise<RoomProperties>;
@@ -52,6 +51,7 @@ export interface NativeCommonModule {
   /** @platform iOS **/
   routePickerView(): void;
 
+  // unregisterAllPushTokens(): Promise<void>;
   // addRecordingListener
   // removeRecordingListener
   // removeAllRecordingListeners
@@ -59,21 +59,28 @@ export interface NativeCommonModule {
 
 type CommonModule_AndroidSpecificKeys = 'handleFirebaseMessageData';
 type CommonModule_IOSSpecificKeys = 'registerVoIPPushToken' | 'unregisterVoIPPushToken' | 'routePickerView';
+export enum ControllableModuleType {
+  DIRECT_CALL = 'DIRECT_CALL',
+  GROUP_CALL = 'GROUP_CALL',
+}
+
+export type JSMediaDeviceControl = AsJSMediaDeviceControl<NativeMediaDeviceControl>;
+export interface NativeMediaDeviceControl {
+  muteMicrophone(type: ControllableModuleType, identifier: string): void;
+  unmuteMicrophone(type: ControllableModuleType, identifier: string): void;
+  stopVideo(type: ControllableModuleType, identifier: string): void;
+  startVideo(type: ControllableModuleType, identifier: string): void;
+  switchCamera(type: ControllableModuleType, identifier: string): Promise<void>;
+  selectVideoDevice(type: ControllableModuleType, identifier: string, device: VideoDevice): Promise<void>;
+  /** @platform Android **/
+  selectAudioDevice(type: ControllableModuleType, identifier: string, device: AudioDevice): Promise<void>;
+}
 
 export interface NativeDirectCallModule {
   accept(callId: string, options: CallOptions, holdActiveCall: boolean): Promise<void>;
   end(callId: string): Promise<void>;
-  switchCamera(callId: string): Promise<void>;
-  startVideo(callId: string): void;
-  stopVideo(callId: string): void;
-  muteMicrophone(callId: string): void;
-  unmuteMicrophone(callId: string): void;
   updateLocalVideoView(callId: string, videoViewId: number): void;
   updateRemoteVideoView(callId: string, videoViewId: number): void;
-  selectVideoDevice(callId: string, device: VideoDevice): Promise<void>;
-
-  /** @platform Android **/
-  selectAudioDevice(callId: string, device: AudioDevice): Promise<void>;
 
   /** Not implemented yet belows **/
   // hold(callId:string): Promise<void>;
@@ -112,7 +119,8 @@ export interface SendbirdCallsNativeSpec
     NativeQueries,
     NativeCommonModule,
     NativeDirectCallModule,
-    NativeGroupCallModule {}
+    NativeGroupCallModule,
+    NativeMediaDeviceControl {}
 
 // --------------- Javascript interfaces ---------------
 

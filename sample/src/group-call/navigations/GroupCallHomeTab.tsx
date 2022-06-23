@@ -1,11 +1,12 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 
+import Header from '../../shared/components/Header';
 import SBIcon from '../../shared/components/SBIcon';
 import UserInfoHeader from '../../shared/components/UserInfoHeader';
 import Palette from '../../shared/styles/palette';
 import GroupCallDialScreen from '../screens/GroupCallDialScreen';
-import GroupCallSettingStack from './GroupCallSettingStack';
+import GroupCallSettingsScreen from '../screens/GroupCallSettingsScreen';
 import { GroupRoutes } from './routes';
 
 const Tab = createBottomTabNavigator();
@@ -30,9 +31,9 @@ const GroupCallHomeTab = () => {
       />
       <Tab.Screen
         name={GroupRoutes.SETTING_STACK}
-        component={GroupCallSettingStack}
+        component={GroupCallSettingsScreen}
         options={{
-          headerShown: false,
+          header: () => <Header title="Settings" />,
           tabBarIcon: ({ focused }) => {
             return (
               <SBIcon

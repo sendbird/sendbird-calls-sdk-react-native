@@ -1,8 +1,16 @@
-import type { EnterParams, GroupCallMethods, RoomListener, RoomProperties } from '../types';
+import type { AudioDevice, EnterParams, GroupCallMethods, RoomListener, RoomProperties } from '../types';
+import { ControllableModuleType } from '../types';
 import { Logger } from '../utils/logger';
+import { LocalParticipant } from './LocalParticipant';
 import type NativeBinder from './NativeBinder';
 import { CallsEvent, GroupCallEventType } from './NativeBinder';
 import { SendbirdError } from './SendbirdError';
+
+export interface InternalEvents<T> {
+  pool: Partial<T>[];
+  emit: (event: keyof T, ...args: unknown[]) => void;
+  add: (listener: Partial<T>) => () => void;
+}
 
 export class Room implements RoomProperties, GroupCallMethods {
   /** @internal **/
@@ -23,10 +31,12 @@ export class Room implements RoomProperties, GroupCallMethods {
   constructor(binder: NativeBinder, props: RoomProperties) {
     this._binder = binder;
     this._props = props;
+    this._localParticipant = null;
   }
 
   private _binder: NativeBinder;
   private _props: RoomProperties;
+  private _localParticipant: LocalParticipant | null;
   private _internalEvents = {
     pool: [] as Partial<RoomListener>[],
     emit: (event: keyof RoomListener, ...args: unknown[]) => {
@@ -42,6 +52,12 @@ export class Room implements RoomProperties, GroupCallMethods {
     },
   };
   private _updateInternal(props: RoomProperties) {
+    this._localParticipant = LocalParticipant.get(
+      this._binder,
+      this._internalEvents,
+      props.localParticipant,
+      this.roomId,
+    );
     this._props = props;
     return this;
   }
@@ -62,16 +78,16 @@ export class Room implements RoomProperties, GroupCallMethods {
     return this._props.participants;
   }
   public get localParticipant() {
-    return this._props.localParticipant;
+    return this._localParticipant;
   }
   public get remoteParticipants() {
     return this._props.remoteParticipants;
   }
-  public get availableAudioDevices() {
-    return this._props.availableAudioDevices;
+  public get android_availableAudioDevices() {
+    return this._props.android_availableAudioDevices;
   }
-  public get currentAudioDevice() {
-    return this._props.currentAudioDevice;
+  public get android_currentAudioDevice() {
+    return this._props.android_currentAudioDevice;
   }
   public get createdAt() {
     return this._props.createdAt;
@@ -81,7 +97,7 @@ export class Room implements RoomProperties, GroupCallMethods {
   }
 
   /**
-   * Add GroupCall listener.
+   * Add GroupCall Room listener.
    * supports multiple listeners.
    *
    * @since 1.0.0
@@ -152,7 +168,9 @@ export class Room implements RoomProperties, GroupCallMethods {
   };
 
   /**
-   * Enter room
+   * Enter the room
+   * Will trigger {@link RoomListener.onRemoteParticipantEntered} method of remote participants after successfully entering the room.
+   * If a remote participant entered the room, the local user will be notified via the same method.
    *
    * @since 1.0.0
    */
@@ -161,11 +179,25 @@ export class Room implements RoomProperties, GroupCallMethods {
   };
 
   /**
-   * Exit room
+   * Exit from the room
+   * Will trigger {@link RoomListener.onRemoteParticipantExited} method of remote participants after successfully exiting the room.
+   * If a remote participant exited the room, the local user will be notified via the same method.
    *
    * @since 1.0.0
    */
   public exit() {
     this._binder.nativeModule.exit(this.roomId);
   }
+
+  /**
+   * Selects audio device
+   * Changes current audio device asynchronously.
+   * Will trigger {@link RoomListener.onAudioDeviceChanged} method of the local participant after successfully changing the audio device.
+   *
+   * @platform Android
+   * @since 1.0.0
+   */
+  public android_selectAudioDevice = (device: AudioDevice) => {
+    return this._binder.nativeModule.selectAudioDevice(ControllableModuleType.GROUP_CALL, this.roomId, device);
+  };
 }

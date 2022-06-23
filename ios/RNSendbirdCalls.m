@@ -100,12 +100,6 @@ RCT_EXTERN_METHOD(dial
                   : (RCTPromiseRejectBlock)reject)
 
 // MARK: - SendbirdCalls: DirectCall
-RCT_EXTERN_METHOD(selectVideoDevice
-                  : (NSString *)callId
-                  : (NSDictionary *)device
-                  : (RCTPromiseResolveBlock)resolve
-                  : (RCTPromiseRejectBlock)reject)
-
 RCT_EXTERN_METHOD(accept
                   : (NSString *)callId
                   : (NSDictionary *)options
@@ -118,23 +112,6 @@ RCT_EXTERN_METHOD(end
                   : (RCTPromiseResolveBlock)resolve
                   : (RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(switchCamera
-                  : (NSString *)callId
-                  : (RCTPromiseResolveBlock)resolve
-                  : (RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(startVideo
-                  : (NSString *)callId)
-
-RCT_EXTERN_METHOD(stopVideo
-                  : (NSString *)callId)
-
-RCT_EXTERN_METHOD(muteMicrophone
-                  : (NSString *)callId)
-
-RCT_EXTERN_METHOD(unmuteMicrophone
-                  : (NSString *)callId)
-
 RCT_EXTERN_METHOD(updateLocalVideoView
                   : (NSString *)callId
                   : (NSNumber *)videoViewId)
@@ -142,6 +119,36 @@ RCT_EXTERN_METHOD(updateLocalVideoView
 RCT_EXTERN_METHOD(updateRemmoteVideoView
                   : (NSString *)callId
                   : (NSNumber *)videoViewId)
+
+// MARK: - SendbirdCalls: MediaDeviceControl
+RCT_EXTERN_METHOD(switchCamera
+                  : (NSString *)type
+                  : (NSString *)identifier
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(startVideo
+                  : (NSString *)type
+                  : (NSString *)identifier)
+
+RCT_EXTERN_METHOD(stopVideo
+                  : (NSString *)type
+                  : (NSString *)identifier)
+
+RCT_EXTERN_METHOD(muteMicrophone
+                  : (NSString *)type
+                  : (NSString *)identifier)
+
+RCT_EXTERN_METHOD(unmuteMicrophone
+                  : (NSString *)type
+                  : (NSString *)identifier)
+
+RCT_EXTERN_METHOD(selectVideoDevice
+                  : (NSString *)type
+                  : (NSString *)identifier
+                  : (NSDictionary *)device
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
 
 //#ifdef RCT_NEW_ARCH_ENABLED
 //- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:

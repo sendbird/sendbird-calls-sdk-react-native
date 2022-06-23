@@ -6,6 +6,8 @@ import com.facebook.react.bridge.ReadableMap
 import com.sendbird.calls.*
 import com.sendbird.calls.reactnative.RNCallsInternalError
 import com.sendbird.calls.reactnative.extension.rejectCalls
+import com.sendbird.calls.reactnative.module.listener.CallsDirectCallListener
+import com.sendbird.calls.reactnative.module.listener.CallsGroupCallListener
 import com.sendbird.calls.reactnative.utils.CallsUtils
 
 class CallsCommonModule(private val root: CallsModule): CommonModule {
@@ -142,7 +144,7 @@ class CallsCommonModule(private val root: CallsModule): CommonModule {
                 promise.rejectCalls(it)
             }
             call?.let {
-                it.setListener(root.directCallModule)
+                it.setListener(CallsDirectCallListener(root))
                 promise.resolve(CallsUtils.convertDirectCallToJsMap(it))
             }
         }

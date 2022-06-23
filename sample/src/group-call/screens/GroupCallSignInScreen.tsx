@@ -37,6 +37,7 @@ const GroupCallSignInScreen = () => {
         paddingHorizontal: 16,
         backgroundColor: Palette.background50,
       }}
+      keyboardShouldPersistTaps={'always'}
     >
       <SignInForm {...state} onChange={setState} onSubmit={onSignIn} />
     </ScrollView>

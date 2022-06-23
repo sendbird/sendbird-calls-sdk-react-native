@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { StatusBar, StyleSheet, View } from 'react-native';
 
-import { Room, SendbirdCalls } from '@sendbird/calls-react-native';
-
-import SBButton from '../../shared/components/SBButton';
-import { useLayoutEffectAsync } from '../../shared/hooks/useEffectAsync';
+import Loading from '../../shared/components/Loading';
 import Palette from '../../shared/styles/palette';
 import { AppLogger } from '../../shared/utils/logger';
+import ModalRoomId from '../components/ModalRoomId';
+import RoomFooter from '../components/RoomFooter';
+import RoomHeader from '../components/RoomHeader';
+import { useGroupCallRoom } from '../hooks/useGroupCallRoom';
 import { useGroupNavigation } from '../hooks/useGroupNavigation';
 import { GroupRoutes } from '../navigations/routes';
 
@@ -14,52 +15,32 @@ const GroupCallRoomScreen = () => {
   const {
     navigation: { goBack },
     route: {
-      params: { roomId },
+      params: { roomId, isCreated },
     },
   } = useGroupNavigation<GroupRoutes.ROOM>();
 
-  const [room, setRoom] = useState<Room>();
+  const [visible, setVisible] = useState(isCreated ?? false);
 
-  useLayoutEffectAsync(async () => {
-    try {
-      const room = await SendbirdCalls.getCachedRoomById(roomId);
-      if (room === null) throw Error(`The room(${roomId}) is not exists`);
-      const unsubscribe = room.addListener({
-        onRemoteParticipantEntered(participant) {
-          AppLogger.log('RoomScreen onRemoteParticipantEntered', participant);
-        },
-        onRemoteParticipantExited(participant) {
-          AppLogger.log('RoomScreen onRemoteParticipantExited', participant);
-        },
-      });
-      setRoom(room);
-
-      return () => unsubscribe();
-    } catch (e) {
-      AppLogger.log('[ERROR] RoomScreen getCachedRoomById', e);
+  const { room, isFetched } = useGroupCallRoom(roomId);
+  if (!room) {
+    if (isFetched) {
+      AppLogger.log('[ERROR] RoomScreen getCachedRoomById');
       goBack();
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      return () => {};
     }
-  }, []);
 
-  const exit = () => {
-    room?.exit();
-    goBack();
-  };
+    return <Loading visible={true} />;
+  }
 
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={Palette.background500} barStyle={'light-content'} />
+      <ModalRoomId roomId={roomId} visible={visible} onClose={() => setVisible(false)} />
 
-      <View>{/* top - room info, speacker, change camera */}</View>
+      <RoomHeader />
 
       <View style={styles.view}>{/* Video View */}</View>
 
-      <View>{/* bottom - settings, mute, off camera, exit, participants */}</View>
-      <SBButton disabled={!room} onPress={exit}>
-        {'EXIT'}
-      </SBButton>
+      <RoomFooter />
     </View>
   );
 };
@@ -67,16 +48,12 @@ const GroupCallRoomScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 24,
     backgroundColor: Palette.background600,
   },
   view: {
-    width: '100%',
-    height: 400,
-    borderRadius: 4,
-    backgroundColor: Palette.background500,
-    marginTop: 24,
-    marginBottom: 16,
+    flex: 1,
+    backgroundColor: '#eee',
+    marginVertical: 20,
   },
 });
 

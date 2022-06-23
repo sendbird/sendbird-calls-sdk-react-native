@@ -15,7 +15,13 @@ interface IModalRoomIdProps {
 
 const ModalRoomId = ({ roomId, visible, onClose }: IModalRoomIdProps) => {
   return (
-    <Modal visible={visible} style={StyleSheet.absoluteFill} transparent animationType={'fade'}>
+    <Modal
+      visible={visible}
+      style={StyleSheet.absoluteFill}
+      transparent
+      animationType={'fade'}
+      onRequestClose={() => onClose()}
+    >
       <View style={styles.background}>
         <View style={styles.container}>
           <SBText h3 style={{ paddingTop: 20 }}>

@@ -96,7 +96,7 @@ const AudioDeviceButton: FC<Props> = ({
   );
 };
 
-const AudioDeviceSelectModal: FC<{
+export const AudioDeviceSelectModal: FC<{
   currentDevice?: AudioDevice | null;
   devices: AudioDeviceType[];
   visible: boolean;
@@ -124,7 +124,7 @@ const AudioDeviceSelectModal: FC<{
                 onPress={() => onSelect(device)}
                 style={menuStyles.button}
               >
-                <SBText body3 style={{ flex: 1 }}>
+                <SBText body3 style={{ flex: 1, height: 24 }}>
                   {device}
                 </SBText>
                 {currentDevice === device && <SBIcon icon={'Done'} />}

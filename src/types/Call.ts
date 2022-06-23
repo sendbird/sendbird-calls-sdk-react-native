@@ -1,5 +1,6 @@
 import type { AudioDevice, AudioDeviceChangedInfo, RecordingStatus, VideoDevice } from './Media';
 import type { NativeDirectCallModule } from './NativeModule';
+import { JSMediaDeviceControl } from './NativeModule';
 import type { User } from './User';
 import type { AsJSDirectCall, AsJSInterface } from './index';
 
@@ -326,9 +327,10 @@ export interface DirectCallProperties {
 }
 
 /** DirectCall */
-type JSDirectCallModule = AsJSInterface<AsJSDirectCall<NativeDirectCallModule>, 'android', 'selectAudioDevice'>;
+type JSDirectCallModule = AsJSDirectCall<NativeDirectCallModule>;
+type JSDirectCallMediaDeviceControl = AsJSInterface<JSMediaDeviceControl, 'android', 'selectAudioDevice'>;
 
-export interface DirectCallMethods extends JSDirectCallModule {
+export interface DirectCallMethods extends JSDirectCallModule, JSDirectCallMediaDeviceControl {
   addListener(listener: Partial<DirectCallListener>): () => void;
 }
 
