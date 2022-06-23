@@ -59,21 +59,21 @@ export interface NativeCommonModule {
 
 type CommonModule_AndroidSpecificKeys = 'handleFirebaseMessageData';
 type CommonModule_IOSSpecificKeys = 'registerVoIPPushToken' | 'unregisterVoIPPushToken' | 'routePickerView';
-export enum ModuleType {
+export enum ControllableModuleType {
   DIRECT_CALL = 'DIRECT_CALL',
   GROUP_CALL = 'GROUP_CALL',
 }
 
 export type JSMediaDeviceControl = AsJSMediaDeviceControl<NativeMediaDeviceControl>;
 export interface NativeMediaDeviceControl {
-  muteMicrophone(type: ModuleType, identifier: string): void;
-  unmuteMicrophone(type: ModuleType, identifier: string): void;
-  stopVideo(type: ModuleType, identifier: string): void;
-  startVideo(type: ModuleType, identifier: string): void;
-  switchCamera(type: ModuleType, identifier: string): Promise<void>;
-  selectVideoDevice(type: ModuleType, identifier: string, device: VideoDevice): Promise<void>;
+  muteMicrophone(type: ControllableModuleType, identifier: string): void;
+  unmuteMicrophone(type: ControllableModuleType, identifier: string): void;
+  stopVideo(type: ControllableModuleType, identifier: string): void;
+  startVideo(type: ControllableModuleType, identifier: string): void;
+  switchCamera(type: ControllableModuleType, identifier: string): Promise<void>;
+  selectVideoDevice(type: ControllableModuleType, identifier: string, device: VideoDevice): Promise<void>;
   /** @platform Android **/
-  selectAudioDevice(type: ModuleType, identifier: string, device: AudioDevice): Promise<void>;
+  selectAudioDevice(type: ControllableModuleType, identifier: string, device: AudioDevice): Promise<void>;
 }
 
 export interface NativeDirectCallModule {

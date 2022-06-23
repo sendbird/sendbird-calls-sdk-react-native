@@ -37,7 +37,7 @@ interface GroupCallModule: MediaDeviceControl {
     fun exit(roomId: String)
 }
 
-enum class ModuleType {
+enum class ControllableModuleType {
     DIRECT_CALL,
     GROUP_CALL
 }

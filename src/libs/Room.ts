@@ -1,5 +1,5 @@
 import type { AudioDevice, EnterParams, GroupCallMethods, RoomListener, RoomProperties } from '../types';
-import { ModuleType } from '../types';
+import { ControllableModuleType } from '../types';
 import { Logger } from '../utils/logger';
 import { LocalParticipant } from './LocalParticipant';
 import type NativeBinder from './NativeBinder';
@@ -198,6 +198,6 @@ export class Room implements RoomProperties, GroupCallMethods {
    * @since 1.0.0
    */
   public android_selectAudioDevice = (device: AudioDevice) => {
-    return this._binder.nativeModule.selectAudioDevice(ModuleType.GROUP_CALL, this.roomId, device);
+    return this._binder.nativeModule.selectAudioDevice(ControllableModuleType.GROUP_CALL, this.roomId, device);
   };
 }

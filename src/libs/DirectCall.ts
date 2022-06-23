@@ -8,7 +8,7 @@ import type {
   DirectCallProperties,
   VideoDevice,
 } from '../types';
-import { ModuleType, RouteChangeReason } from '../types';
+import { ControllableModuleType, RouteChangeReason } from '../types';
 import { Logger } from '../utils/logger';
 import type NativeBinder from './NativeBinder';
 import { CallsEvent, DirectCallEventType } from './NativeBinder';
@@ -265,7 +265,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
    * @since 1.0.0
    */
   public selectVideoDevice = async (device: VideoDevice) => {
-    await this._binder.nativeModule.selectVideoDevice(ModuleType.DIRECT_CALL, this.callId, device);
+    await this._binder.nativeModule.selectVideoDevice(ControllableModuleType.DIRECT_CALL, this.callId, device);
   };
 
   /**
@@ -275,7 +275,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
    * @since 1.0.0
    */
   public android_selectAudioDevice = async (device: AudioDevice) => {
-    await this._binder.nativeModule.selectAudioDevice(ModuleType.DIRECT_CALL, this.callId, device);
+    await this._binder.nativeModule.selectAudioDevice(ControllableModuleType.DIRECT_CALL, this.callId, device);
   };
 
   /**
@@ -286,7 +286,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
    * @since 1.0.0
    */
   public muteMicrophone = () => {
-    this._binder.nativeModule.muteMicrophone(ModuleType.DIRECT_CALL, this.callId);
+    this._binder.nativeModule.muteMicrophone(ControllableModuleType.DIRECT_CALL, this.callId);
 
     // NOTE: native doesn't have onLocalAudioSettingsChanged event
     this._props.isLocalAudioEnabled = false;
@@ -301,7 +301,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
    * @since 1.0.0
    */
   public unmuteMicrophone = () => {
-    this._binder.nativeModule.unmuteMicrophone(ModuleType.DIRECT_CALL, this.callId);
+    this._binder.nativeModule.unmuteMicrophone(ControllableModuleType.DIRECT_CALL, this.callId);
 
     // NOTE: native doesn't have onLocalAudioSettingsChanged event
     this._props.isLocalAudioEnabled = true;
@@ -316,7 +316,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
    * @since 1.0.0
    */
   public startVideo = () => {
-    this._binder.nativeModule.startVideo(ModuleType.DIRECT_CALL, this.callId);
+    this._binder.nativeModule.startVideo(ControllableModuleType.DIRECT_CALL, this.callId);
     this._props.isLocalVideoEnabled = true;
 
     // NOTE: ios native doesn't have onLocalAudioSettingsChanged event
@@ -331,7 +331,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
    * @since 1.0.0
    */
   public stopVideo = () => {
-    this._binder.nativeModule.stopVideo(ModuleType.DIRECT_CALL, this.callId);
+    this._binder.nativeModule.stopVideo(ControllableModuleType.DIRECT_CALL, this.callId);
     this._props.isLocalVideoEnabled = false;
 
     // NOTE: ios native doesn't have onLocalAudioSettingsChanged event
@@ -347,7 +347,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
    * @since 1.0.0
    */
   public switchCamera = async () => {
-    await this._binder.nativeModule.switchCamera(ModuleType.DIRECT_CALL, this.callId);
+    await this._binder.nativeModule.switchCamera(ControllableModuleType.DIRECT_CALL, this.callId);
   };
 
   /**

@@ -90,8 +90,8 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
         const val NAME = "RNSendbirdCalls"
     }
 
-    private fun getControllableModule(type: String): MediaDeviceControl = when (ModuleType.valueOf(type)) {
-        ModuleType.DIRECT_CALL -> directCallModule
-        ModuleType.GROUP_CALL -> groupCallModule
+    private fun getControllableModule(type: String): MediaDeviceControl = when (ControllableModuleType.valueOf(type)) {
+        ControllableModuleType.DIRECT_CALL -> directCallModule
+        ControllableModuleType.GROUP_CALL -> groupCallModule
     }
 }

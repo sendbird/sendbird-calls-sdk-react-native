@@ -1,5 +1,5 @@
 import type { LocalParticipantMethods, ParticipantProperties, RoomListener } from '../types';
-import { ModuleType } from '../types';
+import { ControllableModuleType } from '../types';
 import type NativeBinder from './NativeBinder';
 import { InternalEvents } from './Room';
 
@@ -75,7 +75,7 @@ export class LocalParticipant implements ParticipantProperties, LocalParticipant
    * @since 1.0.0
    */
   public muteMicrophone = () => {
-    this._binder.nativeModule.muteMicrophone(ModuleType.GROUP_CALL, this._roomId);
+    this._binder.nativeModule.muteMicrophone(ControllableModuleType.GROUP_CALL, this._roomId);
 
     // NOTE: native doesn't have onLocalAudioSettingsChanged event
     this._props.isAudioEnabled = false;
@@ -90,7 +90,7 @@ export class LocalParticipant implements ParticipantProperties, LocalParticipant
    * @since 1.0.0
    */
   public unmuteMicrophone = () => {
-    this._binder.nativeModule.unmuteMicrophone(ModuleType.GROUP_CALL, this._roomId);
+    this._binder.nativeModule.unmuteMicrophone(ControllableModuleType.GROUP_CALL, this._roomId);
 
     // NOTE: native doesn't have onLocalAudioSettingsChanged event
     this._props.isAudioEnabled = true;
@@ -105,7 +105,7 @@ export class LocalParticipant implements ParticipantProperties, LocalParticipant
    * @since 1.0.0
    */
   public stopVideo = () => {
-    this._binder.nativeModule.stopVideo(ModuleType.GROUP_CALL, this._roomId);
+    this._binder.nativeModule.stopVideo(ControllableModuleType.GROUP_CALL, this._roomId);
 
     // NOTE: native doesn't have onLocalAudioSettingsChanged event
     this._props.isVideoEnabled = false;
@@ -120,7 +120,7 @@ export class LocalParticipant implements ParticipantProperties, LocalParticipant
    * @since 1.0.0
    */
   public startVideo = () => {
-    this._binder.nativeModule.startVideo(ModuleType.GROUP_CALL, this._roomId);
+    this._binder.nativeModule.startVideo(ControllableModuleType.GROUP_CALL, this._roomId);
 
     // NOTE: native doesn't have onLocalAudioSettingsChanged event
     this._props.isVideoEnabled = true;
@@ -136,6 +136,6 @@ export class LocalParticipant implements ParticipantProperties, LocalParticipant
    * @since 1.0.0
    */
   public switchCamera = () => {
-    return this._binder.nativeModule.switchCamera(ModuleType.GROUP_CALL, this._roomId);
+    return this._binder.nativeModule.switchCamera(ControllableModuleType.GROUP_CALL, this._roomId);
   };
 }
