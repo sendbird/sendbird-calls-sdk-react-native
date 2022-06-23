@@ -118,7 +118,8 @@ export interface SendbirdCallsNativeSpec
     NativeCommonModule,
     NativeDirectCallModule,
     NativeGroupCallModule,
-    NativeCommonUserInteractModule {}
+    NativeCommonUserInteractModule,
+    NativeCommonDeviceControlModule {}
 
 // --------------- Javascript interfaces ---------------
 
