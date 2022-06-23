@@ -1,4 +1,4 @@
-import type { AsNativeInterface, DirectCallProperties, RoomProperties } from '@sendbird/calls-react-native';
+import type { AsNativeInterface, DirectCallProperties, RoomProperties } from '../types';
 
 // NTJ - Native To Javascript
 // JTN - Javascript To Native
@@ -15,6 +15,7 @@ export function convertDirectCallPropsNTJ(data: AsNativeInterface<DirectCallProp
 export function convertGroupCallPropsNTJ(data: AsNativeInterface<RoomProperties>): RoomProperties {
   return {
     ...data,
-    // TODO: check platform specific code
+    android_availableAudioDevices: data.availableAudioDevices,
+    android_currentAudioDevice: data.currentAudioDevice,
   };
 }

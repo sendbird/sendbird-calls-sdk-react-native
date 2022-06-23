@@ -2,7 +2,7 @@ import type { AudioDevice } from './Media';
 import type { NativeGroupCallModule } from './NativeModule';
 import { JSMediaDeviceControl } from './NativeModule';
 import type { ParticipantProperties } from './Participant';
-import type { AsJSGroupCall } from './index';
+import type { AsJSGroupCall, AsJSInterface } from './index';
 
 export interface RoomListener {
   /**
@@ -137,16 +137,18 @@ export interface RoomProperties {
   /**
    * Gets available audio devices.
    *
+   * @platform Android
    * @since 1.0.0
    */
-  availableAudioDevices: AudioDevice[];
+  android_availableAudioDevices: AudioDevice[];
 
   /**
    * Gets current audio device.
    *
+   * @platform Android
    * @since 1.0.0
    */
-  currentAudioDevice: AudioDevice | null;
+  android_currentAudioDevice: AudioDevice | null;
 
   /**
    * Gets createdAt that is a timestamp of creating the room.
@@ -164,7 +166,11 @@ export interface RoomProperties {
 }
 
 type JSGroupCallModule = AsJSGroupCall<NativeGroupCallModule>;
-type JSGroupCallMediaDeviceControl = Pick<JSMediaDeviceControl, 'selectAudioDevice'>;
+type JSGroupCallMediaDeviceControl = AsJSInterface<
+  Pick<JSMediaDeviceControl, 'selectAudioDevice'>,
+  'android',
+  'selectAudioDevice'
+>;
 
 export interface GroupCallMethods extends JSGroupCallModule, JSGroupCallMediaDeviceControl {
   addListener(listener: Partial<RoomListener>): () => void;

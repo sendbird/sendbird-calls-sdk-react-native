@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AudioDeviceSelectModal } from '../../shared/components/AudioDeviceButton';
@@ -51,15 +51,17 @@ const RoomHeader = () => {
         </Pressable>
       </View>
 
-      <AudioDeviceSelectModal
-        currentDevice={room?.currentAudioDevice}
-        devices={room?.availableAudioDevices ?? []}
-        visible={visible}
-        onSelect={async (device) => {
-          setVisible(false);
-          device && (await room?.selectAudioDevice(device));
-        }}
-      />
+      {Platform.OS === 'android' && (
+        <AudioDeviceSelectModal
+          currentDevice={room?.android_currentAudioDevice}
+          devices={room?.android_availableAudioDevices ?? []}
+          visible={visible}
+          onSelect={async (device) => {
+            setVisible(false);
+            device && (await room?.android_selectAudioDevice(device));
+          }}
+        />
+      )}
     </View>
   );
 };

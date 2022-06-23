@@ -103,20 +103,27 @@ export default class NativeBinder {
               event,
               eventType,
               event === CallsEvent.GROUP_CALL
-                ? (data as RoomProperties).roomId
+                ? (data as AsNativeInterface<RoomProperties>).roomId
                 : (data as AsNativeInterface<DirectCallProperties>).callId,
               additionalData && JSON.stringify(additionalData).slice(0, 30) + '...',
             ].join(' ++ '),
           );
 
-          this.jsEventEmitter.emit(event, {
-            type: eventType,
-            data:
-              event === CallsEvent.GROUP_CALL
-                ? convertGroupCallPropsNTJ(data as RoomProperties)
-                : convertDirectCallPropsNTJ(data as AsNativeInterface<DirectCallProperties>),
-            additionalData,
-          });
+          if (event === CallsEvent.DIRECT_CALL || event === CallsEvent.DEFAULT) {
+            this.jsEventEmitter.emit(event, {
+              type: eventType,
+              data: convertDirectCallPropsNTJ(data as AsNativeInterface<DirectCallProperties>),
+              additionalData,
+            });
+          }
+
+          if (event === CallsEvent.GROUP_CALL) {
+            this.jsEventEmitter.emit(event, {
+              type: eventType,
+              data: convertGroupCallPropsNTJ(data as AsNativeInterface<RoomProperties>),
+              additionalData,
+            });
+          }
         },
       );
     });

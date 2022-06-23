@@ -83,11 +83,11 @@ export class Room implements RoomProperties, GroupCallMethods {
   public get remoteParticipants() {
     return this._props.remoteParticipants;
   }
-  public get availableAudioDevices() {
-    return this._props.availableAudioDevices;
+  public get android_availableAudioDevices() {
+    return this._props.android_availableAudioDevices;
   }
-  public get currentAudioDevice() {
-    return this._props.currentAudioDevice;
+  public get android_currentAudioDevice() {
+    return this._props.android_currentAudioDevice;
   }
   public get createdAt() {
     return this._props.createdAt;
@@ -194,9 +194,10 @@ export class Room implements RoomProperties, GroupCallMethods {
    * Changes current audio device asynchronously.
    * Will trigger {@link RoomListener.onAudioDeviceChanged} method of the local participant after successfully changing the audio device.
    *
+   * @platform Android
    * @since 1.0.0
    */
-  public selectAudioDevice = (device: AudioDevice) => {
+  public android_selectAudioDevice = (device: AudioDevice) => {
     return this._binder.nativeModule.selectAudioDevice(ModuleType.GROUP_CALL, this.roomId, device);
   };
 }
