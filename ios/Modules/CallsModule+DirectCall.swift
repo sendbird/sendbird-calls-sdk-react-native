@@ -11,42 +11,15 @@ import SendBirdCalls
 import CallKit
 import AVFoundation
 
-protocol CallsDirectCallModuleProtocol {
-    func selectVideoDevice(_ callId: String, _ device: [String: String], _ promise: Promise)
+protocol CallsDirectCallModuleProtocol: MediaDeviceControlProtocol {
     func accept(_ callId: String, _ options: [String: Any?], _ holdActiveCall: Bool, _ promise: Promise)
     func end(_ callId: String, _ promise: Promise)
-    func switchCamera(_ callId: String, _ promise: Promise)
-    func startVideo(_ callId: String)
-    func stopVideo(_ callId: String)
-    func muteMicrophone(_ callId: String)
-    func unmuteMicrophone(_ callId: String)
     func updateLocalVideoView(_ callId: String, _ videoViewId: NSNumber)
     func updateRemoteVideoView(_ callId: String, _ videoViewId: NSNumber)
 }
 
 // MARK: DirectCallMethods
 class CallsDirectCallModule: CallsBaseModule, CallsDirectCallModuleProtocol {
-    func selectVideoDevice(_ callId: String, _ device: [String: String], _ promise: Promise) {
-        let from = "directCall/accept"
-        guard let deviceId = device["deviceId"], let _ = device["position"] else {
-            return promise.reject(RNCallsInternalError.invalidParams(from))
-        }
-        guard let directCall = try? CallsUtils.findDirectCallBy(callId) else {
-            return promise.reject(RNCallsInternalError.notFoundDirectCall(from))
-        }
-        guard let videoDevice = directCall.availableVideoDevices.first(where: { $0.uniqueId == deviceId }) else {
-            return promise.reject(RNCallsInternalError.notFoundVideoDevice(from))
-        }
-        
-        directCall.selectVideoDevice(videoDevice) { error in
-            if let error = error {
-                promise.reject(error)
-            } else {
-                promise.resolve()
-            }
-        }
-    }
-    
     func accept(_ callId: String, _ options: [String : Any?], _ holdActiveCall: Bool, _ promise: Promise) {
         if let directCall = try? CallsUtils.findDirectCallBy(callId) {
             let callOptions = CallsUtils.convertDictToCallOptions(options)
@@ -69,48 +42,6 @@ class CallsDirectCallModule: CallsBaseModule, CallsDirectCallModuleProtocol {
         }
     }
     
-    func switchCamera(_ callId: String, _ promise: Promise) {
-        if let directCall = try? CallsUtils.findDirectCallBy(callId) {
-            directCall.switchCamera { error in
-                if let error = error {
-                    promise.reject(error)
-                } else {
-                    promise.resolve()
-                }
-            }
-        } else {
-            promise.reject(RNCallsInternalError.notFoundDirectCall("directCall/accept"))
-        }
-    }
-    
-    func startVideo(_ callId: String) {
-        CallsUtils.safeRun {
-            let directCall = try CallsUtils.findDirectCallBy(callId)
-            directCall.startVideo()
-        }
-    }
-    
-    func stopVideo(_ callId: String) {
-        CallsUtils.safeRun {
-            let directCall = try CallsUtils.findDirectCallBy(callId)
-            directCall.stopVideo()
-        }
-    }
-    
-    func muteMicrophone(_ callId: String) {
-        CallsUtils.safeRun {
-            let directCall = try CallsUtils.findDirectCallBy(callId)
-            directCall.muteMicrophone()
-        }
-    }
-    
-    func unmuteMicrophone(_ callId: String) {
-        CallsUtils.safeRun {
-            let directCall = try CallsUtils.findDirectCallBy(callId)
-            directCall.unmuteMicrophone()
-        }
-    }
-    
     func updateLocalVideoView(_ callId: String, _ videoViewId: NSNumber) {
         CallsUtils.safeRun {
             let directCall = try CallsUtils.findDirectCallBy(callId)
@@ -126,6 +57,72 @@ class CallsDirectCallModule: CallsBaseModule, CallsDirectCallModuleProtocol {
             directCall.updateRemoteVideoView(videoView.surface)
         }
     }
+}
+
+// MARK: DirectCall MediaDeviceControl
+extension CallsDirectCallModule {
+    func switchCamera(_ type: String, _ callId: String, _ promise: Promise) {
+        if let directCall = try? CallsUtils.findDirectCallBy(callId) {
+            directCall.switchCamera { error in
+                if let error = error {
+                    promise.reject(error)
+                } else {
+                    promise.resolve()
+                }
+            }
+        } else {
+            promise.reject(RNCallsInternalError.notFoundDirectCall("directCall/accept"))
+        }
+    }
+    
+    func startVideo(_ type: String, _ callId: String) {
+        CallsUtils.safeRun {
+            let directCall = try CallsUtils.findDirectCallBy(callId)
+            directCall.startVideo()
+        }
+    }
+    
+    func stopVideo(_ type: String, _ callId: String) {
+        CallsUtils.safeRun {
+            let directCall = try CallsUtils.findDirectCallBy(callId)
+            directCall.stopVideo()
+        }
+    }
+    
+    func muteMicrophone(_ type: String, _ callId: String) {
+        CallsUtils.safeRun {
+            let directCall = try CallsUtils.findDirectCallBy(callId)
+            directCall.muteMicrophone()
+        }
+    }
+    
+    func unmuteMicrophone(_ type: String, _ callId: String) {
+        CallsUtils.safeRun {
+            let directCall = try CallsUtils.findDirectCallBy(callId)
+            directCall.unmuteMicrophone()
+        }
+    }
+    func selectVideoDevice(_ type: String, _ callId: String, _ device: [String: String], _ promise: Promise) {
+        let from = "directCall/accept"
+        guard let deviceId = device["deviceId"], let _ = device["position"] else {
+            return promise.reject(RNCallsInternalError.invalidParams(from))
+        }
+        guard let directCall = try? CallsUtils.findDirectCallBy(callId) else {
+            return promise.reject(RNCallsInternalError.notFoundDirectCall(from))
+        }
+        guard let videoDevice = directCall.availableVideoDevices.first(where: { $0.uniqueId == deviceId }) else {
+            return promise.reject(RNCallsInternalError.notFoundVideoDevice(from))
+        }
+        
+        directCall.selectVideoDevice(videoDevice) { error in
+            if let error = error {
+                promise.reject(error)
+            } else {
+                promise.resolve()
+            }
+        }
+    }
+    
 }
 
 // MARK: DirectCallDelegate

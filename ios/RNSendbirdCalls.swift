@@ -133,10 +133,6 @@ extension RNSendbirdCalls {
 
 // MARK: DirectCall
 extension RNSendbirdCalls {
-    @objc func selectVideoDevice(_ callId: String, _ device: [String: String], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
-        module.selectVideoDevice(callId, device, Promise(resolve, reject))
-    }
-    
     @objc func accept(_ callId: String, _ options: [String: Any], _ holdActiveCall: Bool, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
         module.accept(callId, options, holdActiveCall, Promise(resolve, reject))
     }
@@ -145,31 +141,38 @@ extension RNSendbirdCalls {
         module.end(callId, Promise(resolve, reject))
     }
     
-    @objc func switchCamera(_ callId: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
-        module.switchCamera(callId, Promise(resolve, reject))
-    }
-    
-    @objc func startVideo(_ callId: String) {
-        module.startVideo(callId)
-    }
-    
-    @objc func stopVideo(_ callId: String) {
-        module.stopVideo(callId)
-    }
-    
-    @objc func muteMicrophone(_ callId: String) {
-        module.muteMicrophone(callId)
-    }
-    
-    @objc func unmuteMicrophone(_ callId: String) {
-        module.unmuteMicrophone(callId)
-    }
-    
     @objc func updateLocalVideoView(_ callId: String, _ videoViewId: NSNumber) {
         module.updateLocalVideoView(callId, videoViewId)
     }
     
     @objc func updateRemoteVideoView(_ callId: String, _ videoViewId: NSNumber) {
         module.updateRemoteVideoView(callId, videoViewId)
+    }
+}
+
+// MARK: MediaDeviceControl
+extension RNSendbirdCalls {
+    @objc func switchCamera(_ type: String, _ identifier: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.switchCamera(type, identifier, Promise(resolve, reject))
+    }
+    
+    @objc func startVideo(_ type: String, _ identifier: String) {
+        module.startVideo(type, identifier)
+    }
+    
+    @objc func stopVideo(_ type: String, _ identifier: String) {
+        module.stopVideo(type, identifier)
+    }
+    
+    @objc func muteMicrophone(_ type: String, _ identifier: String) {
+        module.muteMicrophone(type, identifier)
+    }
+    
+    @objc func unmuteMicrophone(_ type: String, _ identifier: String) {
+        module.unmuteMicrophone(type, identifier)
+    }
+    
+    @objc func selectVideoDevice(_ type: String, _ identifier: String, _ device: [String: String], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.selectVideoDevice(type, identifier, device, Promise(resolve, reject))
     }
 }
