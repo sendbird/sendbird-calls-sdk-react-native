@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ModuleType } from './NativeModule';
 
 /** @internal **/
 type PlatformPrefix = 'android' | 'ios';
@@ -32,8 +33,8 @@ export type AsJSInterface<T, Platform extends PlatformPrefix, Keys extends keyof
 };
 
 /** @internal **/
-export type AsJSCommonControl<T> = {
-  [key in keyof T]: T[key] extends (isDirectCall: boolean, identifier: string, ...args: infer Args) => infer R
+export type AsJSMediaDeviceControl<T> = {
+  [key in keyof T]: T[key] extends (type: ModuleType, identifier: string, ...args: infer Args) => infer R
     ? (...args: Args) => R
     : T[key];
 };

@@ -1,7 +1,8 @@
 import type { AudioDevice } from './Media';
 import type { NativeGroupCallModule } from './NativeModule';
+import { JSMediaDeviceControl } from './NativeModule';
 import type { ParticipantProperties } from './Participant';
-import type { AsJSCommonControl, AsJSGroupCall } from './index';
+import type { AsJSGroupCall } from './index';
 
 export interface RoomListener {
   /**
@@ -162,9 +163,10 @@ export interface RoomProperties {
   createdBy: string;
 }
 
-type JSGroupCallModule = AsJSGroupCall<AsJSCommonControl<NativeGroupCallModule>>; // TODO: check platform specific func
+type JSGroupCallModule = AsJSGroupCall<NativeGroupCallModule>;
+type JSGroupCallMediaDeviceControl = Pick<JSMediaDeviceControl, 'selectAudioDevice'>;
 
-export interface GroupCallMethods extends JSGroupCallModule {
+export interface GroupCallMethods extends JSGroupCallModule, JSGroupCallMediaDeviceControl {
   addListener(listener: Partial<RoomListener>): () => void;
 }
 

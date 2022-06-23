@@ -1,4 +1,5 @@
 import type { AudioDevice, EnterParams, GroupCallMethods, RoomListener, RoomProperties } from '../types';
+import { ModuleType } from '../types';
 import { Logger } from '../utils/logger';
 import { LocalParticipant } from './LocalParticipant';
 import type NativeBinder from './NativeBinder';
@@ -31,10 +32,8 @@ export class Room implements RoomProperties, GroupCallMethods {
     this._binder = binder;
     this._props = props;
     this._localParticipant = null;
-    this._isDirectCall = false;
   }
 
-  private _isDirectCall: boolean;
   private _binder: NativeBinder;
   private _props: RoomProperties;
   private _localParticipant: LocalParticipant | null;
@@ -197,7 +196,7 @@ export class Room implements RoomProperties, GroupCallMethods {
    *
    * @since 1.0.0
    */
-  public selectAudioDevice = async (device: AudioDevice) => {
-    return await this._binder.nativeModule.selectAudioDevice(this._isDirectCall, this.roomId, device);
+  public selectAudioDevice = (device: AudioDevice) => {
+    return this._binder.nativeModule.selectAudioDevice(ModuleType.GROUP_CALL, this.roomId, device);
   };
 }

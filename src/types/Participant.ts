@@ -1,5 +1,5 @@
 import type { User } from './User';
-import { AsJSCommonControl, NativeCommonUserInteractModule } from './index';
+import { JSMediaDeviceControl } from './index';
 
 export interface ParticipantProperties {
   participantId: string;
@@ -16,10 +16,12 @@ export interface ParticipantProperties {
   updatedAt: number;
 }
 
-type JSLocalParticipantModule = AsJSCommonControl<NativeCommonUserInteractModule>;
+type JSLocalParticipantMediaDeviceControl = Pick<
+  JSMediaDeviceControl,
+  'muteMicrophone' | 'unmuteMicrophone' | 'switchCamera' | 'startVideo' | 'stopVideo'
+>;
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface LocalParticipantMethods extends JSLocalParticipantModule {}
+export type LocalParticipantMethods = JSLocalParticipantMediaDeviceControl;
 
 export enum ParticipantState {
   ENTERED = 'ENTERED',
