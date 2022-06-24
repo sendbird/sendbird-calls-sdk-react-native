@@ -26,13 +26,6 @@ plugins {
   id ("io.invertase.gradle.build") version "1.5"
 }
 
-def rnFirebaseProject
-if (findProject(":@react-native-firebase_app")) {
-  rnFirebaseProject = project(":@react-native-firebase_app")
-} else if (findProject(":react-native-firebase_app")) {
-  rnFirebaseProject = project(":react-native-firebase_app")
-}
-
 def getDefaultProperty(name, asInteger) {
   def value = project.properties["RNSendbirdCalls_" + name]
   return asInteger ? value.toInteger() : value
@@ -50,10 +43,7 @@ project.ext {
         targetSdk : getDefaultProperty("targetSdkVersion", true),
         compileSdk: getDefaultProperty("compileSdkVersion", true),
         kotlin: getDefaultProperty("kotlinVersion", false)
-      ],
-      firebase: [
-        bom: rnFirebaseProject ? PackageJson.getForProject(rnFirebaseProject)["sdkVersions"]["android"]["firebase"] : getDefaultProperty("firebaseBomVersion", false),
-      ],
+      ]
     ],
   ])
 }
@@ -100,14 +90,6 @@ dependencies {
   // noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:${ReactNative.ext.getVersion("android", "kotlin")}"
-  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1"
-
-  if (rnFirebaseProject) {
-    api rnFirebaseProject
-  }
-
-  implementation platform("com.google.firebase:firebase-bom:${ReactNative.ext.getVersion("firebase", "bom")}")
-  implementation "com.google.firebase:firebase-messaging"
   implementation("com.sendbird.sdk:sendbird-calls:1.9.0")
 }
 
