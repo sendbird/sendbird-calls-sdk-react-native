@@ -30,7 +30,7 @@ Sendbird Calls SDK for React-Native provides a module to make and receive voice 
 
 ### More about Sendbird Calls SDK for React-Native
 
-Find out more about Sendbird Calls for React-Native on [Calls SDK for React-Native doc](https://sendbird.com/docs/calls/v1/react-native/getting-started/about-calls-sdk).
+Find out more about Sendbird Calls for React-Native on Calls SDK for React-Native doc.
 
 <br />
 
@@ -149,12 +149,12 @@ In order to make and receive calls, authenticate the user with SendBird server w
 Register a VoIP push token by using the `SendbirdCalls.ios_registerVoIPPush()` method after authentication has completed.
 VoIP Push Notification will also enable receiving calls even when the app is in the background or terminated state.
 A valid APNS certificate also needs to be registered on the [Sendbird Dashboard](https://dashboard.sendbird.com/auth/signin): **Application** > **Settings** > **Notifications** > **Add certificate**.
-For more details on registering push tokens, refer to [Calls SDK for React-Native doc](https://sendbird.com/docs/calls/v1/react-native/guides/remote-notifications#2-remote-push-token-registration).
+For more details on registering push tokens, refer to Calls SDK for React-Native doc.
 
 > **NOTE**: In order to receive incoming calls to a user's device, you must implement either VoIP notifications or remote notifications.
 > If you want to register a APNS token, you can register APNS token by using `SendbirdCalls.registerPushToken()` method
 >
-> refer to [Calls SDK for iOS doc](https://sendbird.com/docs/calls/v1/ios/guides/notifications#2-understanding-the-differences).
+> refer to Calls SDK for iOS doc.
 
 #### Android
 
@@ -168,27 +168,27 @@ import messaging from '@react-native-firebase/messaging';
 
 // Authenticate
 SendbirdCalls.authenticate(USER_ID, ACCESS_TOKEN)
-  .then(user => {
-    // The user has been authenticated successfully
-  })
-  .catch(error => {
-    // error
-  })
+    .then(user => {
+        // The user has been authenticated successfully
+    })
+    .catch(error => {
+        // error
+    })
 
 // Update FCM push token
 if (Platform.OS === 'android') {
-  const fcmToken = await messaging().getToken();
-  await SendbirdCalls.registerPushToken(fcmToken);
-  // The FCM Push Token has been registered successfully
+    const fcmToken = await messaging().getToken();
+    await SendbirdCalls.registerPushToken(fcmToken);
+    // The FCM Push Token has been registered successfully
 }
 
 // Update VoIP push token
 if (Platform.OS === 'ios') {
-  RNVoipPushNotification.addEventListener('register', async (voipToken) => {
-    await SendbirdCalls.ios_registerVoIPPushToken(voipToken)
-    // The VoIP Push Token has been registered successfully
-  });
-  RNVoipPushNotification.registerVoipToken();
+    RNVoipPushNotification.addEventListener('register', async (voipToken) => {
+        await SendbirdCalls.ios_registerVoIPPushToken(voipToken)
+        // The VoIP Push Token has been registered successfully
+    });
+    RNVoipPushNotification.registerVoipToken();
 }
 ```
 
@@ -283,16 +283,16 @@ Once prepared, the call parameters are then passed into the `SendbirdCalls.dial(
 
 ```ts
 const callOptions: CallOptions = {
-  audioEnabled: true,
-  videoEnabled: true,
-  frontCamera: true,
+    audioEnabled: true,
+    videoEnabled: true,
+    frontCamera: true,
 }
 
 const callProps = await SendbirdCalls.dial(CALLEE_ID, IS_VIDEO_CALL, callOptions);
 
 const directCall = await SendbirdCalls.getDirectCall(callProps.callId);
 directCall.addListener({
-  // ...
+    // ...
 });
 ```
 
@@ -566,11 +566,11 @@ call.end();
 
 // receives the event
 directCall.addListener({
-  ...
+    ...
 
-  onEnded: (callProps: DirectCallProperties) => {
+        onEnded: (callProps: DirectCallProperties) => {
     // Consider releasing or destroying call-related view from here.
-  },
+},
 });
 ```
 
