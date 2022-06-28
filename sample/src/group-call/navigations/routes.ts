@@ -1,4 +1,4 @@
-import type { ParticipantProperties } from '@sendbird/calls-react-native';
+import type { Participant } from '@sendbird/calls-react-native';
 
 export enum GroupRoutes {
   SIGN_IN = 'sign_in',
@@ -48,7 +48,7 @@ export type GroupRouteWithParams =
     }
   | {
       route: GroupRoutes.PARTICIPANTS;
-      params: { roomId: string; participants: ParticipantProperties[] };
+      params: { roomId: string; participants: Participant[] };
     }
   | {
       route: GroupRoutes.ROOM_INFO;
