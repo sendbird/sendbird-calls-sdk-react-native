@@ -1,8 +1,11 @@
 import React, { FC, useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 
 import { GroupCallVideoView, Room } from '@sendbird/calls-react-native';
 
+import IconAssets from '../../assets';
+import SBIcon from '../../shared/components/SBIcon';
+import SBText from '../../shared/components/SBText';
 import Palette from '../../shared/styles/palette';
 
 type LayoutSize = {
@@ -55,6 +58,8 @@ const GroupCallVideoStreamView: FC<GroupCallVideoStreamViewProps> = ({ room, lay
     }
   }, [layoutSize.width, layoutSize.height, rowCol.row, rowCol.column]);
 
+  console.log(!room.localParticipant?.isVideoEnabled);
+
   return (
     <View
       style={[
@@ -67,7 +72,38 @@ const GroupCallVideoStreamView: FC<GroupCallVideoStreamViewProps> = ({ room, lay
     >
       {room.participants.map((participant) => (
         <View key={participant.participantId} style={viewSize}>
-          <GroupCallVideoView participant={participant} roomId={room.roomId} style={styles.videoView} />
+          <GroupCallVideoView
+            participant={participant}
+            roomId={room.roomId}
+            style={styles.videoView}
+            onLayout={(e) => console.log('onLayout: ', e)}
+          />
+          {((participant.participantId === room.localParticipant?.participantId &&
+            !room.localParticipant?.isVideoEnabled) ||
+            (participant.participantId !== room.localParticipant?.participantId && !participant.isVideoEnabled)) && (
+            <View style={[styles.videoView, StyleSheet.absoluteFillObject]}>
+              <Image
+                source={participant.user.profileUrl ? { uri: participant.user.profileUrl } : IconAssets.Avatar}
+                style={styles.profileImage}
+              />
+            </View>
+          )}
+          <View style={styles.userId}>
+            {((participant.participantId === room.localParticipant?.participantId &&
+              !room.localParticipant?.isAudioEnabled) ||
+              (participant.participantId !== room.localParticipant?.participantId && !participant.isAudioEnabled)) && (
+              <SBIcon icon="AudioOff" size={11} color={Palette.support01} style={{ marginRight: 4 }} />
+            )}
+            <SBText
+              caption4
+              numberOfLines={1}
+              ellipsizeMode={'tail'}
+              color={Palette.onBackgroundDark01}
+              style={{ maxWidth: viewSize.width * 0.7 }}
+            >
+              User ID: {participant.user.userId}
+            </SBText>
+          </View>
         </View>
       ))}
     </View>
@@ -88,6 +124,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     margin: MARGIN_SIZE,
     backgroundColor: Palette.background500,
+  },
+  profileImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: Palette.background300,
+  },
+  userId: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    height: 20,
+    backgroundColor: Palette.overlay01,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
   },
 });
 
