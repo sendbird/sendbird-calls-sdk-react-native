@@ -146,7 +146,7 @@ In order to make and receive calls, authenticate the user with SendBird server w
 
 #### iOS
 
-Register a VoIP push token by using the `SendbirdCalls.ios_registerVoIPPush()` method after authentication has completed.
+Register a VoIP push token by using the `SendbirdCalls.ios_registerVoIPPushToken()` method after authentication has completed.
 VoIP Push Notification will also enable receiving calls even when the app is in the background or terminated state.
 A valid APNS certificate also needs to be registered on the [Sendbird Dashboard](https://dashboard.sendbird.com/auth/signin): **Application** > **Settings** > **Notifications** > **Add certificate**.
 For more details on registering push tokens, refer to Calls SDK for React-Native doc.
@@ -508,7 +508,7 @@ messaging().onMessage(firebaseListener);
 ### Handle a current call
 
 During an ongoing call, a caller may mute or unmute their microphone by using the `directCall.muteMicrophone()` or `directCall.unmuteMicrophone()` methods.
-`DirectCallListener.onRemoteAudioSettingsChanged()` delegate method will notify any changes that a remote user makes on audio settings to the local user.
+`DirectCallListener.onRemoteAudioSettingsChanged()` listener method will notify any changes that a remote user makes on audio settings to the local user.
 
 The caller may start or stop video using the `directCall.startVideo()` or `directCall.stopVideo()` methods.
 If the remote user changes the video settings, the local user will be notified through the `DirectCallListener.onRemoteVideoSettingsChanged()` listener.
@@ -702,7 +702,9 @@ The following table lists a set of methods of the `SendbirdCalls` class.
 
 ### Sound effects
 
-> **Warning**: Not supported yet.
+You should add files to your native project
+for Android, add your files to `res/raw/{filename}.mp3`
+for iOS, when you add files to a project, xcode automatically added to the bundled resources (Build Phases > Copy Bundle Resources)
 
 #### - Sound types
 
@@ -713,17 +715,26 @@ The following table lists a set of methods of the `SendbirdCalls` class.
 | reconnecting | Refers to a sound that is played when a connection is lost, but immediately tries to reconnect. Users are also allowed to customize the ringtone. |
 | reconnnected | Refers to a sound that is played when a connection is re-established.                                                                             |
 
-### Add sound
+#### - Add sound
 
-> **Warning**: Not supported yet.
+| Method             | Description                                                                                             |
+| ------------------ | ------------------------------------------------------------------------------------------------------- |
+| addDirectCallSound | Adds a specific sound to a direct call such as a ringtone or an alert tone with an Android resource ID. |
 
-#### - addDirectCallSound()
+| Parameter | Type      | Description                                                 |
+| --------- | --------- | ----------------------------------------------------------- |
+| soundType | SoundType | Specifies the sound type to be used according to the event. |
+| fileName  | int       | Specifies the Android resource ID.                          |
 
-#### - addDirectCallSound()
+#### - Remove sound
 
-### Remove sound
+| Method                | Description                                  |
+| --------------------- | -------------------------------------------- |
+| removeDirectCallSound | Removes a specific sound from a direct call. |
 
-> **Warning**: Not supported yet.
+| Parameter | Type      | Description                                                 |
+| --------- | --------- | ----------------------------------------------------------- |
+| soundType | SoundType | Specifies the sound type to be used according to the event. |
 
 <br />
 
