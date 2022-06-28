@@ -13,17 +13,15 @@ import { GroupRoutes } from '../navigations/routes';
 const GroupCallSettingsScreen = () => {
   const {
     navigation: { navigate },
-    route: {
-      params: { roomId },
-    },
+    route: { params },
   } = useGroupNavigation<GroupRoutes.SETTINGS>();
   const { currentUser, setCurrentUser } = useAuthContext();
 
   const [room, setRoom] = useState<Room | null>(null);
   useLayoutEffectAsync(async () => {
-    if (roomId) {
+    if (params?.roomId) {
       try {
-        setRoom(await SendbirdCalls.getCachedRoomById(roomId));
+        setRoom(await SendbirdCalls.getCachedRoomById(params?.roomId));
       } catch (e) {
         AppLogger.log('[ERROR] SettingsScreen getCachedRoomById', e);
       }

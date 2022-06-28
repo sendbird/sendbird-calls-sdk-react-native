@@ -21,7 +21,7 @@ const GroupCallEnterRoomScreen = () => {
   } = useGroupNavigation<GroupRoutes.ENTER_ROOM>();
 
   const [room, setRoom] = useState<Room>();
-  const [enterParam, setEnterParam] = useState<EnterParams>({ audioEnabled: false, videoEnabled: false });
+  const [enterParam, setEnterParam] = useState<EnterParams>({ audioEnabled: true, videoEnabled: true });
 
   useLayoutEffectAsync(async () => {
     try {
@@ -54,7 +54,7 @@ const GroupCallEnterRoomScreen = () => {
           style={styles.check}
           onPress={() => setEnterParam((prev) => ({ ...prev, audioEnabled: !prev.audioEnabled }))}
         >
-          <SBIcon icon={enterParam.audioEnabled ? 'CheckboxOn' : 'CheckboxOff'} />
+          <SBIcon icon={enterParam.audioEnabled ? 'CheckboxOff' : 'CheckboxOn'} />
         </Pressable>
         <SBText subtitle2>Mute my audio</SBText>
       </View>
@@ -63,7 +63,7 @@ const GroupCallEnterRoomScreen = () => {
           style={styles.check}
           onPress={() => setEnterParam((prev) => ({ ...prev, videoEnabled: !prev.videoEnabled }))}
         >
-          <SBIcon icon={enterParam.videoEnabled ? 'CheckboxOn' : 'CheckboxOff'} />
+          <SBIcon icon={enterParam.videoEnabled ? 'CheckboxOff' : 'CheckboxOn'} />
         </Pressable>
         <SBText subtitle2>Turn off my video</SBText>
       </View>
