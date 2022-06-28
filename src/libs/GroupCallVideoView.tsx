@@ -2,7 +2,6 @@
 import React, { createRef } from 'react';
 import { View, ViewProps, findNodeHandle, requireNativeComponent } from 'react-native';
 
-import { ParticipantState } from '../types';
 import { LINKING_ERROR } from '../utils/constants';
 import { Participant } from './Participant';
 
@@ -11,8 +10,8 @@ const NativeViewModule = requireNativeComponent(MODULE_NAME);
 if (!NativeViewModule) throw new Error(LINKING_ERROR);
 
 export interface GroupCallVideoViewProps extends ViewProps {
-  participant: Participant;
-  roomId: string;
+  participant?: Participant;
+  roomId?: string;
 }
 export default class GroupCallVideoView extends React.PureComponent<GroupCallVideoViewProps> {
   private ref = createRef<any>();
@@ -26,9 +25,9 @@ export default class GroupCallVideoView extends React.PureComponent<GroupCallVid
   }
   private get validProps() {
     return {
-      participantId: this.props.participant.participantId,
+      participantId: this.props.participant?.participantId,
       roomId: this.props.roomId,
-      state: this.props.participant.state,
+      state: this.props.participant?.state,
       style: { width: '100%', height: '100%' },
     };
   }

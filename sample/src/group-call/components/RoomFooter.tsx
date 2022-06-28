@@ -5,7 +5,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SBIcon from '../../shared/components/SBIcon';
 import SBText from '../../shared/components/SBText';
 import Palette from '../../shared/styles/palette';
-import { AppLogger } from '../../shared/utils/logger';
 import { useGroupCallRoom } from '../hooks/useGroupCallRoom';
 import { useGroupNavigation } from '../hooks/useGroupNavigation';
 import { GroupRoutes } from '../navigations/routes';
@@ -22,7 +21,6 @@ const RoomFooter = () => {
   const { room, toggleLocalParticipantAudio, toggleLocalParticipantVideo } = useGroupCallRoom(roomId);
 
   const exit = () => {
-    AppLogger.log('RoomScreen exit');
     room?.exit();
     goBack();
   };

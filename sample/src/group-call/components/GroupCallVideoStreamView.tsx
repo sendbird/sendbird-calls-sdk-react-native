@@ -1,7 +1,13 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 
-import { GroupCallVideoView, Room } from '@sendbird/calls-react-native';
+import {
+  GroupCallVideoView,
+  LocalParticipant,
+  Participant,
+  ParticipantState,
+  Room,
+} from '@sendbird/calls-react-native';
 
 import IconAssets from '../../assets';
 import SBIcon from '../../shared/components/SBIcon';
@@ -58,8 +64,6 @@ const GroupCallVideoStreamView: FC<GroupCallVideoStreamViewProps> = ({ room, lay
     }
   }, [layoutSize.width, layoutSize.height, rowCol.row, rowCol.column]);
 
-  console.log(!room.localParticipant?.isVideoEnabled);
-
   return (
     <View
       style={[
@@ -72,15 +76,10 @@ const GroupCallVideoStreamView: FC<GroupCallVideoStreamViewProps> = ({ room, lay
     >
       {room.participants.map((participant) => (
         <View key={participant.participantId} style={viewSize}>
-          <GroupCallVideoView
-            participant={participant}
-            roomId={room.roomId}
-            style={styles.videoView}
-            onLayout={(e) => console.log('onLayout: ', e)}
-          />
-          {((participant.participantId === room.localParticipant?.participantId &&
-            !room.localParticipant?.isVideoEnabled) ||
-            (participant.participantId !== room.localParticipant?.participantId && !participant.isVideoEnabled)) && (
+          <GroupCallVideoView participant={participant} roomId={room.roomId} style={styles.videoView} />
+          {(!getIsEnabled(participant, room.localParticipant, 'video') ||
+            (!isLocalParticipant(participant, room.localParticipant) &&
+              participant.state !== ParticipantState.CONNECTED)) && (
             <View style={[styles.videoView, StyleSheet.absoluteFillObject]}>
               <Image
                 source={participant.user.profileUrl ? { uri: participant.user.profileUrl } : IconAssets.Avatar}
@@ -89,9 +88,7 @@ const GroupCallVideoStreamView: FC<GroupCallVideoStreamViewProps> = ({ room, lay
             </View>
           )}
           <View style={styles.userId}>
-            {((participant.participantId === room.localParticipant?.participantId &&
-              !room.localParticipant?.isAudioEnabled) ||
-              (participant.participantId !== room.localParticipant?.participantId && !participant.isAudioEnabled)) && (
+            {!getIsEnabled(participant, room.localParticipant, 'audio') && (
               <SBIcon icon="AudioOff" size={11} color={Palette.support01} style={{ marginRight: 4 }} />
             )}
             <SBText
@@ -108,6 +105,20 @@ const GroupCallVideoStreamView: FC<GroupCallVideoStreamViewProps> = ({ room, lay
       ))}
     </View>
   );
+};
+
+const isLocalParticipant = (participant: Participant, localParticipant: LocalParticipant | null) => {
+  return participant.participantId === localParticipant?.participantId;
+};
+
+const getIsEnabled = (participant: Participant, localParticipant: LocalParticipant | null, type: 'video' | 'audio') => {
+  const isLocal = isLocalParticipant(participant, localParticipant);
+  if (type === 'video') {
+    return isLocal ? localParticipant?.isVideoEnabled : participant.isVideoEnabled;
+  } else {
+    // audio
+    return isLocal ? localParticipant?.isAudioEnabled : participant.isAudioEnabled;
+  }
 };
 
 const styles = StyleSheet.create({

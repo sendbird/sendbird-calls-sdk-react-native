@@ -24,6 +24,7 @@ const GroupCallRoomScreen = () => {
   const [layoutSize, setLayoutSize] = useState({ width: 0, height: 0 });
 
   const { room, isFetched } = useGroupCallRoom(roomId);
+
   if (!room) {
     if (isFetched) {
       AppLogger.log('[ERROR] RoomScreen getCachedRoomById');
