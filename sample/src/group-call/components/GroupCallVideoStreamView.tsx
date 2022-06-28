@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { GroupCallVideoView, Participant, ParticipantState, Room } from '@sendbird/calls-react-native';
+import { GroupCallVideoView, Room } from '@sendbird/calls-react-native';
 
 import Palette from '../../shared/styles/palette';
 
@@ -25,7 +25,6 @@ const MARGIN_SIZE = 2;
 const GroupCallVideoStreamView: FC<GroupCallVideoStreamViewProps> = ({ room, layoutSize }) => {
   const [rowCol, setRowCol] = useState<RowCol>({ row: 1, column: 1 });
   const [viewSize, setViewSize] = useState<LayoutSize>({ width: 0, height: 0 });
-  const [connectedParticipants, setConnectedParticipants] = useState<Participant[]>([]);
 
   useEffect(() => {
     setRowCol(() => {
@@ -56,16 +55,6 @@ const GroupCallVideoStreamView: FC<GroupCallVideoStreamViewProps> = ({ room, lay
     }
   }, [layoutSize.width, layoutSize.height, rowCol.row, rowCol.column]);
 
-  useEffect(() => {
-    setConnectedParticipants(() =>
-      room.participants.filter(
-        (participant) =>
-          participant.state === ParticipantState.CONNECTED ||
-          participant.participantId === room.localParticipant?.participantId,
-      ),
-    );
-  }, [room.participants]);
-
   return (
     <View
       style={[
@@ -76,15 +65,9 @@ const GroupCallVideoStreamView: FC<GroupCallVideoStreamViewProps> = ({ room, lay
         },
       ]}
     >
-      {connectedParticipants.map((participant) => (
-        <View style={[styles.videoView, viewSize]} key={participant.participantId}>
-          <GroupCallVideoView
-            participantId={participant.participantId}
-            roomId={room.roomId}
-            // style={[styles.videoView, viewSize]}
-            style={{}}
-            // key={participant.participantId}
-          />
+      {room.participants.map((participant) => (
+        <View key={participant.participantId} style={viewSize}>
+          <GroupCallVideoView participant={participant} roomId={room.roomId} style={styles.videoView} />
         </View>
       ))}
     </View>
@@ -100,6 +83,9 @@ const styles = StyleSheet.create({
     backgroundColor: Palette.background600,
   },
   videoView: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
     margin: MARGIN_SIZE,
     backgroundColor: Palette.background500,
   },
