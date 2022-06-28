@@ -12,4 +12,5 @@ export { DirectCallLogListQuery, RoomListQuery } from './libs/BridgedQuery';
 const nativeBinder = new NativeBinder();
 export const SendbirdCalls = new SendbirdCallsModule(nativeBinder);
 export { default as DirectCallVideoView, DirectCallVideoViewProps } from './libs/DirectCallVideoView';
+export { default as GroupCallVideoView, GroupCallVideoViewProps } from './libs/GroupCallVideoView';
 export { default as SendbirdCallsModule } from './libs/SendbirdCallsModule';
