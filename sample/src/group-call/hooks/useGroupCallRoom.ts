@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { useState } from 'react';
 
-import type { AudioDevice, AudioDeviceRoute, ParticipantProperties, Room } from '@sendbird/calls-react-native';
+import type { AudioDevice, AudioDeviceRoute, Participant, Room, RoomListener } from '@sendbird/calls-react-native';
 import { SendbirdCalls } from '@sendbird/calls-react-native';
 
 import { useEffectAsync } from '../../shared/hooks/useEffectAsync';
@@ -13,6 +14,7 @@ export const useGroupCallRoom = (roomId: string) => {
   const [room, setRoom] = useState<Room | null>(null);
   const [isFetched, setIsFetched] = useState(false);
   const [currentAudioDeviceIOS, setCurrentAudioDeviceIOS] = useState<AudioDeviceRoute>({ inputs: [], outputs: [] });
+  const [roomListener, setRoomListener] = useState<Partial<RoomListener>>({});
 
   const toggleLocalParticipantAudio = () => {
     room?.localParticipant?.isAudioEnabled
@@ -42,39 +44,32 @@ export const useGroupCallRoom = (roomId: string) => {
           },
 
           onDeleted() {
-            // TODO: delete AppLogger and add code
-            AppLogger.log('useGroupCallRoom :: onDeleted : ', room?.roomId);
+            roomListener.onDeleted?.();
           },
-          onError(e: Error, participant?: ParticipantProperties) {
-            // TODO: delete AppLogger and add code
-            AppLogger.log('useGroupCallRoom :: onError : ', e, participant);
+          onError(e: Error, participant: Participant | null) {
+            roomListener.onError?.(e, participant);
           },
 
           /* Remote Participant */
-          onRemoteParticipantEntered(participant: ParticipantProperties) {
-            // TODO: delete AppLogger and add code
-            AppLogger.log('useGroupCallRoom :: onRemoteParticipantEntered : ', participant);
+          onRemoteParticipantEntered(participant: Participant) {
             forceUpdate();
+            roomListener.onRemoteParticipantEntered?.(participant);
           },
-          onRemoteParticipantExited(participant: ParticipantProperties) {
-            // TODO: delete AppLogger and add code
-            AppLogger.log('useGroupCallRoom :: onRemoteParticipantExited : ', participant);
+          onRemoteParticipantExited(participant: Participant) {
             forceUpdate();
+            roomListener.onRemoteParticipantExited?.(participant);
           },
-          onRemoteParticipantStreamStarted(participant: ParticipantProperties) {
-            // TODO: delete AppLogger and add code
-            AppLogger.log('useGroupCallRoom :: onRemoteParticipantStreamStarted : ', participant);
+          onRemoteParticipantStreamStarted(participant: Participant) {
             forceUpdate();
+            roomListener.onRemoteParticipantStreamStarted?.(participant);
           },
-          onRemoteVideoSettingsChanged(participant: ParticipantProperties) {
-            // TODO: delete AppLogger and add code
-            AppLogger.log('useGroupCallRoom :: onRemoteVideoSettingsChanged : ', participant);
+          onRemoteVideoSettingsChanged(participant: Participant) {
             forceUpdate();
+            roomListener.onRemoteVideoSettingsChanged?.(participant);
           },
-          onRemoteAudioSettingsChanged(participant: ParticipantProperties) {
-            // TODO: delete AppLogger and add code
-            AppLogger.log('useGroupCallRoom :: onRemoteAudioSettingsChanged : ', participant);
+          onRemoteAudioSettingsChanged(participant: Participant) {
             forceUpdate();
+            roomListener.onRemoteAudioSettingsChanged?.(participant);
           },
 
           onAudioDeviceChanged(currentAudioDevice: AudioDevice | null, availableAudioDevices: AudioDevice[]) {
@@ -85,20 +80,17 @@ export const useGroupCallRoom = (roomId: string) => {
               setCurrentAudioDeviceIOS(route);
             }
 
-            // TODO: delete AppLogger and add code
-            AppLogger.log('useGroupCallRoom :: onAudioDeviceChanged : ', currentAudioDevice, availableAudioDevices);
             forceUpdate();
+            roomListener.onAudioDeviceChanged?.(currentAudioDevice, availableAudioDevices);
           },
 
           onCustomItemsUpdated(updatedKeys: string[]) {
-            // TODO: delete AppLogger and add code
-            AppLogger.log('useGroupCallRoom :: updatedKeys : ', updatedKeys);
             forceUpdate();
+            roomListener.onCustomItemsUpdated?.(updatedKeys);
           },
           onCustomItemsDeleted(deletedKeys: string[]) {
-            // TODO: delete AppLogger and add code
-            AppLogger.log('useGroupCallRoom :: deletedKeys : ', deletedKeys);
             forceUpdate();
+            roomListener.onCustomItemsDeleted?.(deletedKeys);
           },
         })
       : // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -114,5 +106,6 @@ export const useGroupCallRoom = (roomId: string) => {
     toggleLocalParticipantAudio,
     toggleLocalParticipantVideo,
     flipCameraFrontAndBack,
+    setRoomListener,
   };
 };
