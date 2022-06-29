@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { Platform } from 'react-native';
 
-import { SendbirdCalls } from '@sendbird/calls-react-native';
+import { SendbirdCalls, SoundType } from '@sendbird/calls-react-native';
 
 import { useAuthContext } from '../shared/contexts/AuthContext';
 import AuthManager from '../shared/libs/AuthManager';
@@ -28,6 +28,13 @@ if (Platform.OS === 'android') {
 if (Platform.OS === 'ios') {
   setupCallKit();
 }
+
+// use ringtone sound of CallKit on iOS
+Platform.OS === 'android' && SendbirdCalls.addDirectCallSound(SoundType.RINGING, 'ringing.mp3');
+SendbirdCalls.addDirectCallSound(SoundType.DIALING, 'dialing.mp3');
+SendbirdCalls.addDirectCallSound(SoundType.RECONNECTED, 'reconnected.mp3');
+SendbirdCalls.addDirectCallSound(SoundType.RECONNECTING, 'reconnecting.mp3');
+// SendbirdCalls.setDirectCallDialingSoundOnWhenSilentOrVibrateMode(true);
 
 SendbirdCalls.onRinging(async (call) => {
   const directCall = await SendbirdCalls.getDirectCall(call.callId);

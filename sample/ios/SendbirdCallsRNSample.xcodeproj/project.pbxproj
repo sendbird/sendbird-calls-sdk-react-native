@@ -12,6 +12,10 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1A22AC5BD4D73E684E2C8CF5 /* libPods-SendbirdCallsRNSample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DC002BF437A63542A56AF10 /* libPods-SendbirdCallsRNSample.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		ED2BB06F286AE65C0039E765 /* reconnecting.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = ED2BB06B286AE65C0039E765 /* reconnecting.mp3 */; };
+		ED2BB070286AE65C0039E765 /* reconnected.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = ED2BB06C286AE65C0039E765 /* reconnected.mp3 */; };
+		ED2BB071286AE65C0039E765 /* dialing.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = ED2BB06D286AE65C0039E765 /* dialing.mp3 */; };
+		ED2BB072286AE65C0039E765 /* ringing.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = ED2BB06E286AE65C0039E765 /* ringing.mp3 */; };
 		EDE39477284F8A850062727A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EDE39476284F8A850062727A /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
@@ -27,6 +31,10 @@
 		9DC002BF437A63542A56AF10 /* libPods-SendbirdCallsRNSample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SendbirdCallsRNSample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7E869E4B24C87892D35FEDF /* Pods-SendbirdCallsRNSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SendbirdCallsRNSample.debug.xcconfig"; path = "Target Support Files/Pods-SendbirdCallsRNSample/Pods-SendbirdCallsRNSample.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		ED2BB06B286AE65C0039E765 /* reconnecting.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = reconnecting.mp3; sourceTree = "<group>"; };
+		ED2BB06C286AE65C0039E765 /* reconnected.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = reconnected.mp3; sourceTree = "<group>"; };
+		ED2BB06D286AE65C0039E765 /* dialing.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = dialing.mp3; sourceTree = "<group>"; };
+		ED2BB06E286AE65C0039E765 /* ringing.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ringing.mp3; sourceTree = "<group>"; };
 		ED79CE222825258D007CC64F /* SendbirdCallsRNSample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = SendbirdCallsRNSample.entitlements; path = SendbirdCallsRNSample/SendbirdCallsRNSample.entitlements; sourceTree = "<group>"; };
 		EDE39476284F8A850062727A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		EDF7F3CF28111ED9000E043F /* SendbirdCallsRNSample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SendbirdCallsRNSample-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -47,6 +55,7 @@
 		13B07FAE1A68108700A75B9A /* SendbirdCallsRNSample */ = {
 			isa = PBXGroup;
 			children = (
+				ED2BB06A286AE6450039E765 /* Sounds */,
 				EDE39476284F8A850062727A /* GoogleService-Info.plist */,
 				ED79CE222825258D007CC64F /* SendbirdCallsRNSample.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -105,6 +114,17 @@
 				9AA99F8446E211967F59F5B1 /* Pods-SendbirdCallsRNSample.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		ED2BB06A286AE6450039E765 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				ED2BB06B286AE65C0039E765 /* reconnecting.mp3 */,
+				ED2BB06C286AE65C0039E765 /* reconnected.mp3 */,
+				ED2BB06D286AE65C0039E765 /* dialing.mp3 */,
+				ED2BB06E286AE65C0039E765 /* ringing.mp3 */,
+			);
+			name = Sounds;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -171,7 +191,11 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				ED2BB06F286AE65C0039E765 /* reconnecting.mp3 in Resources */,
+				ED2BB072286AE65C0039E765 /* ringing.mp3 in Resources */,
+				ED2BB071286AE65C0039E765 /* dialing.mp3 in Resources */,
 				EDE39477284F8A850062727A /* GoogleService-Info.plist in Resources */,
+				ED2BB070286AE65C0039E765 /* reconnected.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
