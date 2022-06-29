@@ -5,7 +5,6 @@ import com.sendbird.calls.ParticipantState
 import com.sendbird.calls.Room
 import com.sendbird.calls.SendBirdCall
 import com.sendbird.calls.reactnative.view.BaseVideoView
-import org.webrtc.RendererCommon
 
 class RNSBGroupCallVideoView(context: Context) : BaseVideoView(context) {
     private var mRoomId: String? = null
@@ -20,7 +19,6 @@ class RNSBGroupCallVideoView(context: Context) : BaseVideoView(context) {
     fun updateView() {
         val participant = this.getRoom(mRoomId)?.participants?.find { participant -> participant.participantId == mParticipantId }
         this.updateViewLayout(mSurface, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
-//        mSurface.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FIT)
         participant?.videoView = mSurface
     }
 

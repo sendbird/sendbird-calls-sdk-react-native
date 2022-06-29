@@ -77,6 +77,8 @@ const GroupCallVideoStreamView: FC<GroupCallVideoStreamViewProps> = ({ room, lay
       {room.participants.map((participant) => (
         <View key={participant.participantId} style={viewSize}>
           <GroupCallVideoView participant={participant} roomId={room.roomId} style={styles.videoView} />
+
+          {/* User Video Off */}
           {(!getIsEnabled(participant, room.localParticipant, 'video') ||
             (!isLocalParticipant(participant, room.localParticipant) &&
               participant.state !== ParticipantState.CONNECTED)) && (
@@ -87,6 +89,8 @@ const GroupCallVideoStreamView: FC<GroupCallVideoStreamViewProps> = ({ room, lay
               />
             </View>
           )}
+
+          {/* UserID and User Audio Off */}
           <View style={styles.userId}>
             {!getIsEnabled(participant, room.localParticipant, 'audio') && (
               <SBIcon icon="AudioOff" size={11} color={Palette.support01} style={{ marginRight: 4 }} />
