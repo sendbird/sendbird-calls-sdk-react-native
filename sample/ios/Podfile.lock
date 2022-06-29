@@ -444,6 +444,10 @@ PODS:
     - SendBirdWebRTC (~> 1.5.0)
   - SendBirdWebRTC (1.5.0)
   - SocketRocket (0.6.0)
+  - VisionCamera (2.13.5):
+    - React
+    - React-callinvoker
+    - React-Core
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -516,6 +520,7 @@ DEPENDENCIES:
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNVoipPushNotification (from `../node_modules/react-native-voip-push-notification`)
   - sendbird-calls-react-native (from `../..`)
+  - VisionCamera (from `../node_modules/react-native-vision-camera`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -634,6 +639,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-voip-push-notification"
   sendbird-calls-react-native:
     :path: "../.."
+  VisionCamera:
+    :path: "../node_modules/react-native-vision-camera"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -706,6 +713,7 @@ SPEC CHECKSUMS:
   SendBirdCalls: 7ecc15b7712f435bdc7e86ced5feee158266a464
   SendBirdWebRTC: 0ef66b6e6b2f73b307d1e4fe63ce36ab3f0b2518
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
+  VisionCamera: 1ae1415dd21fee97c9bbfc1504d87cd7daba8d9c
   Yoga: 99652481fcd320aefa4a7ef90095b95acd181952
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
