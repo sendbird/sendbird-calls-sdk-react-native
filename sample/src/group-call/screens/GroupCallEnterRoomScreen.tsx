@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Image, Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
+import React, { useState } from 'react';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { Camera, CameraType } from 'react-native-camera-kit';
 
 import { EnterParams, Room, SendbirdCalls } from '@sendbird/calls-react-native';
