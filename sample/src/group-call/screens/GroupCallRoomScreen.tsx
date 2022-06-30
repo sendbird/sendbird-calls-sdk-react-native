@@ -27,6 +27,7 @@ const GroupCallRoomScreen = () => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', () => {
+      AppLogger.log('RoomScreen(beforeRemove) getCachedRoomById');
       if (room) room.exit();
     });
 

@@ -18,7 +18,6 @@ class RNSBGroupCallVideoView(context: Context) : BaseVideoView(context) {
 
     fun updateView() {
         val participant = this.getRoom(mRoomId)?.participants?.find { participant -> participant.participantId == mParticipantId }
-        this.updateViewLayout(mSurface, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
         participant?.videoView = mSurface
     }
 

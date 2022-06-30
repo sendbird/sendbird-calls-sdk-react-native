@@ -75,8 +75,13 @@ const GroupCallVideoStreamView: FC<GroupCallVideoStreamViewProps> = ({ room, lay
       ]}
     >
       {room.participants.map((participant) => (
-        <View key={participant.participantId} style={viewSize}>
-          <GroupCallVideoView participant={participant} roomId={room.roomId} style={styles.videoView} />
+        <View key={participant.participantId} style={[viewSize, { backgroundColor: Palette.background600 }]}>
+          <GroupCallVideoView
+            participant={participant}
+            roomId={room.roomId}
+            style={styles.videoView}
+            resizeMode={'contain'}
+          />
 
           {/* User Video Off */}
           {(!getIsEnabled(participant, room.localParticipant, 'video') ||
@@ -135,8 +140,8 @@ const styles = StyleSheet.create({
   },
   videoView: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
     margin: MARGIN_SIZE,
     backgroundColor: Palette.background500,
   },

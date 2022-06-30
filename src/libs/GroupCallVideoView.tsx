@@ -30,7 +30,7 @@ export default class GroupCallVideoView extends React.PureComponent<GroupCallVid
     const {
       android_zOrderMediaOverlay = false,
       mirror = false,
-      resizeMode = 'cover',
+      resizeMode = 'contain',
       participant,
       roomId,
       style,
