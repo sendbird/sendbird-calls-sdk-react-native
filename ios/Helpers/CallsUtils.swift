@@ -151,7 +151,7 @@ class CallsUtils {
             "customItems": room.customItems,
             
             "participants": room.participants.map { convertParticipantToDict($0) },
-            "localParticipant": convertParticipantToDict(room.localParticipant)!,
+            "localParticipant": convertParticipantToDict(room.localParticipant),
             "remoteParticipants": room.remoteParticipants.map { convertParticipantToDict($0) },
             
             "createdAt": room.createdAt,
@@ -177,7 +177,6 @@ class CallsUtils {
             "isVideoEnabled": participant.isVideoEnabled,
             
             "updatedAt": participant.updatedAt,
-            // "videoView": participant.videoView
         ]
     }
 }

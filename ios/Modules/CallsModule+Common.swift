@@ -31,6 +31,9 @@ protocol CallsCommonModuleProtocol {
     func unregisterVoIPPushToken(_ token: String, _ promise: Promise)
     
     func dial(_ calleeId: String, _ isVideoCall: Bool, _ options: [String: Any?], _ promise: Promise)
+    
+    func fetchRoomById(_ roomId: String, _ promise: Promise)
+    func getCachedRoomById(_ roomId: String, _ promise: Promise)
 }
 
 class CallsCommonModule: CallsBaseModule, CallsCommonModuleProtocol {
@@ -172,6 +175,28 @@ class CallsCommonModule: CallsBaseModule, CallsCommonModuleProtocol {
             } else if let directCall = directCall {
                 directCall.delegate = self.root.directCallModule
                 promise.resolve(CallsUtils.convertDirectCallToDict(directCall))
+            }
+        }
+    }
+    
+    func fetchRoomById(_ roomId: String, _ promise: Promise) {
+        SendBirdCall.fetchRoom(by: roomId) { room, error in
+            if let error = error {
+                promise.reject(error)
+            } else if let room = room {
+//                room.addDelegate(RoomDelegate, room.roomId)
+                promise.resolve(CallsUtils.convertRoomToDict(room))
+            }
+        }
+    }
+    
+    func getCachedRoomById(_ roomId: String, _ promise: Promise) {
+        DispatchQueue.main.async {
+            do {
+                let room = try SendBirdCall.getCachedRoom(by: roomId)
+                promise.resolve(CallsUtils.convertRoomToDict(room))
+            } catch {
+                promise.resolve(nil)
             }
         }
     }

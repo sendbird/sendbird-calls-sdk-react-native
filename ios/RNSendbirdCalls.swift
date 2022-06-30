@@ -142,6 +142,14 @@ extension RNSendbirdCalls {
     @objc func dial(_ calleeId: String, _ isVideoCall: Bool, _ options: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
         module.dial(calleeId, isVideoCall, options, Promise(resolve, reject))
     }
+    
+    @objc func fetchRoomById(_ roomId: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.fetchRoomById(roomId, Promise(resolve, reject))
+    }
+    
+    @objc func getCachedRoomById(_ roomId: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.getCachedRoomById(roomId, Promise(resolve, reject))
+    }
 }
 
 // MARK: DirectCall
