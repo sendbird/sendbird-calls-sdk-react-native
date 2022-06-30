@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar, StyleSheet, View } from 'react-native';
 
 import Loading from '../../shared/components/Loading';
@@ -14,7 +14,7 @@ import { GroupRoutes } from '../navigations/routes';
 
 const GroupCallRoomScreen = () => {
   const {
-    navigation: { goBack },
+    navigation,
     route: {
       params: { roomId, isCreated },
     },
@@ -25,10 +25,18 @@ const GroupCallRoomScreen = () => {
 
   const { room, isFetched } = useGroupCallRoom(roomId);
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', () => {
+      if (room) room.exit();
+    });
+
+    return () => unsubscribe();
+  }, [room]);
+
   if (!room) {
     if (isFetched) {
       AppLogger.log('[ERROR] RoomScreen getCachedRoomById');
-      goBack();
+      navigation.goBack();
     }
 
     return <Loading visible={true} />;
