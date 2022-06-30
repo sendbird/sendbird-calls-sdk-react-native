@@ -118,6 +118,14 @@ extension CallsModule: CallsCommonModuleProtocol {
     func dial(_ calleeId: String, _ isVideoCall: Bool, _ options: [String: Any?], _ promise: Promise) {
         commonModule.dial(calleeId, isVideoCall, options, promise)
     }
+    
+    func fetchRoomById(_ roomId: String, _ promise: Promise) {
+        commonModule.fetchRoomById(roomId, promise)
+    }
+    
+    func getCachedRoomById(_ roomId: String, _ promise: Promise) {
+        commonModule.getCachedRoomById(roomId, promise)
+    }
 }
 
 // MARK: MediaDeviceControl extension
