@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Image, Pressable, StyleSheet, View } from 'react-native';
-import { Camera, useCameraDevices } from 'react-native-vision-camera';
+import React, { useEffect, useRef, useState } from 'react';
+import { Image, Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { Camera, CameraType } from 'react-native-camera-kit';
 
 import { EnterParams, Room, SendbirdCalls } from '@sendbird/calls-react-native';
 
@@ -26,7 +26,6 @@ const GroupCallEnterRoomScreen = () => {
   const [room, setRoom] = useState<Room>();
   const [enterParam, setEnterParam] = useState<EnterParams>({ audioEnabled: true, videoEnabled: true });
 
-  const devices = useCameraDevices();
   const { currentUser } = useAuthContext();
 
   useLayoutEffectAsync(async () => {
@@ -54,11 +53,9 @@ const GroupCallEnterRoomScreen = () => {
   return (
     <View style={styles.container}>
       <View style={[styles.previewProfile, styles.preview]}>
-        {enterParam.videoEnabled && devices.front && (
-          <Camera style={StyleSheet.absoluteFill} device={devices.front} isActive={true} />
-        )}
+        {enterParam.videoEnabled && <Camera style={StyleSheet.absoluteFill} cameraType={CameraType.Front} />}
 
-        {(!enterParam.videoEnabled || !devices.front) && (
+        {!enterParam.videoEnabled && (
           <View style={styles.previewProfile}>
             <Image
               style={styles.profile}
@@ -101,7 +98,7 @@ const styles = StyleSheet.create({
   },
   previewProfile: {
     width: '100%',
-    height: 430,
+    height: 420,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 4,
