@@ -142,7 +142,7 @@ class CallsGroupCallListener(private val root: CallsModule, private val room: Ro
             CallsEvents.TYPE_GROUP_CALL_ON_CUSTOM_ITEMS_UPDATED,
             CallsUtils.convertRoomToJsMap(room),
             Arguments.createMap().apply {
-                putArray("updatedKeys", Arguments.fromList(updatedKeys.map { it }))
+                putArray("updatedKeys", Arguments.fromList(updatedKeys))
             }
         )
     }
@@ -156,7 +156,7 @@ class CallsGroupCallListener(private val root: CallsModule, private val room: Ro
             CallsEvents.TYPE_GROUP_CALL_ON_CUSTOM_ITEMS_DELETED,
             CallsUtils.convertRoomToJsMap(room),
             Arguments.createMap().apply {
-                putArray("deletedKeys", Arguments.fromList(deletedKeys.map { it }))
+                putArray("deletedKeys", Arguments.fromList(deletedKeys))
             }
         )
     }
