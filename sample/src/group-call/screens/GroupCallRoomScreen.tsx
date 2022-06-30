@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar, StyleSheet, View } from 'react-native';
 
 import Loading from '../../shared/components/Loading';
 import Palette from '../../shared/styles/palette';
 import { AppLogger } from '../../shared/utils/logger';
+import GroupCallVideoStreamView from '../components/GroupCallVideoStreamView';
 import ModalRoomId from '../components/ModalRoomId';
 import RoomFooter from '../components/RoomFooter';
 import RoomHeader from '../components/RoomHeader';
@@ -13,19 +14,30 @@ import { GroupRoutes } from '../navigations/routes';
 
 const GroupCallRoomScreen = () => {
   const {
-    navigation: { goBack },
+    navigation,
     route: {
       params: { roomId, isCreated },
     },
   } = useGroupNavigation<GroupRoutes.ROOM>();
 
   const [visible, setVisible] = useState(isCreated ?? false);
+  const [layoutSize, setLayoutSize] = useState({ width: 0, height: 0 });
 
   const { room, isFetched } = useGroupCallRoom(roomId);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', () => {
+      AppLogger.log('RoomScreen(beforeRemove) getCachedRoomById');
+      if (room) room.exit();
+    });
+
+    return () => unsubscribe();
+  }, [room]);
+
   if (!room) {
     if (isFetched) {
       AppLogger.log('[ERROR] RoomScreen getCachedRoomById');
-      goBack();
+      navigation.goBack();
     }
 
     return <Loading visible={true} />;
@@ -38,7 +50,16 @@ const GroupCallRoomScreen = () => {
 
       <RoomHeader />
 
-      <View style={styles.view}>{/* Video View */}</View>
+      <View
+        style={styles.videoView}
+        onLayout={({
+          nativeEvent: {
+            layout: { width, height },
+          },
+        }) => setLayoutSize({ width, height })}
+      >
+        <GroupCallVideoStreamView room={room} layoutSize={layoutSize} />
+      </View>
 
       <RoomFooter />
     </View>
@@ -50,10 +71,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Palette.background600,
   },
-  view: {
+  videoView: {
     flex: 1,
-    backgroundColor: '#eee',
-    marginVertical: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Palette.background600,
   },
 });
 

@@ -42,6 +42,8 @@ const Palette = {
   onBackgroundDark02: 'rgba(255,255,255,0.50)',
   onBackgroundDark03: 'rgba(255,255,255,0.38)',
   onBackgroundDark04: 'rgba(255,255,255,0.12)',
+
+  support01: 'rgb(242, 77, 107)',
 };
 
 export default Palette;

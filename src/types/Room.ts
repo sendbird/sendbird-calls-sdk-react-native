@@ -1,3 +1,4 @@
+import { Participant } from '../libs/Participant';
 import type { AudioDevice } from './Media';
 import type { NativeGroupCallModule } from './NativeModule';
 import { JSMediaDeviceControl } from './NativeModule';
@@ -25,28 +26,28 @@ export interface RoomListener {
    *
    * @since 1.0.0
    */
-  onError: (e: Error, participant?: ParticipantProperties) => void;
+  onError: (e: Error, participant: Participant | null) => void;
 
   /**
    * Called when a remote participant entered the room.
    *
    * @since 1.0.0
    */
-  onRemoteParticipantEntered: (participant: ParticipantProperties) => void;
+  onRemoteParticipantEntered: (participant: Participant) => void;
 
   /**
    * Called when a remote participant exited the room.
    *
    * @since 1.0.0
    */
-  onRemoteParticipantExited: (participant: ParticipantProperties) => void;
+  onRemoteParticipantExited: (participant: Participant) => void;
 
   /**
    * Called when a remote participant starts to send a stream.
    *
    * @since 1.0.0
    */
-  onRemoteParticipantStreamStarted: (participant: ParticipantProperties) => void;
+  onRemoteParticipantStreamStarted: (participant: Participant) => void;
 
   /**
    * Called when the audio device has been changed.
@@ -60,14 +61,14 @@ export interface RoomListener {
    *
    * @since 1.0.0
    */
-  onRemoteVideoSettingsChanged: (participant: ParticipantProperties) => void;
+  onRemoteVideoSettingsChanged: (participant: Participant) => void;
 
   /**
    * Called when a remote participant changed audio settings.
    *
    * @since 1.0.0
    */
-  onRemoteAudioSettingsChanged: (participant: ParticipantProperties) => void;
+  onRemoteAudioSettingsChanged: (participant: Participant) => void;
 
   /**
    *  Called when the custom items of the call are updated.

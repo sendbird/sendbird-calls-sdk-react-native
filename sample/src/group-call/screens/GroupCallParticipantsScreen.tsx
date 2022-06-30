@@ -22,7 +22,7 @@ const GroupCallParticipantsScreen = () => {
     <FlatList
       keyExtractor={({ participantId }) => participantId}
       data={participants}
-      renderItem={({ item }) => <UserInfo {...item} />}
+      renderItem={({ item }) => <UserInfo user={item.user} />}
       ListFooterComponent={<Footer roomId={roomId} />}
     />
   );

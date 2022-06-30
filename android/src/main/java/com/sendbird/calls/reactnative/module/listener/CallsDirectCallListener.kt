@@ -42,7 +42,9 @@ class CallsDirectCallListener(private val root: CallsModule,): DirectCallListene
             CallsEvents.EVENT_DIRECT_CALL,
             CallsEvents.TYPE_DIRECT_CALL_ON_CUSTOM_ITEMS_DELETED,
             CallsUtils.convertDirectCallToJsMap(call),
-            deletedKeys
+            Arguments.createMap().apply {
+                putArray("deletedKeys", Arguments.fromList(deletedKeys))
+            }
         )
     }
 
@@ -52,7 +54,9 @@ class CallsDirectCallListener(private val root: CallsModule,): DirectCallListene
             CallsEvents.EVENT_DIRECT_CALL,
             CallsEvents.TYPE_DIRECT_CALL_ON_CUSTOM_ITEMS_UPDATED,
             CallsUtils.convertDirectCallToJsMap(call),
-            updatedKeys
+            Arguments.createMap().apply {
+                putArray("updatedKeys", Arguments.fromList(updatedKeys))
+            }
         )
     }
 

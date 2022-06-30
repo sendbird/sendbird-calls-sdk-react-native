@@ -47,7 +47,9 @@ class CallsGroupCallListener(private val root: CallsModule, private val room: Ro
                 CallsEvents.EVENT_GROUP_CALL,
                 CallsEvents.TYPE_GROUP_CALL_ON_REMOTE_PARTICIPANT_ENTERED,
                 CallsUtils.convertRoomToJsMap(room),
-                it
+                Arguments.createMap().apply {
+                    putMap("participant", it)
+                }
             )
         }
     }
@@ -61,7 +63,9 @@ class CallsGroupCallListener(private val root: CallsModule, private val room: Ro
                 CallsEvents.EVENT_GROUP_CALL,
                 CallsEvents.TYPE_GROUP_CALL_ON_REMOTE_PARTICIPANT_EXITED,
                 CallsUtils.convertRoomToJsMap(room),
-                it
+                Arguments.createMap().apply {
+                    putMap("participant", it)
+                }
             )
         }
     }
@@ -75,7 +79,9 @@ class CallsGroupCallListener(private val root: CallsModule, private val room: Ro
                 CallsEvents.EVENT_GROUP_CALL,
                 CallsEvents.TYPE_GROUP_CALL_ON_REMOTE_PARTICIPANT_STREAM_STARTED,
                 CallsUtils.convertRoomToJsMap(room),
-                it
+                Arguments.createMap().apply {
+                    putMap("participant", it)
+                }
             )
         }
     }
@@ -104,7 +110,9 @@ class CallsGroupCallListener(private val root: CallsModule, private val room: Ro
                 CallsEvents.EVENT_GROUP_CALL,
                 CallsEvents.TYPE_GROUP_CALL_ON_REMOTE_VIDEO_SETTINGS_CHANGED,
                 CallsUtils.convertRoomToJsMap(room),
-                it
+                Arguments.createMap().apply {
+                    putMap("participant", it)
+                }
             )
         }
     }
@@ -118,7 +126,9 @@ class CallsGroupCallListener(private val root: CallsModule, private val room: Ro
                 CallsEvents.EVENT_GROUP_CALL,
                 CallsEvents.TYPE_GROUP_CALL_ON_REMOTE_AUDIO_SETTINGS_CHANGED,
                 CallsUtils.convertRoomToJsMap(room),
-                it
+                Arguments.createMap().apply {
+                    putMap("participant", it)
+                }
             )
         }
     }
@@ -131,7 +141,9 @@ class CallsGroupCallListener(private val root: CallsModule, private val room: Ro
             CallsEvents.EVENT_GROUP_CALL,
             CallsEvents.TYPE_GROUP_CALL_ON_CUSTOM_ITEMS_UPDATED,
             CallsUtils.convertRoomToJsMap(room),
-            updatedKeys
+            Arguments.createMap().apply {
+                putArray("updatedKeys", Arguments.fromList(updatedKeys))
+            }
         )
     }
 
@@ -143,7 +155,9 @@ class CallsGroupCallListener(private val root: CallsModule, private val room: Ro
             CallsEvents.EVENT_GROUP_CALL,
             CallsEvents.TYPE_GROUP_CALL_ON_CUSTOM_ITEMS_DELETED,
             CallsUtils.convertRoomToJsMap(room),
-            deletedKeys
+            Arguments.createMap().apply {
+                putArray("deletedKeys", Arguments.fromList(deletedKeys))
+            }
         )
     }
 }

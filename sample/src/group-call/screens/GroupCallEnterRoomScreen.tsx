@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { Camera, useCameraDevices } from 'react-native-vision-camera';
 
 import { EnterParams, Room, SendbirdCalls } from '@sendbird/calls-react-native';
 
+import IconAssets from '../../assets';
 import SBButton from '../../shared/components/SBButton';
 import SBIcon from '../../shared/components/SBIcon';
 import SBText from '../../shared/components/SBText';
+import { useAuthContext } from '../../shared/contexts/AuthContext';
 import { useLayoutEffectAsync } from '../../shared/hooks/useEffectAsync';
 import Palette from '../../shared/styles/palette';
 import { AppLogger } from '../../shared/utils/logger';
@@ -21,7 +24,10 @@ const GroupCallEnterRoomScreen = () => {
   } = useGroupNavigation<GroupRoutes.ENTER_ROOM>();
 
   const [room, setRoom] = useState<Room>();
-  const [enterParam, setEnterParam] = useState<EnterParams>({ audioEnabled: false, videoEnabled: false });
+  const [enterParam, setEnterParam] = useState<EnterParams>({ audioEnabled: true, videoEnabled: true });
+
+  const devices = useCameraDevices();
+  const { currentUser } = useAuthContext();
 
   useLayoutEffectAsync(async () => {
     try {
@@ -47,14 +53,27 @@ const GroupCallEnterRoomScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.view}>{/* Video View */}</View>
+      <View style={[styles.previewProfile, styles.preview]}>
+        {enterParam.videoEnabled && devices.front && (
+          <Camera style={StyleSheet.absoluteFill} device={devices.front} isActive={true} />
+        )}
+
+        {(!enterParam.videoEnabled || !devices.front) && (
+          <View style={styles.previewProfile}>
+            <Image
+              style={styles.profile}
+              source={currentUser?.profileUrl ? { uri: currentUser.profileUrl } : IconAssets.Avatar}
+            />
+          </View>
+        )}
+      </View>
 
       <View style={styles.option}>
         <Pressable
           style={styles.check}
           onPress={() => setEnterParam((prev) => ({ ...prev, audioEnabled: !prev.audioEnabled }))}
         >
-          <SBIcon icon={enterParam.audioEnabled ? 'CheckboxOn' : 'CheckboxOff'} />
+          <SBIcon icon={enterParam.audioEnabled ? 'CheckboxOff' : 'CheckboxOn'} />
         </Pressable>
         <SBText subtitle2>Mute my audio</SBText>
       </View>
@@ -63,7 +82,7 @@ const GroupCallEnterRoomScreen = () => {
           style={styles.check}
           onPress={() => setEnterParam((prev) => ({ ...prev, videoEnabled: !prev.videoEnabled }))}
         >
-          <SBIcon icon={enterParam.videoEnabled ? 'CheckboxOn' : 'CheckboxOff'} />
+          <SBIcon icon={enterParam.videoEnabled ? 'CheckboxOff' : 'CheckboxOn'} />
         </Pressable>
         <SBText subtitle2>Turn off my video</SBText>
       </View>
@@ -80,13 +99,22 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 24,
   },
-  view: {
+  previewProfile: {
     width: '100%',
-    height: 400,
+    height: 430,
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 4,
     backgroundColor: Palette.background500,
+  },
+  preview: {
     marginTop: 24,
     marginBottom: 16,
+  },
+  profile: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
   },
   option: {
     flexDirection: 'row',

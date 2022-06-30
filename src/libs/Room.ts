@@ -1,9 +1,9 @@
 import type { AudioDevice, EnterParams, GroupCallMethods, RoomListener, RoomProperties } from '../types';
 import { ControllableModuleType } from '../types';
 import { Logger } from '../utils/logger';
-import { LocalParticipant } from './LocalParticipant';
 import type NativeBinder from './NativeBinder';
 import { CallsEvent, GroupCallEventType } from './NativeBinder';
+import { LocalParticipant, Participant } from './Participant';
 import { SendbirdError } from './SendbirdError';
 
 export interface InternalEvents<T> {
@@ -32,11 +32,15 @@ export class Room implements RoomProperties, GroupCallMethods {
     this._binder = binder;
     this._props = props;
     this._localParticipant = null;
+    this._participants = [];
+    this._remoteParticipants = [];
   }
 
   private _binder: NativeBinder;
   private _props: RoomProperties;
   private _localParticipant: LocalParticipant | null;
+  private _participants: Participant[];
+  private _remoteParticipants: Participant[];
   private _internalEvents = {
     pool: [] as Partial<RoomListener>[],
     emit: (event: keyof RoomListener, ...args: unknown[]) => {
@@ -53,10 +57,14 @@ export class Room implements RoomProperties, GroupCallMethods {
   };
   private _updateInternal(props: RoomProperties) {
     this._localParticipant = LocalParticipant.get(
+      props.localParticipant,
       this._binder,
       this._internalEvents,
-      props.localParticipant,
       this.roomId,
+    );
+    this._participants = props.participants.map((participant) => Participant.get(participant) as Participant);
+    this._remoteParticipants = props.remoteParticipants.map(
+      (remoteParticipant) => Participant.get(remoteParticipant) as Participant,
     );
     this._props = props;
     return this;
@@ -75,13 +83,13 @@ export class Room implements RoomProperties, GroupCallMethods {
     return this._props.customItems;
   }
   public get participants() {
-    return this._props.participants;
+    return this._participants;
   }
   public get localParticipant() {
     return this._localParticipant;
   }
   public get remoteParticipants() {
-    return this._props.remoteParticipants;
+    return this._remoteParticipants;
   }
   public get android_availableAudioDevices() {
     return this._props.android_availableAudioDevices;
@@ -121,20 +129,20 @@ export class Room implements RoomProperties, GroupCallMethods {
         }
         case GroupCallEventType.ON_ERROR: {
           const error = new SendbirdError(additionalData?.errorMessage, additionalData?.errorCode);
-          const participant = additionalData?.participant;
+          const participant = Participant.get(additionalData?.participant);
           listener.onError?.(error, participant);
           break;
         }
         case GroupCallEventType.ON_REMOTE_PARTICIPANT_ENTERED: {
-          listener.onRemoteParticipantEntered?.(additionalData?.participant);
+          listener.onRemoteParticipantEntered?.(Participant.get(additionalData?.participant) as Participant);
           break;
         }
         case GroupCallEventType.ON_REMOTE_PARTICIPANT_EXITED: {
-          listener.onRemoteParticipantExited?.(additionalData?.participant);
+          listener.onRemoteParticipantExited?.(Participant.get(additionalData?.participant) as Participant);
           break;
         }
         case GroupCallEventType.ON_REMOTE_PARTICIPANT_STREAM_STARTED: {
-          listener.onRemoteParticipantStreamStarted?.(additionalData?.participant);
+          listener.onRemoteParticipantStreamStarted?.(Participant.get(additionalData?.participant) as Participant);
           break;
         }
         case GroupCallEventType.ON_AUDIO_DEVICE_CHANGED: {
@@ -145,11 +153,11 @@ export class Room implements RoomProperties, GroupCallMethods {
           break;
         }
         case GroupCallEventType.ON_REMOTE_VIDEO_SETTINGS_CHANGED: {
-          listener.onRemoteVideoSettingsChanged?.(additionalData?.participant);
+          listener.onRemoteVideoSettingsChanged?.(Participant.get(additionalData?.participant) as Participant);
           break;
         }
         case GroupCallEventType.ON_REMOTE_AUDIO_SETTINGS_CHANGED: {
-          listener.onRemoteAudioSettingsChanged?.(additionalData?.participant);
+          listener.onRemoteAudioSettingsChanged?.(Participant.get(additionalData?.participant) as Participant);
           break;
         }
         case GroupCallEventType.ON_CUSTOM_ITEMS_UPDATED: {

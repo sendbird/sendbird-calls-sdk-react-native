@@ -46,6 +46,7 @@ const IconAssets = {
   'VideoThumbnailFilled_2': require('./icVideoThumbnailFilled_2.png'),
   'VideoThumbnailFilled_3': require('./icVideoThumbnailFilled_3.png'),
   'AudioOff': require('./iconAudioOff.png'),
+  'AudioOffRed': require('./iconAudioOffRed.png'),
   'Avatar': require('./iconAvatar.png'),
   'Back': require('./iconBack.png'),
   'Bluetooth': require('./iconBluetooth.png'),

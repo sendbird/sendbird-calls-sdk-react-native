@@ -1,38 +1,28 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { LocalParticipantMethods, ParticipantProperties, RoomListener } from '../types';
 import { ControllableModuleType } from '../types';
 import type NativeBinder from './NativeBinder';
-import { InternalEvents } from './Room';
+import type { InternalEvents } from './Room';
 
-export class LocalParticipant implements ParticipantProperties, LocalParticipantMethods {
+export class Participant implements ParticipantProperties {
   /** @internal **/
   public static get(
-    binder: NativeBinder,
-    internalEvents: InternalEvents<RoomListener>,
     props: ParticipantProperties | null,
-    roomId: string,
+    _binder?: NativeBinder,
+    _internalEvents?: InternalEvents<RoomListener>,
+    _roomId?: string,
   ) {
     if (!props) return null;
 
-    const localParticipant = new LocalParticipant(binder, internalEvents, props, roomId);
+    const localParticipant = new Participant(props);
     return localParticipant._updateInternal(props);
   }
 
-  constructor(
-    binder: NativeBinder,
-    internalEvents: InternalEvents<RoomListener>,
-    props: ParticipantProperties,
-    roomId: string,
-  ) {
-    this._binder = binder;
-    this._internalEvents = internalEvents;
+  constructor(props: ParticipantProperties) {
     this._props = props;
-    this._roomId = roomId;
   }
 
-  private _binder: NativeBinder;
-  private _props: ParticipantProperties;
-  private _internalEvents: InternalEvents<RoomListener>;
-  private _roomId: string;
+  protected _props: ParticipantProperties;
 
   private _updateInternal(props: ParticipantProperties) {
     this._props = props;
@@ -66,6 +56,36 @@ export class LocalParticipant implements ParticipantProperties, LocalParticipant
   public get updatedAt() {
     return this._props.updatedAt;
   }
+}
+
+export class LocalParticipant extends Participant implements LocalParticipantMethods {
+  /** @internal **/
+  public static get(
+    props: ParticipantProperties | null,
+    binder: NativeBinder,
+    internalEvents: InternalEvents<RoomListener>,
+    roomId: string,
+  ) {
+    if (!props) return null;
+
+    return new LocalParticipant(props, binder, internalEvents, roomId);
+  }
+
+  constructor(
+    props: ParticipantProperties,
+    binder: NativeBinder,
+    internalEvents: InternalEvents<RoomListener>,
+    roomId: string,
+  ) {
+    super(props);
+    this._binder = binder;
+    this._internalEvents = internalEvents;
+    this._roomId = roomId;
+  }
+
+  private _binder: NativeBinder;
+  private _internalEvents: InternalEvents<RoomListener>;
+  private _roomId: string;
 
   /**
    * Mutes the audio of the local user.
