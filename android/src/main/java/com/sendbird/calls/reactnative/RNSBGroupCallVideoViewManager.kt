@@ -10,6 +10,21 @@ class RNSBGroupCallVideoViewManager(private val reactContext: ReactContext) : Si
     override fun getName() = NAME
     override fun createViewInstance(context: ThemedReactContext) = RNSBGroupCallVideoView(context)
 
+    @ReactProp(name = "zOrderMediaOverlay")
+    fun setZOrderMediaOverlay(view: RNSBGroupCallVideoView, overlay: Boolean) {
+        view.setZOrderMediaOverlay(overlay)
+    }
+
+    @ReactProp(name = "resizeMode")
+    fun setResizeMode(view: RNSBGroupCallVideoView, mode: String) {
+        view.setResizeMode(mode)
+    }
+
+    @ReactProp(name = "mirror")
+    fun setMirror(view: RNSBGroupCallVideoView, enabled: Boolean) {
+        view.setMirror(enabled)
+    }
+
     @ReactProp(name = "participantId")
     fun setParticipantId(view: RNSBGroupCallVideoView, participantId: String) {
         view.setParticipantId(participantId)
@@ -22,8 +37,9 @@ class RNSBGroupCallVideoViewManager(private val reactContext: ReactContext) : Si
 
     @ReactProp(name = "state")
     fun setParticipantState(view: RNSBGroupCallVideoView, state: String) {
-        val participantState = ParticipantState.valueOf(state.uppercase())
-        view.setParticipantState(participantState)
+        ParticipantState.valueOf(state.uppercase()).let {
+            view.setParticipantState(it)
+        }
     }
 
     companion object {
