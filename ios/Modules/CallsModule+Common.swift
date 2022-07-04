@@ -34,6 +34,7 @@ protocol CallsCommonModuleProtocol {
     
     func fetchRoomById(_ roomId: String, _ promise: Promise)
     func getCachedRoomById(_ roomId: String, _ promise: Promise)
+    func createRoom(_ type: String, _ promise: Promise)
 }
 
 class CallsCommonModule: CallsBaseModule, CallsCommonModuleProtocol {
@@ -184,7 +185,7 @@ class CallsCommonModule: CallsBaseModule, CallsCommonModuleProtocol {
             if let error = error {
                 promise.reject(error)
             } else if let room = room {
-//                room.addDelegate(RoomDelegate, room.roomId)
+                // TODO: room.addDelegate(RoomDelegate, room.roomId)
                 promise.resolve(CallsUtils.convertRoomToDict(room))
             }
         }
@@ -197,6 +198,22 @@ class CallsCommonModule: CallsBaseModule, CallsCommonModuleProtocol {
                 promise.resolve(CallsUtils.convertRoomToDict(room))
             } catch {
                 promise.resolve(nil)
+            }
+        }
+    }
+     
+    func createRoom(_ type: String, _ promise: Promise) {
+        let from = "groupCall/createRoom"
+        guard let roomType = RoomType(fromString: type) else {
+            return promise.reject(RNCallsInternalError.invalidParams(from))
+        }
+        let roomParams = RoomParams(roomType: roomType)
+        SendBirdCall.createRoom(with: roomParams) { room, error in
+            if let error = error {
+                promise.reject(error)
+            } else if let room = room {
+                // TODO: room.addDelegate(RoomDelegate, room.roomId)
+                promise.resolve(CallsUtils.convertRoomToDict(room))
             }
         }
     }

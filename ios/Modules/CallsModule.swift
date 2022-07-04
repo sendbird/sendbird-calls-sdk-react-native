@@ -126,6 +126,10 @@ extension CallsModule: CallsCommonModuleProtocol {
     func getCachedRoomById(_ roomId: String, _ promise: Promise) {
         commonModule.getCachedRoomById(roomId, promise)
     }
+    
+    func createRoom(_ type: String, _ promise: Promise) {
+        commonModule.createRoom(type, promise)
+    }
 }
 
 // MARK: MediaDeviceControl extension

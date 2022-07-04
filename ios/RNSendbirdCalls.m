@@ -119,6 +119,11 @@ RCT_EXTERN_METHOD(getCachedRoomById
                   : (RCTPromiseResolveBlock)resolve
                   : (RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(createRoom
+                  : (NSString *)type
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
+
 // MARK: - SendbirdCalls: DirectCall
 RCT_EXTERN_METHOD(accept
                   : (NSString *)callId
