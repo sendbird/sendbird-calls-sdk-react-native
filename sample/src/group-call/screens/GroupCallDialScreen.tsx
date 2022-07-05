@@ -1,6 +1,6 @@
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Keyboard, ScrollView, StyleSheet, View } from 'react-native';
 
 import { SendbirdCalls } from '@sendbird/calls-react-native';
 
@@ -37,6 +37,7 @@ const GroupCallDialScreen = () => {
         AppLogger.log('[ERROR] DialScreen createRoom', e);
       }
     } else {
+      Keyboard.dismiss();
       try {
         const room = await SendbirdCalls.fetchRoomById(roomId);
         AppLogger.log('DialScreen fetchRoomById', room);

@@ -24,7 +24,7 @@ const RoomHeader = () => {
   const [visible, setVisible] = useState(false);
 
   return (
-    <View style={[styles.container, { paddingTop: top }]}>
+    <View style={[styles.container, !!top && { paddingTop: top }]}>
       <Pressable
         style={styles.info}
         onPress={() => room && navigate(GroupRoutes.ROOM_INFO, { roomId, createdBy: room.createdBy })}
@@ -68,7 +68,7 @@ const RoomHeader = () => {
 
 const styles = StyleSheet.create({
   container: {
-    height: 44,
+    paddingVertical: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     backgroundColor: Palette.background500,
