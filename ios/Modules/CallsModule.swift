@@ -169,7 +169,7 @@ extension CallsModule {
         case .directCall:
             return directCallModule
         case .groupCall:
-            return nil //groupCallModule
+            return groupCallModule
         }
     }
 }

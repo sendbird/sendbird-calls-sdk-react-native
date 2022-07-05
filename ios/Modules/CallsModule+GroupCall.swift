@@ -10,7 +10,7 @@ import Foundation
 import SendBirdCalls
 import CallKit
 
-protocol CallsGroupCallModuleProtocol {
+protocol CallsGroupCallModuleProtocol: MediaDeviceControlProtocol {
     func enter(_ roomId: String, _ options: [String: Any?], _ promise: Promise)
     func exit(_ roomId: String)
 }
@@ -47,5 +47,50 @@ class CallsGroupCallModule: CallsBaseModule, CallsGroupCallModuleProtocol {
 }
 
 // MARK: GroupCall MediaDeviceControl
-//extension CallsGroupCallModule {
-//}
+extension CallsGroupCallModule {
+    func switchCamera(_ type: String, _ roomId: String, _ promise: Promise) {
+        CallsUtils.safeRun {
+            let room = try CallsUtils.findRoom(roomId)
+            room.localParticipant?.switchCamera { error in
+                if let error = error {
+                    promise.reject(error)
+                } else {
+                    promise.resolve()
+                }
+            }
+        }
+    }
+    
+    func startVideo(_ type: String, _ roomId: String) {
+        CallsUtils.safeRun {
+            let room = try CallsUtils.findRoom(roomId)
+            room.localParticipant?.startVideo()
+        }
+    }
+    
+    func stopVideo(_ type: String, _ roomId: String) {
+        CallsUtils.safeRun {
+            let room = try CallsUtils.findRoom(roomId)
+            room.localParticipant?.stopVideo()
+        }
+    }
+    
+    func muteMicrophone(_ type: String, _ roomId: String) {
+        CallsUtils.safeRun {
+            let room = try CallsUtils.findRoom(roomId)
+            room.localParticipant?.muteMicrophone()
+        }
+    }
+    
+    func unmuteMicrophone(_ type: String, _ roomId: String) {
+        CallsUtils.safeRun {
+            let room = try CallsUtils.findRoom(roomId)
+            room.localParticipant?.unmuteMicrophone()
+        }
+    }
+    
+    func selectVideoDevice(_ type: String, _ roomId: String, _ device: [String: String], _ promise: Promise) {
+        // NOOP
+        promise.resolve()
+    }
+}
