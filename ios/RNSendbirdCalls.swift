@@ -175,6 +175,17 @@ extension RNSendbirdCalls {
     }
 }
 
+// MARK: GroupCall
+extension RNSendbirdCalls {
+    @objc func enter(_ roomId: String, _ options: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.enter(roomId, options, Promise(resolve, reject))
+    }
+    
+    @objc func exit(_ roomId: String) {
+        module.exit(roomId)
+    }
+}
+
 // MARK: MediaDeviceControl
 extension RNSendbirdCalls {
     @objc func switchCamera(_ type: String, _ identifier: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {

@@ -145,6 +145,16 @@ RCT_EXTERN_METHOD(updateRemmoteVideoView
                   : (NSString *)callId
                   : (NSNumber *)videoViewId)
 
+// MARK: - SendbirdCalls: GroupCall
+RCT_EXTERN_METHOD(enter
+                  : (NSString *)roomId
+                  : (NSDictionary *)options
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(exit
+                  : (NSString *)roomId)
+
 // MARK: - SendbirdCalls: MediaDeviceControl
 RCT_EXTERN_METHOD(switchCamera
                   : (NSString *)type

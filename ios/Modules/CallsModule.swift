@@ -29,6 +29,10 @@ class CallsModule: SendBirdCallDelegate {
         CallsDirectCallModule(root: self)
     }()
     
+    internal lazy var groupCallModule: CallsGroupCallModule = {
+        CallsGroupCallModule(root: self)
+    }()
+    
     internal var initialized: Bool {
         get {
             return SendBirdCall.appId != nil
@@ -186,6 +190,17 @@ extension CallsModule: CallsDirectCallModuleProtocol {
     
     func updateRemoteVideoView(_ callId: String, _ videoViewId: NSNumber) {
         directCallModule.updateRemoteVideoView(callId, videoViewId)
+    }
+}
+
+// MARK: GroupCallModule extension
+extension CallsModule: CallsGroupCallModuleProtocol {
+    func enter(_ roomId: String, _ options: [String : Any?], _ promise: Promise) {
+        groupCallModule.enter(roomId, options, promise)
+    }
+    
+    func exit(_ roomId: String) {
+        groupCallModule.exit(roomId)
     }
 }
 
