@@ -215,4 +215,11 @@ extension CallsUtils {
         }
         throw RNCallsInternalError.notFoundVideoView("findViewBy")
     }
+    
+    static func findRoom(_ roomId: String) throws -> Room {
+        if let room = SendBirdCall.getCachedRoom(by: roomId) {
+            return room
+        }
+        throw RNCallsInternalError.notFoundRoom("findRoom")
+    }
 }

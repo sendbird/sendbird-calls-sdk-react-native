@@ -29,6 +29,10 @@ class CallsModule: SendBirdCallDelegate {
         CallsDirectCallModule(root: self)
     }()
     
+    internal lazy var groupCallModule: CallsGroupCallModule = {
+        CallsGroupCallModule(root: self)
+    }()
+    
     internal var initialized: Bool {
         get {
             return SendBirdCall.appId != nil
@@ -126,6 +130,10 @@ extension CallsModule: CallsCommonModuleProtocol {
     func getCachedRoomById(_ roomId: String, _ promise: Promise) {
         commonModule.getCachedRoomById(roomId, promise)
     }
+    
+    func createRoom(_ type: String, _ promise: Promise) {
+        commonModule.createRoom(type, promise)
+    }
 }
 
 // MARK: MediaDeviceControl extension
@@ -161,7 +169,7 @@ extension CallsModule {
         case .directCall:
             return directCallModule
         case .groupCall:
-            return nil //groupCallModule
+            return groupCallModule
         }
     }
 }
@@ -182,6 +190,17 @@ extension CallsModule: CallsDirectCallModuleProtocol {
     
     func updateRemoteVideoView(_ callId: String, _ videoViewId: NSNumber) {
         directCallModule.updateRemoteVideoView(callId, videoViewId)
+    }
+}
+
+// MARK: GroupCallModule extension
+extension CallsModule: CallsGroupCallModuleProtocol {
+    func enter(_ roomId: String, _ options: [String : Any?], _ promise: Promise) {
+        groupCallModule.enter(roomId, options, promise)
+    }
+    
+    func exit(_ roomId: String) {
+        groupCallModule.exit(roomId)
     }
 }
 

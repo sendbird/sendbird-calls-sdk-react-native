@@ -26,7 +26,7 @@ const RoomFooter = () => {
   };
 
   return (
-    <View style={[styles.container, { paddingBottom: bottom }]}>
+    <View style={[styles.container, !!bottom && { paddingBottom: bottom }]}>
       <Pressable hitSlop={10} onPress={() => navigate(GroupRoutes.SETTINGS, { roomId })}>
         <SBIcon icon={'Settings'} size={20} color={Palette.background50} />
         <SBText caption2 color={Palette.onBackgroundDark01} style={{ marginTop: 4 }}>
@@ -63,7 +63,7 @@ const RoomFooter = () => {
 
 const styles = StyleSheet.create({
   container: {
-    height: 64,
+    paddingVertical: 8,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',

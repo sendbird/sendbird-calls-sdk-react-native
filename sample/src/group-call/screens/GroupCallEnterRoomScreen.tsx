@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { Image, Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { Camera, CameraType } from 'react-native-camera-kit';
 
 import { EnterParams, Room, SendbirdCalls } from '@sendbird/calls-react-native';
@@ -15,6 +15,8 @@ import { AppLogger } from '../../shared/utils/logger';
 import { useGroupNavigation } from '../hooks/useGroupNavigation';
 import { GroupRoutes } from '../navigations/routes';
 
+const SCREEN_PADDING = 24;
+
 const GroupCallEnterRoomScreen = () => {
   const {
     navigation: { replace, goBack },
@@ -27,6 +29,9 @@ const GroupCallEnterRoomScreen = () => {
   const [enterParam, setEnterParam] = useState<EnterParams>({ audioEnabled: true, videoEnabled: true });
 
   const { currentUser } = useAuthContext();
+
+  const previewWidth = useWindowDimensions().width - SCREEN_PADDING * 2;
+  const previewHeight = (previewWidth * 4) / 3;
 
   useLayoutEffectAsync(async () => {
     try {
@@ -52,7 +57,7 @@ const GroupCallEnterRoomScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={[styles.previewProfile, styles.preview]}>
+      <View style={[styles.previewProfile, styles.preview, { width: previewWidth, height: previewHeight }]}>
         {enterParam.videoEnabled && <Camera style={StyleSheet.absoluteFill} cameraType={CameraType.Front} />}
 
         {!enterParam.videoEnabled && (
@@ -94,18 +99,18 @@ const GroupCallEnterRoomScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: SCREEN_PADDING,
   },
   previewProfile: {
     width: '100%',
-    height: 420,
+    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 4,
     backgroundColor: Palette.background500,
   },
   preview: {
-    marginTop: 24,
+    marginTop: SCREEN_PADDING,
     marginBottom: 16,
   },
   profile: {
