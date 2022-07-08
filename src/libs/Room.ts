@@ -1,5 +1,7 @@
+import { Platform } from 'react-native';
+
 import type { AudioDevice, EnterParams, GroupCallMethods, RoomListener, RoomProperties } from '../types';
-import { ControllableModuleType } from '../types';
+import { ControllableModuleType, RouteChangeReason } from '../types';
 import { Logger } from '../utils/logger';
 import type NativeBinder from './NativeBinder';
 import { CallsEvent, GroupCallEventType } from './NativeBinder';
@@ -118,9 +120,9 @@ export class Room implements RoomProperties, GroupCallMethods {
     const disposeInternal = this._internalEvents.add(listener);
 
     const disposeNative = this._binder.addListener(CallsEvent.GROUP_CALL, ({ type, data, additionalData }) => {
+      Logger.debug('[GroupCall]', 'receive events ', type, data.roomId, additionalData);
       if (data.roomId !== this.roomId) return;
 
-      Logger.debug('[GroupCall]', 'receive events ', type, data.roomId, additionalData);
       this._updateInternal(data);
       switch (type) {
         case GroupCallEventType.ON_DELETED: {
@@ -146,10 +148,25 @@ export class Room implements RoomProperties, GroupCallMethods {
           break;
         }
         case GroupCallEventType.ON_AUDIO_DEVICE_CHANGED: {
-          listener.onAudioDeviceChanged?.(
-            additionalData?.currentAudioDevice ?? null,
-            additionalData?.availableAudioDevices ?? [],
-          );
+          if (Platform.OS === 'android') {
+            listener.onAudioDeviceChanged?.({
+              platform: 'android',
+              data: {
+                currentAudioDevice: additionalData?.currentAudioDevice ?? null,
+                availableAudioDevices: additionalData?.availableAudioDevices ?? [],
+              },
+            });
+          }
+          if (Platform.OS === 'ios') {
+            listener.onAudioDeviceChanged?.({
+              platform: 'ios',
+              data: {
+                reason: additionalData?.reason ?? RouteChangeReason.unknown,
+                currentRoute: additionalData?.currentRoute ?? { inputs: [], outputs: [] },
+                previousRoute: additionalData?.previousRoute ?? { inputs: [], outputs: [] },
+              },
+            });
+          }
           break;
         }
         case GroupCallEventType.ON_REMOTE_VIDEO_SETTINGS_CHANGED: {

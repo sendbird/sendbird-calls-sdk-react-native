@@ -1,5 +1,6 @@
 import { Participant } from '../libs/Participant';
-import type { AudioDevice } from './Media';
+// import type { AudioDevice } from './Media';
+import type { AudioDevice, AudioDeviceChangedInfo, RecordingStatus, VideoDevice } from './Media';
 import type { NativeGroupCallModule } from './NativeModule';
 import { JSMediaDeviceControl } from './NativeModule';
 import type { ParticipantProperties } from './Participant';
@@ -52,9 +53,13 @@ export interface RoomListener {
   /**
    * Called when the audio device has been changed.
    *
+   * on iOS, if you want to change the audio device you should handle the native side. (Currently, only port names are supported as strings)
+   * See also: AVAudioSession.setPreferredInput {@link https://developer.apple.com/documentation/avfaudio/avaudiosession/1616491-setpreferredinput}
+   * See also: AVRoutePickerView {@link https://developer.apple.com/documentation/avkit/avroutepickerview}
+   *
    * @since 1.0.0
    */
-  onAudioDeviceChanged: (currentAudioDevice: AudioDevice | null, availableAudioDevices: AudioDevice[]) => void;
+  onAudioDeviceChanged: (info: AudioDeviceChangedInfo) => void;
 
   /**
    * Called when a remote participant changed video settings.
