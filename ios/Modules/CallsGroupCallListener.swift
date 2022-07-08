@@ -2,7 +2,7 @@
 //  RoomDelegate.swift
 //  RNSendbirdCalls
 //
-//  Created by Beomjun Kim on 2022/07/05.
+//  Created by James Kim on 2022/07/05.
 //  Copyright © 2022 Facebook. All rights reserved.
 //
 
