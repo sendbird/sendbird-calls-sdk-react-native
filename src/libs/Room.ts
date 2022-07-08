@@ -120,8 +120,8 @@ export class Room implements RoomProperties, GroupCallMethods {
     const disposeInternal = this._internalEvents.add(listener);
 
     const disposeNative = this._binder.addListener(CallsEvent.GROUP_CALL, ({ type, data, additionalData }) => {
-      Logger.debug('[GroupCall]', 'receive events ', type, data.roomId, additionalData);
       if (data.roomId !== this.roomId) return;
+      Logger.debug('[GroupCall]', 'receive events ', type, data.roomId, additionalData);
 
       this._updateInternal(data);
       switch (type) {

@@ -1,5 +1,4 @@
 import { Participant } from '../libs/Participant';
-// import type { AudioDevice } from './Media';
 import type { AudioDevice, AudioDeviceChangedInfo } from './Media';
 import type { NativeGroupCallModule } from './NativeModule';
 import { JSMediaDeviceControl } from './NativeModule';
