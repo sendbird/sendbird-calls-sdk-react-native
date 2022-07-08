@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar, StyleSheet, View } from 'react-native';
 
-import Loading from '../../shared/components/Loading';
 import Palette from '../../shared/styles/palette';
 import { AppLogger } from '../../shared/utils/logger';
-import GroupCallVideoStreamView from '../components/GroupCallVideoStreamView';
+// import GroupCallVideoStreamView from '../components/GroupCallVideoStreamView';
 import ModalRoomId from '../components/ModalRoomId';
 import RoomFooter from '../components/RoomFooter';
 import RoomHeader from '../components/RoomHeader';
@@ -21,7 +20,7 @@ const GroupCallRoomScreen = () => {
   } = useGroupNavigation<GroupRoutes.ROOM>();
 
   const [visible, setVisible] = useState(isCreated ?? false);
-  const [layoutSize, setLayoutSize] = useState({ width: 0, height: 0 });
+  const [, setLayoutSize] = useState({ width: 0, height: 0 });
 
   const { room, isFetched } = useGroupCallRoom(roomId);
 
@@ -34,15 +33,12 @@ const GroupCallRoomScreen = () => {
     return () => unsubscribe();
   }, [room]);
 
-  // if (!room) {
-  //   console.log(!room, isFetched);
-  //   if (isFetched) {
-  //     AppLogger.log('[ERROR] RoomScreen getCachedRoomById');
-  //     navigation.goBack();
-  //   }
-
-  //   return <Loading visible={true} />;
-  // }
+  useEffect(() => {
+    if (isFetched && !room) {
+      AppLogger.log('[ERROR] RoomScreen getCachedRoomById');
+      navigation.goBack();
+    }
+  }, [isFetched]);
 
   return (
     <View style={styles.container}>

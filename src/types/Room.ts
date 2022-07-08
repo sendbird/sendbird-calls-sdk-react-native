@@ -1,6 +1,6 @@
 import { Participant } from '../libs/Participant';
 // import type { AudioDevice } from './Media';
-import type { AudioDevice, AudioDeviceChangedInfo, RecordingStatus, VideoDevice } from './Media';
+import type { AudioDevice, AudioDeviceChangedInfo } from './Media';
 import type { NativeGroupCallModule } from './NativeModule';
 import { JSMediaDeviceControl } from './NativeModule';
 import type { ParticipantProperties } from './Participant';

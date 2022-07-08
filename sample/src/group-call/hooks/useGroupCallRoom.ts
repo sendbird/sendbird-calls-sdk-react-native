@@ -2,7 +2,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 
-import type { AudioDevice, AudioDeviceRoute, Participant, Room } from '@sendbird/calls-react-native';
+import type { AudioDeviceRoute, Participant, Room } from '@sendbird/calls-react-native';
 import { SendbirdCalls } from '@sendbird/calls-react-native';
 
 import { useEffectAsync } from '../../shared/hooks/useEffectAsync';
