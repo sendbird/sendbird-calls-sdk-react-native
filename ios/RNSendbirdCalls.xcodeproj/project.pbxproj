@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		44136F732877E86D00923AFA /* CallsGroupCallListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44136F722877E86D00923AFA /* CallsGroupCallListener.swift */; };
 		44BE5F942873A5C30072E874 /* CallsModule+GroupCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44BE5F932873A5C30072E874 /* CallsModule+GroupCall.swift */; };
 		ED1849E92854449D00354FA9 /* AVAudioSession+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1849E82854449D00354FA9 /* AVAudioSession+Extension.swift */; };
 		ED1849EB2854641600354FA9 /* RNSBDirectCallVideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1849EA2854641600354FA9 /* RNSBDirectCallVideoView.swift */; };
@@ -43,6 +44,7 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libRNSendbirdCalls.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNSendbirdCalls.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		44136F722877E86D00923AFA /* CallsGroupCallListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallsGroupCallListener.swift; sourceTree = "<group>"; };
 		44BE5F932873A5C30072E874 /* CallsModule+GroupCall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CallsModule+GroupCall.swift"; sourceTree = "<group>"; };
 		ED1849E82854449D00354FA9 /* AVAudioSession+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVAudioSession+Extension.swift"; sourceTree = "<group>"; };
 		ED1849EA2854641600354FA9 /* RNSBDirectCallVideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNSBDirectCallVideoView.swift; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 				ED5C694A2824BF3F00E9904E /* CallsModule+DirectCall.swift */,
 				EDFE61D22858DE420055B413 /* CallsQueries.swift */,
 				44BE5F932873A5C30072E874 /* CallsModule+GroupCall.swift */,
+				44136F722877E86D00923AFA /* CallsGroupCallListener.swift */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -222,6 +225,7 @@
 				ED1849E92854449D00354FA9 /* AVAudioSession+Extension.swift in Sources */,
 				ED1849EB2854641600354FA9 /* RNSBDirectCallVideoView.swift in Sources */,
 				ED5C694B2824BF3F00E9904E /* CallsModule+DirectCall.swift in Sources */,
+				44136F732877E86D00923AFA /* CallsGroupCallListener.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
