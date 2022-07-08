@@ -34,14 +34,15 @@ const GroupCallRoomScreen = () => {
     return () => unsubscribe();
   }, [room]);
 
-  if (!room) {
-    if (isFetched) {
-      AppLogger.log('[ERROR] RoomScreen getCachedRoomById');
-      navigation.goBack();
-    }
+  // if (!room) {
+  //   console.log(!room, isFetched);
+  //   if (isFetched) {
+  //     AppLogger.log('[ERROR] RoomScreen getCachedRoomById');
+  //     navigation.goBack();
+  //   }
 
-    return <Loading visible={true} />;
-  }
+  //   return <Loading visible={true} />;
+  // }
 
   return (
     <View style={styles.container}>
@@ -58,7 +59,7 @@ const GroupCallRoomScreen = () => {
           },
         }) => setLayoutSize({ width, height })}
       >
-        <GroupCallVideoStreamView room={room} layoutSize={layoutSize} />
+        {/* <GroupCallVideoStreamView room={room} layoutSize={layoutSize} /> */}
       </View>
 
       <RoomFooter />
