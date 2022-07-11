@@ -9,7 +9,7 @@ import com.sendbird.calls.reactnative.extension.asString
 import com.sendbird.calls.reactnative.module.CallsModule
 import com.sendbird.calls.reactnative.utils.CallsUtils
 
-class CallsDirectCallListener(private val root: CallsModule,): DirectCallListener() {
+class CallsDirectCallListener(private val root: CallsModule): DirectCallListener() {
     override fun onAudioDeviceChanged(
         call: DirectCall,
         currentAudioDevice: AudioDevice?,
@@ -147,5 +147,13 @@ class CallsDirectCallListener(private val root: CallsModule,): DirectCallListene
                 putBoolean("isUserOnHold", isUserOnHold)
             }
         )
+    }
+
+    companion object {
+        var shared: CallsDirectCallListener? = null
+        fun get(root: CallsModule): CallsDirectCallListener = shared ?: run {
+            shared = CallsDirectCallListener(root)
+            return shared as CallsDirectCallListener
+        }
     }
 }

@@ -158,4 +158,16 @@ class CallsGroupCallListener(private val root: CallsModule, private val room: Ro
             }
         )
     }
+
+    companion object {
+        private val listeners = mutableMapOf<String, CallsGroupCallListener>()
+        fun get(root: CallsModule, room: Room): CallsGroupCallListener = listeners[room.roomId] ?: run {
+            listeners[room.roomId] = CallsGroupCallListener(root, room)
+            return listeners[room.roomId] as CallsGroupCallListener
+        }
+        fun invalidate() {
+            listeners.values.forEach { it.room.removeAllListeners() }
+            listeners.clear()
+        }
+    }
 }

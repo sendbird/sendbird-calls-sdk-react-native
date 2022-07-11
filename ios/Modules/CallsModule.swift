@@ -54,6 +54,7 @@ class CallsModule: SendBirdCallDelegate {
             SendBirdCall.removeAllDelegates()
             SendBirdCall.removeAllRecordingDelegates()
             SendBirdCall.getOngoingCalls().forEach { $0.end() }
+            GroupCallDelegate.invalidate()
         }
     }
     

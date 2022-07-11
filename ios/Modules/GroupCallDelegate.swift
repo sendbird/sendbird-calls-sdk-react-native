@@ -18,6 +18,10 @@ class GroupCallDelegate: RoomDelegate {
         }
         return delegates[room.roomId]!
     }
+    static func invalidate() {
+        GroupCallDelegate.delegates.values.forEach { $0.room.removeAllDelegates() }
+        GroupCallDelegate.delegates.removeAll()
+    }
     
     var room: Room
     init(_ room: Room) {
