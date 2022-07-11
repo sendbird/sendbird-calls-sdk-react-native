@@ -185,7 +185,7 @@ class CallsCommonModule: CallsBaseModule, CallsCommonModuleProtocol {
             if let error = error {
                 promise.reject(error)
             } else if let room = room {
-                room.addDelegate(CallsGroupCallListener(room), identifier: room.roomId)
+                room.addDelegate(GroupCallDelegate.get(room), identifier: room.roomId)
                 promise.resolve(CallsUtils.convertRoomToDict(room))
             }
         }
@@ -212,7 +212,7 @@ class CallsCommonModule: CallsBaseModule, CallsCommonModuleProtocol {
             if let error = error {
                 promise.reject(error)
             } else if let room = room {
-                room.addDelegate(CallsGroupCallListener(room), identifier: room.roomId)
+                room.addDelegate(GroupCallDelegate.get(room), identifier: room.roomId)
                 promise.resolve(CallsUtils.convertRoomToDict(room))
             }
         }

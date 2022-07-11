@@ -1,5 +1,5 @@
 //
-//  RoomDelegate.swift
+//  GroupCallDelegate.swift
 //  RNSendbirdCalls
 //
 //  Created by James Kim on 2022/07/05.
@@ -10,9 +10,16 @@ import Foundation
 import SendBirdCalls
 import AVFoundation
 
-class CallsGroupCallListener: RoomDelegate {
-    var room: Room
+class GroupCallDelegate: RoomDelegate {
+    static var delegates: [String: GroupCallDelegate] = [:]
+    static func get(_ room: Room) -> GroupCallDelegate {
+        if delegates[room.roomId] == nil {
+            delegates[room.roomId] = GroupCallDelegate(room)
+        }
+        return delegates[room.roomId]!
+    }
     
+    var room: Room
     init(_ room: Room) {
         self.room = room
     }
@@ -24,7 +31,7 @@ class CallsGroupCallListener: RoomDelegate {
         }
     }
     
-    func didReceiveError(_ error: SBCError, _ participant: Participant?) {
+    func didReceiveError(_ error: SBCError, participant: Participant?) {
         DispatchQueue.main.async {
             CallsEvents.shared.sendEvent(.groupCall(.onError),
                                          CallsUtils.convertRoomToDict(self.room)!,
@@ -98,7 +105,7 @@ class CallsGroupCallListener: RoomDelegate {
         }
     }
     
-    func didCustomItemsUpdate(_ updatedKeys: [String]) {
+    func didCustomItemsUpdate(updatedKeys: [String]) {
         DispatchQueue.main.async {
             CallsEvents.shared.sendEvent(.groupCall(.onCustomItemsUpdated),
                                          CallsUtils.convertRoomToDict(self.room)!,
@@ -108,7 +115,7 @@ class CallsGroupCallListener: RoomDelegate {
         }
     }
     
-    func didCustomItemsDelete(_ deletedKeys: [String]) {
+    func didCustomItemsDelete(deletedKeys: [String]) {
         DispatchQueue.main.async {
             CallsEvents.shared.sendEvent(.groupCall(.onCustomItemsDeleted),
                                          CallsUtils.convertRoomToDict(self.room)!,
