@@ -2,7 +2,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 
-import type { AudioDevice, AudioDeviceRoute, Participant, Room } from '@sendbird/calls-react-native';
+import type { AudioDeviceRoute, Participant, Room } from '@sendbird/calls-react-native';
 import { SendbirdCalls } from '@sendbird/calls-react-native';
 
 import { useEffectAsync } from '../../shared/hooks/useEffectAsync';
@@ -80,22 +80,14 @@ export const useGroupCallRoom = (roomId: string) => {
             AppLogger.log('[useGroupCallRoom] onRemoteAudioSettingsChanged(participant) : ', participant);
           },
 
-          onAudioDeviceChanged(currentAudioDevice: AudioDevice | null, availableAudioDevices: AudioDevice[]) {
-            // TODO: setCurrentAudioDeviceIOS
-            const todoFlag = false;
-            if (todoFlag) {
-              const route = { inputs: [], outputs: [] };
-              setCurrentAudioDeviceIOS(route);
+          onAudioDeviceChanged({ platform, data }) {
+            AppLogger.log('[useGroupCallRoom] onAudioDeviceChanged(platform, data) : ', platform, data);
+
+            if (platform === 'ios') {
+              setCurrentAudioDeviceIOS(data.currentRoute);
+            } else {
+              forceUpdate();
             }
-
-            forceUpdate();
-
-            // do something...
-            AppLogger.log(
-              '[useGroupCallRoom] onAudioDeviceChanged(currentAudioDevice, availableAudioDevices) : ',
-              currentAudioDevice,
-              availableAudioDevices,
-            );
           },
 
           onCustomItemsUpdated(updatedKeys: string[]) {

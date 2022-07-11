@@ -185,7 +185,7 @@ class CallsCommonModule: CallsBaseModule, CallsCommonModuleProtocol {
             if let error = error {
                 promise.reject(error)
             } else if let room = room {
-                // TODO: room.addDelegate(RoomDelegate, room.roomId)
+                room.addDelegate(GroupCallDelegate.get(room), identifier: room.roomId)
                 promise.resolve(CallsUtils.convertRoomToDict(room))
             }
         }
@@ -201,7 +201,7 @@ class CallsCommonModule: CallsBaseModule, CallsCommonModuleProtocol {
             }
         }
     }
-     
+
     func createRoom(_ type: String, _ promise: Promise) {
         let from = "groupCall/createRoom"
         guard let roomType = RoomType(fromString: type) else {
@@ -212,7 +212,7 @@ class CallsCommonModule: CallsBaseModule, CallsCommonModuleProtocol {
             if let error = error {
                 promise.reject(error)
             } else if let room = room {
-                // TODO: room.addDelegate(RoomDelegate, room.roomId)
+                room.addDelegate(GroupCallDelegate.get(room), identifier: room.roomId)
                 promise.resolve(CallsUtils.convertRoomToDict(room))
             }
         }
