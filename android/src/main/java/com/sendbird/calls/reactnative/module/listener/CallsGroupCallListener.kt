@@ -23,19 +23,17 @@ class CallsGroupCallListener(private val root: CallsModule, private val room: Ro
     override fun onError(e: SendBirdException, participant: Participant?) {
         val from = "groupCall/onError"
         Log.d(CallsModule.NAME, "[GroupCallListener] $from -> roomId(${room.roomId}) e($e) participant($participant)")
-        CallsUtils.convertParticipantToJsMap(participant)?.let {
-            CallsEvents.sendEvent(
-                root.reactContext,
-                CallsEvents.EVENT_GROUP_CALL,
-                CallsEvents.TYPE_GROUP_CALL_ON_ERROR,
-                CallsUtils.convertRoomToJsMap(room),
-                Arguments.createMap().apply {
-                    putMap("participant", it)
-                    putInt("errorCode", e.code)
-                    putString("errorMessage", e.message)
-                }
-            )
-        }
+        CallsEvents.sendEvent(
+            root.reactContext,
+            CallsEvents.EVENT_GROUP_CALL,
+            CallsEvents.TYPE_GROUP_CALL_ON_ERROR,
+            CallsUtils.convertRoomToJsMap(room),
+            Arguments.createMap().apply {
+                putMap("participant", CallsUtils.convertParticipantToJsMap(participant))
+                putInt("errorCode", e.code)
+                putString("errorMessage", e.message)
+            }
+        )
     }
 
     override fun onRemoteParticipantEntered(participant: RemoteParticipant) {
