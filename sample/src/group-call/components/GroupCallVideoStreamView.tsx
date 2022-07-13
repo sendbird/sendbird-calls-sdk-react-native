@@ -50,13 +50,13 @@ const GroupCallVideoStreamView: FC<GroupCallVideoStreamViewProps> = ({ room, lay
     if (width !== 0 && height !== 0) {
       if (row > 1) {
         // 3명 이상
-        const layoutHeight = height / row - MARGIN_SIZE * 2;
-        const layoutWidth = layoutHeight * (width / height) - MARGIN_SIZE * 2;
+        const layoutHeight = height / row - MARGIN_SIZE;
+        const layoutWidth = layoutHeight * (width / height) - MARGIN_SIZE;
 
         setViewSize({ width: layoutWidth, height: layoutHeight });
       } else {
         // 2명 이하
-        const layoutWidth = width / column - MARGIN_SIZE * 2;
+        const layoutWidth = width / column - MARGIN_SIZE;
         const layoutHeight = layoutWidth * (height / width);
 
         setViewSize({ width: layoutWidth, height: layoutHeight });
@@ -137,12 +137,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     backgroundColor: Palette.background600,
+    padding: MARGIN_SIZE,
   },
   videoView: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    margin: MARGIN_SIZE,
+    marginVertical: MARGIN_SIZE * 2,
+    marginHorizontal: MARGIN_SIZE,
     backgroundColor: Palette.background500,
   },
   profileImage: {
