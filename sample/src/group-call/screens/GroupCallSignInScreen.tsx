@@ -24,7 +24,7 @@ const GroupCallSignInScreen = () => {
 
   const onSignIn = () => {
     SendbirdCalls.authenticate(state.userId).then(async (user) => {
-      AppLogger.log('sendbird user:', user);
+      AppLogger.log('[GroupCallSignInScreen] sendbird user - ', user);
       setCurrentUser(user);
     });
   };

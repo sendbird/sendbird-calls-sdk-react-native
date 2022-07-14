@@ -39,7 +39,7 @@ const GroupCallEnterRoomScreen = () => {
       if (room === null) throw Error(`The room(${roomId}) is not exists`);
       setRoom(room);
     } catch (e) {
-      AppLogger.log('[ERROR] EnterRoomScreen getCachedRoomById', e);
+      AppLogger.log('[GroupCallEnterRoomScreen::ERROR] getCachedRoomById - ', e);
       goBack();
     }
   }, []);
@@ -51,7 +51,7 @@ const GroupCallEnterRoomScreen = () => {
         replace(GroupRoutes.ROOM, { roomId: room.roomId });
       }
     } catch (e) {
-      AppLogger.log('[ERROR] EnterRoomScreen enter', e);
+      AppLogger.log('[GroupCallEnterRoomScreen::ERROR] enter - ', e);
     }
   };
 
