@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Platform, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { SendbirdCalls } from '@sendbird/calls-react-native';
+
 import { AudioDeviceSelectModal } from '../../shared/components/AudioDeviceButton';
 import SBIcon from '../../shared/components/SBIcon';
 import SBText from '../../shared/components/SBText';
@@ -43,7 +45,18 @@ const RoomHeader = () => {
       </Pressable>
 
       <View style={styles.right}>
-        <Pressable style={{ marginRight: 24 }} hitSlop={10} onPress={() => setVisible(true)}>
+        <Pressable
+          style={{ marginRight: 24 }}
+          hitSlop={10}
+          onPress={() => {
+            if (Platform.OS === 'android') {
+              setVisible(true);
+            }
+            if (Platform.OS === 'ios') {
+              SendbirdCalls.ios_routePickerView();
+            }
+          }}
+        >
           <SBIcon icon="Speaker" color={Palette.background50} />
         </Pressable>
         <Pressable hitSlop={10} onPress={flipCameraFrontAndBack}>
