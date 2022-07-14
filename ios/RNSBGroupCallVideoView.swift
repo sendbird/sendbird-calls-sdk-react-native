@@ -14,6 +14,7 @@ import SendBirdCalls
 class RNSBGroupCallVideoView: BaseVideoView {
     @objc var roomId: String? = nil
     @objc var participantId: String? = nil
+    @objc var state: String = SendBirdCalls.Participant.State.entered.asString
     
     private func getRoom(id: String?) -> Room? {
         guard let roomId = roomId else { return nil }
@@ -30,22 +31,24 @@ class RNSBGroupCallVideoView: BaseVideoView {
         super.didSetProps(changedProps)
         
         if changedProps.contains("roomId") {
-            setRoomId()
+            updateView()
         }
+        
         if changedProps.contains("participantId") {
-            setParticipantId()
+            updateView()
+        }
+        
+        if changedProps.contains("state") {
+            if SendBirdCalls.Participant.State.init(fromString: self.state.uppercased()) != nil {
+                updateView()
+            }
         }
     }
     
-    private func setRoomId() {
+    private func updateView() {
         guard let room = getRoom(id: self.roomId) else { return }
         guard let participant = room.participants.first(where: { $0.participantId == self.participantId }) else { return }
         participant.videoView = self.surface
     }
-    
-    private func setParticipantId() {
-        guard let room = getRoom(id: self.roomId) else { return }
-        guard let participant = room.participants.first(where: { $0.participantId == self.participantId }) else { return }
-        participant.videoView = self.surface
-    }
+
 }
