@@ -1,4 +1,5 @@
 import { Participant } from '../libs/Participant';
+import { SendbirdError } from '../libs/SendbirdError';
 import type { AudioDevice, AudioDeviceChangedInfo } from './Media';
 import type { NativeGroupCallModule } from './NativeModule';
 import { JSMediaDeviceControl } from './NativeModule';
@@ -26,7 +27,7 @@ export interface RoomListener {
    *
    * @since 1.0.0
    */
-  onError: (e: Error, participant: Participant | null) => void;
+  onError: (e: SendbirdError, participant: Participant | null) => void;
 
   /**
    * Called when a remote participant entered the room.

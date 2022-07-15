@@ -8,6 +8,7 @@ export { DirectCall } from './libs/DirectCall';
 export { Room } from './libs/Room';
 export { Participant, LocalParticipant } from './libs/Participant';
 export { DirectCallLogListQuery, RoomListQuery } from './libs/BridgedQuery';
+export { SendbirdError } from './libs/SendbirdError';
 
 const nativeBinder = new NativeBinder();
 export const SendbirdCalls = new SendbirdCallsModule(nativeBinder);

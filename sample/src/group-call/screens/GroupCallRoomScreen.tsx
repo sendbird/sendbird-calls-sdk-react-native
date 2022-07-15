@@ -26,7 +26,7 @@ const GroupCallRoomScreen = () => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', () => {
-      AppLogger.log('RoomScreen(beforeRemove) getCachedRoomById');
+      AppLogger.log(`[GroupCallRoomScreen::ERROR] beforeRemove - the room(${roomId}) is not found`);
       if (room) room.exit();
     });
 
@@ -35,7 +35,7 @@ const GroupCallRoomScreen = () => {
 
   useEffect(() => {
     if (isFetched && !room) {
-      AppLogger.log('[ERROR] RoomScreen getCachedRoomById');
+      AppLogger.log(`[GroupCallRoomScreen::ERROR] goBack() - the room(${roomId}) is not found`);
       navigation.goBack();
     }
   }, [isFetched]);
