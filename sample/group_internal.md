@@ -23,7 +23,7 @@ $ npx pod-install
 _NOTE : The below libraries were installed for GroupCall._
 
 - [react-navigation](https://reactnavigation.org/)
-- [react-native-vision-camera](https://mrousavy.com/react-native-vision-camera/)
+- [react-native-camera-kit](https://github.com/teslamotors/react-native-camera-kit)
 
 <br />
 
