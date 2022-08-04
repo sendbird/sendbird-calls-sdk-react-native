@@ -4,7 +4,7 @@
 
 To specify APP_ID and change the Call type which is whether is DirectCall or GroupCall, you must copy `env.sample.ts` to create `env.ts` file and then enter `APP_ID` and `INITIAL_ROUTE` you want to run
 
-```typescript
+```ts
 export const APP_ID = '<APP_ID>';
 export const INITIAL_ROUTE: 'group-call' | 'direct-call' = 'group-call';
 ```
@@ -22,14 +22,14 @@ $ npx pod-install
 
 _NOTE : The below libraries were installed for GroupCall._
 
-- [react-navigation](https://reactnavigation.org/)
+- [@react-native-clipboard/clipboard](https://github.com/react-native-clipboard/clipboard)
 - [react-native-camera-kit](https://github.com/teslamotors/react-native-camera-kit)
 
 <br />
 
 ## File Structure
 
-- assets : manage images are used in the project
+- assets
 - direct-call : `DirectCall` files
 - group-call : `GroupCall` files
 - shared: shared files
