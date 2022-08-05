@@ -102,7 +102,6 @@ _NOTE : Please check the [Android Native Modules](https://reactnative.dev/docs/n
  ┃ ┃ ┗ CallsModule
  ┃ ┣ 📂 utils
  ┃ ┣ 📂 view
- ┃ ┣ 📂 screens
  ┃ ┗ RNSBGroupCallVideoViewManager
  ┗ 📂 oldarch
    ┗ RNSendbirdCallsModule
