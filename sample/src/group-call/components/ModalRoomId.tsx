@@ -2,6 +2,8 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import React from 'react';
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
 
+import { useToast } from '@sendbird/uikit-react-native-foundation';
+
 import SBButton from '../../shared/components/SBButton';
 import SBIcon from '../../shared/components/SBIcon';
 import SBText from '../../shared/components/SBText';
@@ -14,6 +16,8 @@ interface IModalRoomIdProps {
 }
 
 const ModalRoomId = ({ roomId, visible, onClose }: IModalRoomIdProps) => {
+  const { show } = useToast();
+
   return (
     <Modal
       visible={visible}
@@ -40,7 +44,13 @@ const ModalRoomId = ({ roomId, visible, onClose }: IModalRoomIdProps) => {
               <SBText body1 ellipsizeMode={'tail'} numberOfLines={1} style={{ width: '100%' }}>
                 {roomId}
               </SBText>
-              <Pressable style={{ marginLeft: 16 }} onPress={() => Clipboard.setString(roomId)}>
+              <Pressable
+                style={{ marginLeft: 16 }}
+                onPress={() => {
+                  Clipboard.setString(roomId);
+                  show('The room ID is copied.');
+                }}
+              >
                 <SBIcon icon={'Copy'} size={24} />
               </Pressable>
             </View>

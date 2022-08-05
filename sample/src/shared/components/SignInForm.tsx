@@ -1,8 +1,6 @@
 import React from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
-import { useAlert, useToast } from '@sendbird/uikit-react-native-foundation';
-
 import Palette from '../styles/palette';
 import SBButton from './SBButton';
 import SBIcon from './SBIcon';
@@ -27,11 +25,6 @@ const SignInForm = ({
   containerStyle,
   hideApplicationId,
 }: Props) => {
-  /** Remove after check **/
-  const { show } = useToast();
-  const { alert } = useAlert();
-  /** Remove after check **/
-
   return (
     <View style={containerStyle}>
       <View style={styles.logoContainer}>
@@ -61,13 +54,6 @@ const SignInForm = ({
       <SBButton style={styles.button} onPress={() => onSubmit({ applicationId, userId, accessToken })}>
         {'Sign in'}
       </SBButton>
-
-      {/** Remove after check **/}
-      <SBButton onPress={() => alert({ title: 'Title', message: 'Message' })}>{'Alert'}</SBButton>
-      <SBButton onPress={() => show('Toast')}>{'Toast'}</SBButton>
-      <SBButton onPress={() => show('Toast', 'success')}>{'Toast success'}</SBButton>
-      <SBButton onPress={() => show('Toast', 'error')}>{'Toast error'}</SBButton>
-      {/** Remove after check **/}
     </View>
   );
 };
