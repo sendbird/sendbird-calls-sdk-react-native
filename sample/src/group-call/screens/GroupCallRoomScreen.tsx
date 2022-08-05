@@ -1,3 +1,4 @@
+import { useKeepAwake } from '@sayem314/react-native-keep-awake';
 import React, { useEffect, useState } from 'react';
 import { StatusBar, StyleSheet, View } from 'react-native';
 
@@ -12,6 +13,8 @@ import { useGroupNavigation } from '../hooks/useGroupNavigation';
 import { GroupRoutes } from '../navigations/routes';
 
 const GroupCallRoomScreen = () => {
+  useKeepAwake();
+
   const {
     navigation,
     route: {
