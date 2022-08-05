@@ -3,6 +3,7 @@ import React, { useCallback, useState } from 'react';
 import { Keyboard, ScrollView, StyleSheet, View } from 'react-native';
 
 import { SendbirdCalls } from '@sendbird/calls-react-native';
+import { useAlert } from '@sendbird/uikit-react-native-foundation';
 
 import InputSafeView from '../../shared/components/InputSafeView';
 import SBButton from '../../shared/components/SBButton';
@@ -10,11 +11,13 @@ import SBIcon from '../../shared/components/SBIcon';
 import SBText from '../../shared/components/SBText';
 import SBTextInput from '../../shared/components/SBTextInput';
 import Palette from '../../shared/styles/palette';
+import { getErrorMessage } from '../../shared/utils/error';
 import { AppLogger } from '../../shared/utils/logger';
 import { useGroupNavigation } from '../hooks/useGroupNavigation';
 import { GroupRoutes } from '../navigations/routes';
 
 const GroupCallDialScreen = () => {
+  const { alert } = useAlert();
   const {
     navigation: { navigate },
   } = useGroupNavigation<GroupRoutes.DIAL>();
@@ -35,6 +38,7 @@ const GroupCallDialScreen = () => {
         navigate(GroupRoutes.ROOM, { roomId: room.roomId, isCreated: true });
       } catch (e) {
         AppLogger.log('[GroupCallDialScreen::ERROR] createRoom - ', e);
+        alert({ title: 'Create a room', message: 'The createRoom() method call has failed.' });
       }
     } else {
       Keyboard.dismiss();
@@ -44,6 +48,7 @@ const GroupCallDialScreen = () => {
         navigate(GroupRoutes.ENTER_ROOM, { roomId });
       } catch (e) {
         AppLogger.log('[GroupCallDialScreen::ERROR] fetchRoomById - ', e);
+        alert({ title: 'Enter a room', message: getErrorMessage(e) });
       }
     }
   };

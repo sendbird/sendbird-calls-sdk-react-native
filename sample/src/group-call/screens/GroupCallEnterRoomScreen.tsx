@@ -3,6 +3,7 @@ import { Image, Pressable, StyleSheet, View, useWindowDimensions } from 'react-n
 import { Camera, CameraType } from 'react-native-camera-kit';
 
 import { EnterParams, Room, SendbirdCalls } from '@sendbird/calls-react-native';
+import { useAlert } from '@sendbird/uikit-react-native-foundation';
 
 import IconAssets from '../../assets';
 import SBButton from '../../shared/components/SBButton';
@@ -11,6 +12,7 @@ import SBText from '../../shared/components/SBText';
 import { useAuthContext } from '../../shared/contexts/AuthContext';
 import { useLayoutEffectAsync } from '../../shared/hooks/useEffectAsync';
 import Palette from '../../shared/styles/palette';
+import { getErrorMessage } from '../../shared/utils/error';
 import { AppLogger } from '../../shared/utils/logger';
 import { useGroupNavigation } from '../hooks/useGroupNavigation';
 import { GroupRoutes } from '../navigations/routes';
@@ -18,6 +20,7 @@ import { GroupRoutes } from '../navigations/routes';
 const SCREEN_PADDING = 24;
 
 const GroupCallEnterRoomScreen = () => {
+  const { alert } = useAlert();
   const {
     navigation: { replace, goBack },
     route: {
@@ -52,6 +55,7 @@ const GroupCallEnterRoomScreen = () => {
       }
     } catch (e) {
       AppLogger.log('[GroupCallEnterRoomScreen::ERROR] enter - ', e);
+      alert({ title: 'Enter a room', message: getErrorMessage(e) });
     }
   };
 
