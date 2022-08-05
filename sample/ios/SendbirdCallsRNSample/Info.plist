@@ -43,6 +43,8 @@
 	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Enable microphone access so that others can hear you.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Enable photo library access to save photo</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>voip</string>
