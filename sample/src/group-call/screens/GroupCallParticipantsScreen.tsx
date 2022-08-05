@@ -55,7 +55,7 @@ const Footer = ({ roomId }: { roomId: string }) => {
       </View>
 
       <View style={styles.info}>
-        <SBText subtitle2>Share room ID</SBText>
+        <SBText subtitle2>Copy room ID</SBText>
       </View>
     </Pressable>
   );
