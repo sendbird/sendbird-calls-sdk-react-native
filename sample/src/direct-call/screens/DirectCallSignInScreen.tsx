@@ -22,7 +22,7 @@ const DirectCallSignInScreen = () => {
   const { setCurrentUser } = useAuthContext();
   const [state, setState] = useReducer((prev: Input, next: Partial<Input>) => ({ ...prev, ...next }), {
     applicationId: APP_ID,
-    userId: 'DirectCall_' + Platform.OS,
+    userId: __DEV__ ? 'DirectCall_' + Platform.OS : '',
     accessToken: '',
   });
 

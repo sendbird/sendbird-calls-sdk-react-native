@@ -28,6 +28,11 @@ const GroupCallSettingsScreen = () => {
     }
   }, []);
 
+  const deauthenticate = async () => {
+    await Promise.all([AuthManager.deAuthenticate(), SendbirdCalls.deauthenticate()]);
+    setCurrentUser(undefined);
+  };
+
   if (!currentUser) return null;
 
   return (
@@ -38,10 +43,7 @@ const GroupCallSettingsScreen = () => {
       onPressApplicationInformation={() => navigate(GroupRoutes.APP_INFO)}
       onPressSignOut={async () => {
         room?.exit();
-        await SendbirdCalls.deauthenticate().then(() => {
-          setCurrentUser(undefined);
-          AuthManager.deAuthenticate();
-        });
+        await deauthenticate();
       }}
     />
   );
