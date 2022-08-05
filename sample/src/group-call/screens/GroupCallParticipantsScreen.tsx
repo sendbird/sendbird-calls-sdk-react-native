@@ -3,6 +3,7 @@ import React, { FC, memo } from 'react';
 import { FlatList, Image, Pressable, StyleSheet, View } from 'react-native';
 
 import { User } from '@sendbird/calls-react-native';
+import { useToast } from '@sendbird/uikit-react-native-foundation';
 
 import IconAssets from '../../assets';
 import SBIcon from '../../shared/components/SBIcon';
@@ -48,8 +49,16 @@ const UserInfo: FC<{ user: User }> = memo(({ user: { profileUrl, nickname, userI
 });
 
 const Footer = ({ roomId }: { roomId: string }) => {
+  const { show } = useToast();
+
   return (
-    <Pressable onPress={() => Clipboard.setString(roomId)} style={styles.container}>
+    <Pressable
+      onPress={() => {
+        Clipboard.setString(roomId);
+        show('The room ID is copied.');
+      }}
+      style={styles.container}
+    >
       <View style={styles.profileImg}>
         <SBIcon icon="Copy" />
       </View>
