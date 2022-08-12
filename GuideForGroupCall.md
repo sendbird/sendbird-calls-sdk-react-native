@@ -37,7 +37,9 @@ SendbirdCalls.authenticate(USER_ID, ACCESS_TOKEN)
 By calling the `SendbirdCalls.createRoom()` by passing `SMALL_ROOM_FOR_VIDEO` as the parameter, you can create a room for up to 6 participants to make a video call. When a room is created, the status of the room becomes `OPEN` and `ROOM_ID` is generated.
 
 ```ts
-const room = await SendbirdCalls.createRoom(SendbirdCalls.RoomType.SMALL_ROOM_FOR_VIDEO);
+const room = await SendbirdCalls.createRoom({
+    roomType: SendbirdCalls.RoomType.SMALL_ROOM_FOR_VIDEO
+});
 ```
 
 > **Note**: Share the room ID with other users for them to enter the room from the client app.
@@ -147,7 +149,9 @@ room.exit();
 A room is a must to use a **Group calls** to talk to multiple people. You can create a new room using `SendbirdCalls.createRoom()`. Once the room is created, you must use `enter()` to enter the room. And then you have to share the `ROOM_ID` of the room with other users in order for other participants can enter the room.
 
 ```ts
-const room = await SendbirdCalls.createRoom(SendbirdCalls.RoomType.SMALL_ROOM_FOR_VIDEO);
+const room = await SendbirdCalls.createRoom({
+    roomType: SendbirdCalls.RoomType.SMALL_ROOM_FOR_VIDEO
+});
 await room.enter();
 ```
 

@@ -32,7 +32,9 @@ const GroupCallDialScreen = () => {
   const onNavigate = async (isCreated = false) => {
     if (isCreated) {
       try {
-        const room = await SendbirdCalls.createRoom(SendbirdCalls.RoomType.SMALL_ROOM_FOR_VIDEO);
+        const room = await SendbirdCalls.createRoom({
+          roomType: SendbirdCalls.RoomType.SMALL_ROOM_FOR_VIDEO,
+        });
         AppLogger.log('[GroupCallDialScreen] createRoom - ', room.roomId);
         await room.enter();
         navigate(GroupRoutes.ROOM, { roomId: room.roomId, isCreated: true });
