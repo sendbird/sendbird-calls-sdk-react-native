@@ -11,6 +11,7 @@ export const useDirectCallDuration = (callId: string, interval = 1000) => {
   useEffectAsync(() => {
     if (!callId) return;
 
+    // TODO: migrate and check to call.duration
     const timer = setInterval(async () => {
       SendbirdCalls.getDirectCall(callId)
         .then(({ duration }) => mountRef.current && setDuration(duration))

@@ -175,6 +175,13 @@ export interface DirectCallProperties {
   customItems: Record<string, string>;
 
   /**
+   * Gets call startedAt timestamp.
+   *
+   * @since 1.0.0
+   */
+  startedAt: number;
+
+  /**
    * Gets call duration(ms).
    *
    * @since 1.0.0

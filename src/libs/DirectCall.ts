@@ -85,8 +85,17 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
   public get customItems() {
     return this._props.customItems;
   }
+  public get startedAt() {
+    return this._props.startedAt;
+  }
   public get duration() {
-    return this._props.duration;
+    if (this.startedAt > 0) {
+      return Math.max(0, Date.now() - this.startedAt);
+    } else if (this._props.duration > 0) {
+      return this._props.duration;
+    } else {
+      return 0;
+    }
   }
   public get endedBy() {
     return this._props.endedBy;
