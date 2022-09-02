@@ -76,7 +76,7 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
 
   /**
    * Gets the current `User`.
-   * Returns the current `User`. If SendBirdCall is not authenticated, `null` will be returned.
+   * Returns the current `User`. If SendbirdCalls is not authenticated, `null` will be returned.
    *
    * @since 1.0.0
    */
@@ -143,7 +143,7 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
 
   /**
    * Gets the current `User` from native
-   * Returns the current `User`. If SendBirdCall is not authenticated, `null` will be returned.
+   * Returns the current `User`. If SendbirdCalls is not authenticated, `null` will be returned.
    *
    * @since 1.0.0
    */
@@ -342,7 +342,7 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
 
   /**
    * Handles Firebase message data.
-   * Returns true if SendBird call message. Otherwise false.
+   * Returns true if Sendbird call message. Otherwise false.
    *
    * @platform Android
    * @since 1.0.0
