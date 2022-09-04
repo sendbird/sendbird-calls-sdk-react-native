@@ -10,7 +10,7 @@ import type {
   SendbirdCallsJavascriptSpec,
   User,
 } from '../types';
-import { NativeConstants, NativeQueryType, RoomType, SoundType } from '../types';
+import { NativeConstants, NativeQueryType, RoomState, RoomType, SoundType } from '../types';
 import { noop } from '../utils';
 import { Logger } from '../utils/logger';
 import { DirectCallLogListQuery, RoomListQuery } from './BridgedQuery';
@@ -92,6 +92,16 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
    */
   public get RoomType() {
     return RoomType;
+  }
+
+  /**
+   * An enum that represents state of a room.
+   * Returns {@link RoomState}
+   *
+   * @since 1.0.0
+   */
+  public get RoomState() {
+    return RoomState;
   }
 
   /**
