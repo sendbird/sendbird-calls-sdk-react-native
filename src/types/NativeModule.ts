@@ -13,7 +13,7 @@ import {
   RoomListQueryParams,
 } from './Query';
 import type { EnterParams, RoomParams, RoomProperties } from './Room';
-import type { User } from './User';
+import type { AuthenticateParams, User } from './User';
 import type { AsJSInterface, AsJSMediaDeviceControl } from './index';
 
 // --------------- Native interfaces ---------------
@@ -37,7 +37,7 @@ export interface NativeCommonModule {
   getDirectCall(callId: string): Promise<DirectCallProperties>;
 
   initialize(appId: string): boolean;
-  authenticate(userId: string, accessToken?: string | null): Promise<User>;
+  authenticate(authParams: AuthenticateParams): Promise<User>;
   deauthenticate(): Promise<void>;
   registerPushToken(token: string, unique?: boolean): Promise<void>;
   unregisterPushToken(token: string): Promise<void>;

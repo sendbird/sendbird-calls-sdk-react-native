@@ -30,7 +30,7 @@ const GroupCallSignInScreen = () => {
   }, []);
 
   const authenticate = async (value: Input) => {
-    const user = await SendbirdCalls.authenticate(value.userId, value.accessToken);
+    const user = await SendbirdCalls.authenticate(value);
     await AuthManager.authenticate(value);
 
     AppLogger.log('sendbird user:', user);

@@ -44,7 +44,7 @@ SendbirdCalls.onRinging(async (call) => {
 
     if (credential) {
       // Authenticate before accept
-      await SendbirdCalls.authenticate(credential.userId, credential.accessToken);
+      await SendbirdCalls.authenticate(credential);
     } else {
       // Invalid user call
       return directCall.end();

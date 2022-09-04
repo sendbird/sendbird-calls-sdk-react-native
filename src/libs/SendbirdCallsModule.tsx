@@ -2,6 +2,7 @@ import { Platform } from 'react-native';
 
 import pkg from '../../package.json';
 import type {
+  AuthenticateParams,
   CallOptions,
   DirectCallLogQueryParams,
   DirectCallProperties,
@@ -224,8 +225,8 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
    *
    * @since 1.0.0
    */
-  public authenticate = async (userId: string, accessToken: string | null = null) => {
-    this._currentUser = await this.binder.nativeModule.authenticate(userId, accessToken);
+  public authenticate = async (authParams: AuthenticateParams) => {
+    this._currentUser = await this.binder.nativeModule.authenticate(authParams);
     return this.currentUser as User;
   };
 
