@@ -36,32 +36,34 @@ SendbirdCalls.addDirectCallSound(SoundType.RECONNECTED, 'reconnected.mp3');
 SendbirdCalls.addDirectCallSound(SoundType.RECONNECTING, 'reconnecting.mp3');
 // SendbirdCalls.setDirectCallDialingSoundOnWhenSilentOrVibrateMode(true);
 
-SendbirdCalls.onRinging(async (call) => {
-  const directCall = await SendbirdCalls.getDirectCall(call.callId);
+SendbirdCalls.setListener({
+  async onRinging(call) {
+    const directCall = await SendbirdCalls.getDirectCall(call.callId);
 
-  if (!SendbirdCalls.currentUser) {
-    const credential = await AuthManager.getSavedCredential();
+    if (!SendbirdCalls.currentUser) {
+      const credential = await AuthManager.getSavedCredential();
 
-    if (credential) {
-      // Authenticate before accept
-      await SendbirdCalls.authenticate(credential);
-    } else {
-      // Invalid user call
-      return directCall.end();
+      if (credential) {
+        // Authenticate before accept
+        await SendbirdCalls.authenticate(credential);
+      } else {
+        // Invalid user call
+        return directCall.end();
+      }
     }
-  }
 
-  const unsubscribe = directCall.addListener({
-    onEnded({ callId, callLog }) {
-      AppLogger.info('[onRinging/onEnded] add to call history manager');
-      callLog && CallHistoryManager.add(callId, callLog);
-      unsubscribe();
-    },
-  });
+    const unsubscribe = directCall.addListener({
+      onEnded({ callId, callLog }) {
+        AppLogger.info('[onRinging/onEnded] add to call history manager');
+        callLog && CallHistoryManager.add(callId, callLog);
+        unsubscribe();
+      },
+    });
 
-  // Show interaction UI (Accept/Decline)
-  if (Platform.OS === 'android') startRingingWithNotification(call);
-  if (Platform.OS === 'ios') startRingingWithCallKit(call);
+    // Show interaction UI (Accept/Decline)
+    if (Platform.OS === 'android') startRingingWithNotification(call);
+    if (Platform.OS === 'ios') startRingingWithCallKit(call);
+  },
 });
 
 export const Stack = createNativeStackNavigator();

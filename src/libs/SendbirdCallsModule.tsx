@@ -8,11 +8,11 @@ import type {
   DirectCallProperties,
   RoomListQueryParams,
   RoomParams,
+  SendbirdCallListener,
   SendbirdCallsJavascriptSpec,
   User,
 } from '../types';
 import { NativeConstants, NativeQueryType, RoomState, RoomType, SoundType } from '../types';
-import { noop } from '../utils';
 import { Logger } from '../utils/logger';
 import { DirectCallLogListQuery, RoomListQuery } from './BridgedQuery';
 import { DirectCall } from './DirectCall';
@@ -28,7 +28,7 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   private _applicationId = '';
   private _initialized = false;
   private _currentUser: User | null = null;
-  private _onRinging: (props: DirectCallProperties) => void = noop;
+  private _listener: SendbirdCallListener | null = null;
 
   /**
    * Returns current React-Native SDK version.
@@ -209,7 +209,7 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
       this.binder.addListener(CallsEvent.DEFAULT, ({ type, data }) => {
         if (type === DefaultEventType.ON_RINGING) {
           this.Logger.info('[SendbirdCalls]', 'onRinging', data.callId);
-          this._onRinging(data);
+          this._listener?.onRinging(data);
         }
       });
     }
@@ -368,11 +368,13 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   };
 
   /**
-   * Set onRinging listener
-   * A listener called when received dialing.
+   * Set SendbirdCall listener
+   *
+   * @since 1.0.0
    */
-  public onRinging(listener: (props: DirectCallProperties) => void) {
-    this._onRinging = listener;
+  setListener(listener: SendbirdCallListener): void {
+    this.Logger.info('[SendbirdCalls]', 'setListener');
+    this._listener = listener;
   }
 
   /**

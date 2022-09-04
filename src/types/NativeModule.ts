@@ -1,7 +1,7 @@
 import type { NativeModule, TurboModule } from 'react-native';
 
 import { BridgedQuery } from '../libs/BridgedQuery';
-import type { CallOptions, DirectCallLog, DirectCallProperties } from './Call';
+import type { CallOptions, DirectCallLog, DirectCallProperties, SendbirdCallListener } from './Call';
 import type { AudioDevice, VideoDevice } from './Media';
 import { SoundType } from './Media';
 import {
@@ -137,7 +137,7 @@ type PlatformSpecificInterface = AsJSInterface<
 
 export interface SendbirdCallsJavascriptSpec extends PlatformSpecificInterface {
   /** Listeners **/
-  onRinging(listener: (props: DirectCallProperties) => void): void;
+  setListener(listener: SendbirdCallListener): void;
 
   /** Queries **/
   createDirectCallLogListQuery(
