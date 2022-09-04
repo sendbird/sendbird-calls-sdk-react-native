@@ -30,7 +30,7 @@ export const useGroupCallRoom = (roomId: string) => {
     try {
       await room?.localParticipant?.switchCamera();
     } catch (e) {
-      AppLogger.log('[useGroupCallRoom::ERROR] RoomScreen switchCamera - ', e);
+      AppLogger.info('[useGroupCallRoom::ERROR] RoomScreen switchCamera - ', e);
     }
   };
 
@@ -49,32 +49,32 @@ export const useGroupCallRoom = (roomId: string) => {
           canGoBack() && goBack();
         },
         onError(e: SendbirdError, participant: Participant | null) {
-          AppLogger.log('[useGroupCallRoom] onError(e, participant) - ', e, participant);
+          AppLogger.info('[useGroupCallRoom] onError(e, participant) - ', e, participant);
         },
 
         onRemoteParticipantEntered(participant: Participant) {
           forceUpdate();
-          AppLogger.log('[useGroupCallRoom] onRemoteParticipantEntered(participant) - ', participant);
+          AppLogger.info('[useGroupCallRoom] onRemoteParticipantEntered(participant) - ', participant);
         },
         onRemoteParticipantExited(participant: Participant) {
           forceUpdate();
-          AppLogger.log('[useGroupCallRoom] onRemoteParticipantExited(participant) - ', participant);
+          AppLogger.info('[useGroupCallRoom] onRemoteParticipantExited(participant) - ', participant);
         },
         onRemoteParticipantStreamStarted(participant: Participant) {
           forceUpdate();
-          AppLogger.log('[useGroupCallRoom] onRemoteParticipantStreamStarted(participant) - ', participant);
+          AppLogger.info('[useGroupCallRoom] onRemoteParticipantStreamStarted(participant) - ', participant);
         },
         onRemoteVideoSettingsChanged(participant: Participant) {
           forceUpdate();
-          AppLogger.log('[useGroupCallRoom] onRemoteVideoSettingsChanged(participant) - ', participant);
+          AppLogger.info('[useGroupCallRoom] onRemoteVideoSettingsChanged(participant) - ', participant);
         },
         onRemoteAudioSettingsChanged(participant: Participant) {
           forceUpdate();
-          AppLogger.log('[useGroupCallRoom] onRemoteAudioSettingsChanged(participant) - ', participant);
+          AppLogger.info('[useGroupCallRoom] onRemoteAudioSettingsChanged(participant) - ', participant);
         },
 
         onAudioDeviceChanged({ platform, data }) {
-          AppLogger.log('[useGroupCallRoom] onAudioDeviceChanged(platform, data) - ', platform, data);
+          AppLogger.info('[useGroupCallRoom] onAudioDeviceChanged(platform, data) - ', platform, data);
 
           if (platform === 'ios') {
             setCurrentAudioDeviceIOS(data.currentRoute);
@@ -85,11 +85,11 @@ export const useGroupCallRoom = (roomId: string) => {
 
         onCustomItemsUpdated(updatedKeys: string[]) {
           forceUpdate();
-          AppLogger.log('[useGroupCallRoom] onCustomItemsUpdated(updatedKeys) - ', updatedKeys);
+          AppLogger.info('[useGroupCallRoom] onCustomItemsUpdated(updatedKeys) - ', updatedKeys);
         },
         onCustomItemsDeleted(deletedKeys: string[]) {
           forceUpdate();
-          AppLogger.log('[useGroupCallRoom] onCustomItemsDeleted(deletedKeys) - ', deletedKeys);
+          AppLogger.info('[useGroupCallRoom] onCustomItemsDeleted(deletedKeys) - ', deletedKeys);
         },
       });
     }

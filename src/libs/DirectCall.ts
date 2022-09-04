@@ -153,7 +153,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
    * @since 1.0.0
    */
   public addListener = (listener: Partial<DirectCallListener>) => {
-    Logger.debug('[DirectCall]', 'addListener', this.callId);
+    Logger.info('[DirectCall]', 'addListener', this.callId);
 
     const unsubscribes: Array<() => void> = [];
 

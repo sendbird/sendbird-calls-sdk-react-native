@@ -200,7 +200,7 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   };
 
   private _init = (appId: string) => {
-    this.Logger.debug('[SendbirdCalls]', 'initialize()');
+    this.Logger.info('[SendbirdCalls]', 'initialize()');
 
     DirectCall.poolRelease();
     Room.poolRelease();
@@ -208,7 +208,7 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
     if (!this.initialized) {
       this.binder.addListener(CallsEvent.DEFAULT, ({ type, data }) => {
         if (type === DefaultEventType.ON_RINGING) {
-          this.Logger.debug('[SendbirdCalls]', 'onRinging', data.callId);
+          this.Logger.info('[SendbirdCalls]', 'onRinging', data.callId);
           this._onRinging(data);
         }
       });

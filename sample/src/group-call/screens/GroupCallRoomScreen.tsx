@@ -29,7 +29,7 @@ const GroupCallRoomScreen = () => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', () => {
-      AppLogger.log(`[GroupCallRoomScreen::ERROR] beforeRemove - the room(${roomId}) is not found`);
+      AppLogger.info(`[GroupCallRoomScreen::ERROR] beforeRemove - the room(${roomId}) is not found`);
       if (room) room.exit();
     });
 
@@ -38,7 +38,7 @@ const GroupCallRoomScreen = () => {
 
   useEffect(() => {
     if (isFetched && !room) {
-      AppLogger.log(`[GroupCallRoomScreen::ERROR] goBack() - the room(${roomId}) is not found`);
+      AppLogger.info(`[GroupCallRoomScreen::ERROR] goBack() - the room(${roomId}) is not found`);
       navigation.goBack();
     }
   }, [isFetched]);

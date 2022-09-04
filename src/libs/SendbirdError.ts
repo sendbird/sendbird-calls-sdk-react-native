@@ -69,7 +69,7 @@ export class SendbirdError extends Error {
     ERR_FAILED_TO_OPEN_FILE: 1800613,
     ERR_FAILED_TO_START_RECORDING: 1800614,
     ERR_FAILED_TO_STOP_RECORDING: 1800615,
-    /** @platform Javascript **/
+    /** @platform Web **/
     ERR_NOT_SUPPORTED_BROWSER_FOR_RECORDING: 1800616,
     ERR_INVALID_RECORDING_TYPE: 1800617,
     /** @platform Android **/
@@ -82,7 +82,7 @@ export class SendbirdError extends Error {
     ERR_NO_SCREEN_SHARE_EXISTS: 1800623,
     /** @platform Android **/
     ERR_NOT_SUPPORTED_OS_VERSION_FOR_SCREEN_SHARE: 1800624,
-    /** @platform Javascript **/
+    /** @platform Web **/
     ERR_NOT_SUPPORTED_BROWSER_FOR_SCREEN_SHARE: 1800625,
     ERR_SCREEN_SHARE_FAILED_DUE_TO_UNKNOWN_REASON: 1800626,
     ERR_NOT_SUPPORTED_APP_STATE_FOR_SCREEN_SHARE: 1800627,

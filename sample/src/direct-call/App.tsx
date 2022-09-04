@@ -53,7 +53,7 @@ SendbirdCalls.onRinging(async (call) => {
 
   const unsubscribe = directCall.addListener({
     onEnded({ callId, callLog }) {
-      AppLogger.debug('[onRinging/onEnded] add to call history manager');
+      AppLogger.info('[onRinging/onEnded] add to call history manager');
       callLog && CallHistoryManager.add(callId, callLog);
       unsubscribe();
     },
