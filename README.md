@@ -14,6 +14,7 @@
 1. [Configuring the application for the SDK](#configuring-the-application-for-the-sdk)
 1. [Making your first call](#making-your-first-call)
 1. [Implementation guide](#implementation-guide)
+1. [Making your first group call](#making-your-first-group-call)
 1. [Appendix](#appendix)
 
 <br />
@@ -210,14 +211,14 @@ The code below shows the way device-wide events such as incoming calls are handl
 
 ```ts
 SendbirdCalls.setListener({
-    onRinging(callProps: DirectCallProperties) {
-        // Process incoming call
-    }
-})
+  onRinging(callProps: DirectCallProperties) {
+    // Process incoming call
+  },
+});
 ```
 
 | Listener  | Invoked when                                        |
-|-----------| --------------------------------------------------- |
+| --------- | --------------------------------------------------- |
 | onRinging | Incoming calls are received in the callee’s device. |
 
 > **NOTE**: You can set up only one SendbirdCallListener.
@@ -315,17 +316,17 @@ Once registered, `DirectCallListener` enables reacting to in-call events through
 
 ```ts
 SendbirdCalls.setListener({
-    async onRinging(callProps: DirectCallProperties) {
-        const directCall = await SendbirdCalls.getDirectCall(callProps.callId);
-    
-        const unsubscribe = directCall.addListener({
-            onEnded(call) {
-                unsubscribe();
-            },
-        });
-    
-        directCall.accept();
-    }
+  async onRinging(callProps: DirectCallProperties) {
+    const directCall = await SendbirdCalls.getDirectCall(callProps.callId);
+
+    const unsubscribe = directCall.addListener({
+      onEnded(call) {
+        unsubscribe();
+      },
+    });
+
+    directCall.accept();
+  },
 });
 ```
 
@@ -344,17 +345,17 @@ Once registered, `DirectCallListener` enables reacting to in-call events through
 
 ```ts
 SendbirdCalls.setListener({
-    async onRinging(callProps: DirectCallProperties) {
-        const directCall = await SendbirdCalls.getDirectCall(callProps.callId);
-    
-        const unsubscribe = directCall.addListener({
-            onEnded(call) {
-                unsubscribe();
-            },
-        });
-    
-        directCall.accept();
-    }
+  async onRinging(callProps: DirectCallProperties) {
+    const directCall = await SendbirdCalls.getDirectCall(callProps.callId);
+
+    const unsubscribe = directCall.addListener({
+      onEnded(call) {
+        unsubscribe();
+      },
+    });
+
+    directCall.accept();
+  },
 });
 ```
 
@@ -369,17 +370,17 @@ Once registered, `DirectCallListener` enables reacting to in-call events through
 
 ```ts
 SendbirdCalls.setListener({
-    async onRinging(callProps){
-        const directCall = await SendbirdCalls.getDirectCall(callProps.callId);
+  async onRinging(callProps) {
+    const directCall = await SendbirdCalls.getDirectCall(callProps.callId);
 
-        const unsubscribe = directCall.addListener({
-            onEnded(call) {
-                unsubscribe();
-            },
-        });
+    const unsubscribe = directCall.addListener({
+      onEnded(call) {
+        unsubscribe();
+      },
+    });
 
-        directCall.accept();
-    }
+    directCall.accept();
+  },
 });
 ```
 
@@ -466,34 +467,34 @@ import RNCallKeep from 'react-native-callkeep';
 import RNVoipPushNotification from 'react-native-voip-push-notification';
 
 SendbirdCalls.setListener({
-    async onRinging(callProps) {
-        const directCall = await SendbirdCalls.getDirectCall(callProps.callId);
+  async onRinging(callProps) {
+    const directCall = await SendbirdCalls.getDirectCall(callProps.callId);
 
-        // handle incoming call with CallKit (react-native-callkeep)
-        RNCallKeep.addEventListener('answerCall', async () => {
-            directCall.accept();
-        });
-        RNCallKeep.addEventListener('endCall', async () => {
-            directCall.end();
-        });
+    // handle incoming call with CallKit (react-native-callkeep)
+    RNCallKeep.addEventListener('answerCall', async () => {
+      directCall.accept();
+    });
+    RNCallKeep.addEventListener('endCall', async () => {
+      directCall.end();
+    });
 
-        const unsubscribe = directCall.addListener({
-            onEnded() {
-                RNCallKeep.removeEventListener('answerCall');
-                RNCallKeep.removeEventListener('endCall');
-                RNCallKeep.endAllCalls();
-                unsubscribe();
-            },
-        });
+    const unsubscribe = directCall.addListener({
+      onEnded() {
+        RNCallKeep.removeEventListener('answerCall');
+        RNCallKeep.removeEventListener('endCall');
+        RNCallKeep.endAllCalls();
+        unsubscribe();
+      },
+    });
 
-        RNCallKeep.displayIncomingCall(
-            callProps.ios_callUUID,
-            callProps.remoteUser?.userId,
-            callProps.remoteUser?.nickname ?? 'Unknown',
-            'generic',
-            callProps.isVideoCall,
-        );
-    }
+    RNCallKeep.displayIncomingCall(
+      callProps.ios_callUUID,
+      callProps.remoteUser?.userId,
+      callProps.remoteUser?.nickname ?? 'Unknown',
+      'generic',
+      callProps.isVideoCall,
+    );
+  },
 });
 
 RNVoipPushNotification.registerVoipToken();
@@ -509,11 +510,11 @@ The FCM messages received by SendbirdCalls must be delivered to the SDK through 
 import messaging, { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
 
 SendbirdCalls.setListener({
-    async onRinging(callProps) {
-        const directCall = await SendbirdCalls.getDirectCall(callProps.callId);
-        
-        // handle incoming call with what you want (e.g. Notifee foreground service)
-    }
+  async onRinging(callProps) {
+    const directCall = await SendbirdCalls.getDirectCall(callProps.callId);
+
+    // handle incoming call with what you want (e.g. Notifee foreground service)
+  },
 });
 
 const firebaseListener = async (message: FirebaseMessagingTypes.RemoteMessage) => {
@@ -645,7 +646,11 @@ const YourApp = () => {
 
 ### Mirror a DirectCallVideoView
 
-> **Warning**: Not supported yet.
+```tsx
+const VideoView = () => {
+  return <DirectCallVideoView mirror={false} callId={'CALL_ID'} viewType={'remote'} />;
+};
+```
 
 ### Retrieve a call information
 
@@ -756,8 +761,6 @@ for iOS, when you add files to a project, xcode automatically added to the bundl
 
 <br />
 
-## Appendix
-
 ### Call results
 
 Information relating the end result of a call can be obtained at any time through the `directCall.endResult` property, best invoked within the `onEnded()` listener.
@@ -775,6 +778,8 @@ Information relating the end result of a call can be obtained at any time throug
 | OTHER_DEVICE_ACCEPTED | The incoming call was accepted on a different device. This device received an incoming call notification, but the call ended when a different device accepted it. |
 | NONE                  | Default value of the endResult.                                                                                                                                   |
 | UNKNOWN               | Ended with unknown reason.                                                                                                                                        |
+
+<br />
 
 ## Making your first group call
 
@@ -802,8 +807,8 @@ import { SendbirdCalls } from '@sendbird/calls-react-native';
 
 // Authenticate
 SendbirdCalls.authenticate({
-    userId: USER_ID, 
-    accessToken: ACCESS_TOKEN  
+  userId: USER_ID,
+  accessToken: ACCESS_TOKEN,
 })
   .then((user) => {
     // The user has been authenticated successfully
@@ -1089,6 +1094,10 @@ const YourApp = () => {
 ### Retrieve a participant information
 
 The local or remote participant’s information is available via the `room.participants` or `room.localParticipant` and `room.remoteParticipants` properties.
+
+<br />
+
+## Appendix
 
 ### Encoding Configurations
 
