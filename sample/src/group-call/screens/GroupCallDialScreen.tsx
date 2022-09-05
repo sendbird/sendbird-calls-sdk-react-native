@@ -35,21 +35,21 @@ const GroupCallDialScreen = () => {
         const room = await SendbirdCalls.createRoom({
           roomType: SendbirdCalls.RoomType.SMALL_ROOM_FOR_VIDEO,
         });
-        AppLogger.log('[GroupCallDialScreen] createRoom - ', room.roomId);
+        AppLogger.info('[GroupCallDialScreen] createRoom - ', room.roomId);
         await room.enter();
         navigate(GroupRoutes.ROOM, { roomId: room.roomId, isCreated: true });
       } catch (e) {
-        AppLogger.log('[GroupCallDialScreen::ERROR] createRoom - ', e);
+        AppLogger.info('[GroupCallDialScreen::ERROR] createRoom - ', e);
         alert({ title: 'Create a room', message: 'The createRoom() method call has failed.' });
       }
     } else {
       Keyboard.dismiss();
       try {
         const room = await SendbirdCalls.fetchRoomById(roomId);
-        AppLogger.log('[GroupCallDialScreen] fetchRoomById - ', room);
+        AppLogger.info('[GroupCallDialScreen] fetchRoomById - ', room);
         navigate(GroupRoutes.ENTER_ROOM, { roomId });
       } catch (e) {
-        AppLogger.log('[GroupCallDialScreen::ERROR] fetchRoomById - ', e);
+        AppLogger.info('[GroupCallDialScreen::ERROR] fetchRoomById - ', e);
         alert({ title: 'Enter a room', message: getErrorMessage(e) });
       }
     }

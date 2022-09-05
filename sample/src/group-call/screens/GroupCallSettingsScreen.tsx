@@ -23,7 +23,7 @@ const GroupCallSettingsScreen = () => {
       try {
         setRoom(await SendbirdCalls.getCachedRoomById(params?.roomId));
       } catch (e) {
-        AppLogger.log('[GroupCallSettingsScreen::ERROR] getCachedRoomById - ', e);
+        AppLogger.info('[GroupCallSettingsScreen::ERROR] getCachedRoomById - ', e);
       }
     }
   }, []);
