@@ -13,8 +13,9 @@
 1. [Getting started](#getting-started)
 1. [Configuring the application for the SDK](#configuring-the-application-for-the-sdk)
 1. [Making your first call](#making-your-first-call)
-1. [Implementation guide](#implementation-guide)
+1. [Implementation direct call guide](#implementation-direct-call-guide)
 1. [Making your first group call](#making-your-first-group-call)
+1. [Implementation group call guide](#implementation-group-call-guide)
 1. [Appendix](#appendix)
 
 <br />
@@ -174,7 +175,10 @@ import RNVoipPushNotification from 'react-native-voip-push-notification';
 import messaging from '@react-native-firebase/messaging';
 
 // Authenticate
-SendbirdCalls.authenticate(USER_ID, ACCESS_TOKEN)
+SendbirdCalls.authenticate({
+    userId: USER_ID,
+    accessToken: ACCESS_TOKEN,
+})
     .then(user => {
         // The user has been authenticated successfully
     })
@@ -205,7 +209,7 @@ The SDK provides two types of event handlers for various events that client apps
 
 #### - SendbirdCallListener
 
-Register a device-specific onRinging event handler using the `SendbirdCalls.setListener()` method.
+Register a device-specific `onRinging` event handler using the `SendbirdCalls.setListener()` method.
 It is recommended to add the event handler during initialization because it is a prerequisite for detecting onRinging event.
 The code below shows the way device-wide events such as incoming calls are handled once `SendbirdCallListener.onRinging` is added.
 
@@ -332,7 +336,7 @@ SendbirdCalls.setListener({
 
 <br />
 
-## Implementation guide
+## Implementation direct call guide
 
 ### Make a call
 
@@ -926,7 +930,7 @@ room.exit();
 
 <br />
 
-## Implementation guide
+## Implementation group call guide
 
 ### Create a room
 
