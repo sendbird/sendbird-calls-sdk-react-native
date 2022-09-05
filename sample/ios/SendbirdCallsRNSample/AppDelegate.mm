@@ -84,13 +84,13 @@
 // MARK: - VoIP Notification - Receive incoming call
 /**
  * This being called after voip registration
- * so you can register voip on the JS side, after set `SendbirdCalls.onRinging` and `RNCallKeep.addListener`
- * 
+ * so you can register voip on the JS side, after set `SendbirdCall.setListener` and `RNCallKeep.addListener`
+ *
  * 0. voip notification wake your app
- * 1. [Native] App is start
+ * 1. [Native] App started
  * 2. [JS] JS bridge created and your React-Native app is mounted
  * 3. [JS] call SendbirdCalls.initialize()
- * 4. [JS] set SendbirdCalls.onRinging
+ * 4. [JS] set SendbirdCalls.setListener({onRinging})
  * 5. [JS] set RNCallKeep.addListener
  * 6. [JS] RNVoipPushNotification.registerVoipToken() >> it means register voip
  * 7. [Native] didReceiveIncomingPushWithPayload called
@@ -121,7 +121,7 @@
       // Report and end invalid call
       NSUUID* uuid = [NSUUID alloc];
       NSString* uuidString = [uuid UUIDString];
-      
+
       [RNCallKeep reportNewIncomingCall: uuidString
                                  handle: @"invalid"
                              handleType: @"generic"

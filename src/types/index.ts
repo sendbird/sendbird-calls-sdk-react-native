@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ControllableModuleType } from './NativeModule';
 
 /** @internal **/
 type PlatformPrefix = 'android' | 'ios';
@@ -29,6 +30,13 @@ export type Values<T extends { [key: string]: any }> = T[keyof T];
 export type AsJSInterface<T, Platform extends PlatformPrefix, Keys extends keyof T> = {
   // @ts-ignore
   [key in keyof T as key extends Keys ? `${Platform}_${key}` : key]: T[key];
+};
+
+/** @internal **/
+export type AsJSMediaDeviceControl<T> = {
+  [key in keyof T]: T[key] extends (type: ControllableModuleType, identifier: string, ...args: infer Args) => infer R
+    ? (...args: Args) => R
+    : T[key];
 };
 
 /** @internal **/

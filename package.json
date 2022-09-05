@@ -1,6 +1,6 @@
 {
   "name": "@sendbird/calls-react-native",
-  "version": "0.1.0",
+  "version": "1.0.0-rc.0",
   "description": "ReactNative Calls SDK",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -25,6 +25,7 @@
     "docs": "typedoc src/index.ts --excludeInternal --excludePrivate --excludeProtected",
     "test": "jest",
     "test:build": "yarn build && yarn clean",
+    "test:tsc": "tsc --noEmit",
     "typescript": "tsc --noEmit",
     "build": "bob build",
     "clean": "del lib",
@@ -39,6 +40,7 @@
     "fix:eslint": "eslint --fix src sample --ext ts,tsx -c ./.eslintrc.js",
     "fix:prettier": "prettier --write \"sample/**/*.{ts,tsx}\" \"src/**/*.{ts,tsx}\"",
     "adb:reverse": "adb start-server && adb reverse tcp:8081 tcp:8081",
+    "build:sample:android": "yarn sample build:android",
     "start:sample": "yarn sample start",
     "icons": "node scripts/bundle-icons.js"
   },
@@ -80,7 +82,7 @@
     "react-native-builder-bob": "^0.18.2",
     "release-it": "^14.2.2",
     "typedoc": "^0.22.16",
-    "typescript": "^4.6.3",
+    "typescript": "4.6.3",
     "metro-react-native-babel-preset": "^0.67.0"
   },
   "peerDependencies": {
@@ -105,7 +107,7 @@
       "tagName": "v${version}"
     },
     "npm": {
-      "publish": true
+      "publish": false
     },
     "github": {
       "release": true

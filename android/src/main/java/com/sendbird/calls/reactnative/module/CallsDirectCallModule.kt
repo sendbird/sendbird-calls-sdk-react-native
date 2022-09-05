@@ -1,74 +1,51 @@
 package com.sendbird.calls.reactnative.module
 
 import android.util.Log
-import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReadableMap
-import com.sendbird.calls.*
-import com.sendbird.calls.handler.DirectCallListener
-import com.sendbird.calls.reactnative.CallsEvents
+import com.sendbird.calls.AcceptParams
+import com.sendbird.calls.AudioDevice
+import com.sendbird.calls.CallOptions
 import com.sendbird.calls.reactnative.RNCallsInternalError
-import com.sendbird.calls.reactnative.extension.asString
+import com.sendbird.calls.reactnative.extension.rejectCalls
 import com.sendbird.calls.reactnative.utils.CallsUtils
 
-class CallsDirectCallModule(private val root: CallsModule): DirectCallModule,
-    DirectCallListener() {
-    /** DirectCallMethods **/
-    override fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise)  {
-        val from = "directCall/selectVideoDevice"
-        CallsUtils.safePromiseRejection(promise, from) {
-            val call = CallsUtils.findDirectCall(callId, from)
-
-            val deviceId = device.getString("deviceId")
-            val position = device.getString("position")
-            if (deviceId == null || position == null) throw RNCallsInternalError(from, RNCallsInternalError.Type.INVALID_PARAMS)
-            else {
-                when (val videoDevice = call.availableVideoDevices.find { it.deviceName === deviceId }) {
-                    null -> throw RNCallsInternalError(from, RNCallsInternalError.Type.NOT_FOUND_VIDEO_DEVICE)
-                    else -> call.selectVideoDevice(videoDevice) {
-                        if (it !== null) throw it
-                        else promise.resolve(null)
-                    }
-                }
-            }
-        }
-    }
-
-    override fun selectAudioDevice(callId: String, device: String, promise: Promise) {
-        val from = "directCall/selectAudioDevice"
-        CallsUtils.safePromiseRejection(promise, from) {
-            val call = CallsUtils.findDirectCall(callId, from)
-            val audioDevice = AudioDevice.valueOf(device)
-            call.selectAudioDevice(audioDevice) {
-                if (it !== null) throw it
-                else promise.resolve(null)
-            }
-        }
-    }
-
+class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
     override fun accept(callId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise) {
         Log.d(CallsModule.NAME, "[DirectCallModule] accept() -> $callId")
-        val from = "directCall/accept"
-        CallsUtils.safePromiseRejection(promise, from) {
-            val call = CallsUtils.findDirectCall(callId, from)
+        Log.d(CallsModule.NAME, "[DirectCallModule] accept options -> ${options.toHashMap()}")
 
-            Log.d(CallsModule.NAME, "[DirectCallModule] accept options -> ${options.toHashMap()}")
+        CallsUtils.safeRun(promise) {
+            val from = "directCall/accept"
+            val call = CallsUtils.findDirectCall(callId, from)
 
             val localVideoViewId = CallsUtils.safeGet { options.getInt("localVideoViewId") }
             val remoteVideoViewId = CallsUtils.safeGet { options.getInt("remoteVideoViewId") }
 
-            val audioEnabled = options.getBoolean("audioEnabled")
-            val videoEnabled = options.getBoolean("videoEnabled")
-            val frontCamera = options.getBoolean("frontCamera")
+            val audioEnabled = CallsUtils.safeGet { options.getBoolean("audioEnabled") }
+            val videoEnabled = CallsUtils.safeGet { options.getBoolean("videoEnabled") }
+            val frontCamera = CallsUtils.safeGet { options.getBoolean("frontCamera") }
 
             val acceptParams = AcceptParams().apply {
                 setHoldActiveCall(holdActiveCall)
                 setCallOptions(CallOptions().apply {
-                    if(localVideoViewId != null) setLocalVideoView(CallsUtils.findVideoView(root.reactContext, localVideoViewId, from).getSurface())
-                    if(remoteVideoViewId != null) setRemoteVideoView(CallsUtils.findVideoView(root.reactContext, remoteVideoViewId, from).getSurface())
-                    setAudioEnabled(audioEnabled)
-                    setVideoEnabled(videoEnabled)
-                    setFrontCameraAsDefault(frontCamera)
+                    localVideoViewId?.let {
+                        val surface = CallsUtils.findVideoView(root.reactContext, it, from).getSurface()
+                        setLocalVideoView(surface)
+                    }
+                    remoteVideoViewId?.let {
+                        val surface = CallsUtils.findVideoView(root.reactContext, it, from).getSurface()
+                        setRemoteVideoView(surface)
+                    }
+                    audioEnabled?.let {
+                        setAudioEnabled(it)
+                    }
+                    videoEnabled?.let {
+                        setVideoEnabled(it)
+                    }
+                    frontCamera?.let {
+                        setFrontCameraAsDefault(it)
+                    }
                 })
             }
             call.accept(acceptParams)
@@ -78,62 +55,19 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule,
 
     override fun end(callId: String, promise: Promise) {
         Log.d(CallsModule.NAME, "[DirectCallModule] end() -> $callId")
-        val from = "directCall/end"
-        CallsUtils.safePromiseRejection(promise, from) {
-            val call = CallsUtils.findDirectCall(callId, from)
-            call.end()
+
+        CallsUtils.safeRun(promise) {
+            val from = "directCall/end"
+            CallsUtils.findDirectCall(callId, from).end()
             promise.resolve(null)
-        }
-    }
-
-    override fun switchCamera(callId: String, promise: Promise) {
-        Log.d(CallsModule.NAME, "[DirectCallModule] switchCamera() -> $callId")
-        val from = "directCall/switchCamera"
-        CallsUtils.safePromiseRejection(promise, from) {
-            val call = CallsUtils.findDirectCall(callId, from)
-            call.switchCamera {
-                if (it !== null) throw it
-                else promise.resolve(null)
-            }
-        }
-    }
-
-    override fun startVideo(callId: String) {
-        Log.d(CallsModule.NAME, "[DirectCallModule] startVideo() -> $callId")
-        CallsUtils.safeRun {
-            val call = CallsUtils.findDirectCall(callId,"directCall/startVideo")
-            call.startVideo()
-        }
-    }
-
-    override fun stopVideo(callId: String) {
-        Log.d(CallsModule.NAME, "[DirectCallModule] stopVideo() -> $callId")
-        CallsUtils.safeRun {
-            val call = CallsUtils.findDirectCall(callId, "directCall/stopVideo")
-            call.stopVideo()
-        }
-    }
-
-    override fun muteMicrophone(callId: String) {
-        Log.d(CallsModule.NAME, "[DirectCallModule] muteMicrophone() -> $callId")
-        CallsUtils.safeRun {
-            val call = CallsUtils.findDirectCall(callId, "directCall/muteMicrophone")
-            call.muteMicrophone()
-        }
-    }
-
-    override fun unmuteMicrophone(callId: String) {
-        Log.d(CallsModule.NAME, "[DirectCallModule] unmuteMicrophone() -> $callId")
-        CallsUtils.safeRun {
-            val call = CallsUtils.findDirectCall(callId, "directCall/unmuteMicrophone")
-            call.unmuteMicrophone()
         }
     }
 
     override fun updateLocalVideoView(callId: String, videoViewId: Int) {
         Log.d(CallsModule.NAME, "[DirectCallModule] updateLocalVideoView() -> $callId / $videoViewId")
-        val from = "directCall/updateLocalVideoView"
+
         CallsUtils.safeRun {
+            val from = "directCall/updateLocalVideoView"
             val call = CallsUtils.findDirectCall(callId, from)
             val view = CallsUtils.findVideoView(root.reactContext, videoViewId, from)
             call.setLocalVideoView(view.getSurface())
@@ -142,147 +76,111 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule,
 
     override fun updateRemoteVideoView(callId: String, videoViewId: Int) {
         Log.d(CallsModule.NAME, "[DirectCallModule] updateRemoteVideoView() -> $callId / $videoViewId")
-        val from = "directCall/updateRemoteVideoView"
+
         CallsUtils.safeRun {
+            val from = "directCall/updateRemoteVideoView"
             val call = CallsUtils.findDirectCall(callId, from)
             val view = CallsUtils.findVideoView(root.reactContext, videoViewId, from)
             call.setRemoteVideoView(view.getSurface())
         }
     }
 
-    /** DirectCallListeners **/
-    override fun onAudioDeviceChanged(
-        call: DirectCall,
-        currentAudioDevice: AudioDevice?,
-        availableAudioDevices: MutableSet<AudioDevice>
-    ) {
-        CallsEvents.sendEvent(
-            root.reactContext,
-            CallsEvents.EVENT_DIRECT_CALL,
-            CallsEvents.TYPE_DIRECT_CALL_ON_AUDIO_DEVICE_CHANGED,
-            CallsUtils.convertDirectCallToJsMap(call),
-            Arguments.createMap().apply {
-                putString("currentAudioDevice", currentAudioDevice?.asString())
-                putArray("availableAudioDevices", Arguments.fromList(availableAudioDevices.map { it.asString() }))
+    override fun selectVideoDevice(type: String, identifier: String, device: ReadableMap, promise: Promise)  {
+        CallsUtils.safeRun(promise) {
+            val from = "directCall/selectVideoDevice"
+            val call = CallsUtils.findDirectCall(identifier, from)
+            val deviceId = CallsUtils.safeGet { device.getString("deviceId") }
+
+            call.availableVideoDevices
+                .find {
+                    it.deviceName === deviceId
+                }
+                ?.let {
+                    call.selectVideoDevice(it) { error ->
+                        error
+                            ?.let {
+                                promise.rejectCalls(error)
+                            }
+                            ?: run {
+                                promise.resolve(null)
+                            }
+                    }
+                }
+                ?: run {
+                    promise.reject(RNCallsInternalError(from, RNCallsInternalError.Type.NOT_FOUND_VIDEO_DEVICE))
+                }
+        }
+    }
+    
+    override fun muteMicrophone(type: String, identifier: String) {
+        val from = "directCall/muteMicrophone"
+        Log.d(CallsModule.NAME, "[DirectCallModule] $from ($identifier)")
+
+        CallsUtils.safeRun {
+            CallsUtils.findDirectCall(identifier, from).muteMicrophone()
+        }
+    }
+
+    override fun unmuteMicrophone(type: String, identifier: String) {
+        val from = "directCall/unmuteMicrophone"
+        Log.d(CallsModule.NAME, "[DirectCallModule] $from ($identifier)")
+
+        CallsUtils.safeRun {
+            CallsUtils.findDirectCall(identifier, from).unmuteMicrophone()
+        }
+    }
+
+    override fun stopVideo(type: String, identifier: String) {
+        val from = "directCall/stopVideo"
+        Log.d(CallsModule.NAME, "[DirectCallModule] $from ($identifier)")
+
+        CallsUtils.safeRun {
+            CallsUtils.findDirectCall(identifier, from).stopVideo()
+        }
+    }
+
+    override fun startVideo(type: String, identifier: String) {
+        val from = "directCall/startVideo"
+        Log.d(CallsModule.NAME, "[DirectCallModule] $from ($identifier)")
+
+        CallsUtils.safeRun {
+            CallsUtils.findDirectCall(identifier, from).startVideo()
+        }
+    }
+
+    override fun switchCamera(type: String, identifier: String, promise: Promise) {
+        val from = "directCall/switchCamera"
+        Log.d(CallsModule.NAME, "[DirectCallModule] $from ($identifier)")
+
+        CallsUtils.safeRun(promise) {
+            CallsUtils.findDirectCall(identifier, from).switchCamera { error ->
+                error
+                    ?.let {
+                        promise.rejectCalls(it)
+                    }
+                    ?: run {
+                        promise.resolve(null)
+                    }
             }
-        )
+        }
     }
 
-    override fun onConnected(call: DirectCall) {
-        CallsEvents.sendEvent(
-            root.reactContext,
-            CallsEvents.EVENT_DIRECT_CALL,
-            CallsEvents.TYPE_DIRECT_CALL_ON_CONNECTED,
-            CallsUtils.convertDirectCallToJsMap(call)
-        )
-    }
+    override fun selectAudioDevice(type: String, identifier: String, device: String, promise: Promise) {
+        val from = "directCall/switchCamera"
+        Log.d(CallsModule.NAME, "[DirectCallModule] $from ($identifier)")
 
-    override fun onCustomItemsDeleted(call: DirectCall, deletedKeys: List<String>) {
-        CallsEvents.sendEvent(
-            root.reactContext,
-            CallsEvents.EVENT_DIRECT_CALL,
-            CallsEvents.TYPE_DIRECT_CALL_ON_CUSTOM_ITEMS_DELETED,
-            CallsUtils.convertDirectCallToJsMap(call),
-            deletedKeys
-        )
-    }
+        CallsUtils.safeRun(promise) {
+            val audioDevice = AudioDevice.valueOf(device)
 
-    override fun onCustomItemsUpdated(call: DirectCall, updatedKeys: List<String>) {
-        CallsEvents.sendEvent(
-            root.reactContext,
-            CallsEvents.EVENT_DIRECT_CALL,
-            CallsEvents.TYPE_DIRECT_CALL_ON_CUSTOM_ITEMS_UPDATED,
-            CallsUtils.convertDirectCallToJsMap(call),
-            updatedKeys
-        )
-    }
-
-    override fun onEnded(call: DirectCall) {
-        CallsEvents.sendEvent(
-            root.reactContext,
-            CallsEvents.EVENT_DIRECT_CALL,
-            CallsEvents.TYPE_DIRECT_CALL_ON_ENDED,
-            CallsUtils.convertDirectCallToJsMap(call)
-        )
-    }
-
-    override fun onEstablished(call: DirectCall) {
-        CallsEvents.sendEvent(
-            root.reactContext,
-            CallsEvents.EVENT_DIRECT_CALL,
-            CallsEvents.TYPE_DIRECT_CALL_ON_ESTABLISHED,
-            CallsUtils.convertDirectCallToJsMap(call)
-        )
-    }
-
-    override fun onLocalVideoSettingsChanged(call: DirectCall) {
-        CallsEvents.sendEvent(
-            root.reactContext,
-            CallsEvents.EVENT_DIRECT_CALL,
-            CallsEvents.TYPE_DIRECT_CALL_ON_LOCAL_VIDEO_SETTINGS_CHANGED,
-            CallsUtils.convertDirectCallToJsMap(call)
-        )
-    }
-
-    override fun onReconnected(call: DirectCall) {
-        CallsEvents.sendEvent(
-            root.reactContext,
-            CallsEvents.EVENT_DIRECT_CALL,
-            CallsEvents.TYPE_DIRECT_CALL_ON_RECONNECTED,
-            CallsUtils.convertDirectCallToJsMap(call)
-        )
-    }
-
-    override fun onReconnecting(call: DirectCall) {
-        CallsEvents.sendEvent(
-            root.reactContext,
-            CallsEvents.EVENT_DIRECT_CALL,
-            CallsEvents.TYPE_DIRECT_CALL_ON_RECONNECTING,
-            CallsUtils.convertDirectCallToJsMap(call)
-        )
-    }
-
-    override fun onRemoteAudioSettingsChanged(call: DirectCall) {
-        CallsEvents.sendEvent(
-            root.reactContext,
-            CallsEvents.EVENT_DIRECT_CALL,
-            CallsEvents.TYPE_DIRECT_CALL_ON_REMOTE_AUDIO_SETTINGS_CHANGED,
-            CallsUtils.convertDirectCallToJsMap(call)
-        )
-    }
-
-    override fun onRemoteRecordingStatusChanged(call: DirectCall) {
-        CallsEvents.sendEvent(
-            root.reactContext,
-            CallsEvents.EVENT_DIRECT_CALL,
-            CallsEvents.TYPE_DIRECT_CALL_ON_REMOTE_RECORDING_STATUS_CHANGED,
-            CallsUtils.convertDirectCallToJsMap(call)
-        )
-    }
-
-    override fun onRemoteVideoSettingsChanged(call: DirectCall) {
-        CallsEvents.sendEvent(
-            root.reactContext,
-            CallsEvents.EVENT_DIRECT_CALL,
-            CallsEvents.TYPE_DIRECT_CALL_ON_REMOTE_VIDEO_SETTINGS_CHANGED,
-            CallsUtils.convertDirectCallToJsMap(call)
-        )
-    }
-
-    override fun onUserHoldStatusChanged(
-        call: DirectCall,
-        isLocalUser: Boolean,
-        isUserOnHold: Boolean
-    ) {
-        CallsEvents.sendEvent(
-            root.reactContext,
-            CallsEvents.EVENT_DIRECT_CALL,
-            CallsEvents.TYPE_DIRECT_CALL_ON_USER_HOLD_STATUS_CHANGED,
-            CallsUtils.convertDirectCallToJsMap(call),
-            Arguments.createMap().apply {
-                putBoolean("isLocalUser", isLocalUser)
-                putBoolean("isUserOnHold", isUserOnHold)
+            CallsUtils.findDirectCall(identifier, from).selectAudioDevice(audioDevice) { error ->
+                error
+                    ?.let {
+                        promise.rejectCalls(it)
+                    }
+                    ?: run {
+                        promise.resolve(null)
+                    }
             }
-        )
+        }
     }
 }

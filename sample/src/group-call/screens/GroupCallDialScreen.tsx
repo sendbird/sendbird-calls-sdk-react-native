@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import React, { useCallback, useState } from 'react';
+import { Keyboard, ScrollView, StyleSheet, View } from 'react-native';
 
-import { Room, SendbirdCalls } from '@sendbird/calls-react-native';
+import { SendbirdCalls } from '@sendbird/calls-react-native';
+import { useAlert } from '@sendbird/uikit-react-native-foundation';
 
 import InputSafeView from '../../shared/components/InputSafeView';
 import SBButton from '../../shared/components/SBButton';
@@ -9,51 +11,66 @@ import SBIcon from '../../shared/components/SBIcon';
 import SBText from '../../shared/components/SBText';
 import SBTextInput from '../../shared/components/SBTextInput';
 import Palette from '../../shared/styles/palette';
+import { getErrorMessage } from '../../shared/utils/error';
 import { AppLogger } from '../../shared/utils/logger';
-
-const enterRoom = async (roomId: string, withoutCache = false) => {
-  try {
-    console.log(roomId, withoutCache);
-    const room: Room | null = withoutCache
-      ? await SendbirdCalls.fetchRoomById(roomId)
-      : await SendbirdCalls.getCachedRoomById(roomId);
-    AppLogger.log('enterRoom', room);
-    if (room === null) throw 'There is no Room';
-    room.enter();
-  } catch (e) {
-    AppLogger.log('enterRoom - e', e);
-  }
-};
-
-const createRoom = async () => {
-  try {
-    const room: Room = await SendbirdCalls.createRoom(SendbirdCalls.RoomType.SMALL_ROOM_FOR_VIDEO);
-    AppLogger.log('createRoom', room);
-    enterRoom(room.roomId);
-  } catch (e) {
-    AppLogger.log('createRoom - e', e);
-  }
-};
+import { useGroupNavigation } from '../hooks/useGroupNavigation';
+import { GroupRoutes } from '../navigations/routes';
 
 const GroupCallDialScreen = () => {
+  const { alert } = useAlert();
+  const {
+    navigation: { navigate },
+  } = useGroupNavigation<GroupRoutes.DIAL>();
+
   const [roomId, setRoomId] = useState<string>('');
+  useFocusEffect(
+    useCallback(() => {
+      setRoomId('');
+    }, []),
+  );
+
+  const onNavigate = async (isCreated = false) => {
+    if (isCreated) {
+      try {
+        const room = await SendbirdCalls.createRoom({
+          roomType: SendbirdCalls.RoomType.SMALL_ROOM_FOR_VIDEO,
+        });
+        AppLogger.info('[GroupCallDialScreen] createRoom - ', room.roomId);
+        await room.enter();
+        navigate(GroupRoutes.ROOM, { roomId: room.roomId, isCreated: true });
+      } catch (e) {
+        AppLogger.info('[GroupCallDialScreen::ERROR] createRoom - ', e);
+        alert({ title: 'Create a room', message: 'The createRoom() method call has failed.' });
+      }
+    } else {
+      Keyboard.dismiss();
+      try {
+        const room = await SendbirdCalls.fetchRoomById(roomId);
+        AppLogger.info('[GroupCallDialScreen] fetchRoomById - ', room);
+        navigate(GroupRoutes.ENTER_ROOM, { roomId });
+      } catch (e) {
+        AppLogger.info('[GroupCallDialScreen::ERROR] fetchRoomById - ', e);
+        alert({ title: 'Enter a room', message: getErrorMessage(e) });
+      }
+    }
+  };
 
   return (
     <InputSafeView>
-      <ScrollView style={styles.container}>
+      <ScrollView style={styles.container} keyboardShouldPersistTaps={'always'}>
         <View style={styles.card}>
-          <SBIcon icon={'RoomAdd'} />
+          <SBIcon icon={'RoomAdd'} containerStyle={{ alignItems: 'flex-start' }} />
           <SBText h1 style={styles.title}>
             Create a room
           </SBText>
           <SBText body2>Start a group call in a room and share the room ID with others.</SBText>
-          <SBButton style={styles.button} onPress={createRoom}>
+          <SBButton style={styles.button} onPress={() => onNavigate(true)}>
             {'Create'}
           </SBButton>
         </View>
 
         <View style={[styles.card, { marginTop: 20 }]}>
-          <SBIcon icon={'Join'} />
+          <SBIcon icon={'Join'} containerStyle={{ alignItems: 'flex-start' }} />
           <SBText h1 style={styles.title}>
             Enter with room ID
           </SBText>
@@ -64,11 +81,13 @@ const GroupCallDialScreen = () => {
               onChangeText={setRoomId}
               placeholder={'Room ID'}
               placeholderTextColor={Palette.onBackgroundLight02}
-              onSubmitEditing={() => enterRoom(roomId, true)}
+              onSubmitEditing={() => onNavigate()}
               style={styles.input}
+              autoCapitalize={'none'}
+              autoCorrect={false}
             />
             {!!roomId && (
-              <SBButton style={styles.textButton} onPress={() => enterRoom(roomId, true)} variant="text">
+              <SBButton variant="text" style={styles.textButton} onPress={() => onNavigate()}>
                 {'Enter'}
               </SBButton>
             )}
@@ -83,6 +102,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
+    backgroundColor: Palette.background100,
   },
   card: {
     backgroundColor: Palette.background50,

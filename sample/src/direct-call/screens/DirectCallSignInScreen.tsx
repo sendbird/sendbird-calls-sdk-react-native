@@ -22,7 +22,7 @@ const DirectCallSignInScreen = () => {
   const { setCurrentUser } = useAuthContext();
   const [state, setState] = useReducer((prev: Input, next: Partial<Input>) => ({ ...prev, ...next }), {
     applicationId: APP_ID,
-    userId: 'DirectCall_' + Platform.OS,
+    userId: __DEV__ ? 'DirectCall_' + Platform.OS : '',
     accessToken: '',
   });
 
@@ -32,10 +32,10 @@ const DirectCallSignInScreen = () => {
   }, []);
 
   const authenticate = async (value: Input) => {
-    const user = await SendbirdCalls.authenticate(value.userId, value.accessToken);
+    const user = await SendbirdCalls.authenticate(value);
     await AuthManager.authenticate(value);
 
-    AppLogger.log('sendbird user:', user);
+    AppLogger.info('sendbird user:', user);
     return user;
   };
 
@@ -46,7 +46,7 @@ const DirectCallSignInScreen = () => {
         SendbirdCalls.registerPushToken(token, true),
         TokenManager.set({ value: token, type: 'fcm' }),
       ]);
-      AppLogger.log('registered token:', TokenManager.token);
+      AppLogger.info('registered token:', TokenManager.token);
     }
 
     if (Platform.OS === 'ios') {
@@ -56,7 +56,7 @@ const DirectCallSignInScreen = () => {
           TokenManager.set({ value: voipToken, type: 'voip' }),
         ]);
         RNVoipPushNotification.removeEventListener('register');
-        AppLogger.log('registered token:', TokenManager.token);
+        AppLogger.info('registered token:', TokenManager.token);
       });
       RNVoipPushNotification.registerVoipToken();
     }
@@ -71,6 +71,7 @@ const DirectCallSignInScreen = () => {
   return (
     <ScrollView
       contentContainerStyle={{ backgroundColor: 'white', flex: 1, paddingVertical: 12, paddingHorizontal: 16 }}
+      keyboardShouldPersistTaps={'always'}
     >
       <SignInForm {...state} hideApplicationId onChange={setState} onSubmit={onSignIn} />
     </ScrollView>

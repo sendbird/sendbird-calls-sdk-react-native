@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { Platform } from 'react-native';
 
-import { SendbirdCalls } from '@sendbird/calls-react-native';
+import { SendbirdCalls, SoundType } from '@sendbird/calls-react-native';
 
 import { useAuthContext } from '../shared/contexts/AuthContext';
 import AuthManager from '../shared/libs/AuthManager';
@@ -29,32 +29,41 @@ if (Platform.OS === 'ios') {
   setupCallKit();
 }
 
-SendbirdCalls.onRinging(async (call) => {
-  const directCall = await SendbirdCalls.getDirectCall(call.callId);
+// use ringtone sound of CallKit on iOS
+Platform.OS === 'android' && SendbirdCalls.addDirectCallSound(SoundType.RINGING, 'ringing.mp3');
+SendbirdCalls.addDirectCallSound(SoundType.DIALING, 'dialing.mp3');
+SendbirdCalls.addDirectCallSound(SoundType.RECONNECTED, 'reconnected.mp3');
+SendbirdCalls.addDirectCallSound(SoundType.RECONNECTING, 'reconnecting.mp3');
+// SendbirdCalls.setDirectCallDialingSoundOnWhenSilentOrVibrateMode(true);
 
-  if (!SendbirdCalls.currentUser) {
-    const credential = await AuthManager.getSavedCredential();
+SendbirdCalls.setListener({
+  async onRinging(call) {
+    const directCall = await SendbirdCalls.getDirectCall(call.callId);
 
-    if (credential) {
-      // Authenticate before accept
-      await SendbirdCalls.authenticate(credential.userId, credential.accessToken);
-    } else {
-      // Invalid user call
-      return directCall.end();
+    if (!SendbirdCalls.currentUser) {
+      const credential = await AuthManager.getSavedCredential();
+
+      if (credential) {
+        // Authenticate before accept
+        await SendbirdCalls.authenticate(credential);
+      } else {
+        // Invalid user call
+        return directCall.end();
+      }
     }
-  }
 
-  const unsubscribe = directCall.addListener({
-    onEnded({ callId, callLog }) {
-      AppLogger.debug('[onRinging/onEnded] add to call history manager');
-      callLog && CallHistoryManager.add(callId, callLog);
-      unsubscribe();
-    },
-  });
+    const unsubscribe = directCall.addListener({
+      onEnded({ callId, callLog }) {
+        AppLogger.info('[onRinging/onEnded] add to call history manager');
+        callLog && CallHistoryManager.add(callId, callLog);
+        unsubscribe();
+      },
+    });
 
-  // Show interaction UI (Accept/Decline)
-  if (Platform.OS === 'android') startRingingWithNotification(call);
-  if (Platform.OS === 'ios') startRingingWithCallKit(call);
+    // Show interaction UI (Accept/Decline)
+    if (Platform.OS === 'android') startRingingWithNotification(call);
+    if (Platform.OS === 'ios') startRingingWithCallKit(call);
+  },
 });
 
 export const Stack = createNativeStackNavigator();

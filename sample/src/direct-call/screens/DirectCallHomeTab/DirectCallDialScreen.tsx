@@ -1,4 +1,3 @@
-import messaging from '@react-native-firebase/messaging';
 import React from 'react';
 import { Alert, Keyboard, Platform, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 
@@ -23,15 +22,6 @@ const DirectCallScreen = () => {
     }),
   });
 
-  React.useEffect(() => {
-    const listener = messaging().onMessage((message) => {
-      SendbirdCalls.android_handleFirebaseMessageData(message.data);
-    });
-    return () => {
-      listener();
-    };
-  }, []);
-
   const onNavigate = (callProps: DirectCallProperties) => {
     if (callProps.isVideoCall) {
       navigation.navigate(DirectRoutes.VIDEO_CALLING, { callId: callProps.callId });
@@ -43,7 +33,7 @@ const DirectCallScreen = () => {
   const calling = async (isVideoCall: boolean) => {
     try {
       const callProps = await SendbirdCalls.dial(state.userId, isVideoCall);
-      AppLogger.log('dial called', callProps.callId);
+      AppLogger.info('dial called', callProps.callId);
       onNavigate(callProps);
     } catch (e) {
       // @ts-ignore

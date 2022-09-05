@@ -59,8 +59,9 @@ extension RNSendbirdCalls {
     }
     override func supportedEvents() -> [String]! {
         return [
-            CallsEvents.Event.default(.onRinging).name,
-            CallsEvents.Event.directCall(.onConnected).name
+            CallsEvents.Event.default(nil).name,
+            CallsEvents.Event.directCall(nil).name,
+            CallsEvents.Event.groupCall(nil).name
         ]
     }
 }
@@ -86,6 +87,18 @@ extension RNSendbirdCalls {
 
 // MARK: Common
 extension RNSendbirdCalls {
+    @objc func addDirectCallSound(_ type: String, _ fileName: String) {
+        module.addDirectCallSound(type, fileName)
+    }
+    
+    @objc func removeDirectCallSound(_ type: String) {
+        module.removeDirectCallSound(type)
+    }
+    
+    @objc func setDirectCallDialingSoundOnWhenSilentOrVibrateMode(_ enabled: Bool) {
+        module.setDirectCallDialingSoundOnWhenSilentOrVibrateMode(enabled)
+    }
+    
     @objc func initialize(_ appId: String) -> Bool {
         return module.initialize(appId)
     }
@@ -102,8 +115,8 @@ extension RNSendbirdCalls {
         module.getDirectCall(callIdOrUUID, Promise(resolve, reject))
     }
     
-    @objc func authenticate(_ userId: String, _ accessToken: String?, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
-        module.authenticate(userId, accessToken, Promise(resolve, reject))
+    @objc func authenticate(_ authParams: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.authenticate(authParams, Promise(resolve, reject))
     }
     
     @objc func deauthenticate(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
@@ -129,14 +142,22 @@ extension RNSendbirdCalls {
     @objc func dial(_ calleeId: String, _ isVideoCall: Bool, _ options: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
         module.dial(calleeId, isVideoCall, options, Promise(resolve, reject))
     }
+    
+    @objc func fetchRoomById(_ roomId: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.fetchRoomById(roomId, Promise(resolve, reject))
+    }
+    
+    @objc func getCachedRoomById(_ roomId: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.getCachedRoomById(roomId, Promise(resolve, reject))
+    }
+    
+    @objc func createRoom(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.createRoom(params, Promise(resolve, reject))
+    }
 }
 
 // MARK: DirectCall
 extension RNSendbirdCalls {
-    @objc func selectVideoDevice(_ callId: String, _ device: [String: String], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
-        module.selectVideoDevice(callId, device, Promise(resolve, reject))
-    }
-    
     @objc func accept(_ callId: String, _ options: [String: Any], _ holdActiveCall: Bool, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
         module.accept(callId, options, holdActiveCall, Promise(resolve, reject))
     }
@@ -145,31 +166,49 @@ extension RNSendbirdCalls {
         module.end(callId, Promise(resolve, reject))
     }
     
-    @objc func switchCamera(_ callId: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
-        module.switchCamera(callId, Promise(resolve, reject))
-    }
-    
-    @objc func startVideo(_ callId: String) {
-        module.startVideo(callId)
-    }
-    
-    @objc func stopVideo(_ callId: String) {
-        module.stopVideo(callId)
-    }
-    
-    @objc func muteMicrophone(_ callId: String) {
-        module.muteMicrophone(callId)
-    }
-    
-    @objc func unmuteMicrophone(_ callId: String) {
-        module.unmuteMicrophone(callId)
-    }
-    
     @objc func updateLocalVideoView(_ callId: String, _ videoViewId: NSNumber) {
         module.updateLocalVideoView(callId, videoViewId)
     }
     
     @objc func updateRemoteVideoView(_ callId: String, _ videoViewId: NSNumber) {
         module.updateRemoteVideoView(callId, videoViewId)
+    }
+}
+
+// MARK: GroupCall
+extension RNSendbirdCalls {
+    @objc func enter(_ roomId: String, _ options: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.enter(roomId, options, Promise(resolve, reject))
+    }
+    
+    @objc func exit(_ roomId: String) {
+        module.exit(roomId)
+    }
+}
+
+// MARK: MediaDeviceControl
+extension RNSendbirdCalls {
+    @objc func switchCamera(_ type: String, _ identifier: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.switchCamera(type, identifier, Promise(resolve, reject))
+    }
+    
+    @objc func startVideo(_ type: String, _ identifier: String) {
+        module.startVideo(type, identifier)
+    }
+    
+    @objc func stopVideo(_ type: String, _ identifier: String) {
+        module.stopVideo(type, identifier)
+    }
+    
+    @objc func muteMicrophone(_ type: String, _ identifier: String) {
+        module.muteMicrophone(type, identifier)
+    }
+    
+    @objc func unmuteMicrophone(_ type: String, _ identifier: String) {
+        module.unmuteMicrophone(type, identifier)
+    }
+    
+    @objc func selectVideoDevice(_ type: String, _ identifier: String, _ device: [String: String], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.selectVideoDevice(type, identifier, device, Promise(resolve, reject))
     }
 }

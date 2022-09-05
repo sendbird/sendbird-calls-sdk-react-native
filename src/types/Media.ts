@@ -1,5 +1,18 @@
 import type { AVAudioSessionPort, RouteChangeReason } from './Platform';
 
+export interface BaseVideoViewProps {
+  android_zOrderMediaOverlay?: boolean;
+  resizeMode?: 'contain' | 'cover' | 'center';
+  mirror?: boolean;
+}
+
+export enum SoundType {
+  DIALING = 'DIALING',
+  RINGING = 'RINGING',
+  RECONNECTING = 'RECONNECTING',
+  RECONNECTED = 'RECONNECTED',
+}
+
 export enum AudioDeviceType {
   EARPIECE = 'EARPIECE',
   SPEAKERPHONE = 'SPEAKERPHONE',
@@ -41,7 +54,7 @@ export interface VideoDevice {
    * device id
    * @android deviceName
    * @ios uniqueId
-   * */
+   */
   deviceId: string;
   position: VideoDevicePosition;
 }

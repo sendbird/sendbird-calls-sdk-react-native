@@ -1,6 +1,7 @@
 import type { User } from './User';
+import { JSMediaDeviceControl } from './index';
 
-export interface Participant {
+export interface ParticipantProperties {
   participantId: string;
   user: User;
   state: ParticipantState;
@@ -14,6 +15,13 @@ export interface Participant {
 
   updatedAt: number;
 }
+
+type JSLocalParticipantMediaDeviceControl = Pick<
+  JSMediaDeviceControl,
+  'muteMicrophone' | 'unmuteMicrophone' | 'switchCamera' | 'startVideo' | 'stopVideo'
+>;
+
+export type LocalParticipantMethods = JSLocalParticipantMediaDeviceControl;
 
 export enum ParticipantState {
   ENTERED = 'ENTERED',

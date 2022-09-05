@@ -17,7 +17,7 @@ const nativePermissionGranted = (stats: PermissionResults, limitedCallback?: () 
 
 export const CALL_PERMISSIONS = Platform.select({
   android: [PERMISSIONS.ANDROID.CAMERA, PERMISSIONS.ANDROID.RECORD_AUDIO, PERMISSIONS.ANDROID.BLUETOOTH_CONNECT],
-  ios: [PERMISSIONS.IOS.CAMERA, PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL],
+  ios: [PERMISSIONS.IOS.CAMERA, PERMISSIONS.IOS.MICROPHONE],
   default: [],
 });
 

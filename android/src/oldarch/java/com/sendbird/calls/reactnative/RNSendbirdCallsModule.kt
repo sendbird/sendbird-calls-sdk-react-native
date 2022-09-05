@@ -43,6 +43,12 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
+    override fun addDirectCallSound(type: String, fileName: String) = module.addDirectCallSound(type, fileName)
+    @ReactMethod
+    override fun removeDirectCallSound(type: String) = module.removeDirectCallSound(type)
+    @ReactMethod
+    override fun setDirectCallDialingSoundOnWhenSilentOrVibrateMode(enabled: Boolean) = module.setDirectCallDialingSoundOnWhenSilentOrVibrateMode(enabled)
+    @ReactMethod
     override fun getCurrentUser(promise: Promise) = module.getCurrentUser(promise)
     @ReactMethod
     override fun getOngoingCalls(promise: Promise) = module.getOngoingCalls(promise)
@@ -51,7 +57,7 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     @ReactMethod
     override fun initialize(appId: String) = module.initialize(appId)
     @ReactMethod
-    override fun authenticate(userId: String, accessToken: String?, promise: Promise) = module.authenticate(userId, accessToken, promise)
+    override fun authenticate(authParams: ReadableMap, promise: Promise) = module.authenticate(authParams, promise)
     @ReactMethod
     override fun deauthenticate(promise: Promise) = module.deauthenticate(promise)
     @ReactMethod
@@ -61,31 +67,33 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     @ReactMethod
     override fun dial(calleeId: String, isVideoCall: Boolean, options: ReadableMap, promise: Promise) = module.dial(calleeId, isVideoCall, options, promise)
     @ReactMethod
-    override fun createRoom(roomType: String, promise: Promise) = module.createRoom(roomType, promise)
+    override fun createRoom(params: ReadableMap, promise: Promise) = module.createRoom(params, promise)
     @ReactMethod
     override fun fetchRoomById(roomId: String, promise: Promise) = module.fetchRoomById(roomId, promise)
     @ReactMethod
     override fun getCachedRoomById(roomId: String, promise: Promise) = module.getCachedRoomById(roomId, promise)
 
+    /** MediaDevice Control **/
+    @ReactMethod
+    override fun muteMicrophone(type: String, identifier: String) = module.muteMicrophone(type, identifier)
+    @ReactMethod
+    override fun unmuteMicrophone(type: String, identifier: String) = module.unmuteMicrophone(type, identifier)
+    @ReactMethod
+    override fun stopVideo(type: String, identifier: String) = module.stopVideo(type, identifier)
+    @ReactMethod
+    override fun startVideo(type: String, identifier: String) = module.startVideo(type, identifier)
+    @ReactMethod
+    override fun switchCamera(type: String, identifier: String, promise: Promise) = module.switchCamera(type, identifier, promise)
+    @ReactMethod
+    override fun selectAudioDevice(type: String, identifier: String, device: String, promise: Promise) = module.selectAudioDevice(type, identifier, device, promise)
+    @ReactMethod
+    override fun selectVideoDevice(type: String, identifier: String, device: ReadableMap, promise: Promise) = module.selectVideoDevice(type, identifier, device, promise)
+
     /** DirectCall **/
-    @ReactMethod
-    override fun selectVideoDevice(callId: String, device: ReadableMap, promise: Promise) = module.selectVideoDevice(callId, device, promise)
-    @ReactMethod
-    override fun selectAudioDevice(callId: String, device: String, promise: Promise) = module.selectAudioDevice(callId, device, promise)
     @ReactMethod
     override fun accept(callId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise) = module.accept(callId, options, holdActiveCall, promise)
     @ReactMethod
     override fun end(callId: String, promise: Promise) = module.end(callId, promise)
-    @ReactMethod
-    override fun switchCamera(callId: String, promise: Promise) = module.switchCamera(callId, promise)
-    @ReactMethod
-    override fun startVideo(callId: String) = module.startVideo(callId)
-    @ReactMethod
-    override fun stopVideo(callId: String) = module.stopVideo(callId)
-    @ReactMethod
-    override fun muteMicrophone(callId: String) = module.muteMicrophone(callId)
-    @ReactMethod
-    override fun unmuteMicrophone(callId: String) = module.unmuteMicrophone(callId)
     @ReactMethod
     override fun updateLocalVideoView(callId: String, videoViewId: Int) = module.updateLocalVideoView(callId, videoViewId)
     @ReactMethod

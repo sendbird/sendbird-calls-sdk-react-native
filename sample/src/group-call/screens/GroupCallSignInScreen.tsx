@@ -6,6 +6,8 @@ import { SendbirdCalls } from '@sendbird/calls-react-native';
 import { APP_ID } from '../../env';
 import SignInForm from '../../shared/components/SignInForm';
 import { useAuthContext } from '../../shared/contexts/AuthContext';
+import { useLayoutEffectAsync } from '../../shared/hooks/useEffectAsync';
+import AuthManager from '../../shared/libs/AuthManager';
 import Palette from '../../shared/styles/palette';
 import { AppLogger } from '../../shared/utils/logger';
 
@@ -17,16 +19,27 @@ type Input = {
 const GroupCallSignInScreen = () => {
   const { setCurrentUser } = useAuthContext();
   const [state, setState] = useReducer((prev: Input, next: Partial<Input>) => ({ ...prev, ...next }), {
-    userId: 'GroupCall_' + Platform.OS,
+    userId: __DEV__ ? 'GroupCall_' + Platform.OS : '',
     applicationId: APP_ID,
     accessToken: '',
   });
 
-  const onSignIn = () => {
-    SendbirdCalls.authenticate(state.userId).then(async (user) => {
-      AppLogger.log('sendbird user:', user);
-      setCurrentUser(user);
-    });
+  useLayoutEffectAsync(async () => {
+    const credential = await AuthManager.getSavedCredential();
+    if (credential) onSignIn(credential);
+  }, []);
+
+  const authenticate = async (value: Input) => {
+    const user = await SendbirdCalls.authenticate(value);
+    await AuthManager.authenticate(value);
+
+    AppLogger.info('sendbird user:', user);
+    return user;
+  };
+
+  const onSignIn = async (value: Input) => {
+    const user = await authenticate(value);
+    setCurrentUser(user);
   };
 
   return (
@@ -37,8 +50,9 @@ const GroupCallSignInScreen = () => {
         paddingHorizontal: 16,
         backgroundColor: Palette.background50,
       }}
+      keyboardShouldPersistTaps={'always'}
     >
-      <SignInForm {...state} onChange={setState} onSubmit={onSignIn} />
+      <SignInForm {...state} hideApplicationId onChange={setState} onSubmit={onSignIn} />
     </ScrollView>
   );
 };

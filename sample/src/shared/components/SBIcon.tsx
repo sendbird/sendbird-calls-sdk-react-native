@@ -18,7 +18,7 @@ type Props = {
 const SBIcon: FC<Props> & { Assets: typeof IconAssets } = ({ icon, size = 24, containerStyle, style, color }) => {
   const sizeStyle = sizeStyles[size as SizeFactor] ?? { width: size, height: size };
   return (
-    <View style={[containerStyle, styles.container]}>
+    <View style={[styles.container, containerStyle]}>
       <Image
         resizeMode={'contain'}
         source={IconAssets[icon]}

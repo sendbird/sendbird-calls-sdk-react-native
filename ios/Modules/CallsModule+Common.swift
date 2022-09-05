@@ -11,13 +11,17 @@ import SendBirdCalls
 import PushKit
 
 protocol CallsCommonModuleProtocol {
+    func addDirectCallSound(_ type: String, _ fileName: String)
+    func removeDirectCallSound(_ type: String)
+    func setDirectCallDialingSoundOnWhenSilentOrVibrateMode(_ enabled: Bool)
+    
     func getCurrentUser(_ promise: Promise)
     func getOngoingCalls(_ promise: Promise)
     func getDirectCall(_ callIdOrUUID: String, _ promise: Promise)
     
     func initialize(_ appId: String) -> Bool
     
-    func authenticate(_ userId: String, _ accessToken: String?, _ promise: Promise)
+    func authenticate(_ authParams: [String: Any?], _ promise: Promise)
     func deauthenticate(_ promise: Promise)
     
     func registerPushToken(_ token: String, _ unique: Bool, _ promise: Promise)
@@ -27,9 +31,27 @@ protocol CallsCommonModuleProtocol {
     func unregisterVoIPPushToken(_ token: String, _ promise: Promise)
     
     func dial(_ calleeId: String, _ isVideoCall: Bool, _ options: [String: Any?], _ promise: Promise)
+    
+    func fetchRoomById(_ roomId: String, _ promise: Promise)
+    func getCachedRoomById(_ roomId: String, _ promise: Promise)
+    func createRoom(_ params: [String: Any], _ promise: Promise)
 }
 
 class CallsCommonModule: CallsBaseModule, CallsCommonModuleProtocol {
+    func addDirectCallSound(_ type: String, _ fileName: String) {
+        guard let soundType = SoundType(fromString: type) else { return }
+        SendBirdCall.addDirectCallSound(fileName, forType: soundType)
+    }
+    
+    func removeDirectCallSound(_ type: String) {
+        guard let soundType = SoundType(fromString: type) else { return }
+        SendBirdCall.removeDirectCallSound(forType: soundType)
+    }
+    
+    func setDirectCallDialingSoundOnWhenSilentOrVibrateMode(_ enabled: Bool) {
+        SendBirdCall.setDirectCallDialingSoundOnWhenSilentMode(isEnabled: enabled)
+    }
+    
     func getCurrentUser(_ promise: Promise) {
         DispatchQueue.main.async {
             guard let user = SendBirdCall.currentUser else {
@@ -62,9 +84,15 @@ class CallsCommonModule: CallsBaseModule, CallsCommonModuleProtocol {
         return SendBirdCall.configure(appId: appId)
     }
     
-    func authenticate(_ userId: String, _ accessToken: String?, _ promise: Promise) {
-        let authParams = AuthenticateParams(userId: userId, accessToken: accessToken)
-        SendBirdCall.authenticate(with: authParams) { user, error in
+    func authenticate(_ authParams: [String: Any?], _ promise: Promise) {
+        let userId = authParams["userId"] as! String
+        let authenticateParams = AuthenticateParams(userId: userId)
+        
+        if let accessToken = authParams["accessToken"] as? String {
+            authenticateParams.accessToken = accessToken
+        }
+        
+        SendBirdCall.authenticate(with: authenticateParams) { user, error in
             if let error = error {
                 promise.reject(error)
             } else if let user = user {
@@ -154,6 +182,42 @@ class CallsCommonModule: CallsBaseModule, CallsCommonModuleProtocol {
             } else if let directCall = directCall {
                 directCall.delegate = self.root.directCallModule
                 promise.resolve(CallsUtils.convertDirectCallToDict(directCall))
+            }
+        }
+    }
+    
+    func fetchRoomById(_ roomId: String, _ promise: Promise) {
+        SendBirdCall.fetchRoom(by: roomId) { room, error in
+            if let error = error {
+                promise.reject(error)
+            } else if let room = room {
+                room.addDelegate(GroupCallDelegate.get(room), identifier: room.roomId)
+                promise.resolve(CallsUtils.convertRoomToDict(room))
+            }
+        }
+    }
+    
+    func getCachedRoomById(_ roomId: String, _ promise: Promise) {
+        guard let room = SendBirdCall.getCachedRoom(by: roomId) else {
+            return promise.resolve(nil)
+        }
+        promise.resolve(CallsUtils.convertRoomToDict(room))
+    }
+    
+    func createRoom(_ params: [String: Any], _ promise: Promise) {
+        let from = "groupCall/createRoom"
+        guard let roomTypeString = params["roomType"] as? String,
+            let roomType = RoomType(fromString: roomTypeString) else {
+            return promise.reject(RNCallsInternalError.invalidParams(from))
+        }
+        
+        let roomParams = RoomParams(roomType: roomType)
+        SendBirdCall.createRoom(with: roomParams) { room, error in
+            if let error = error {
+                promise.reject(error)
+            } else if let room = room {
+                room.addDelegate(GroupCallDelegate.get(room), identifier: room.roomId)
+                promise.resolve(CallsUtils.convertRoomToDict(room))
             }
         }
     }

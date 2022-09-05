@@ -1,7 +1,14 @@
 package com.sendbird.calls.reactnative.module
 
-import com.facebook.react.bridge.*
+import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.bridge.WritableNativeArray
+import com.facebook.react.bridge.WritableNativeMap
 import com.sendbird.calls.*
+import com.sendbird.calls.reactnative.RNCallsInternalError
+import com.sendbird.calls.reactnative.extension.rangeFromReactNative
+import com.sendbird.calls.reactnative.extension.rejectCalls
+import com.sendbird.calls.reactnative.module.listener.CallsGroupCallListener
 import com.sendbird.calls.reactnative.utils.CallsUtils
 
 enum class QueryType {
@@ -9,120 +16,127 @@ enum class QueryType {
     ROOM_LIST
 }
 
-class CallsQueries {
+class CallsQueries(private val root: CallsModule) {
     val directCallLogQueries = mutableMapOf<String, DirectCallLogListQuery>()
     val roomListQueries = mutableMapOf<String, RoomListQuery>()
 
     fun createDirectCallLogListQuery(params: ReadableMap, promise: Promise) {
         val queryParams = DirectCallLogListQuery.Params().apply {
-            val myRole = CallsUtils.safeGet {
-                params.getString("myRole")?.let { DirectCallUserRole.valueOf(it) }
-            }
-            val limit = CallsUtils.safeGet {
+            CallsUtils.safeGet {
                 params.getInt("limit")
-            }
-            val endResults = CallsUtils.safeGet {
-                params.getArray("endResults")?.toArrayList()?.map {
-                    DirectCallEndResult.valueOf(it as String)
-                }
-            }
+            }?.let { setLimit(it) }
 
-            if(myRole != null) setMyRole(myRole)
-            if(limit != null) setLimit(limit)
-            if(endResults != null) setEndResults(endResults)
+            CallsUtils.safeGet {
+                params.getString("myRole")?.let { DirectCallUserRole.valueOf(it) }
+            }?.let { setMyRole(it) }
+
+            CallsUtils.safeGet {
+                params.getArray("endResults")?.toArrayList()?.map { DirectCallEndResult.valueOf(it as String) }
+            }?.let { setEndResults(it) }
         }
 
-        val query = SendBirdCall.createDirectCallLogListQuery(queryParams)
-        val key = query.hashCode().toString()
-        directCallLogQueries[key] = query
-        promise.resolve(key)
+        SendBirdCall.createDirectCallLogListQuery(queryParams).let {
+            it.hashCode().toString().run {
+                directCallLogQueries[this] = it
+                promise.resolve(this)
+            }
+        }
     }
 
     fun createRoomListQuery(params: ReadableMap, promise: Promise) {
         val queryParams = RoomListQuery.Params().apply {
-            val limit = CallsUtils.safeGet {
+            CallsUtils.safeGet {
                 params.getInt("limit")
-            }
-            val createdByUserIds = CallsUtils.safeGet {
+            }?.let { setLimit(it) }
+
+            CallsUtils.safeGet {
                 params.getArray("createdByUserIds")?.toArrayList()?.map { it as String }
-            }
-            val roomIds = CallsUtils.safeGet {
+            }?.let { setCreatedByUserIds(it) }
+
+            CallsUtils.safeGet {
                 params.getArray("roomIds")?.toArrayList()?.map { it as String }
-            }
-            val state = CallsUtils.safeGet {
+            }?.let { setRoomIds(it) }
+
+            CallsUtils.safeGet {
                 params.getString("state")?.let { RoomState.valueOf(it) }
-            }
-            val type = CallsUtils.safeGet {
+            }?.let { setState(it) }
+
+            CallsUtils.safeGet {
                 params.getString("type")?.let { RoomType.valueOf(it) }
-            }
+            }?.let { setType(it) }
 
-            if(limit != null) setLimit(limit)
-            if(createdByUserIds != null) setCreatedByUserIds(createdByUserIds)
-            if(roomIds != null) setRoomIds(roomIds)
-            if(state != null) setState(state)
-            if(type != null) setType(type)
+            CallsUtils.safeGet {
+                val createdAt = params.getMap("createdAt") ?: WritableNativeMap()
+                val lowerBound = CallsUtils
+                    .safeGet { createdAt.getDouble("lowerBound") }
+                val upperBound = CallsUtils
+                    .safeGet { createdAt.getDouble("upperBound") }
+                Range.rangeFromReactNative(lowerBound, upperBound)
+            }?.let { setRangeForCreatedAt(it) }
 
-            // FIXME: Range methods are internal.
-//            val createdAtRange = CallsUtils.safeGet {
-//                val range = Range()
-//                val createdAt = params.getMap("createdAt") ?: WritableNativeMap()
-//                CallsUtils
-//                    .safeGet { createdAt.getDouble("lowerBound") }
-//                    ?.let { range.greaterThanOrEqualTo(it.toLong()) }
-//                CallsUtils
-//                    .safeGet { createdAt.getDouble("upperBound") }
-//                    ?.let { range.lessThanOrEqualTo(it.toLong()) }
-//                range
-//            }
-//
-//            val participantCountRange = CallsUtils.safeGet {
-//                val range = Range()
-//                val count = params.getMap("currentParticipantCount")
-//                CallsUtils
-//                    .safeGet { count?.getDouble("lowerBound") }
-//                    ?.let { range.greaterThanOrEqualTo(it.toLong()) }
-//                CallsUtils
-//                    .safeGet { count?.getDouble("upperBound") }
-//                    ?.let { range.lessThanOrEqualTo(it.toLong()) }
-//                range
-//            }
+            CallsUtils.safeGet {
+                val count = params.getMap("currentParticipantCount") ?: WritableNativeMap()
+                val lowerBound = CallsUtils
+                    .safeGet { count.getDouble("lowerBound") }
+                val upperBound = CallsUtils
+                    .safeGet { count.getDouble("upperBound") }
+                Range.rangeFromReactNative(lowerBound, upperBound)
+            }?.let { setRangeForCurrentParticipantCount(it) }
         }
-        val query = SendBirdCall.createRoomListQuery(queryParams)
-        val key = query.hashCode().toString()
-        roomListQueries[key] = query
-        promise.resolve(key)
+
+        SendBirdCall.createRoomListQuery(queryParams).let {
+            it.hashCode().toString().run {
+                roomListQueries[this] = it
+                promise.resolve(this)
+            }
+        }
     }
 
     fun queryNext(key: String, type: String, promise: Promise) {
-        when(QueryType.valueOf(type)) {
+        when (QueryType.valueOf(type)) {
             QueryType.DIRECT_CALL_LOG -> {
-                val query = directCallLogQueries[key]
-                query?.next { list, e ->
-                    if(e != null) promise.reject(e)
-                    if(list != null) {
-                        promise.resolve(CallsUtils.convertToJsMap(mapOf(
-                            "hasNext" to query.hasNext(),
-                            "result" to list.map {
-                                CallsUtils.convertDirectCallLogToJsMap(it)
-                            },
-                        )))
+                directCallLogQueries[key]
+                    ?.run {
+                        this.next { list, error ->
+                            error?.let {
+                                promise.rejectCalls(error)
+                            }
+                            list?.let {
+                                promise.resolve(CallsUtils.convertToJsMap(mapOf(
+                                    "hasNext" to this.hasNext(),
+                                    "result" to list.map {
+                                        CallsUtils.convertDirectCallLogToJsMap(it)
+                                    },
+                                )))
+                            }
+                        }
                     }
-                }
+                    ?: run {
+                        promise.reject(RNCallsInternalError("queryNext", RNCallsInternalError.Type.NOT_FOUND_QUERY))
+                    }
             }
             QueryType.ROOM_LIST -> {
-                val query = roomListQueries[key]
-                query?.next { list, e ->
-                    if(e != null) promise.reject(e)
-                    else {
-                        promise.resolve(CallsUtils.convertToJsMap(mapOf(
-                            "hasNext" to query.hasNext(),
-                            "result" to list.map {
-                                CallsUtils.convertRoomToJsMap(it)
-                            }
-                        )))
+                roomListQueries[key]
+                    ?.run {
+                        this.next { list, error ->
+                            error
+                                ?.let {
+                                    promise.rejectCalls(it)
+                                }
+                                ?: run {
+                                    promise.resolve(CallsUtils.convertToJsMap(mapOf(
+                                        "hasNext" to this.hasNext(),
+                                        "result" to list.map {
+                                            it.addListener(it.roomId, CallsGroupCallListener.get(root, it))
+                                            CallsUtils.convertRoomToJsMap(it)
+                                        }
+                                    )))
+                                }
+                        }
                     }
-                }
-
+                    ?: run {
+                        promise.reject(RNCallsInternalError("queryNext", RNCallsInternalError.Type.NOT_FOUND_QUERY))
+                    }
             }
             else -> {
                 promise.resolve(CallsUtils.convertToJsMap(mapOf(

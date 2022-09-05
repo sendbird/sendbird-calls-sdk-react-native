@@ -1,21 +1,37 @@
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React from 'react';
+import React, { useState } from 'react';
 
-import { SendbirdCalls } from '@sendbird/calls-react-native';
+import { Room, SendbirdCalls } from '@sendbird/calls-react-native';
 
 import SettingsView from '../../shared/components/SettingsView';
 import { useAuthContext } from '../../shared/contexts/AuthContext';
+import { useLayoutEffectAsync } from '../../shared/hooks/useEffectAsync';
 import AuthManager from '../../shared/libs/AuthManager';
-import type { GroupCallSettingStackParamList } from '../navigations/navigatorTypes';
+import { AppLogger } from '../../shared/utils/logger';
+import { useGroupNavigation } from '../hooks/useGroupNavigation';
 import { GroupRoutes } from '../navigations/routes';
 
-type SettingsScreenNavigationProps = NativeStackNavigationProp<GroupCallSettingStackParamList>;
-type GroupCallSettingsScreenProps = {
-  navigation: SettingsScreenNavigationProps;
-};
-
-const GroupCallSettingsScreen = ({ navigation: { navigate } }: GroupCallSettingsScreenProps) => {
+const GroupCallSettingsScreen = () => {
+  const {
+    navigation: { navigate },
+    route: { params },
+  } = useGroupNavigation<GroupRoutes.SETTINGS>();
   const { currentUser, setCurrentUser } = useAuthContext();
+
+  const [room, setRoom] = useState<Room | null>(null);
+  useLayoutEffectAsync(async () => {
+    if (params?.roomId) {
+      try {
+        setRoom(await SendbirdCalls.getCachedRoomById(params?.roomId));
+      } catch (e) {
+        AppLogger.info('[GroupCallSettingsScreen::ERROR] getCachedRoomById - ', e);
+      }
+    }
+  }, []);
+
+  const deauthenticate = async () => {
+    await Promise.all([AuthManager.deAuthenticate(), SendbirdCalls.deauthenticate()]);
+    setCurrentUser(undefined);
+  };
 
   if (!currentUser) return null;
 
@@ -26,10 +42,8 @@ const GroupCallSettingsScreen = ({ navigation: { navigate } }: GroupCallSettings
       profileUrl={currentUser.profileUrl}
       onPressApplicationInformation={() => navigate(GroupRoutes.APP_INFO)}
       onPressSignOut={async () => {
-        await SendbirdCalls.deauthenticate().then(() => {
-          setCurrentUser(undefined);
-          AuthManager.deAuthenticate();
-        });
+        room?.exit();
+        await deauthenticate();
       }}
     />
   );

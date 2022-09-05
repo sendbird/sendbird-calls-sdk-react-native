@@ -1,4 +1,4 @@
-import type { DirectCallListener } from '@sendbird/calls-react-native';
+import type { DirectCallListener } from '../types';
 
 export const noop = () => {
   void 0;
@@ -20,6 +20,7 @@ export const noopDirectCallListener: DirectCallListener = {
   onUserHoldStatusChanged: noop,
 };
 export const noopRoomListener = {
+  onPropertyUpdatedManually: noop,
   onDeleted: noop,
   onError: noop,
   onRemoteParticipantEntered: noop,

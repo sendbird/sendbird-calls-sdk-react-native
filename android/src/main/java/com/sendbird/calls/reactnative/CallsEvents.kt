@@ -49,8 +49,16 @@ class CallsEvents {
         val TYPE_DIRECT_CALL_ON_CUSTOM_ITEMS_DELETED = directCallType("onCustomItemsDeleted")
         val TYPE_DIRECT_CALL_ON_USER_HOLD_STATUS_CHANGED = directCallType("onUserHoldStatusChanged")
         // Group
+        val TYPE_GROUP_CALL_ON_DELETED = groupCallType("onDeleted")
+        val TYPE_GROUP_CALL_ON_ERROR = groupCallType("onError")
         val TYPE_GROUP_CALL_ON_REMOTE_PARTICIPANT_ENTERED = groupCallType("onRemoteParticipantEntered")
         val TYPE_GROUP_CALL_ON_REMOTE_PARTICIPANT_EXITED = groupCallType("onRemoteParticipantExited")
+        val TYPE_GROUP_CALL_ON_REMOTE_PARTICIPANT_STREAM_STARTED = groupCallType("onRemoteParticipantStreamStarted")
+        val TYPE_GROUP_CALL_ON_AUDIO_DEVICE_CHANGED = groupCallType("onAudioDeviceChanged")
+        val TYPE_GROUP_CALL_ON_REMOTE_VIDEO_SETTINGS_CHANGED = groupCallType("onRemoteVideoSettingsChanged")
+        val TYPE_GROUP_CALL_ON_REMOTE_AUDIO_SETTINGS_CHANGED = groupCallType("onRemoteAudioSettingsChanged")
+        val TYPE_GROUP_CALL_ON_CUSTOM_ITEMS_UPDATED = groupCallType("onCustomItemsUpdated")
+        val TYPE_GROUP_CALL_ON_CUSTOM_ITEMS_DELETED = groupCallType("onCustomItemsDeleted")
 
         fun sendEvent(reactContext: ReactContext, event: String, eventType: String, data: WritableMap) {
             Log.d(CallsModule.NAME, "[CallsEvents] sendEvent() $event++$eventType")
