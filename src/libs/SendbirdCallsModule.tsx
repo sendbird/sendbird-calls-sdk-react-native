@@ -28,7 +28,7 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   private _applicationId = '';
   private _initialized = false;
   private _currentUser: User | null = null;
-  private _listener: SendbirdCallListener | null = null;
+  private _sendbirdCallListener: SendbirdCallListener | null = null;
 
   /**
    * Returns current React-Native SDK version.
@@ -209,7 +209,7 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
       this.binder.addListener(CallsEvent.DEFAULT, ({ type, data }) => {
         if (type === DefaultEventType.ON_RINGING) {
           this.Logger.info('[SendbirdCalls]', 'onRinging', data.callId);
-          this._listener?.onRinging(data);
+          this._sendbirdCallListener?.onRinging(data);
         }
       });
     }
@@ -374,7 +374,7 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
    */
   setListener(listener: SendbirdCallListener): void {
     this.Logger.info('[SendbirdCalls]', 'setListener');
-    this._listener = listener;
+    this._sendbirdCallListener = listener;
   }
 
   /**

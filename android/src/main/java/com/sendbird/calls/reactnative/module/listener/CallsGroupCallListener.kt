@@ -29,7 +29,6 @@ class CallsGroupCallListener(private val root: CallsModule, private val room: Ro
             CallsEvents.TYPE_GROUP_CALL_ON_ERROR,
             CallsUtils.convertRoomToJsMap(room),
             Arguments.createMap().apply {
-                SendBirdError.DIAL_CANCELED
                 putMap("participant", CallsUtils.convertParticipantToJsMap(participant))
                 putInt("errorCode", e.code)
                 putString("errorMessage", e.message)
