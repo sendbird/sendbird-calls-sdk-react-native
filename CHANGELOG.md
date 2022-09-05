@@ -1,3 +1,5 @@
+# [1.0.0-rc.2](https://github.com/sendbird/sendbird-calls-react-native/compare/v1.0.0-rc.1...v1.0.0-rc.2) (2022-09-05)
+
 # [1.0.0-rc.1](https://github.com/sendbird/sendbird-calls-react-native/compare/v1.0.0-rc.0...v1.0.0-rc.1) (2022-09-05)
 
 
