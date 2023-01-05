@@ -118,6 +118,9 @@
         "preset": "angular",
         "infile": "CHANGELOG.md"
       }
+    },
+    "hooks": {
+      "after:bump": "yarn build"
     }
   },
   "react-native-builder-bob": {
