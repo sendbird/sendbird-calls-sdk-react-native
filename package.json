@@ -120,7 +120,7 @@
       }
     },
     "hooks": {
-      "after:bump": "yarn build"
+      "after:bump": "yarn build && yarn docs"
     }
   },
   "react-native-builder-bob": {
