@@ -4,7 +4,7 @@ metadata:
   name: sendbird-calls-sdk-react-native-dev
   description: Calls SDK for React-Native (for development)
   annotations:
-    github.com/project-slug: sendbird-calls-sdk-react-native-dev
+    github.com/project-slug: sendbird/sendbird-calls-sdk-react-native-dev
 spec:
   type: library
   lifecycle: production
