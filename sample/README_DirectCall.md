@@ -1,3 +1,9 @@
+# This is a sample for Call SDK development
+
+Please check our official quickstart from here: https://github.com/sendbird/sendbird-calls-directcall-quickstart-react-native
+
+---
+
 # Sendbird Calls for React-Native Quickstart
 
 ![Platform](https://img.shields.io/badge/platform-React--Native-black.svg)

@@ -589,11 +589,11 @@ call.end();
 
 // receives the event
 directCall.addListener({
-    ...
+  // ...
 
-        onEnded: (callProps: DirectCallProperties) => {
+  onEnded: (callProps: DirectCallProperties) => {
     // Consider releasing or destroying call-related view from here.
-},
+  },
 });
 ```
 
@@ -845,7 +845,7 @@ To enter a room, you must first acquire the room instance from Sendbird server w
 const room = await SendbirdCalls.fetchRoomById(ROOM_ID);
 
 // get cached room instance using ROOM_ID
-const room = await SendbirdCalls.getCachedRoomById(ROOM_ID);
+const cachedRoom = await SendbirdCalls.getCachedRoomById(ROOM_ID);
 ```
 
 #### - enter a room
@@ -977,8 +977,8 @@ const room = await SendbirdCalls.fetchRoomById(ROOM_ID);
 await room.enter()
 
 // get cached room instance using ROOM_ID
-const room = await SendbirdCalls.getCachedRoomById(ROOM_ID);
-await room?.enter()
+const cachedRoom = await SendbirdCalls.getCachedRoomById(ROOM_ID);
+await cachedRoom?.enter()
 
 // receives the event
 room.addListener({
@@ -1066,21 +1066,22 @@ room.addListener({
 By passing the `participant` instance and `ROOM_ID` to the `GroupCallVideoView` component, you can display the streamed view on the screen. Group calls can have up to 6 people, so you should need to think about how to arrange views on the screen depending on the number of participants.
 
 ```tsx
-import { GroupCallVideoView, SendbirdCalls } from '@sendbird/calls-react-native';
+import { useEffect, useState } from 'react';
+
+import { GroupCallVideoView, Room, SendbirdCalls } from '@sendbird/calls-react-native';
 
 const YourApp = () => {
-  const room = await SendbirdCalls.getCachedRoomById(ROOM_ID);
+  const [room, setRoom] = useState<Room>();
+
+  useEffect(() => {
+    SendbirdCalls.getCachedRoomById(ROOM_ID).then((room) => setRoom(room));
+  }, []);
 
   return (
     <View>
-      {room.participants.map((participant) => (
-        <GroupCallVideoView
-          participant={participant}
-          roomId={room.roomId}
-          resizeMode={'contain'}
-          style={{}}
-        />
-      )}
+      {room?.participants.map((participant) => (
+        <GroupCallVideoView participant={participant} roomId={room.roomId} resizeMode={'contain'} />
+      ))}
     </View>
   );
 };
