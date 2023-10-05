@@ -34,7 +34,7 @@ For more details on **installing and configuring the Calls SDK for React-Native*
 Install dependencies (`node_modules` and `Pods`)
 
 ```shell
-$ npm install
+$ yarn install
 $ npx pod-install
 ```
 
