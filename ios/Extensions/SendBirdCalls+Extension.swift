@@ -236,6 +236,7 @@ extension DirectCallEndResult {
         case DIAL_FAILED
         case ACCEPT_FAILED
         case OTHER_DEVICE_ACCEPTED
+        case NOT_CONNECTED
         
         init(origin: DirectCallEndResult) {
             switch origin {
@@ -261,6 +262,8 @@ extension DirectCallEndResult {
                 self = .ACCEPT_FAILED
             case .otherDeviceAccepted:
                 self = .OTHER_DEVICE_ACCEPTED
+            case .notConnected:
+                self = .NOT_CONNECTED
             @unknown default:
                 self = .UNKNOWN
             }
@@ -290,6 +293,8 @@ extension DirectCallEndResult {
                 return .acceptFailed
             case .OTHER_DEVICE_ACCEPTED:
                 return .otherDeviceAccepted
+            case .NOT_CONNECTED:
+                return .notConnected
             }
         }
     }

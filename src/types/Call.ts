@@ -415,6 +415,8 @@ export enum DirectCallEndResult {
 
   /** Unknown **/
   UNKNOWN = 'UNKNOWN',
+
+  NOT_CONNECTED = 'NOT_CONNECTED',
 }
 
 export enum DirectCallUserRole {

@@ -4,6 +4,7 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReadableMap
 import com.sendbird.calls.DirectCall
+import com.sendbird.calls.RoomInvitation
 import com.sendbird.calls.SendBirdCall
 import com.sendbird.calls.handler.CompletionHandler
 import com.sendbird.calls.handler.SendBirdCallListener
@@ -48,6 +49,9 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
         )
 
         call.setListener(CallsDirectCallListener(this))
+    }
+    override fun onInvitationReceived(invitation: RoomInvitation) {
+        TODO("Not yet implemented")
     }
 
     /** Common module interface **/
