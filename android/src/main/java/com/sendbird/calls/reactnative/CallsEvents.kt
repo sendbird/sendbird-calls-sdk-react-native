@@ -1,12 +1,11 @@
 package com.sendbird.calls.reactnative
 
-import android.util.Log
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
-import com.sendbird.calls.reactnative.module.CallsModule
 import com.sendbird.calls.reactnative.utils.CallsUtils
+import com.sendbird.calls.reactnative.utils.RNCallsLogger
 
 fun defaultType(type: String): String {
     return "${CallsEvents.EVENT_DEFAULT}.${type}"
@@ -61,7 +60,7 @@ class CallsEvents {
         val TYPE_GROUP_CALL_ON_CUSTOM_ITEMS_DELETED = groupCallType("onCustomItemsDeleted")
 
         fun sendEvent(reactContext: ReactContext, event: String, eventType: String, data: WritableMap) {
-            Log.d(CallsModule.NAME, "[CallsEvents] sendEvent() $event++$eventType")
+            RNCallsLogger.d("[CallsEvents] sendEvent() $event++$eventType")
 
             reactContext
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
@@ -72,7 +71,7 @@ class CallsEvents {
         }
 
         fun sendEvent(reactContext: ReactContext, event: String, eventType: String, data: WritableMap, additionalData: Any) {
-            Log.d(CallsModule.NAME, "[CallsEvents] sendEvent() $event++$eventType")
+            RNCallsLogger.d("[CallsEvents] sendEvent() $event++$eventType")
 
             reactContext
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)

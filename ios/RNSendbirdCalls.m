@@ -44,6 +44,9 @@ RCT_EXTERN_METHOD(queryRelease
 
 
 // MARK: - SendbirdCalls: Common
+RCT_EXTERN_METHOD(setLoggerLevel
+                  : (NSString *)level)
+
 RCT_EXTERN_METHOD(addDirectCallSound
                   : (NSString *)type
                   : (NSString *)fileName)

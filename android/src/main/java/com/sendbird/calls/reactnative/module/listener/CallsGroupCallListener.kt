@@ -1,17 +1,17 @@
 package com.sendbird.calls.reactnative.module.listener
 
-import android.util.Log
 import com.facebook.react.bridge.Arguments
 import com.sendbird.calls.*
 import com.sendbird.calls.reactnative.CallsEvents
 import com.sendbird.calls.reactnative.extension.asString
 import com.sendbird.calls.reactnative.module.CallsModule
 import com.sendbird.calls.reactnative.utils.CallsUtils
+import com.sendbird.calls.reactnative.utils.RNCallsLogger
 
 class CallsGroupCallListener(private val root: CallsModule, private val room: Room): RoomListener {
     override fun onDeleted() {
         val from = "groupCall/onDeleted"
-        Log.d(CallsModule.NAME, "[GroupCallListener] $from -> roomId(${room.roomId})")
+        RNCallsLogger.d("[GroupCallListener] $from -> roomId(${room.roomId})")
         CallsEvents.sendEvent(
             root.reactContext,
             CallsEvents.EVENT_GROUP_CALL,
@@ -22,7 +22,7 @@ class CallsGroupCallListener(private val root: CallsModule, private val room: Ro
 
     override fun onError(e: SendBirdException, participant: Participant?) {
         val from = "groupCall/onError"
-        Log.d(CallsModule.NAME, "[GroupCallListener] $from -> roomId(${room.roomId}) e($e) participant($participant)")
+        RNCallsLogger.d("[GroupCallListener] $from -> roomId(${room.roomId}) e($e) participant($participant)")
         CallsEvents.sendEvent(
             root.reactContext,
             CallsEvents.EVENT_GROUP_CALL,
@@ -38,7 +38,7 @@ class CallsGroupCallListener(private val root: CallsModule, private val room: Ro
 
     override fun onRemoteParticipantEntered(participant: RemoteParticipant) {
         val from = "groupCall/onRemoteParticipantEntered"
-        Log.d(CallsModule.NAME, "[GroupCallListener] $from -> roomId(${room.roomId}) participant($participant)")
+        RNCallsLogger.d("[GroupCallListener] $from -> roomId(${room.roomId}) participant($participant)")
         CallsUtils.convertParticipantToJsMap(participant)?.let {
             CallsEvents.sendEvent(
                 root.reactContext,
@@ -54,7 +54,7 @@ class CallsGroupCallListener(private val root: CallsModule, private val room: Ro
 
     override fun onRemoteParticipantExited(participant: RemoteParticipant) {
         val from = "groupCall/onRemoteParticipantExited"
-        Log.d(CallsModule.NAME, "[GroupCallListener] $from -> roomId(${room.roomId}) participant($participant)")
+        RNCallsLogger.d("[GroupCallListener] $from -> roomId(${room.roomId}) participant($participant)")
         CallsUtils.convertParticipantToJsMap(participant)?.let {
             CallsEvents.sendEvent(
                 root.reactContext,
@@ -70,7 +70,7 @@ class CallsGroupCallListener(private val root: CallsModule, private val room: Ro
 
     override fun onRemoteParticipantStreamStarted(participant: RemoteParticipant) {
         val from = "groupCall/onRemoteParticipantStreamStarted"
-        Log.d(CallsModule.NAME, "[GroupCallListener] $from -> roomId(${room.roomId}) participant($participant)")
+        RNCallsLogger.d("[GroupCallListener] $from -> roomId(${room.roomId}) participant($participant)")
         CallsUtils.convertParticipantToJsMap(participant)?.let {
             CallsEvents.sendEvent(
                 root.reactContext,
@@ -86,7 +86,7 @@ class CallsGroupCallListener(private val root: CallsModule, private val room: Ro
 
     override fun onAudioDeviceChanged(currentAudioDevice: AudioDevice?, availableAudioDevices: Set<AudioDevice>) {
         val from = "groupCall/onAudioDeviceChanged"
-        Log.d(CallsModule.NAME, "[GroupCallListener] $from -> roomId(${room.roomId}) currentAudioDevice($currentAudioDevice) availableAudioDevices($availableAudioDevices)")
+        RNCallsLogger.d("[GroupCallListener] $from -> roomId(${room.roomId}) currentAudioDevice($currentAudioDevice) availableAudioDevices($availableAudioDevices)")
         CallsEvents.sendEvent(
             root.reactContext,
             CallsEvents.EVENT_GROUP_CALL,
@@ -101,7 +101,7 @@ class CallsGroupCallListener(private val root: CallsModule, private val room: Ro
 
     override fun onRemoteVideoSettingsChanged(participant: RemoteParticipant) {
         val from = "groupCall/onRemoteVideoSettingsChanged"
-        Log.d(CallsModule.NAME, "[GroupCallListener] $from -> roomId(${room.roomId}) participant($participant)")
+        RNCallsLogger.d("[GroupCallListener] $from -> roomId(${room.roomId}) participant($participant)")
         CallsUtils.convertParticipantToJsMap(participant)?.let {
             CallsEvents.sendEvent(
                 root.reactContext,
@@ -117,7 +117,7 @@ class CallsGroupCallListener(private val root: CallsModule, private val room: Ro
 
     override fun onRemoteAudioSettingsChanged(participant: RemoteParticipant) {
         val from = "groupCall/onRemoteAudioSettingsChanged"
-        Log.d(CallsModule.NAME, "[GroupCallListener] $from -> roomId(${room.roomId}) participant($participant)")
+        RNCallsLogger.d("[GroupCallListener] $from -> roomId(${room.roomId}) participant($participant)")
         CallsUtils.convertParticipantToJsMap(participant)?.let {
             CallsEvents.sendEvent(
                 root.reactContext,
@@ -133,7 +133,7 @@ class CallsGroupCallListener(private val root: CallsModule, private val room: Ro
 
     override fun onCustomItemsUpdated(updatedKeys: List<String>) {
         val from = "groupCall/onCustomItemsUpdated"
-        Log.d(CallsModule.NAME, "[GroupCallListener] $from -> roomId(${room.roomId}) updatedKeys(${updatedKeys.joinToString(", ")})")
+        RNCallsLogger.d("[GroupCallListener] $from -> roomId(${room.roomId}) updatedKeys(${updatedKeys.joinToString(", ")})")
         CallsEvents.sendEvent(
             root.reactContext,
             CallsEvents.EVENT_GROUP_CALL,
@@ -147,7 +147,7 @@ class CallsGroupCallListener(private val root: CallsModule, private val room: Ro
 
     override fun onCustomItemsDeleted(deletedKeys: List<String>) {
         val from = "groupCall/onCustomItemsDeleted"
-        Log.d(CallsModule.NAME, "[GroupCallListener] $from -> roomId(${room.roomId}) updatedKeys(${deletedKeys.joinToString(", ")})")
+        RNCallsLogger.d("[GroupCallListener] $from -> roomId(${room.roomId}) updatedKeys(${deletedKeys.joinToString(", ")})")
         CallsEvents.sendEvent(
             root.reactContext,
             CallsEvents.EVENT_GROUP_CALL,

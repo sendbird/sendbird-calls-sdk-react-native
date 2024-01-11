@@ -301,3 +301,35 @@ extension DirectCallEndResult {
         self = DirectCallEndResultHelper(rawValue: fromString)?.asOrigin ?? .unknown
     }
 }
+
+extension SBCLogger.Level {
+    var asString: String {
+        switch self {
+        case .none:
+            return "none"
+        case .error:
+            return "error"
+        case .warning:
+            return "warning"
+        case .info:
+            return "info"
+        @unknown default:
+            return "none"
+        }
+    }
+    
+    init(fromString: String) {
+        switch fromString {
+        case "none":
+            self = .none
+        case "error":
+            self = .error
+        case "warning":
+            self = .warning
+        case "info":
+            self = .info
+        default:
+            self = .none
+        }
+    }
+}

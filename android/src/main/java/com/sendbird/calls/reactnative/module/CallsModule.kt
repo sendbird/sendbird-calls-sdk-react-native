@@ -1,6 +1,5 @@
 package com.sendbird.calls.reactnative.module
 
-import android.util.Log
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReadableMap
@@ -12,6 +11,7 @@ import com.sendbird.calls.reactnative.CallsEvents
 import com.sendbird.calls.reactnative.module.listener.CallsDirectCallListener
 import com.sendbird.calls.reactnative.module.listener.CallsGroupCallListener
 import com.sendbird.calls.reactnative.utils.CallsUtils
+import com.sendbird.calls.reactnative.utils.RNCallsLogger
 
 class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct, SendBirdCallListener() {
     var initialized = false
@@ -27,7 +27,7 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
         SendBirdCall.Options.removeDirectCallSound(SendBirdCall.SoundType.RECONNECTING)
 
         if(initialized) {
-            Log.d(NAME, "[CallsModule] invalidate()")
+            RNCallsLogger.d("[CallsModule] invalidate()")
             SendBirdCall.removeAllListeners()
             SendBirdCall.removeAllRecordingListeners()
             SendBirdCall.deauthenticate(handler)
@@ -38,7 +38,7 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
     }
 
     override fun onRinging(call: DirectCall) {
-        Log.d(NAME, "[CallsModule] onRinging() -> $call")
+        RNCallsLogger.d("[CallsModule] onRinging() -> $call")
         // foreground -> sendEvent
         CallsEvents.sendEvent(
             reactContext,
@@ -51,6 +51,7 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
     }
 
     /** Common module interface **/
+    override fun setLoggerLevel(level: String) = commonModule.setLoggerLevel(level)
     override fun addDirectCallSound(type: String, fileName: String) = commonModule.addDirectCallSound(type, fileName)
     override fun removeDirectCallSound(type: String) = commonModule.removeDirectCallSound(type)
     override fun setDirectCallDialingSoundOnWhenSilentOrVibrateMode(enabled: Boolean) = commonModule.setDirectCallDialingSoundOnWhenSilentOrVibrateMode(enabled)
@@ -58,7 +59,7 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
     override fun getOngoingCalls(promise: Promise) = commonModule.getOngoingCalls(promise)
     override fun getDirectCall(callId: String, promise: Promise) = commonModule.getDirectCall(callId, promise)
     override fun initialize(appId: String): Boolean {
-        Log.d(NAME, "[CallsModule] initialize() -> $appId")
+        RNCallsLogger.d("[CallsModule] initialize() -> $appId")
         initialized = commonModule.initialize(appId)
         SendBirdCall.addListener("sendbird.call.listener", this)
         return initialized

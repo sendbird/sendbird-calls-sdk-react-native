@@ -87,6 +87,10 @@ extension RNSendbirdCalls {
 
 // MARK: Common
 extension RNSendbirdCalls {
+    @objc func setLoggerLevel(_ level: String) {
+        module.setLoggerLevel(level)
+    }
+    
     @objc func addDirectCallSound(_ type: String, _ fileName: String) {
         module.addDirectCallSound(type, fileName)
     }
