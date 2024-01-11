@@ -151,5 +151,8 @@
         }
       ]
     ]
+  },
+  "resolutions": {
+    "@types/react": "^18.2.47"
   }
 }
