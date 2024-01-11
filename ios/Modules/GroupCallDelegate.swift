@@ -47,6 +47,26 @@ class GroupCallDelegate: RoomDelegate {
         }
     }
     
+    func didLocalParticipantDisconnect(_ participant: LocalParticipant) {
+        DispatchQueue.main.async {
+            CallsEvents.shared.sendEvent(.groupCall(.onLocalParticipantDisconnected),
+                                         CallsUtils.convertRoomToDict(self.room)!,
+                                         [
+                                            "participant": CallsUtils.convertParticipantToDict(participant)
+                                         ])
+        }
+    }
+    
+    func didLocalParticipantReconnect(_ participant: LocalParticipant) {
+        DispatchQueue.main.async {
+            CallsEvents.shared.sendEvent(.groupCall(.onLocalParticipantReconnected),
+                                         CallsUtils.convertRoomToDict(self.room)!,
+                                         [
+                                            "participant": CallsUtils.convertParticipantToDict(participant)
+                                         ])
+        }
+    }
+    
     func didRemoteParticipantEnter(_ participant: RemoteParticipant) {
         DispatchQueue.main.async {
             CallsEvents.shared.sendEvent(.groupCall(.onRemoteParticipantEntered),

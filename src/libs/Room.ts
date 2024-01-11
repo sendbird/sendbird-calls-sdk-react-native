@@ -135,6 +135,14 @@ export class Room implements RoomProperties, GroupCallMethods {
           listener.onError?.(error, participant);
           break;
         }
+        case GroupCallEventType.ON_LOCAL_PARTICIPANT_DISCONNECTED: {
+          listener.onLocalParticipantDisconnected?.(Participant.get(additionalData?.participant) as Participant);
+          break;
+        }
+        case GroupCallEventType.ON_LOCAL_PARTICIPANT_RECONNECTED: {
+          listener.onLocalParticipantReconnected?.(Participant.get(additionalData?.participant) as Participant);
+          break;
+        }
         case GroupCallEventType.ON_REMOTE_PARTICIPANT_ENTERED: {
           listener.onRemoteParticipantEntered?.(Participant.get(additionalData?.participant) as Participant);
           break;

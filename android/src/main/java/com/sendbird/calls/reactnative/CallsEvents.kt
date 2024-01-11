@@ -50,6 +50,8 @@ class CallsEvents {
         // Group
         val TYPE_GROUP_CALL_ON_DELETED = groupCallType("onDeleted")
         val TYPE_GROUP_CALL_ON_ERROR = groupCallType("onError")
+        val TYPE_GROUP_CALL_ON_LOCAL_PARTICIPANT_DISCONNECTED = groupCallType("onLocalParticipantDisconnected")
+        val TYPE_GROUP_CALL_ON_LOCAL_PARTICIPANT_RECONNECTED = groupCallType("onLocalParticipantReconnected")
         val TYPE_GROUP_CALL_ON_REMOTE_PARTICIPANT_ENTERED = groupCallType("onRemoteParticipantEntered")
         val TYPE_GROUP_CALL_ON_REMOTE_PARTICIPANT_EXITED = groupCallType("onRemoteParticipantExited")
         val TYPE_GROUP_CALL_ON_REMOTE_PARTICIPANT_STREAM_STARTED = groupCallType("onRemoteParticipantStreamStarted")

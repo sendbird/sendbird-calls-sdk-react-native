@@ -30,6 +30,20 @@ export interface RoomListener {
   onError: (e: SendbirdError, participant: Participant | null) => void;
 
   /**
+   * Called when the local participant's connection with the server has been interrupted.
+   *
+   * @since 1.1.0
+   */
+  onLocalParticipantDisconnected: (participant: Participant) => void;
+
+  /**
+   * Called when the local participant's connection with the server has been established.
+   *
+   * @since 1.1.0
+   */
+  onLocalParticipantReconnected: (participant: Participant) => void;
+
+  /**
    * Called when a remote participant entered the room.
    *
    * @since 1.0.0

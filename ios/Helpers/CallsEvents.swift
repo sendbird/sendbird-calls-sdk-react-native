@@ -61,6 +61,8 @@ class CallsEvents {
     enum GroupCallEventType: String, CaseIterable {
         case onDeleted
         case onError
+        case onLocalParticipantDisconnected
+        case onLocalParticipantReconnected
         case onRemoteParticipantEntered
         case onRemoteParticipantExited
         case onRemoteParticipantStreamStarted

@@ -48,6 +48,8 @@ export enum DirectCallEventType {
 export enum GroupCallEventType {
   ON_DELETED = 'sendbird.call.group.onDeleted',
   ON_ERROR = 'sendbird.call.group.onError',
+  ON_LOCAL_PARTICIPANT_DISCONNECTED = 'sendbird.call.group.onLocalParticipantDisconnected',
+  ON_LOCAL_PARTICIPANT_RECONNECTED = 'sendbird.call.group.onLocalParticipantReconnected',
   ON_REMOTE_PARTICIPANT_ENTERED = 'sendbird.call.group.onRemoteParticipantEntered',
   ON_REMOTE_PARTICIPANT_EXITED = 'sendbird.call.group.onRemoteParticipantExited',
   ON_REMOTE_PARTICIPANT_STREAM_STARTED = 'sendbird.call.group.onRemoteParticipantStreamStarted',
