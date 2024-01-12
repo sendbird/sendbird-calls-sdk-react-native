@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.0.3...v1.1.0) (2024-01-12)
+
+
+### Features
+
+* **CLNP-1920:** sdk update, integrate logger ([#38](https://github.com/sendbird/sendbird-calls-sdk-react-native/issues/38)) ([4ce705a](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/4ce705ad5630d22ffba54dbc0281e28eaa141212))
+
 ## [1.0.3](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.0.2...v1.0.3) (2023-10-10)
 
 ## [1.0.2](https://github.com/sendbird/sendbird-calls-react-native/compare/v1.0.1...v1.0.2) (2023-01-05)

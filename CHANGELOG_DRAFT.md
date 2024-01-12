@@ -1,3 +1,6 @@
-## v1.0.3
+## v1.1.0
 
-- Support AGP 8+ (To support React-Native 0.73+)
+- Updated native SDK
+  - Added `onLocalParticipantReconnected` and `onLocalParticipantDisconnected` to group call events
+  - Added `NOT_CONNECTED` to DirectCallEndResult
+- Integrated logger with native
