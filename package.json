@@ -27,7 +27,7 @@
     "test:build": "yarn build && yarn clean",
     "test:tsc": "tsc --noEmit",
     "typescript": "tsc --noEmit",
-    "build": "bob build && cp package.json lib/package.json",
+    "build": "bob build && node scripts/postbuild.js",
     "clean": "del lib",
     "release": "release-it",
     "release:local": "npx yalc publish",
@@ -151,5 +151,8 @@
         }
       ]
     ]
+  },
+  "resolutions": {
+    "@types/react": "^18.2.47"
   }
 }

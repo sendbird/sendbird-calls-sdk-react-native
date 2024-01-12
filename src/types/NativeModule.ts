@@ -28,6 +28,8 @@ export interface NativeCommonModule {
   applicationId: string;
   currentUser: User | null;
 
+  setLoggerLevel(level: 'none' | 'error' | 'warning' | 'info'): void;
+
   addDirectCallSound(type: SoundType, fileName: string): void;
   removeDirectCallSound(type: SoundType): void;
   setDirectCallDialingSoundOnWhenSilentOrVibrateMode(enabled: boolean): void;

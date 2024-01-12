@@ -1,10 +1,10 @@
 package com.sendbird.calls.reactnative
 
-import android.util.Log
 import com.facebook.react.bridge.*
 import com.sendbird.calls.SendBirdCall
 import com.sendbird.calls.reactnative.module.CallsModule
 import com.sendbird.calls.reactnative.module.CallsModuleStruct
+import com.sendbird.calls.reactnative.utils.RNCallsLogger
 
 class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext),
     CallsModuleStruct {
@@ -38,9 +38,12 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     @ReactMethod
     fun handleFirebaseMessageData(data: ReadableMap) {
         val map = data.toHashMap() as Map<String, String>
-        Log.d(CallsModule.NAME, "[RNSendbirdCallsModule] handleFirebaseMessageData() -> ${map}")
+        RNCallsLogger.d("[RNSendbirdCallsModule] handleFirebaseMessageData() -> ${map}")
         SendBirdCall.handleFirebaseMessageData(map)
     }
+
+    @ReactMethod
+    override fun setLoggerLevel(level: String) = module.setLoggerLevel(level)
 
     @ReactMethod
     override fun addDirectCallSound(type: String, fileName: String) = module.addDirectCallSound(type, fileName)

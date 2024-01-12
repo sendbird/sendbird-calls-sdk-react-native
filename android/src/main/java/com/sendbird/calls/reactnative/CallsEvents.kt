@@ -1,12 +1,11 @@
 package com.sendbird.calls.reactnative
 
-import android.util.Log
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
-import com.sendbird.calls.reactnative.module.CallsModule
 import com.sendbird.calls.reactnative.utils.CallsUtils
+import com.sendbird.calls.reactnative.utils.RNCallsLogger
 
 fun defaultType(type: String): String {
     return "${CallsEvents.EVENT_DEFAULT}.${type}"
@@ -51,6 +50,8 @@ class CallsEvents {
         // Group
         val TYPE_GROUP_CALL_ON_DELETED = groupCallType("onDeleted")
         val TYPE_GROUP_CALL_ON_ERROR = groupCallType("onError")
+        val TYPE_GROUP_CALL_ON_LOCAL_PARTICIPANT_DISCONNECTED = groupCallType("onLocalParticipantDisconnected")
+        val TYPE_GROUP_CALL_ON_LOCAL_PARTICIPANT_RECONNECTED = groupCallType("onLocalParticipantReconnected")
         val TYPE_GROUP_CALL_ON_REMOTE_PARTICIPANT_ENTERED = groupCallType("onRemoteParticipantEntered")
         val TYPE_GROUP_CALL_ON_REMOTE_PARTICIPANT_EXITED = groupCallType("onRemoteParticipantExited")
         val TYPE_GROUP_CALL_ON_REMOTE_PARTICIPANT_STREAM_STARTED = groupCallType("onRemoteParticipantStreamStarted")
@@ -61,7 +62,7 @@ class CallsEvents {
         val TYPE_GROUP_CALL_ON_CUSTOM_ITEMS_DELETED = groupCallType("onCustomItemsDeleted")
 
         fun sendEvent(reactContext: ReactContext, event: String, eventType: String, data: WritableMap) {
-            Log.d(CallsModule.NAME, "[CallsEvents] sendEvent() $event++$eventType")
+            RNCallsLogger.d("[CallsEvents] sendEvent() $event++$eventType")
 
             reactContext
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
@@ -72,7 +73,7 @@ class CallsEvents {
         }
 
         fun sendEvent(reactContext: ReactContext, event: String, eventType: String, data: WritableMap, additionalData: Any) {
-            Log.d(CallsModule.NAME, "[CallsEvents] sendEvent() $event++$eventType")
+            RNCallsLogger.d("[CallsEvents] sendEvent() $event++$eventType")
 
             reactContext
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)

@@ -6,6 +6,8 @@ import com.facebook.react.bridge.ReadableMap
 interface CallsModuleStruct: CommonModule, DirectCallModule, GroupCallModule { }
 
 interface CommonModule {
+    fun setLoggerLevel(level: String)
+
     fun addDirectCallSound(type: String, fileName: String)
     fun removeDirectCallSound(type: String)
     fun setDirectCallDialingSoundOnWhenSilentOrVibrateMode(enabled: Boolean)

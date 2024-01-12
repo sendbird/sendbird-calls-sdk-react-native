@@ -68,6 +68,10 @@ class CallsModule: SendBirdCallDelegate {
 
 // MARK: CommonModule extension
 extension CallsModule: CallsCommonModuleProtocol {
+    func setLoggerLevel(_ level: String) {
+        commonModule.setLoggerLevel(level)
+    }
+    
     func addDirectCallSound(_ type: String, _ fileName: String) {
         commonModule.addDirectCallSound(type, fileName)
     }

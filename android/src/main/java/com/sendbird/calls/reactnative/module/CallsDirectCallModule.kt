@@ -1,6 +1,5 @@
 package com.sendbird.calls.reactnative.module
 
-import android.util.Log
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReadableMap
 import com.sendbird.calls.AcceptParams
@@ -9,11 +8,11 @@ import com.sendbird.calls.CallOptions
 import com.sendbird.calls.reactnative.RNCallsInternalError
 import com.sendbird.calls.reactnative.extension.rejectCalls
 import com.sendbird.calls.reactnative.utils.CallsUtils
+import com.sendbird.calls.reactnative.utils.RNCallsLogger
 
 class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
     override fun accept(callId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise) {
-        Log.d(CallsModule.NAME, "[DirectCallModule] accept() -> $callId")
-        Log.d(CallsModule.NAME, "[DirectCallModule] accept options -> ${options.toHashMap()}")
+        RNCallsLogger.d("[DirectCallModule] accept() -> $callId")
 
         CallsUtils.safeRun(promise) {
             val from = "directCall/accept"
@@ -54,7 +53,7 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
     }
 
     override fun end(callId: String, promise: Promise) {
-        Log.d(CallsModule.NAME, "[DirectCallModule] end() -> $callId")
+        RNCallsLogger.d("[DirectCallModule] end() -> $callId")
 
         CallsUtils.safeRun(promise) {
             val from = "directCall/end"
@@ -64,7 +63,7 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
     }
 
     override fun updateLocalVideoView(callId: String, videoViewId: Int) {
-        Log.d(CallsModule.NAME, "[DirectCallModule] updateLocalVideoView() -> $callId / $videoViewId")
+        RNCallsLogger.d("[DirectCallModule] updateLocalVideoView() -> $callId / $videoViewId")
 
         CallsUtils.safeRun {
             val from = "directCall/updateLocalVideoView"
@@ -75,7 +74,7 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
     }
 
     override fun updateRemoteVideoView(callId: String, videoViewId: Int) {
-        Log.d(CallsModule.NAME, "[DirectCallModule] updateRemoteVideoView() -> $callId / $videoViewId")
+        RNCallsLogger.d("[DirectCallModule] updateRemoteVideoView() -> $callId / $videoViewId")
 
         CallsUtils.safeRun {
             val from = "directCall/updateRemoteVideoView"
@@ -114,7 +113,7 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
     
     override fun muteMicrophone(type: String, identifier: String) {
         val from = "directCall/muteMicrophone"
-        Log.d(CallsModule.NAME, "[DirectCallModule] $from ($identifier)")
+        RNCallsLogger.d("[DirectCallModule] $from ($identifier)")
 
         CallsUtils.safeRun {
             CallsUtils.findDirectCall(identifier, from).muteMicrophone()
@@ -123,7 +122,7 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
 
     override fun unmuteMicrophone(type: String, identifier: String) {
         val from = "directCall/unmuteMicrophone"
-        Log.d(CallsModule.NAME, "[DirectCallModule] $from ($identifier)")
+        RNCallsLogger.d("[DirectCallModule] $from ($identifier)")
 
         CallsUtils.safeRun {
             CallsUtils.findDirectCall(identifier, from).unmuteMicrophone()
@@ -132,7 +131,7 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
 
     override fun stopVideo(type: String, identifier: String) {
         val from = "directCall/stopVideo"
-        Log.d(CallsModule.NAME, "[DirectCallModule] $from ($identifier)")
+        RNCallsLogger.d("[DirectCallModule] $from ($identifier)")
 
         CallsUtils.safeRun {
             CallsUtils.findDirectCall(identifier, from).stopVideo()
@@ -141,7 +140,7 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
 
     override fun startVideo(type: String, identifier: String) {
         val from = "directCall/startVideo"
-        Log.d(CallsModule.NAME, "[DirectCallModule] $from ($identifier)")
+        RNCallsLogger.d("[DirectCallModule] $from ($identifier)")
 
         CallsUtils.safeRun {
             CallsUtils.findDirectCall(identifier, from).startVideo()
@@ -150,7 +149,7 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
 
     override fun switchCamera(type: String, identifier: String, promise: Promise) {
         val from = "directCall/switchCamera"
-        Log.d(CallsModule.NAME, "[DirectCallModule] $from ($identifier)")
+        RNCallsLogger.d("[DirectCallModule] $from ($identifier)")
 
         CallsUtils.safeRun(promise) {
             CallsUtils.findDirectCall(identifier, from).switchCamera { error ->
@@ -167,7 +166,7 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
 
     override fun selectAudioDevice(type: String, identifier: String, device: String, promise: Promise) {
         val from = "directCall/switchCamera"
-        Log.d(CallsModule.NAME, "[DirectCallModule] $from ($identifier)")
+        RNCallsLogger.d("[DirectCallModule] $from ($identifier)")
 
         CallsUtils.safeRun(promise) {
             val audioDevice = AudioDevice.valueOf(device)

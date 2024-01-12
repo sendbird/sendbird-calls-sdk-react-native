@@ -54,7 +54,15 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
    * @since 1.0.0
    */
   public get Logger() {
-    return Logger;
+    return {
+      setLogLevel: (level: 'none' | 'error' | 'warning' | 'info') => {
+        this.setLoggerLevel(level);
+      },
+      getLogLevel: Logger.getLogLevel,
+      info: Logger.info,
+      warn: Logger.warn,
+      error: Logger.error,
+    };
   }
 
   /**
@@ -104,6 +112,16 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   public get RoomState() {
     return RoomState;
   }
+
+  /**
+   * Set logger level
+   *
+   * @since 1.1.0
+   * */
+  setLoggerLevel = (level: 'none' | 'error' | 'warning' | 'info') => {
+    Logger.setLogLevel(level);
+    this.binder.nativeModule.setLoggerLevel(level);
+  };
 
   /**
    * Gets the constants from React-Native Native module

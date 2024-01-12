@@ -236,6 +236,7 @@ extension DirectCallEndResult {
         case DIAL_FAILED
         case ACCEPT_FAILED
         case OTHER_DEVICE_ACCEPTED
+        case NOT_CONNECTED
         
         init(origin: DirectCallEndResult) {
             switch origin {
@@ -261,6 +262,8 @@ extension DirectCallEndResult {
                 self = .ACCEPT_FAILED
             case .otherDeviceAccepted:
                 self = .OTHER_DEVICE_ACCEPTED
+            case .notConnected:
+                self = .NOT_CONNECTED
             @unknown default:
                 self = .UNKNOWN
             }
@@ -290,6 +293,8 @@ extension DirectCallEndResult {
                 return .acceptFailed
             case .OTHER_DEVICE_ACCEPTED:
                 return .otherDeviceAccepted
+            case .NOT_CONNECTED:
+                return .notConnected
             }
         }
     }
@@ -299,5 +304,37 @@ extension DirectCallEndResult {
     }
     init(fromString: String) {
         self = DirectCallEndResultHelper(rawValue: fromString)?.asOrigin ?? .unknown
+    }
+}
+
+extension SBCLogger.Level {
+    var asString: String {
+        switch self {
+        case .none:
+            return "none"
+        case .error:
+            return "error"
+        case .warning:
+            return "warning"
+        case .info:
+            return "info"
+        @unknown default:
+            return "none"
+        }
+    }
+    
+    init(fromString: String) {
+        switch fromString {
+        case "none":
+            self = .none
+        case "error":
+            self = .error
+        case "warning":
+            self = .warning
+        case "info":
+            self = .info
+        default:
+            self = .none
+        }
     }
 }

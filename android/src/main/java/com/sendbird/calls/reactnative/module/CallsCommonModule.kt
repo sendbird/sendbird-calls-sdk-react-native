@@ -1,6 +1,5 @@
 package com.sendbird.calls.reactnative.module
 
-import android.util.Log
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReadableMap
 import com.sendbird.calls.*
@@ -9,31 +8,36 @@ import com.sendbird.calls.reactnative.extension.rejectCalls
 import com.sendbird.calls.reactnative.module.listener.CallsDirectCallListener
 import com.sendbird.calls.reactnative.module.listener.CallsGroupCallListener
 import com.sendbird.calls.reactnative.utils.CallsUtils
+import com.sendbird.calls.reactnative.utils.RNCallsLogger
 
 class CallsCommonModule(private val root: CallsModule): CommonModule {
+    override fun setLoggerLevel(level: String) {
+        RNCallsLogger.setLoggerLevel(level)
+    }
+
     override fun addDirectCallSound(type: String, fileName: String) {
-        Log.d(CallsModule.NAME, "[CommonModule] addDirectCallSound($type, $fileName)")
+        RNCallsLogger.d("[CommonModule] addDirectCallSound($type, $fileName)")
         val soundType = SendBirdCall.SoundType.valueOf(type)
         val resourceId = root.reactContext.resources.getIdentifier(fileName, "raw", root.reactContext.packageName)
         if (resourceId != 0) {
-            Log.d(CallsModule.NAME, "[CommonModule] addDirectCallSound resource $resourceId")
+            RNCallsLogger.d("[CommonModule] addDirectCallSound resource $resourceId")
             SendBirdCall.Options.addDirectCallSound(soundType, resourceId)
         }
     }
 
     override fun removeDirectCallSound(type: String) {
-        Log.d(CallsModule.NAME, "[CommonModule] removeDirectCallSound($type)")
+        RNCallsLogger.d("[CommonModule] removeDirectCallSound($type)")
         val soundType = SendBirdCall.SoundType.valueOf(type)
         SendBirdCall.Options.removeDirectCallSound(soundType)
     }
 
     override fun setDirectCallDialingSoundOnWhenSilentOrVibrateMode(enabled: Boolean) {
-        Log.d(CallsModule.NAME, "[CommonModule] setDirectCallDialingSoundOnWhenSilentOrVibrateMode($enabled)")
+        RNCallsLogger.d("[CommonModule] setDirectCallDialingSoundOnWhenSilentOrVibrateMode($enabled)")
         SendBirdCall.Options.setDirectCallDialingSoundOnWhenSilentOrVibrateMode(enabled)
     }
 
     override fun getCurrentUser(promise: Promise) {
-        Log.d(CallsModule.NAME, "[CommonModule] getCurrentUser()")
+        RNCallsLogger.d("[CommonModule] getCurrentUser()")
         SendBirdCall.currentUser
             ?.let {
                 promise.resolve(CallsUtils.convertUserToJsMap(it))
@@ -44,13 +48,13 @@ class CallsCommonModule(private val root: CallsModule): CommonModule {
     }
 
     override fun getOngoingCalls(promise: Promise) {
-        Log.d(CallsModule.NAME, "[CommonModule] getOngoingCalls()")
+        RNCallsLogger.d("[CommonModule] getOngoingCalls()")
         val list = SendBirdCall.ongoingCalls.map { CallsUtils.convertDirectCallToJsMap(it) }
         promise.resolve(CallsUtils.convertToJsArray(list))
     }
 
     override fun getDirectCall(callId: String, promise: Promise) {
-        Log.d(CallsModule.NAME, "[CommonModule] getDirectCall($callId)")
+        RNCallsLogger.d("[CommonModule] getDirectCall($callId)")
         SendBirdCall.getCall(callId)
             ?.let {
                 promise.resolve(CallsUtils.convertDirectCallToJsMap(it))
@@ -61,12 +65,12 @@ class CallsCommonModule(private val root: CallsModule): CommonModule {
     }
 
     override fun initialize(appId: String): Boolean {
-        Log.d(CallsModule.NAME, "[CommonModule] initialize($appId)")
+        RNCallsLogger.d("[CommonModule] initialize()")
         return SendBirdCall.init(root.reactContext, appId)
     }
 
     override fun authenticate(authParams: ReadableMap, promise: Promise) {
-        Log.d(CallsModule.NAME, "[CommonModule] authenticate(${authParams.toHashMap()})")
+        RNCallsLogger.d("[CommonModule] authenticate()")
 
         val userId = authParams.getString("userId")!!
         val accessToken = CallsUtils.safeGet { authParams.getString("accessToken") }
@@ -86,7 +90,7 @@ class CallsCommonModule(private val root: CallsModule): CommonModule {
     }
 
     override fun deauthenticate(promise: Promise) {
-        Log.d(CallsModule.NAME, "[CommonModule] deauthenticate()")
+        RNCallsLogger.d("[CommonModule] deauthenticate()")
         SendBirdCall.deauthenticate { error ->
             error
                 ?.let {
@@ -99,7 +103,7 @@ class CallsCommonModule(private val root: CallsModule): CommonModule {
     }
 
     override fun registerPushToken(token: String, unique: Boolean, promise: Promise) {
-        Log.d(CallsModule.NAME, "[CommonModule] registerPushToken($token)")
+        RNCallsLogger.d("[CommonModule] registerPushToken()")
         SendBirdCall.registerPushToken(token, unique) { error ->
             error
                 ?.let {
@@ -112,7 +116,7 @@ class CallsCommonModule(private val root: CallsModule): CommonModule {
     }
 
     override fun unregisterPushToken(token: String, promise: Promise) {
-        Log.d(CallsModule.NAME, "[CommonModule] unregisterPushToken($token)")
+        RNCallsLogger.d("[CommonModule] unregisterPushToken()")
         SendBirdCall.unregisterPushToken(token) { error ->
             error
                 ?.let {
@@ -125,8 +129,8 @@ class CallsCommonModule(private val root: CallsModule): CommonModule {
     }
 
     override fun dial(calleeId: String, isVideoCall: Boolean, options: ReadableMap, promise: Promise) {
-        Log.d(CallsModule.NAME, "[CommonModule] dial($calleeId)")
-        Log.d(CallsModule.NAME, "[CommonModule] dial options -> ${options.toHashMap()}")
+        RNCallsLogger.d("[CommonModule] dial($calleeId)")
+        RNCallsLogger.d("[CommonModule] dial options -> ${options.toHashMap()}")
         val from = "common/dial"
 
         val localVideoViewId = CallsUtils.safeGet { options.getInt("localVideoViewId") }
@@ -178,7 +182,7 @@ class CallsCommonModule(private val root: CallsModule): CommonModule {
 
     override fun createRoom(params: ReadableMap, promise: Promise) {
         val roomType = CallsUtils.safeGet { params.getString("roomType") } ?: "SMALL_ROOM_FOR_VIDEO"
-        Log.d(CallsModule.NAME, "[CommonModule] createRoom($roomType)")
+        RNCallsLogger.d("[CommonModule] createRoom($roomType)")
 
         val roomParams = RoomParams(RoomType.valueOf(roomType.uppercase()))
         SendBirdCall.createRoom(roomParams) { room, error ->
@@ -193,7 +197,7 @@ class CallsCommonModule(private val root: CallsModule): CommonModule {
     }
 
     override fun fetchRoomById(roomId: String, promise: Promise) {
-        Log.d(CallsModule.NAME, "[CommonModule] fetchRoomById($roomId)")
+        RNCallsLogger.d("[CommonModule] fetchRoomById($roomId)")
         SendBirdCall.fetchRoomById(roomId) { room, error ->
             error?.let {
                 promise.rejectCalls(it)
@@ -206,7 +210,7 @@ class CallsCommonModule(private val root: CallsModule): CommonModule {
     }
 
     override fun getCachedRoomById(roomId: String , promise: Promise) {
-        Log.d(CallsModule.NAME, "[CommonModule] getCachedRoomById($roomId)")
+        RNCallsLogger.d("[CommonModule] getCachedRoomById($roomId)")
         SendBirdCall.getCachedRoomById(roomId)
             ?.let {
                 promise.resolve(CallsUtils.convertRoomToJsMap(it))

@@ -23,7 +23,7 @@ import Palette from './src/shared/styles/palette';
 
 LogBox.ignoreLogs(['Sending `RNCallKeepDidChangeAudioRoute` with no listeners registered.']);
 
-SendbirdCalls.Logger.setLogLevel('debug');
+SendbirdCalls.Logger.setLogLevel('info');
 SendbirdCalls.initialize(APP_ID);
 
 const isGroupCall = INITIAL_ROUTE === 'group-call';

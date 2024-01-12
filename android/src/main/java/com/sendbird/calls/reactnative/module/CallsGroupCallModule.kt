@@ -1,17 +1,17 @@
 package com.sendbird.calls.reactnative.module
 
-import android.util.Log
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReadableMap
 import com.sendbird.calls.*
 import com.sendbird.calls.reactnative.RNCallsInternalError
 import com.sendbird.calls.reactnative.extension.rejectCalls
 import com.sendbird.calls.reactnative.utils.CallsUtils
+import com.sendbird.calls.reactnative.utils.RNCallsLogger
 
 class CallsGroupCallModule: GroupCallModule {
     override fun enter(roomId: String, options: ReadableMap, promise: Promise) {
         val from = "groupCall/enter"
-        Log.d(CallsModule.NAME, "[GroupCallModule] $from -> roomId($roomId) options(${options.toHashMap()})")
+        RNCallsLogger.d("[GroupCallModule] $from -> roomId($roomId) options(${options.toHashMap()})")
         SendBirdCall.getCachedRoomById(roomId)
             ?.let {
                 val audioEnabled = CallsUtils.safeGet { options.getBoolean("audioEnabled") }
@@ -43,7 +43,7 @@ class CallsGroupCallModule: GroupCallModule {
 
     override fun exit(roomId: String) {
         val from = "groupCall/exit"
-        Log.d(CallsModule.NAME, "[GroupCallModule] $from -> roomId($roomId)")
+        RNCallsLogger.d("[GroupCallModule] $from -> roomId($roomId)")
         CallsUtils.safeRun {
             CallsUtils.findRoom(roomId, from).exit()
         }
@@ -51,7 +51,7 @@ class CallsGroupCallModule: GroupCallModule {
 
     override fun muteMicrophone(type: String, identifier: String) {
         val from = "groupCall/muteMicrophone"
-        Log.d(CallsModule.NAME, "[GroupCallModule] $from ($identifier)")
+        RNCallsLogger.d("[GroupCallModule] $from ($identifier)")
 
         CallsUtils.safeRun {
             CallsUtils.findRoom(identifier, from).localParticipant?.muteMicrophone()
@@ -60,7 +60,7 @@ class CallsGroupCallModule: GroupCallModule {
 
     override fun unmuteMicrophone(type: String, identifier: String) {
         val from = "groupCall/unmuteMicrophone"
-        Log.d(CallsModule.NAME, "[GroupCallModule] $from ($identifier)")
+        RNCallsLogger.d("[GroupCallModule] $from ($identifier)")
 
         CallsUtils.safeRun {
             CallsUtils.findRoom(identifier, from).localParticipant?.unmuteMicrophone()
@@ -69,7 +69,7 @@ class CallsGroupCallModule: GroupCallModule {
 
     override fun stopVideo(type: String, identifier: String) {
         val from = "groupCall/stopVideo"
-        Log.d(CallsModule.NAME, "[GroupCallModule] $from ($identifier)")
+        RNCallsLogger.d("[GroupCallModule] $from ($identifier)")
 
         CallsUtils.safeRun {
             CallsUtils.findRoom(identifier, from).localParticipant?.stopVideo()
@@ -78,7 +78,7 @@ class CallsGroupCallModule: GroupCallModule {
 
     override fun startVideo(type: String, identifier: String) {
         val from = "groupCall/startVideo"
-        Log.d(CallsModule.NAME, "[GroupCallModule] $from ($identifier)")
+        RNCallsLogger.d("[GroupCallModule] $from ($identifier)")
 
         CallsUtils.safeRun {
             CallsUtils.findRoom(identifier, from).localParticipant?.startVideo()
@@ -87,7 +87,7 @@ class CallsGroupCallModule: GroupCallModule {
 
     override fun switchCamera(type: String, identifier: String, promise: Promise) {
         val from = "groupCall/switchCamera"
-        Log.d(CallsModule.NAME, "[GroupCallModule] $from ($identifier)")
+        RNCallsLogger.d("[GroupCallModule] $from ($identifier)")
 
         CallsUtils.safeRun(promise) {
             CallsUtils.findRoom(identifier, from).localParticipant?.switchCamera { error ->
@@ -104,7 +104,7 @@ class CallsGroupCallModule: GroupCallModule {
 
     override fun selectAudioDevice(type: String, identifier: String, device: String, promise: Promise) {
         val from = "groupCall/switchCamera"
-        Log.d(CallsModule.NAME, "[GroupCallModule] $from ($identifier)")
+        RNCallsLogger.d("[GroupCallModule] $from ($identifier)")
 
         CallsUtils.safeRun(promise) {
             val audioDevice = AudioDevice.valueOf(device)

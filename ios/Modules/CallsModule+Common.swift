@@ -11,6 +11,8 @@ import SendBirdCalls
 import PushKit
 
 protocol CallsCommonModuleProtocol {
+    func setLoggerLevel(_ level: String)
+    
     func addDirectCallSound(_ type: String, _ fileName: String)
     func removeDirectCallSound(_ type: String)
     func setDirectCallDialingSoundOnWhenSilentOrVibrateMode(_ enabled: Bool)
@@ -38,6 +40,10 @@ protocol CallsCommonModuleProtocol {
 }
 
 class CallsCommonModule: CallsBaseModule, CallsCommonModuleProtocol {
+    func setLoggerLevel(_ level: String) {
+        SBCLogger.setLoggerLevel(SBCLogger.Level(fromString: level))
+    }
+    
     func addDirectCallSound(_ type: String, _ fileName: String) {
         guard let soundType = SoundType(fromString: type) else { return }
         SendBirdCall.addDirectCallSound(fileName, forType: soundType)

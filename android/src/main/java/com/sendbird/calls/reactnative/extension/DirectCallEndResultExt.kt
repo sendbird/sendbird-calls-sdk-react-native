@@ -14,4 +14,5 @@ fun DirectCallEndResult.asString() = when (this) {
     DirectCallEndResult.DIAL_FAILED -> "DIAL_FAILED"
     DirectCallEndResult.ACCEPT_FAILED -> "ACCEPT_FAILED"
     DirectCallEndResult.OTHER_DEVICE_ACCEPTED -> "OTHER_DEVICE_ACCEPTED"
+    DirectCallEndResult.NOT_CONNECTED -> "NOT_CONNECTED"
 }
