@@ -1,6 +1,4 @@
-## v1.1.0
+## v1.1.1
 
-- Updated native SDK
-  - Added `onLocalParticipantReconnected` and `onLocalParticipantDisconnected` to group call events
-  - Added `NOT_CONNECTED` to DirectCallEndResult
-- Integrated logger with native
+- Fixed the issue of being unable to find TypeScript definitions caused by ghost package.json
+
