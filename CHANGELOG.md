@@ -1,3 +1,15 @@
+## [1.1.1](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.0.3...v1.1.1) (2024-01-29)
+
+
+### Bug Fixes
+
+* remove ghost package.json from build binary to avoid missing type declaration ([a33ef06](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/a33ef06552532c66a1098229ba200eba07bf3f87))
+
+
+### Features
+
+* **CLNP-1920:** sdk update, integrate logger ([#38](https://github.com/sendbird/sendbird-calls-sdk-react-native/issues/38)) ([4ce705a](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/4ce705ad5630d22ffba54dbc0281e28eaa141212))
+
 # [1.1.0](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.0.3...v1.1.0) (2024-01-12)
 
 

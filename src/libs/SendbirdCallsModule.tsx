@@ -1,6 +1,5 @@
 import { Platform } from 'react-native';
 
-import pkg from '../../package.json';
 import type {
   AuthenticateParams,
   CallOptions,
@@ -14,6 +13,7 @@ import type {
 } from '../types';
 import { NativeConstants, NativeQueryType, RoomState, RoomType, SoundType } from '../types';
 import { Logger } from '../utils/logger';
+import Version from '../version';
 import { DirectCallLogListQuery, RoomListQuery } from './BridgedQuery';
 import { DirectCall } from './DirectCall';
 import NativeBinder, { CallsEvent, DefaultEventType } from './NativeBinder';
@@ -36,7 +36,7 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
    * @since 1.0.0
    */
   public get VERSION() {
-    return pkg.version;
+    return Version;
   }
 
   /**

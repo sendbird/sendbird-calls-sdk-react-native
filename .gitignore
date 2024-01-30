@@ -64,3 +64,4 @@ android/keystores/debug.keystore
 lib/
 
 env.ts
+src/version.ts

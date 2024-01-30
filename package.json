@@ -1,6 +1,6 @@
 {
   "name": "@sendbird/calls-react-native",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Sendbird Calls SDK for React Native: Empower React Native apps with seamless audio, video, and group calling. Build interactive communication easily.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -22,12 +22,13 @@
     "!**/__mocks__"
   ],
   "scripts": {
+    "prepare": "yarn generate-version",
     "docs": "typedoc src/index.ts --excludeInternal --excludePrivate --excludeProtected",
     "test": "jest",
     "test:build": "yarn build && yarn clean",
     "test:tsc": "tsc --noEmit",
     "typescript": "tsc --noEmit",
-    "build": "bob build && node scripts/postbuild.js",
+    "build": "yarn generate-version && bob build",
     "clean": "del lib",
     "release": "release-it",
     "release:local": "npx yalc publish",
@@ -43,7 +44,8 @@
     "adb:reverse": "adb start-server && adb reverse tcp:8081 tcp:8081",
     "build:sample:android": "yarn sample build:android",
     "start:sample": "yarn sample start",
-    "icons": "node scripts/bundle-icons.js"
+    "icons": "node scripts/bundle-icons.js",
+    "generate-version": "node scripts/generate-version.js"
   },
   "keywords": [
     "react-native",
@@ -84,6 +86,7 @@
     "@types/react-native": "^0.67.8",
     "@typescript-eslint/eslint-plugin": "^5.19.0",
     "@typescript-eslint/parser": "^5.19.0",
+    "chalk": "4",
     "commitlint": "^11.0.0",
     "del-cli": "^4.0.1",
     "eslint": "^7.2.0",
