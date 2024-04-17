@@ -13,12 +13,12 @@ Pod::Spec.new do |s|
   s.license      = package["license"]
   s.authors      = package["author"]
 
-  s.platforms    = { :ios => "11.0" }
+  s.platforms    = { :ios => "12.0" }
   s.source       = { :git => "https://github.com/sendbird/sendbird-calls-react-native.git", :tag => "#{s.version}" }
   s.source_files = "ios/**/*.{h,m,mm,swift}"
 
   s.dependency "React-Core"
-  s.dependency "SendBirdCalls", "1.10.14"
+  s.dependency "SendBirdCalls", "1.10.18"
 
 #   if ENV['RCT_NEW_ARCH_ENABLED'] == '1' then
 #       s.compiler_flags = folly_compiler_flags + " -DRCT_NEW_ARCH_ENABLED=1"
