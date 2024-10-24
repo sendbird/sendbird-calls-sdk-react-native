@@ -284,6 +284,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
    * @since 1.0.0
    */
   public android_selectAudioDevice = async (device: AudioDevice) => {
+    if (Platform.OS !== 'android') return;
     await this._binder.nativeModule.selectAudioDevice(ControllableModuleType.DIRECT_CALL, this.callId, device);
   };
 
@@ -294,6 +295,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
    * @since 1.1.3
    * */
   public android_resumeVideoCapturer = () => {
+    if (Platform.OS !== 'android') return;
     this._binder.nativeModule.resumeVideoCapturer(ControllableModuleType.DIRECT_CALL, this.callId);
   };
 

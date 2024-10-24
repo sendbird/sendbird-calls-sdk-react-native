@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { Platform } from 'react-native';
+
 import type { LocalParticipantMethods, ParticipantProperties, RoomListener } from '../types';
 import { ControllableModuleType } from '../types';
 import type NativeBinder from './NativeBinder';
@@ -166,6 +168,7 @@ export class LocalParticipant extends Participant implements LocalParticipantMet
    * @since 1.1.3
    * */
   public android_resumeVideoCapturer = () => {
+    if (Platform.OS !== 'android') return;
     return this._binder.nativeModule.resumeVideoCapturer(ControllableModuleType.GROUP_CALL, this._roomId);
   };
 }
