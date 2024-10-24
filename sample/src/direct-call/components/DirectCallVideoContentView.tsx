@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useRef } from 'react';
-import { Animated, Easing, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { Animated, Easing, Platform, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { DirectCall, DirectCallVideoView } from '@sendbird/calls-react-native';
@@ -30,6 +30,14 @@ const DirectCallVideoContentView: FC<CallStatusProps> = ({ call, status }) => {
       }
     }
   }, [status]);
+
+  // In Android, if you have granted permission after accepting the call,
+  // you have to call `call.android_resumeVideoCapturer()`.
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      call.android_resumeVideoCapturer();
+    }
+  }, []);
 
   return (
     <View style={{ flex: 1 }}>

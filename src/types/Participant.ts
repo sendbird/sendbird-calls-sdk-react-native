@@ -1,5 +1,5 @@
 import type { User } from './User';
-import { JSMediaDeviceControl } from './index';
+import type { AsJSInterface, JSMediaDeviceControl } from './index';
 
 export interface ParticipantProperties {
   participantId: string;
@@ -18,10 +18,14 @@ export interface ParticipantProperties {
 
 type JSLocalParticipantMediaDeviceControl = Pick<
   JSMediaDeviceControl,
-  'muteMicrophone' | 'unmuteMicrophone' | 'switchCamera' | 'startVideo' | 'stopVideo'
+  'muteMicrophone' | 'unmuteMicrophone' | 'switchCamera' | 'startVideo' | 'stopVideo' | 'resumeVideoCapturer'
 >;
 
-export type LocalParticipantMethods = JSLocalParticipantMediaDeviceControl;
+export type LocalParticipantMethods = AsJSInterface<
+  JSLocalParticipantMediaDeviceControl,
+  'android',
+  'resumeVideoCapturer'
+>;
 
 export enum ParticipantState {
   ENTERED = 'ENTERED',

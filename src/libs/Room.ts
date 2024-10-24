@@ -230,7 +230,8 @@ export class Room implements RoomProperties, GroupCallMethods {
    * @platform Android
    * @since 1.0.0
    */
-  public android_selectAudioDevice = (device: AudioDevice) => {
-    return this._binder.nativeModule.selectAudioDevice(ControllableModuleType.GROUP_CALL, this.roomId, device);
+  public android_selectAudioDevice = async (device: AudioDevice) => {
+    if (Platform.OS !== 'android') return;
+    await this._binder.nativeModule.selectAudioDevice(ControllableModuleType.GROUP_CALL, this.roomId, device);
   };
 }

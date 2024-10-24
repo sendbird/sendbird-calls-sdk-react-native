@@ -129,4 +129,13 @@ class CallsGroupCallModule: GroupCallModule {
         // NOOP
         promise.resolve(null)
     }
+
+    override fun resumeVideoCapturer(type: String, identifier: String) {
+        val from = "groupCall/resumeVideoCapturer"
+        RNCallsLogger.d("[GroupCallModule] $from ($identifier)")
+
+        CallsUtils.safeRun {
+            CallsUtils.findRoom(identifier, from).localParticipant?.resumeVideoCapturer()
+        }
+    }
 }
