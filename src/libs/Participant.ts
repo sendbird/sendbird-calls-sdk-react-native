@@ -158,4 +158,14 @@ export class LocalParticipant extends Participant implements LocalParticipantMet
   public switchCamera = () => {
     return this._binder.nativeModule.switchCamera(ControllableModuleType.GROUP_CALL, this._roomId);
   };
+
+  /**
+   * Connects the device camera and Sendbird Calls SDK to stream video for local participant.
+   *
+   * @platform Android
+   * @since 1.1.3
+   * */
+  public android_resumeVideoCapturer = () => {
+    return this._binder.nativeModule.resumeVideoCapturer(ControllableModuleType.GROUP_CALL, this._roomId);
+  };
 }

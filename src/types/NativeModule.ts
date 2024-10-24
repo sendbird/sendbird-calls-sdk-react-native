@@ -81,6 +81,8 @@ export interface NativeMediaDeviceControl {
   selectVideoDevice(type: ControllableModuleType, identifier: string, device: VideoDevice): Promise<void>;
   /** @platform Android **/
   selectAudioDevice(type: ControllableModuleType, identifier: string, device: AudioDevice): Promise<void>;
+  /** @platform Android **/
+  resumeVideoCapturer(type: ControllableModuleType, identifier: string): void;
 }
 
 export interface NativeDirectCallModule {

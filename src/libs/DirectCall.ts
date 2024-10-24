@@ -288,6 +288,16 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
   };
 
   /**
+   * Connects the device camera and Sendbird Calls SDK to stream video.
+   *
+   * @platform Android
+   * @since 1.1.3
+   * */
+  public android_resumeVideoCapturer = () => {
+    this._binder.nativeModule.resumeVideoCapturer(ControllableModuleType.DIRECT_CALL, this.callId);
+  };
+
+  /**
    * Mutes the audio of local user.
    * Will trigger {@link DirectCallListener.onRemoteAudioSettingsChanged} method of the remote user.
    * If the remote user changes their audio settings, local user will be notified via same delegate method.
