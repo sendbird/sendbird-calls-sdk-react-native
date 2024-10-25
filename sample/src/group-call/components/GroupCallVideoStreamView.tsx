@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, Platform, StyleSheet, View } from 'react-native';
 
 import {
   GroupCallVideoView,
@@ -63,6 +63,14 @@ const GroupCallVideoStreamView: FC<GroupCallVideoStreamViewProps> = ({ room, lay
       }
     }
   }, [layoutSize.width, layoutSize.height, rowCol.row, rowCol.column]);
+
+  // In Android, if you have granted permission after accepting the call,
+  // you have to call `room.localParticipant.android_resumeVideoCapturer()`.
+  useEffect(() => {
+    if (Platform.OS === 'android' && room.localParticipant) {
+      room.localParticipant.android_resumeVideoCapturer();
+    }
+  }, [room.localParticipant]);
 
   return (
     <View

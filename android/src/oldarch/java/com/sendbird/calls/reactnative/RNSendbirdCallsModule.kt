@@ -91,6 +91,8 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     override fun selectAudioDevice(type: String, identifier: String, device: String, promise: Promise) = module.selectAudioDevice(type, identifier, device, promise)
     @ReactMethod
     override fun selectVideoDevice(type: String, identifier: String, device: ReadableMap, promise: Promise) = module.selectVideoDevice(type, identifier, device, promise)
+    @ReactMethod
+    override fun resumeVideoCapturer(type: String, identifier: String) = module.resumeVideoCapturer(type, identifier)
 
     /** DirectCall **/
     @ReactMethod

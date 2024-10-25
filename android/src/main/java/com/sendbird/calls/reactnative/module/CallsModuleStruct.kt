@@ -56,4 +56,5 @@ interface MediaDeviceControl {
     fun switchCamera(type: String, identifier: String, promise: Promise)
     fun selectAudioDevice(type: String, identifier: String, device: String, promise: Promise)
     fun selectVideoDevice(type: String, identifier: String, device: ReadableMap, promise: Promise)
+    fun resumeVideoCapturer(type: String, identifier: String)
 }

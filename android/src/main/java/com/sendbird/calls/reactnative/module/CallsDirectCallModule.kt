@@ -83,33 +83,6 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
             call.setRemoteVideoView(view.getSurface())
         }
     }
-
-    override fun selectVideoDevice(type: String, identifier: String, device: ReadableMap, promise: Promise)  {
-        CallsUtils.safeRun(promise) {
-            val from = "directCall/selectVideoDevice"
-            val call = CallsUtils.findDirectCall(identifier, from)
-            val deviceId = CallsUtils.safeGet { device.getString("deviceId") }
-
-            call.availableVideoDevices
-                .find {
-                    it.deviceName === deviceId
-                }
-                ?.let {
-                    call.selectVideoDevice(it) { error ->
-                        error
-                            ?.let {
-                                promise.rejectCalls(error)
-                            }
-                            ?: run {
-                                promise.resolve(null)
-                            }
-                    }
-                }
-                ?: run {
-                    promise.reject(RNCallsInternalError(from, RNCallsInternalError.Type.NOT_FOUND_VIDEO_DEVICE))
-                }
-        }
-    }
     
     override fun muteMicrophone(type: String, identifier: String) {
         val from = "directCall/muteMicrophone"
@@ -180,6 +153,42 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
                         promise.resolve(null)
                     }
             }
+        }
+    }
+
+    override fun selectVideoDevice(type: String, identifier: String, device: ReadableMap, promise: Promise)  {
+        CallsUtils.safeRun(promise) {
+            val from = "directCall/selectVideoDevice"
+            val call = CallsUtils.findDirectCall(identifier, from)
+            val deviceId = CallsUtils.safeGet { device.getString("deviceId") }
+
+            call.availableVideoDevices
+                .find {
+                    it.deviceName === deviceId
+                }
+                ?.let {
+                    call.selectVideoDevice(it) { error ->
+                        error
+                            ?.let {
+                                promise.rejectCalls(error)
+                            }
+                            ?: run {
+                                promise.resolve(null)
+                            }
+                    }
+                }
+                ?: run {
+                    promise.reject(RNCallsInternalError(from, RNCallsInternalError.Type.NOT_FOUND_VIDEO_DEVICE))
+                }
+        }
+    }
+
+    override fun resumeVideoCapturer(type: String, identifier: String) {
+        val from ="directCall/resumeVideoCapturer"
+        RNCallsLogger.d("[DirectCallModule] $from ($identifier)")
+
+        CallsUtils.safeRun {
+            CallsUtils.findDirectCall(identifier, from).resumeVideoCapturer()
         }
     }
 }
