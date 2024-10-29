@@ -1,3 +1,11 @@
+## [1.1.3](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.1.1...v1.1.3) (2024-10-25)
+
+
+### Features
+
+* add resumeVideoCapturer method to android native ([a216526](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/a2165267ba05f7d999e43fcca9e1db7c29a55e36))
+* add resumeVideoCapturer method to javascript ([2c55167](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/2c55167ab8d2ca1a809bcbd5b959d7f33abf237e))
+
 ## [1.1.2](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.1.1...v1.1.2) (2024-04-17)
 
 ## [1.1.1](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.0.3...v1.1.1) (2024-01-29)

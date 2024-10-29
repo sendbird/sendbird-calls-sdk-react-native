@@ -1,4 +1,3 @@
-## v1.1.2
+## v1.1.3
 
-- Updated iOS deployment target to 12.0
-- Updated iOS SDK (Added PrivacyInfo.xcprivacy for Apple Privacy Manifest)
+- Added `DirectCall.resumeVideoCapturer()` and `LocalParticipant.resumeVideoCapturer()` methods to Android.
