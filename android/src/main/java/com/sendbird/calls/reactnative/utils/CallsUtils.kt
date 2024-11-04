@@ -248,8 +248,18 @@ object CallsUtils {
         "createdBy" to room.createdBy,
     ))
 
+    fun convertRoomInvitationToJsMap(roomInvitation: RoomInvitation) = convertToJsMap(mapOf(
+        "roomInvitationId" to roomInvitation.roomInvitationId,
+        "inviter" to convertUserToJsMap(roomInvitation.inviter),
+        "invitee" to convertUserToJsMap(roomInvitation.invitee),
+        "room" to convertRoomToJsMap(roomInvitation.room),
+    ))
+
     fun findRoom(roomId: String, from: String?): Room {
         return SendBirdCall.getCachedRoomById(roomId) ?: throw RNCallsInternalError(from, RNCallsInternalError.Type.NOT_FOUND_ROOM)
     }
 
+    fun findRoomInvitation(roomInvitationId: String, from: String?): RoomInvitation {
+        return SendBirdCall.getRoomInvitation(roomInvitationId) ?: throw RNCallsInternalError(from, RNCallsInternalError.Type.NOT_FOUND_ROOM)
+    }
 }

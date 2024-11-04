@@ -50,8 +50,16 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
 
         call.setListener(CallsDirectCallListener(this))
     }
+
     override fun onInvitationReceived(invitation: RoomInvitation) {
-        TODO("Not yet implemented")
+        RNCallsLogger.d("[CallsModule] onInvitationReceived() -> $invitation")
+
+        CallsEvents.sendEvent(
+            reactContext,
+            CallsEvents.EVENT_DEFAULT,
+            CallsEvents.TYPE_DEFAULT_ON_INVITATION_RECEIVED,
+            CallsUtils.convertRoomInvitationToJsMap(invitation)
+        )
     }
 
     /** Common module interface **/
@@ -76,6 +84,7 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
     override fun createRoom(params: ReadableMap, promise: Promise) = commonModule.createRoom(params, promise)
     override fun fetchRoomById(roomId: String, promise: Promise) = commonModule.fetchRoomById(roomId, promise)
     override fun getCachedRoomById(roomId: String, promise: Promise) = commonModule.getCachedRoomById(roomId, promise)
+    override fun getRoomInvitation(roomInvitationId: String, promise: Promise) = commonModule.getRoomInvitation(roomInvitationId, promise)
 
     /** Media Device control interface **/
     override fun stopVideo(type: String, identifier: String) = getControllableModule(type).stopVideo(type, identifier)
@@ -96,6 +105,9 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
     /** GroupCall module interface**/
     override fun enter(roomId: String, options: ReadableMap, promise: Promise) = groupCallModule.enter(roomId, options, promise)
     override fun exit(roomId: String) = groupCallModule.exit(roomId)
+    override fun accept(roomInvitationId: String, promise: Promise) = groupCallModule.accept(roomInvitationId, promise)
+    override fun cancel(roomInvitationId: String, promise: Promise) = groupCallModule.cancel(roomInvitationId, promise)
+    override fun decline(roomInvitationId: String, promise: Promise) = groupCallModule.decline(roomInvitationId, promise)
 
     /** Queries **/
     fun createDirectCallLogListQuery(params: ReadableMap, promise: Promise) = queries.createDirectCallLogListQuery(params, promise)

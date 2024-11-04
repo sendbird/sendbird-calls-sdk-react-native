@@ -29,6 +29,7 @@ interface CommonModule {
     fun createRoom(params: ReadableMap, promise: Promise)
     fun fetchRoomById(roomId: String, promise: Promise)
     fun getCachedRoomById(roomId: String, promise: Promise)
+    fun getRoomInvitation(roomInvitationId: String, promise: Promise)
 }
 
 interface DirectCallModule: MediaDeviceControl {
@@ -39,8 +40,14 @@ interface DirectCallModule: MediaDeviceControl {
 }
 
 interface GroupCallModule: MediaDeviceControl {
+    // Room
     fun enter(roomId: String, options: ReadableMap, promise: Promise)
     fun exit(roomId: String)
+
+    // RoomInvitation
+    fun accept(roomInvitationId: String, promise: Promise)
+    fun cancel(roomInvitationId: String, promise: Promise)
+    fun decline(roomInvitationId: String, promise: Promise)
 }
 
 enum class ControllableModuleType {

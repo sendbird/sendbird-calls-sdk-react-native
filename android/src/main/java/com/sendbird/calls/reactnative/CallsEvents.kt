@@ -48,6 +48,7 @@ class CallsEvents {
         val TYPE_DIRECT_CALL_ON_CUSTOM_ITEMS_DELETED = directCallType("onCustomItemsDeleted")
         val TYPE_DIRECT_CALL_ON_USER_HOLD_STATUS_CHANGED = directCallType("onUserHoldStatusChanged")
         // Group
+        val TYPE_DEFAULT_ON_INVITATION_RECEIVED = defaultType("onInvitationReceived")
         val TYPE_GROUP_CALL_ON_DELETED = groupCallType("onDeleted")
         val TYPE_GROUP_CALL_ON_ERROR = groupCallType("onError")
         val TYPE_GROUP_CALL_ON_LOCAL_PARTICIPANT_DISCONNECTED = groupCallType("onLocalParticipantDisconnected")
