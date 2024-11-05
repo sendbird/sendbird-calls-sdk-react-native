@@ -99,16 +99,6 @@ dependencies {
   implementation("com.sendbird.sdk:sendbird-calls:1.11.10")
 }
 
-
-// if (isNewArchitectureEnabled()) {
-// https://reactnative.dev/docs/new-architecture-library-android#1-configure-codegen-in-your-gradle-file
-//   react {
-//     libraryName = "rnsendbirdcalls"
-//     codegenJavaPackageName = "com.sendbird.calls.reactnative"
-//     jsRootDir = file("../src/")
-//   }
-// }
-
 ReactNative.shared.applyPackageVersion()
 ReactNative.shared.applyDefaultExcludes()
 ReactNative.module.applyAndroidVersions()
