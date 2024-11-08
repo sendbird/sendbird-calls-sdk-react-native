@@ -1,3 +1,3 @@
-## v1.1.3
+## v1.1.4
 
-- Added `DirectCall.resumeVideoCapturer()` and `LocalParticipant.resumeVideoCapturer()` methods to Android.
+- Fixed a bug where modules were not properly installed in the Android new architecture environment. It now works properly in the interop layer.
