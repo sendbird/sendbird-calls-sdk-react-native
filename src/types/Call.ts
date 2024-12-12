@@ -338,7 +338,7 @@ type JSDirectCallModule = AsJSDirectCall<NativeDirectCallModule>;
 type JSDirectCallMediaDeviceControl = AsJSInterface<
   JSMediaDeviceControl,
   'android',
-  'selectAudioDevice' | 'resumeVideoCapturer'
+  'selectAudioDevice' | 'resumeVideoCapturer' | 'resumeAudioTrack'
 >;
 
 export interface DirectCallMethods extends JSDirectCallModule, JSDirectCallMediaDeviceControl {

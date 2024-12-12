@@ -18,13 +18,19 @@ export interface ParticipantProperties {
 
 type JSLocalParticipantMediaDeviceControl = Pick<
   JSMediaDeviceControl,
-  'muteMicrophone' | 'unmuteMicrophone' | 'switchCamera' | 'startVideo' | 'stopVideo' | 'resumeVideoCapturer'
+  | 'muteMicrophone'
+  | 'unmuteMicrophone'
+  | 'switchCamera'
+  | 'startVideo'
+  | 'stopVideo'
+  | 'resumeVideoCapturer'
+  | 'resumeAudioTrack'
 >;
 
 export type LocalParticipantMethods = AsJSInterface<
   JSLocalParticipantMediaDeviceControl,
   'android',
-  'resumeVideoCapturer'
+  'resumeVideoCapturer' | 'resumeAudioTrack'
 >;
 
 export enum ParticipantState {
