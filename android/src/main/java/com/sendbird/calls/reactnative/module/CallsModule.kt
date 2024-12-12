@@ -86,6 +86,7 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
     override fun selectAudioDevice(type: String, identifier: String, device: String, promise: Promise) = getControllableModule(type).selectAudioDevice(type, identifier, device, promise)
     override fun selectVideoDevice(type: String, identifier: String, device: ReadableMap, promise: Promise) = getControllableModule(type).selectVideoDevice(type, identifier, device, promise)
     override fun resumeVideoCapturer(type: String, identifier: String) = getControllableModule(type).resumeVideoCapturer(type, identifier)
+    override fun resumeAudioTrack(type: String, identifier: String) = getControllableModule(type).resumeAudioTrack(type, identifier)
 
     /** DirectCall module interface **/
     override fun accept(callId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise) = directCallModule.accept(callId, options, holdActiveCall, promise)

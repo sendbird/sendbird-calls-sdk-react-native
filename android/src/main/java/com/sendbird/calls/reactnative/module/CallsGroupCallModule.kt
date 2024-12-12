@@ -138,4 +138,13 @@ class CallsGroupCallModule: GroupCallModule {
             CallsUtils.findRoom(identifier, from).localParticipant?.resumeVideoCapturer()
         }
     }
+
+    override fun resumeAudioTrack(type: String, identifier: String) {
+        val from = "groupCall/resumeAudioTrack"
+        RNCallsLogger.d("[GroupCallModule] $from ($identifier)")
+
+        CallsUtils.safeRun {
+            CallsUtils.findRoom(identifier, from).localParticipant?.resumeAudioTrack()
+        }
+    }
 }

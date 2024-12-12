@@ -171,4 +171,15 @@ export class LocalParticipant extends Participant implements LocalParticipantMet
     if (Platform.OS !== 'android') return;
     return this._binder.nativeModule.resumeVideoCapturer(ControllableModuleType.GROUP_CALL, this._roomId);
   };
+
+  /**
+   * Connects the device audio and Sendbird Calls SDK to stream audio.
+   *
+   * @platform Android
+   * @since 1.1.5
+   * */
+  public android_resumeAudioTrack = () => {
+    if (Platform.OS !== 'android') return;
+    return this._binder.nativeModule.resumeAudioTrack(ControllableModuleType.GROUP_CALL, this._roomId);
+  };
 }

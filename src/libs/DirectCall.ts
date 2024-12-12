@@ -300,6 +300,17 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
   };
 
   /**
+   * Connects the device audio and Sendbird Calls SDK to stream audio.
+   *
+   * @platform Android
+   * @since 1.1.5
+   * */
+  public android_resumeAudioTrack = () => {
+    if (Platform.OS !== 'android') return;
+    this._binder.nativeModule.resumeAudioTrack(ControllableModuleType.DIRECT_CALL, this.callId);
+  };
+
+  /**
    * Mutes the audio of local user.
    * Will trigger {@link DirectCallListener.onRemoteAudioSettingsChanged} method of the remote user.
    * If the remote user changes their audio settings, local user will be notified via same delegate method.
