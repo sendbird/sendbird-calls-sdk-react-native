@@ -1,3 +1,11 @@
+## [1.1.5](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.1.4...v1.1.5) (2024-12-12)
+
+
+### Features
+
+* add resumeAudioTrack method to android native ([17b854e](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/17b854e2e298db3690df39d5eed82610e9954565))
+* add resumeAudioTrack method to javascript ([b000f2e](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/b000f2e312aafbdc391dcd3d3af0ca6ea386f7bc))
+
 ## [1.1.4](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.1.3...v1.1.4) (2024-11-07)
 
 ## [1.1.3](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.1.1...v1.1.3) (2024-10-25)
