@@ -191,4 +191,13 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
             CallsUtils.findDirectCall(identifier, from).resumeVideoCapturer()
         }
     }
+
+    override fun resumeAudioTrack(type: String, identifier: String) {
+        val from = "directCall/resumeAudioTrack"
+        RNCallsLogger.d("[DirectCallModule] $from ($identifier)")
+
+        CallsUtils.safeRun {
+            CallsUtils.findDirectCall(identifier, from).resumeAudioTrack()
+        }
+    }
 }

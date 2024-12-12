@@ -57,4 +57,5 @@ interface MediaDeviceControl {
     fun selectAudioDevice(type: String, identifier: String, device: String, promise: Promise)
     fun selectVideoDevice(type: String, identifier: String, device: ReadableMap, promise: Promise)
     fun resumeVideoCapturer(type: String, identifier: String)
+    fun resumeAudioTrack(type: String, identifier: String)
 }

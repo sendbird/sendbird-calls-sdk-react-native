@@ -93,6 +93,8 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     override fun selectVideoDevice(type: String, identifier: String, device: ReadableMap, promise: Promise) = module.selectVideoDevice(type, identifier, device, promise)
     @ReactMethod
     override fun resumeVideoCapturer(type: String, identifier: String) = module.resumeVideoCapturer(type, identifier)
+    @ReactMethod
+    override fun resumeAudioTrack(type: String, identifier: String) = module.resumeAudioTrack(type, identifier)
 
     /** DirectCall **/
     @ReactMethod
