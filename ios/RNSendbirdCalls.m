@@ -143,7 +143,7 @@ RCT_EXTERN_METHOD(updateLocalVideoView
                   : (NSString *)callId
                   : (NSNumber *)videoViewId)
 
-RCT_EXTERN_METHOD(updateRemmoteVideoView
+RCT_EXTERN_METHOD(updateRemoteVideoView
                   : (NSString *)callId
                   : (NSNumber *)videoViewId)
 
