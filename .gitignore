@@ -65,3 +65,4 @@ lib/
 
 env.ts
 src/version.ts
+/package-lock.json

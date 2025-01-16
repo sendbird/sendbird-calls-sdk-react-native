@@ -11,7 +11,15 @@ import { DirectRouteWithParams, DirectRoutes } from '../navigations/routes';
 /** Firebase RemoteMessage handler **/
 export function setFirebaseMessageHandlers() {
   const firebaseListener = async (message: FirebaseMessagingTypes.RemoteMessage) => {
-    SendbirdCalls.android_handleFirebaseMessageData(message.data);
+    const convertedData: Record<string, string> = Object.entries(message.data ?? {}).reduce(
+      (acc, [key, value]) => {
+        acc[key] = typeof value === 'object' ? JSON.stringify(value) : value;
+        return acc;
+      },
+      {} as Record<string, string>,
+    );
+
+    SendbirdCalls.android_handleFirebaseMessageData(convertedData);
   };
   messaging().setBackgroundMessageHandler(firebaseListener);
   messaging().onMessage(firebaseListener);
@@ -19,6 +27,7 @@ export function setFirebaseMessageHandlers() {
 
 /** Notifee ForegroundService with Notification */
 export const NOTIFICATION_CHANNEL_ID = 'sendbird.calls.rn.ringing';
+
 export async function setNotificationForegroundService() {
   // Create channel
   await Notifee.createChannel({ name: 'Ringing', id: NOTIFICATION_CHANNEL_ID, importance: AndroidImportance.HIGH });
@@ -29,8 +38,18 @@ export async function setNotificationForegroundService() {
   // Register notification listeners
   const onNotificationAction = async ({ type, detail }: Event) => {
     if (type !== EventType.ACTION_PRESS || !detail.notification?.data?.call) return;
-
-    const callString = detail.notification.data.call;
+    
+    const callData = detail.notification.data.call;
+    
+    let callString: string;
+    if (typeof callData === 'string') {
+      callString = callData;
+    } else if (typeof callData === 'object') {
+      callString = JSON.stringify(callData);
+    } else {
+      callString = String(callData);
+    }
+    
     const callProps: DirectCallProperties = JSON.parse(callString);
 
     const directCall = await SendbirdCalls.getDirectCall(callProps.callId);
