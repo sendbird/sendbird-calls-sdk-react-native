@@ -11,8 +11,6 @@
     "build:android": "cd android && ./gradlew assembleRelease && open app/build/outputs/apk/release"
   },
   "dependencies": {
-    "@firebase/app": "^0.10.17",
-    "@firebase/app-types": "^0.9.3",
     "@notifee/react-native": "^9.1.2",
     "@react-native-async-storage/async-storage": "^2.0.0",
     "@react-native-clipboard/clipboard": "1.15.0",
