@@ -1,0 +1,6 @@
+{
+  "extends": [
+    "../tsconfig.json",
+    "@react-native/typescript-config/tsconfig.json"
+  ]
+}
