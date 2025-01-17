@@ -33,8 +33,11 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            yarn install --cwd sample --frozen-lockfile
             yarn install --frozen-lockfile
+      - run:
+          name: Install dependencies
+          command: |
+            yarn install --cwd sample --frozen-lockfile
       - save_cache:
           key: dependencies-{{ checksum "package.json" }}
           paths: node_modules
