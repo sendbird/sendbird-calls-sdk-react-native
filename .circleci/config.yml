@@ -35,7 +35,7 @@ jobs:
           command: |
             yarn install --frozen-lockfile
       - run:
-          name: Install dependencies
+          name: Install sample dependencies
           command: |
             corepack prepare yarn@3.6.4 --activate
             yarn install --cwd sample --immutable
