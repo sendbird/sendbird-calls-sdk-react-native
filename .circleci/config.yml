@@ -3,7 +3,7 @@ version: 2.1
 executors:
   default:
     docker:
-      - image: cimg/node:18.20.5
+      - image: cimg/node:18
     working_directory: ~/project
 
 commands:
@@ -26,6 +26,10 @@ jobs:
           keys:
             - dependencies-sample-{{ checksum "sample/package.json" }}
             - dependencies-sample-
+      - run:
+          name: core pack enable
+          command: |
+            corepack enable
       - run:
           name: Install dependencies
           command: |
