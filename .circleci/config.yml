@@ -38,7 +38,7 @@ jobs:
           name: Install dependencies
           command: |
             corepack prepare yarn@3.6.4 --activate
-            yarn install --cwd sample --frozen-lockfile
+            yarn install --cwd sample --immutable
       - save_cache:
           key: dependencies-{{ checksum "package.json" }}
           paths: node_modules
