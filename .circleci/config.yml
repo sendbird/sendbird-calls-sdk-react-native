@@ -37,6 +37,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            corepack prepare yarn@3.6.4 --activate
             yarn install --cwd sample --frozen-lockfile
       - save_cache:
           key: dependencies-{{ checksum "package.json" }}
