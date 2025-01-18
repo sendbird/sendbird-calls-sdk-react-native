@@ -72,6 +72,15 @@ jobs:
           command: |
             yarn typescript
 
+  sample-typescript:
+    executor: default
+    steps:
+      - attach_project
+      - run:
+          name: Typecheck sample files
+          command: |
+            yarn sample:tsc
+
   unit-tests:
     executor: default
     steps:
@@ -101,6 +110,9 @@ workflows:
           requires:
             - install-dependencies
       - typescript:
+          requires:
+            - install-dependencies
+      - sample-typescript:
           requires:
             - install-dependencies
       - unit-tests:
