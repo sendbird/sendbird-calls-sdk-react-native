@@ -44,7 +44,8 @@
     "@react-native/metro-config": "0.76.0",
     "@react-native/typescript-config": "0.76.0",
     "@types/react": "^18.2.6",
-    "babel-plugin-module-resolver": "^4.1.0"
+    "babel-plugin-module-resolver": "^4.1.0",
+    "typescript": "5.0.4"
   },
   "resolutions": {
     "@types/react": "^18.3.1"
