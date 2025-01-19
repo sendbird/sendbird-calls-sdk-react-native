@@ -27,18 +27,10 @@ jobs:
             - dependencies-sample-{{ checksum "sample/package.json" }}
             - dependencies-sample-
       - run:
-          name: core pack enable
-          command: |
-            corepack enable
-      - run:
           name: Install dependencies
           command: |
+            yarn install --cwd sample --frozen-lockfile
             yarn install --frozen-lockfile
-      - run:
-          name: Install sample dependencies
-          command: |
-            corepack prepare yarn@3.6.4 --activate
-            yarn install --cwd sample --immutable
       - save_cache:
           key: dependencies-{{ checksum "package.json" }}
           paths: node_modules
