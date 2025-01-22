@@ -33,6 +33,7 @@
     "release": "release-it",
     "release:local": "npx yalc publish",
     "sample": "yarn --cwd sample",
+    "sample:tsc": "cd sample && npx tsc --noEmit",
     "pods": "cd sample && pod-install --quiet",
     "bootstrap": "yarn sample && yarn && yarn pods",
     "lint": "yarn lint:eslint && yarn lint:prettier",

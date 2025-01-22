@@ -11,6 +11,7 @@ import { DirectRouteWithParams, DirectRoutes } from '../navigations/routes';
 /** Firebase RemoteMessage handler **/
 export function setFirebaseMessageHandlers() {
   const firebaseListener = async (message: FirebaseMessagingTypes.RemoteMessage) => {
+    // @ts-ignore
     SendbirdCalls.android_handleFirebaseMessageData(message.data);
   };
   messaging().setBackgroundMessageHandler(firebaseListener);
@@ -19,6 +20,7 @@ export function setFirebaseMessageHandlers() {
 
 /** Notifee ForegroundService with Notification */
 export const NOTIFICATION_CHANNEL_ID = 'sendbird.calls.rn.ringing';
+
 export async function setNotificationForegroundService() {
   // Create channel
   await Notifee.createChannel({ name: 'Ringing', id: NOTIFICATION_CHANNEL_ID, importance: AndroidImportance.HIGH });
@@ -30,8 +32,7 @@ export async function setNotificationForegroundService() {
   const onNotificationAction = async ({ type, detail }: Event) => {
     if (type !== EventType.ACTION_PRESS || !detail.notification?.data?.call) return;
 
-    const callString = detail.notification.data.call;
-    const callProps: DirectCallProperties = JSON.parse(callString);
+    const callProps = detail.notification.data.call as unknown as DirectCallProperties;
 
     const directCall = await SendbirdCalls.getDirectCall(callProps.callId);
     if (directCall.isEnded) {
