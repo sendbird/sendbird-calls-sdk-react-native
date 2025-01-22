@@ -11,14 +11,8 @@ import { DirectRouteWithParams, DirectRoutes } from '../navigations/routes';
 /** Firebase RemoteMessage handler **/
 export function setFirebaseMessageHandlers() {
   const firebaseListener = async (message: FirebaseMessagingTypes.RemoteMessage) => {
-    const convertedData: Record<string, string> = Object.entries(
-      (message.data as Record<string, string | object>) ?? {},
-    ).reduce((acc, [key, value]) => {
-      acc[key] = typeof value === 'object' ? JSON.stringify(value) : value;
-      return acc;
-    }, {} as Record<string, string>);
-
-    SendbirdCalls.android_handleFirebaseMessageData(convertedData);
+    // @ts-ignore
+    SendbirdCalls.android_handleFirebaseMessageData(message.data);
   };
   messaging().setBackgroundMessageHandler(firebaseListener);
   messaging().onMessage(firebaseListener);
@@ -38,18 +32,7 @@ export async function setNotificationForegroundService() {
   const onNotificationAction = async ({ type, detail }: Event) => {
     if (type !== EventType.ACTION_PRESS || !detail.notification?.data?.call) return;
 
-    const callData = detail.notification.data.call;
-
-    let callString: string;
-    if (typeof callData === 'string') {
-      callString = callData;
-    } else if (typeof callData === 'object') {
-      callString = JSON.stringify(callData);
-    } else {
-      callString = String(callData);
-    }
-
-    const callProps: DirectCallProperties = JSON.parse(callString);
+    const callProps = detail.notification.data.call as unknown as DirectCallProperties;
 
     const directCall = await SendbirdCalls.getDirectCall(callProps.callId);
     if (directCall.isEnded) {
