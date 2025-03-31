@@ -37,7 +37,7 @@ target 'SendbirdCallsRNSample' do
     :app_path => "#{Pod::Config.instance.installation_root}/..",
 
     # Temporary workaround: A SIGABRT occurs during iOS execution because the new architecture is not yet stabilized.
-    :new_arch_enabled => false
+    :new_arch_enabled => true
   )
 
   post_install do |installer|
@@ -46,7 +46,7 @@ target 'SendbirdCallsRNSample' do
             installer,
             config[:reactNativePath],
             :mac_catalyst_enabled => false,
-            # :ccache_enabled => true
+            # :cache_enabled => true
           )
     # XCode14
     installer.pods_project.targets.each do |target|
