@@ -35,7 +35,7 @@ class RNSendbirdCalls: RCTEventEmitter {
         module = CallsModule()
     }
     
-    @objc func handleRemoteNotificationData(data: [AnyHashable: Any]) {
+    @objc func handleRemoteNotificationData(_ data: [AnyHashable: Any]) {
         SendBirdCall.application(UIApplication.shared, didReceiveRemoteNotification: data)
     }
     
@@ -80,8 +80,8 @@ extension RNSendbirdCalls {
         module.queryNext(queryKey, type, Promise(resolve,reject))
     }
     
-    @objc func queryRelease(_ querKey: String) {
-        module.queryRelease(querKey)
+    @objc func queryRelease(_ queryKey: String) {
+        module.queryRelease(queryKey)
     }
 }
 
@@ -99,12 +99,13 @@ extension RNSendbirdCalls {
         module.removeDirectCallSound(type)
     }
     
-    @objc func setDirectCallDialingSoundOnWhenSilentOrVibrateMode(_ enabled: Bool) {
-        module.setDirectCallDialingSoundOnWhenSilentOrVibrateMode(enabled)
+    @objc func setDirectCallDialingSoundOnWhenSilentOrVibrateMode(_ enabled: NSNumber) {
+        module.setDirectCallDialingSoundOnWhenSilentOrVibrateMode(enabled.boolValue)
     }
     
-    @objc func initialize(_ appId: String) -> Bool {
-        return module.initialize(appId)
+    @objc func initialize(_ appId: String) -> NSNumber {
+        let result = module.initialize(appId)
+        return NSNumber(value: result)
     }
     
     @objc func getCurrentUser(_ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
@@ -127,24 +128,24 @@ extension RNSendbirdCalls {
         module.deauthenticate(Promise(resolve, reject))
     }
     
-    @objc func registerPushToken(_ token: String, _ unique: Bool, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
-        module.registerPushToken(token, unique, Promise(resolve, reject))
+    @objc func registerPushToken(_ token: String, _ unique: NSNumber, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.registerPushToken(token, unique.boolValue, Promise(resolve, reject))
     }
     
     @objc func unregisterPushToken(_ token: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
         module.unregisterPushToken(token, Promise(resolve, reject))
     }
     
-    @objc func registerVoIPPushToken(_ token: String, _ unique: Bool, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
-        module.registerVoIPPushToken(token, unique, Promise(resolve, reject))
+    @objc func registerVoIPPushToken(_ token: String, _ unique: NSNumber, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.registerVoIPPushToken(token, unique.boolValue, Promise(resolve, reject))
     }
     
     @objc func unregisterVoIPPushToken(_ token: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
         module.unregisterVoIPPushToken(token, Promise(resolve, reject))
     }
     
-    @objc func dial(_ calleeId: String, _ isVideoCall: Bool, _ options: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
-        module.dial(calleeId, isVideoCall, options, Promise(resolve, reject))
+    @objc func dial(_ calleeId: String, _ isVideoCall: NSNumber, _ options: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.dial(calleeId, isVideoCall.boolValue, options, Promise(resolve, reject))
     }
     
     @objc func fetchRoomById(_ roomId: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
@@ -162,8 +163,8 @@ extension RNSendbirdCalls {
 
 // MARK: DirectCall
 extension RNSendbirdCalls {
-    @objc func accept(_ callId: String, _ options: [String: Any], _ holdActiveCall: Bool, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
-        module.accept(callId, options, holdActiveCall, Promise(resolve, reject))
+    @objc func accept(_ callId: String, _ options: [String: Any], _ holdActiveCall: NSNumber, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.accept(callId, options, holdActiveCall.boolValue, Promise(resolve, reject))
     }
     
     @objc func end(_ callId: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {

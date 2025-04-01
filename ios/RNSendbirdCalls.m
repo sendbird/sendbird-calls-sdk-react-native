@@ -55,7 +55,7 @@ RCT_EXTERN_METHOD(removeDirectCallSound
                   : (NSString *)type)
 
 RCT_EXTERN_METHOD(setDirectCallDialingSoundOnWhenSilentOrVibrateMode
-                  : (BOOL *)enabled)
+                  : (nonnull NSNumber *)enabled)
 
 RCT_EXTERN_METHOD(initialize
                   : (NSString *)appId)
@@ -84,7 +84,7 @@ RCT_EXTERN_METHOD(deauthenticate
 
 RCT_EXTERN_METHOD(registerPushToken
                   : (NSString *)token
-                  : (BOOL *)unique
+                  : (nonnull NSNumber *)unique
                   : (RCTPromiseResolveBlock)resolve
                   : (RCTPromiseRejectBlock)reject)
 
@@ -95,7 +95,7 @@ RCT_EXTERN_METHOD(unregisterPushToken
 
 RCT_EXTERN_METHOD(registerVoIPPushToken
                   : (NSString *)token
-                  : (BOOL *)unique
+                  : (nonnull NSNumber *)unique
                   : (RCTPromiseResolveBlock)resolve
                   : (RCTPromiseRejectBlock)reject)
 
@@ -106,7 +106,7 @@ RCT_EXTERN_METHOD(unregisterVoIPPushToken
 
 RCT_EXTERN_METHOD(dial
                   : (NSString *)calleeId
-                  : (BOOL *)isVideoCall
+                  : (nonnull NSNumber *)isVideoCall
                   : (NSDictionary *)options
                   : (RCTPromiseResolveBlock)resolve
                   : (RCTPromiseRejectBlock)reject)
@@ -130,7 +130,7 @@ RCT_EXTERN_METHOD(createRoom
 RCT_EXTERN_METHOD(accept
                   : (NSString *)callId
                   : (NSDictionary *)options
-                  : (BOOL *)holdActiveCall
+                  : (nonnull NSNumber *)holdActiveCall
                   : (RCTPromiseResolveBlock)resolve
                   : (RCTPromiseRejectBlock)reject)
 
@@ -141,11 +141,11 @@ RCT_EXTERN_METHOD(end
 
 RCT_EXTERN_METHOD(updateLocalVideoView
                   : (NSString *)callId
-                  : (NSNumber *)videoViewId)
+                  : (nonnull NSNumber *)videoViewId)
 
 RCT_EXTERN_METHOD(updateRemoteVideoView
                   : (NSString *)callId
-                  : (NSNumber *)videoViewId)
+                  : (nonnull NSNumber *)videoViewId)
 
 // MARK: - SendbirdCalls: GroupCall
 RCT_EXTERN_METHOD(enter
