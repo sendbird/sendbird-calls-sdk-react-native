@@ -1,3 +1,11 @@
+## [1.1.6](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.1.5...v1.1.6) (2025-04-02)
+
+
+### Bug Fixes
+
+* crash on iOS when using New Architecture ([3f7c3e8](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/3f7c3e81af4fa23128acf46be46685357c15717d))
+* fixed a typo in the updateRemoteVideoView function on ios ([a31411e](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/a31411e574aeff4512e495a425272a525c79883a))
+
 ## [1.1.5](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.1.4...v1.1.5) (2024-12-12)
 
 
