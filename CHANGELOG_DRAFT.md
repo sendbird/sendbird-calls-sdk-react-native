@@ -1,3 +1,3 @@
-## v1.1.5
+## v1.1.6
 
-- Added `DirectCall.resumeAudioTrack()` and `LocalParticipant.resumeAudioTrack()` methods to Android.
+- Fixed a crash on iOS when using the New Architecture
