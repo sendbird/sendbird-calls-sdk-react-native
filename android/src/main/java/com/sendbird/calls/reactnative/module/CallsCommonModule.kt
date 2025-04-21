@@ -66,7 +66,7 @@ class CallsCommonModule(private val root: CallsModule): CommonModule {
 
     override fun initialize(appId: String): Boolean {
         RNCallsLogger.d("[CommonModule] initialize()")
-        return SendBirdCall.init(root.reactContext, appId)
+        return SendBirdCall.init(root.reactContext.applicationContext, appId)
     }
 
     override fun authenticate(authParams: ReadableMap, promise: Promise) {
