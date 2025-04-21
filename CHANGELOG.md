@@ -1,3 +1,10 @@
+## [1.1.7](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.1.6...v1.1.7) (2025-04-21)
+
+
+### Bug Fixes
+
+* improve stability of local video view on android ([430c71d](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/430c71d5e6dd2593ecc0aa60b303b30647474f6d))
+
 ## [1.1.6](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.1.5...v1.1.6) (2025-04-02)
 
 
