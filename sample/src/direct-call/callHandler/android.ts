@@ -32,7 +32,7 @@ export async function setNotificationForegroundService() {
   const onNotificationAction = async ({ type, detail }: Event) => {
     if (type !== EventType.ACTION_PRESS || !detail.notification?.data?.call) return;
 
-    const callProps = detail.notification.data.call as unknown as DirectCallProperties;
+    const callProps = JSON.parse(detail.notification.data.call as string) as DirectCallProperties;
 
     const directCall = await SendbirdCalls.getDirectCall(callProps.callId);
     if (directCall.isEnded) {
