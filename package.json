@@ -78,6 +78,7 @@
     "access": "public"
   },
   "devDependencies": {
+    "@babel/helper-string-parser": "7.25.9",
     "@commitlint/config-conventional": "^11.0.0",
     "@react-native-community/eslint-config": "^2.0.0",
     "@release-it/conventional-changelog": "^2.0.0",
