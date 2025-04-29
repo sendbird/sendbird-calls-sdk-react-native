@@ -1,5 +1,10 @@
 ## [1.1.8](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.1.7...v1.1.8) (2025-04-29)
 
+
+### Bug Fixes
+
+* update android_handleFirebaseMessageData type to { [key: string]: string | object } ([ee02a46](https://github.com/sendbird/sendbird-calls-sdk-react-native/pull/54/commits/79a507b22e7bfe8f0f309e6f5991ce00f92468dd))
+
 ## [1.1.7](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.1.6...v1.1.7) (2025-04-21)
 
 
