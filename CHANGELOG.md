@@ -1,3 +1,5 @@
+## [1.1.8](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.1.7...v1.1.8) (2025-04-29)
+
 ## [1.1.7](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.1.6...v1.1.7) (2025-04-21)
 
 
