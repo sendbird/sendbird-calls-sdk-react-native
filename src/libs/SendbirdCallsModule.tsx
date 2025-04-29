@@ -376,10 +376,11 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
    * @platform Android
    * @since 1.0.0
    */
-  public android_handleFirebaseMessageData = (data?: Record<string, string>) => {
+  public android_handleFirebaseMessageData = (data?: { [key: string]: string | object }) => {
     if (Platform.OS !== 'android' || !data?.['sendbird_call']) {
       return false;
     } else {
+      //@ts-ignore
       this.binder.nativeModule.handleFirebaseMessageData(data);
       return true;
     }

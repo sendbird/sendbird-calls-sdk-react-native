@@ -11,7 +11,6 @@ import { DirectRouteWithParams, DirectRoutes } from '../navigations/routes';
 /** Firebase RemoteMessage handler **/
 export function setFirebaseMessageHandlers() {
   const firebaseListener = async (message: FirebaseMessagingTypes.RemoteMessage) => {
-    // @ts-ignore
     SendbirdCalls.android_handleFirebaseMessageData(message.data);
   };
   messaging().setBackgroundMessageHandler(firebaseListener);
