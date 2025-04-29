@@ -1,4 +1,4 @@
-## v1.1.7
+## v1.1.8
 
 ### Bug Fixes
-- improve stability of local video view on android
+- update android_handleFirebaseMessageData type to Record<string, string> | object
