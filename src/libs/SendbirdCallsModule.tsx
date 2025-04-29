@@ -376,13 +376,28 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
    * @platform Android
    * @since 1.0.0
    */
-  public android_handleFirebaseMessageData = (data?: Record<string, string>) => {
-    if (Platform.OS !== 'android' || !data?.['sendbird_call']) {
+  public android_handleFirebaseMessageData = (data?: Record<string, string> | object) => {
+    if (Platform.OS !== 'android' || data == null || typeof data !== 'object') {
       return false;
-    } else {
-      this.binder.nativeModule.handleFirebaseMessageData(data);
-      return true;
     }
+
+    const raw = data as Record<string, unknown>;
+    const sendbirdCall = raw['sendbird_call'];
+    if (typeof sendbirdCall !== 'string') {
+      return false;
+    }
+
+    const record: Record<string, string> = {};
+    for (const [key, val] of Object.entries(raw)) {
+      if (typeof val === 'string') {
+        record[key] = val;
+      } else {
+        record[key] = JSON.stringify(val);
+      }
+    }
+
+    this.binder.nativeModule.handleFirebaseMessageData(record);
+    return true;
   };
 
   /**
