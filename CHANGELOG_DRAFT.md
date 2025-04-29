@@ -1,3 +1,4 @@
-## v1.1.6
+## v1.1.7
 
-- Fixed a crash on iOS when using the New Architecture
+### Bug Fixes
+- improve stability of local video view on android
