@@ -49,7 +49,7 @@ export interface NativeCommonModule {
   getCachedRoomById(roomId: string): Promise<RoomProperties | null>;
 
   /** @platform Android **/
-  handleFirebaseMessageData(data: Record<string, string> | object): void;
+  handleFirebaseMessageData(data: Record<string, string>): void;
 
   /** @platform iOS **/
   registerVoIPPushToken(token: string, unique?: boolean): Promise<void>;
