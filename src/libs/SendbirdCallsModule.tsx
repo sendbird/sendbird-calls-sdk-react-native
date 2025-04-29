@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
 
+import { AppLogger } from '../../sample/src/shared/utils/logger';
 import type {
   AuthenticateParams,
   CallOptions,
@@ -392,7 +393,11 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
       if (typeof val === 'string') {
         record[key] = val;
       } else {
-        record[key] = JSON.stringify(val);
+        try {
+          record[key] = JSON.stringify(val);
+        } catch (e) {
+          AppLogger.warn(`JSON.stringify failed for key "${key}":`, e);
+        }
       }
     }
 
