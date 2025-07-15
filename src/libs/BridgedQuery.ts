@@ -11,7 +11,11 @@ export class BridgedQuery<T extends NativeQueryType> implements Query {
     return this._hasNext;
   }
 
-  constructor(protected queryKey: NativeQueryKey, protected type: T, protected binder: NativeBinder) {}
+  constructor(
+    protected queryKey: NativeQueryKey,
+    protected type: T,
+    protected binder: NativeBinder,
+  ) {}
 
   async next() {
     this._isLoading = true;
