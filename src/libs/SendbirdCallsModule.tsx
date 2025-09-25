@@ -415,4 +415,43 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
     const queryKey = await this.binder.nativeModule.createRoomListQuery(params);
     return new RoomListQuery(queryKey, NativeQueryType.ROOM_LIST, this.binder);
   };
+
+  /**
+   * Updates custom items for a given call ID.
+   *
+   * @since 1.1.9
+   */
+  public updateCustomItems = async (callId: string, customItems: Record<string, string>) => {
+    const result = await this.binder.nativeModule.updateCustomItems(callId, customItems);
+    if (result && result.updatedItems) {
+      DirectCall.updateCustomItemsInPool(callId, result.updatedItems);
+    }
+    return result;
+  };
+
+  /**
+   * Deletes custom items for a given call ID.
+   *
+   * @since 1.1.9
+   */
+  public deleteCustomItems = async (callId: string, customItemKeys: string[]) => {
+    const result = await this.binder.nativeModule.deleteCustomItems(callId, customItemKeys);
+    if (result && result.updatedItems) {
+      DirectCall.updateCustomItemsInPool(callId, result.updatedItems);
+    }
+    return result;
+  };
+
+  /**
+   * Deletes all custom items for a given call ID.
+   *
+   * @since 1.1.9
+   */
+  public deleteAllCustomItems = async (callId: string) => {
+    const result = await this.binder.nativeModule.deleteAllCustomItems(callId);
+    if (result && result.updatedItems) {
+      DirectCall.updateCustomItemsInPool(callId, result.updatedItems);
+    }
+    return result;
+  };
 }

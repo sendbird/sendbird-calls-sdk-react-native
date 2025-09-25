@@ -75,6 +75,12 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     override fun fetchRoomById(roomId: String, promise: Promise) = module.fetchRoomById(roomId, promise)
     @ReactMethod
     override fun getCachedRoomById(roomId: String, promise: Promise) = module.getCachedRoomById(roomId, promise)
+    @ReactMethod
+    override fun updateCustomItems(callId: String, customItems: ReadableMap, promise: Promise) = module.updateCustomItems(callId, customItems, promise)
+    @ReactMethod
+    override fun deleteCustomItems(callId: String, customItemKeys: ReadableArray, promise: Promise) = module.deleteCustomItems(callId, customItemKeys, promise)
+    @ReactMethod
+    override fun deleteAllCustomItems(callId: String, promise: Promise) = module.deleteAllCustomItems(callId, promise)
 
     /** MediaDevice Control **/
     @ReactMethod
@@ -106,11 +112,25 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     @ReactMethod
     override fun updateRemoteVideoView(callId: String, videoViewId: Int) = module.updateRemoteVideoView(callId, videoViewId)
 
+    @ReactMethod
+    override fun directCallUpdateCustomItems(callId: String, customItems: ReadableMap, promise: Promise) = module.directCallUpdateCustomItems(callId, customItems, promise)
+    @ReactMethod
+    override fun directCallDeleteCustomItems(callId: String, customItemKeys: ReadableArray, promise: Promise) = module.directCallDeleteCustomItems(callId, customItemKeys, promise)
+    @ReactMethod
+    override fun directCallDeleteAllCustomItems(callId: String, promise: Promise) = module.directCallDeleteAllCustomItems(callId, promise)
+
     /** GroupCall - Room **/
     @ReactMethod
     override fun enter(roomId: String, options: ReadableMap, promise: Promise) = module.enter(roomId, options, promise)
     @ReactMethod
     override fun exit(roomId: String) = module.exit(roomId)
+
+    @ReactMethod
+    override fun groupCallUpdateCustomItems(roomId: String, customItems: ReadableMap, promise: Promise) = module.groupCallUpdateCustomItems(roomId, customItems, promise)
+    @ReactMethod
+    override fun groupCallDeleteCustomItems(roomId: String, customItemKeys: ReadableArray, promise: Promise) = module.groupCallDeleteCustomItems(roomId, customItemKeys, promise)
+    @ReactMethod
+    override fun groupCallDeleteAllCustomItems(roomId: String, promise: Promise) = module.groupCallDeleteAllCustomItems(roomId, promise)
 
     /** Queries **/
     @ReactMethod

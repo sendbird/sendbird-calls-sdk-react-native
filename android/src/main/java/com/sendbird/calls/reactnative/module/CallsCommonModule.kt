@@ -2,6 +2,7 @@ package com.sendbird.calls.reactnative.module
 
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.bridge.WritableNativeMap
 import com.sendbird.calls.*
 import com.sendbird.calls.reactnative.RNCallsInternalError
 import com.sendbird.calls.reactnative.extension.rejectCalls
@@ -218,5 +219,57 @@ class CallsCommonModule(private val root: CallsModule): CommonModule {
             ?: run {
                 promise.resolve(null)
             }
+    }
+
+    override fun updateCustomItems(callId: String, customItems: ReadableMap, promise: Promise) {
+        RNCallsLogger.d("[CommonModule] updateCustomItems($callId)")
+        val items = mutableMapOf<String, String>()
+        customItems.entryIterator.forEach { entry ->
+            items[entry.key] = entry.value as String
+        }
+
+        SendBirdCall.updateCustomItems(callId, items) { updatedItems, affectedKeys, error ->
+            error?.let {
+                promise.rejectCalls(it)
+            } ?: run {
+                val result = WritableNativeMap()
+                result.putMap("updatedItems", CallsUtils.convertToJsMap(updatedItems as? Map<*, *> ?: emptyMap<String, String>()))
+                result.putArray("affectedKeys", CallsUtils.convertToJsArray(affectedKeys as? List<*> ?: emptyList<String>()))
+                promise.resolve(result)
+            }
+        }
+    }
+
+    override fun deleteCustomItems(callId: String, customItemKeys: com.facebook.react.bridge.ReadableArray, promise: Promise) {
+        RNCallsLogger.d("[CommonModule] deleteCustomItems($callId)")
+        val keys = mutableSetOf<String>()
+        for (i in 0 until customItemKeys.size()) {
+            keys.add(customItemKeys.getString(i))
+        }
+
+        SendBirdCall.deleteCustomItems(callId, keys) { updatedItems, affectedKeys, error ->
+            error?.let {
+                promise.rejectCalls(it)
+            } ?: run {
+                val result = WritableNativeMap()
+                result.putMap("updatedItems", CallsUtils.convertToJsMap(updatedItems as? Map<*, *> ?: emptyMap<String, String>()))
+                result.putArray("affectedKeys", CallsUtils.convertToJsArray(affectedKeys as? List<*> ?: emptyList<String>()))
+                promise.resolve(result)
+            }
+        }
+    }
+
+    override fun deleteAllCustomItems(callId: String, promise: Promise) {
+        RNCallsLogger.d("[CommonModule] deleteAllCustomItems($callId)")
+        SendBirdCall.deleteAllCustomItems(callId) { updatedItems, affectedKeys, error ->
+            error?.let {
+                promise.rejectCalls(it)
+            } ?: run {
+                val result = WritableNativeMap()
+                result.putMap("updatedItems", CallsUtils.convertToJsMap(updatedItems as? Map<*, *> ?: emptyMap<String, String>()))
+                result.putArray("affectedKeys", CallsUtils.convertToJsArray(affectedKeys as? List<*> ?: emptyList<String>()))
+                promise.resolve(result)
+            }
+        }
     }
 }

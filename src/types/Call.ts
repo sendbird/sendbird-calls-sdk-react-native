@@ -334,7 +334,12 @@ export interface DirectCallProperties {
 }
 
 /** DirectCall */
-type JSDirectCallModule = AsJSDirectCall<NativeDirectCallModule>;
+type JSDirectCallModule = AsJSDirectCall<
+  Omit<
+    NativeDirectCallModule,
+    'directCallUpdateCustomItems' | 'directCallDeleteCustomItems' | 'directCallDeleteAllCustomItems'
+  >
+>;
 type JSDirectCallMediaDeviceControl = AsJSInterface<
   JSMediaDeviceControl,
   'android',
@@ -343,6 +348,9 @@ type JSDirectCallMediaDeviceControl = AsJSInterface<
 
 export interface DirectCallMethods extends JSDirectCallModule, JSDirectCallMediaDeviceControl {
   addListener(listener: Partial<DirectCallListener>): () => void;
+  updateCustomItems(customItems: Record<string, string>): Promise<CustomItemUpdateResult>;
+  deleteCustomItems(customItemKeys: string[]): Promise<CustomItemUpdateResult>;
+  deleteAllCustomItems(): Promise<CustomItemUpdateResult>;
 }
 
 export interface DirectCallLog {

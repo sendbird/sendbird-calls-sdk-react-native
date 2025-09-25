@@ -200,4 +200,69 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
             CallsUtils.findDirectCall(identifier, from).resumeAudioTrack()
         }
     }
+
+    override fun directCallUpdateCustomItems(callId: String, customItems: ReadableMap, promise: Promise) {
+        val from = "directCall/updateCustomItems"
+        RNCallsLogger.d("[DirectCallModule] $from ($callId)")
+
+        CallsUtils.safeRun(promise) {
+            val call = CallsUtils.findDirectCall(callId, from)
+            val items = CallsUtils.convertMapToHashMap(customItems)
+
+            call.updateCustomItems(items) { updatedItems, affectedKeys, error ->
+                if (error != null) {
+                    promise.rejectCalls(error)
+                } else {
+                    val result = CallsUtils.createMap().apply {
+                        putMap("updatedItems", CallsUtils.convertHashMapToMap(updatedItems ?: hashMapOf()))
+                        putArray("affectedKeys", CallsUtils.convertListToArray(affectedKeys ?: listOf()))
+                    }
+                    promise.resolve(result)
+                }
+            }
+        }
+    }
+
+    override fun directCallDeleteCustomItems(callId: String, customItemKeys: com.facebook.react.bridge.ReadableArray, promise: Promise) {
+        val from = "directCall/deleteCustomItems"
+        RNCallsLogger.d("[DirectCallModule] $from ($callId)")
+
+        CallsUtils.safeRun(promise) {
+            val call = CallsUtils.findDirectCall(callId, from)
+            val keys = CallsUtils.convertArrayToSet(customItemKeys)
+
+            call.deleteCustomItems(keys) { updatedItems, affectedKeys, error ->
+                if (error != null) {
+                    promise.rejectCalls(error)
+                } else {
+                    val result = CallsUtils.createMap().apply {
+                        putMap("updatedItems", CallsUtils.convertHashMapToMap(updatedItems ?: hashMapOf()))
+                        putArray("affectedKeys", CallsUtils.convertListToArray(affectedKeys ?: listOf()))
+                    }
+                    promise.resolve(result)
+                }
+            }
+        }
+    }
+
+    override fun directCallDeleteAllCustomItems(callId: String, promise: Promise) {
+        val from = "directCall/deleteAllCustomItems"
+        RNCallsLogger.d("[DirectCallModule] $from ($callId)")
+
+        CallsUtils.safeRun(promise) {
+            val call = CallsUtils.findDirectCall(callId, from)
+
+            call.deleteAllCustomItems { updatedItems, affectedKeys, error ->
+                if (error != null) {
+                    promise.rejectCalls(error)
+                } else {
+                    val result = CallsUtils.createMap().apply {
+                        putMap("updatedItems", CallsUtils.convertHashMapToMap(updatedItems ?: hashMapOf()))
+                        putArray("affectedKeys", CallsUtils.convertListToArray(affectedKeys ?: listOf()))
+                    }
+                    promise.resolve(result)
+                }
+            }
+        }
+    }
 }

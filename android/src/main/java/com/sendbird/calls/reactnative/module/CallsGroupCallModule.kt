@@ -147,4 +147,71 @@ class CallsGroupCallModule: GroupCallModule {
             CallsUtils.findRoom(identifier, from).localParticipant?.resumeAudioTrack()
         }
     }
+
+    override fun groupCallUpdateCustomItems(roomId: String, customItems: ReadableMap, promise: Promise) {
+        val from = "groupCall/updateCustomItems"
+        RNCallsLogger.d("[GroupCallModule] $from ($roomId)")
+
+        CallsUtils.safeRun(promise) {
+            val room = CallsUtils.findRoom(roomId, from)
+            val items = CallsUtils.convertMapToHashMap(customItems)
+
+            room.updateCustomItems(items) { updatedItems, affectedKeys, error ->
+                if (error != null) {
+                    promise.rejectCalls(error)
+                } else {
+                    val result = CallsUtils.createMap().apply {
+                        putMap("updatedItems", CallsUtils.convertHashMapToMap(updatedItems ?: hashMapOf()))
+                        putArray("affectedKeys", CallsUtils.convertListToArray(affectedKeys ?: listOf()))
+                    }
+                    promise.resolve(result)
+                }
+            }
+        }
+    }
+
+    override fun groupCallDeleteCustomItems(roomId: String, customItemKeys: com.facebook.react.bridge.ReadableArray, promise: Promise) {
+        val from = "groupCall/deleteCustomItems"
+        RNCallsLogger.d("[GroupCallModule] $from ($roomId)")
+
+        CallsUtils.safeRun(promise) {
+            val room = CallsUtils.findRoom(roomId, from)
+            val keys = CallsUtils.convertArrayToSet(customItemKeys)
+
+            room.deleteCustomItems(keys) { updatedItems, affectedKeys, error ->
+                if (error != null) {
+                    promise.rejectCalls(error)
+                } else {
+                    val result = CallsUtils.createMap().apply {
+                        putMap("updatedItems", CallsUtils.convertHashMapToMap(updatedItems ?: hashMapOf()))
+                        putArray("affectedKeys", CallsUtils.convertListToArray(affectedKeys ?: listOf()))
+                    }
+                    promise.resolve(result)
+                }
+            }
+        }
+    }
+
+    override fun groupCallDeleteAllCustomItems(roomId: String, promise: Promise) {
+        val from = "groupCall/deleteAllCustomItems"
+        RNCallsLogger.d("[GroupCallModule] $from ($roomId)")
+
+        CallsUtils.safeRun(promise) {
+            val room = CallsUtils.findRoom(roomId, from)
+            val allKeys = room.customItems.keys
+
+            // There is no deleteAllCustomItems API in Android native, so handled with deleteCustomItems.
+            room.deleteCustomItems(allKeys) { updatedItems, affectedKeys, error ->
+                if (error != null) {
+                    promise.rejectCalls(error)
+                } else {
+                    val result = CallsUtils.createMap().apply {
+                        putMap("updatedItems", CallsUtils.convertHashMapToMap(updatedItems ?: emptyMap()))
+                        putArray("affectedKeys", CallsUtils.convertListToArray(affectedKeys ?: listOf()))
+                    }
+                    promise.resolve(result)
+                }
+            }
+        }
+    }
 }

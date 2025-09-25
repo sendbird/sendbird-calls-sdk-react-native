@@ -126,6 +126,23 @@ RCT_EXTERN_METHOD(createRoom
                   : (RCTPromiseResolveBlock)resolve
                   : (RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(updateCustomItems
+                  : (NSString *)callId
+                  : (NSDictionary *)customItems
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(deleteCustomItems
+                  : (NSString *)callId
+                  : (NSArray *)customItemKeys
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(deleteAllCustomItems
+                  : (NSString *)callId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
+
 // MARK: - SendbirdCalls: DirectCall
 RCT_EXTERN_METHOD(accept
                   : (NSString *)callId
@@ -147,6 +164,23 @@ RCT_EXTERN_METHOD(updateRemoteVideoView
                   : (NSString *)callId
                   : (nonnull NSNumber *)videoViewId)
 
+RCT_EXTERN_METHOD(directCallUpdateCustomItems
+                  : (NSString *)callId
+                  : (NSDictionary *)customItems
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(directCallDeleteCustomItems
+                  : (NSString *)callId
+                  : (NSArray *)customItemKeys
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(directCallDeleteAllCustomItems
+                  : (NSString *)callId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
+
 // MARK: - SendbirdCalls: GroupCall
 RCT_EXTERN_METHOD(enter
                   : (NSString *)roomId
@@ -156,6 +190,23 @@ RCT_EXTERN_METHOD(enter
 
 RCT_EXTERN_METHOD(exit
                   : (NSString *)roomId)
+
+RCT_EXTERN_METHOD(groupCallUpdateCustomItems
+                  : (NSString *)roomId
+                  : (NSDictionary *)customItems
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(groupCallDeleteCustomItems
+                  : (NSString *)roomId
+                  : (NSArray *)customItemKeys
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(groupCallDeleteAllCustomItems
+                  : (NSString *)roomId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
 
 // MARK: - SendbirdCalls: MediaDeviceControl
 RCT_EXTERN_METHOD(switchCamera
