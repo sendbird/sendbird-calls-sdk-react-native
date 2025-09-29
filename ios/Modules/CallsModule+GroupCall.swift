@@ -150,6 +150,3 @@ extension CallsGroupCallModule {
 }
 
 // MARK: GroupCall CustomItems
-extension CallsGroupCallModule {
-
-}
