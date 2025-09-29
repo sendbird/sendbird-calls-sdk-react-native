@@ -30,7 +30,7 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
   }
 
   /** @internal **/
-  public static updateCustomItemsInPool(callId: string, customItems: Record<string, string>) {
+  public static updateCustomItems(callId: string, customItems: Record<string, string>) {
     const directCall = DirectCall.pool[callId];
     if (directCall) {
       directCall._updateCustomItems(customItems);

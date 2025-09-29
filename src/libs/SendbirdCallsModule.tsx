@@ -424,7 +424,7 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   public updateCustomItems = async (callId: string, customItems: Record<string, string>) => {
     const result = await this.binder.nativeModule.updateCustomItems(callId, customItems);
     if (result && result.updatedItems) {
-      DirectCall.updateCustomItemsInPool(callId, result.updatedItems);
+      DirectCall.updateCustomItems(callId, result.updatedItems);
     }
     return result;
   };
@@ -437,7 +437,7 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   public deleteCustomItems = async (callId: string, customItemKeys: string[]) => {
     const result = await this.binder.nativeModule.deleteCustomItems(callId, customItemKeys);
     if (result && result.updatedItems) {
-      DirectCall.updateCustomItemsInPool(callId, result.updatedItems);
+      DirectCall.updateCustomItems(callId, result.updatedItems);
     }
     return result;
   };
@@ -450,7 +450,7 @@ export default class SendbirdCallsModule implements SendbirdCallsJavascriptSpec 
   public deleteAllCustomItems = async (callId: string) => {
     const result = await this.binder.nativeModule.deleteAllCustomItems(callId);
     if (result && result.updatedItems) {
-      DirectCall.updateCustomItemsInPool(callId, result.updatedItems);
+      DirectCall.updateCustomItems(callId, result.updatedItems);
     }
     return result;
   };
