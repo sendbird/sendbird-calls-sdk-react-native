@@ -1,6 +1,7 @@
 package com.sendbird.calls.reactnative.module
 
 import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
 import com.sendbird.calls.AcceptParams
 import com.sendbird.calls.AudioDevice
@@ -83,7 +84,7 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
             call.setRemoteVideoView(view.getSurface())
         }
     }
-    
+
     override fun muteMicrophone(type: String, identifier: String) {
         val from = "directCall/muteMicrophone"
         RNCallsLogger.d("[DirectCallModule] $from ($identifier)")
@@ -223,7 +224,7 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
         }
     }
 
-    override fun directCallDeleteCustomItems(callId: String, customItemKeys: com.facebook.react.bridge.ReadableArray, promise: Promise) {
+    override fun directCallDeleteCustomItems(callId: String, customItemKeys: ReadableArray, promise: Promise) {
         val from = "directCall/deleteCustomItems"
         RNCallsLogger.d("[DirectCallModule] $from ($callId)")
 

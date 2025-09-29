@@ -1,6 +1,7 @@
 package com.sendbird.calls.reactnative.module
 
 import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableNativeMap
 import com.sendbird.calls.*
@@ -223,10 +224,7 @@ class CallsCommonModule(private val root: CallsModule): CommonModule {
 
     override fun updateCustomItems(callId: String, customItems: ReadableMap, promise: Promise) {
         RNCallsLogger.d("[CommonModule] updateCustomItems($callId)")
-        val items = mutableMapOf<String, String>()
-        customItems.entryIterator.forEach { entry ->
-            items[entry.key] = entry.value as String
-        }
+       val items = CallsUtils.convertMapToHashMap(customItems)
 
         SendBirdCall.updateCustomItems(callId, items) { updatedItems, affectedKeys, error ->
             error?.let {
@@ -240,12 +238,9 @@ class CallsCommonModule(private val root: CallsModule): CommonModule {
         }
     }
 
-    override fun deleteCustomItems(callId: String, customItemKeys: com.facebook.react.bridge.ReadableArray, promise: Promise) {
+    override fun deleteCustomItems(callId: String, customItemKeys: ReadableArray, promise: Promise) {
         RNCallsLogger.d("[CommonModule] deleteCustomItems($callId)")
-        val keys = mutableSetOf<String>()
-        for (i in 0 until customItemKeys.size()) {
-            keys.add(customItemKeys.getString(i))
-        }
+         val keys = CallsUtils.convertArrayToSet(customItemKeys)
 
         SendBirdCall.deleteCustomItems(callId, keys) { updatedItems, affectedKeys, error ->
             error?.let {

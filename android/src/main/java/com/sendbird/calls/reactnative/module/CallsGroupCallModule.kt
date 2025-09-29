@@ -1,6 +1,7 @@
 package com.sendbird.calls.reactnative.module
 
 import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
 import com.sendbird.calls.*
 import com.sendbird.calls.reactnative.RNCallsInternalError
@@ -170,7 +171,7 @@ class CallsGroupCallModule: GroupCallModule {
         }
     }
 
-    override fun groupCallDeleteCustomItems(roomId: String, customItemKeys: com.facebook.react.bridge.ReadableArray, promise: Promise) {
+    override fun groupCallDeleteCustomItems(roomId: String, customItemKeys: ReadableArray, promise: Promise) {
         val from = "groupCall/deleteCustomItems"
         RNCallsLogger.d("[GroupCallModule] $from ($roomId)")
 
