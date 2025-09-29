@@ -149,4 +149,3 @@ extension CallsGroupCallModule {
     }
 }
 
-// MARK: GroupCall CustomItems
