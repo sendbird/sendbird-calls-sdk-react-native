@@ -240,7 +240,7 @@ class CallsCommonModule(private val root: CallsModule): CommonModule {
 
     override fun deleteCustomItems(callId: String, customItemKeys: ReadableArray, promise: Promise) {
         RNCallsLogger.d("[CommonModule] deleteCustomItems($callId)")
-         val keys = CallsUtils.convertArrayToSet(customItemKeys)
+        val keys = CallsUtils.convertArrayToSet(customItemKeys)
 
         SendBirdCall.deleteCustomItems(callId, keys) { updatedItems, affectedKeys, error ->
             error?.let {
