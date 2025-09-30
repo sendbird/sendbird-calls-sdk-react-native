@@ -104,7 +104,7 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
     override fun enter(roomId: String, options: ReadableMap, promise: Promise) = groupCallModule.enter(roomId, options, promise)
     override fun exit(roomId: String) = groupCallModule.exit(roomId)
     override fun groupCallUpdateCustomItems(roomId: String, customItems: ReadableMap, promise: Promise) = groupCallModule.groupCallUpdateCustomItems(roomId, customItems, promise)
-    override fun groupCallDeleteCustomItems(roomId: String, customItemKeys: com.facebook.react.bridge.ReadableArray, promise: Promise) = groupCallModule.groupCallDeleteCustomItems(roomId, customItemKeys, promise)
+    override fun groupCallDeleteCustomItems(roomId: String, customItemKeys: ReadableArray, promise: Promise) = groupCallModule.groupCallDeleteCustomItems(roomId, customItemKeys, promise)
     override fun groupCallDeleteAllCustomItems(roomId: String, promise: Promise) = groupCallModule.groupCallDeleteAllCustomItems(roomId, promise)
 
     /** Queries **/
