@@ -97,7 +97,7 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
     override fun updateLocalVideoView(callId: String, videoViewId: Int)= directCallModule.updateLocalVideoView(callId, videoViewId)
     override fun updateRemoteVideoView(callId: String, videoViewId: Int)= directCallModule.updateRemoteVideoView(callId, videoViewId)
     override fun directCallUpdateCustomItems(callId: String, customItems: ReadableMap, promise: Promise) = directCallModule.directCallUpdateCustomItems(callId, customItems, promise)
-    override fun directCallDeleteCustomItems(callId: String, customItemKeys: com.facebook.react.bridge.ReadableArray, promise: Promise) = directCallModule.directCallDeleteCustomItems(callId, customItemKeys, promise)
+    override fun directCallDeleteCustomItems(callId: String, customItemKeys: ReadableArray, promise: Promise) = directCallModule.directCallDeleteCustomItems(callId, customItemKeys, promise)
     override fun directCallDeleteAllCustomItems(callId: String, promise: Promise) = directCallModule.directCallDeleteAllCustomItems(callId, promise)
 
     /** GroupCall module interface**/
