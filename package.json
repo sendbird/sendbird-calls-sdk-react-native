@@ -1,6 +1,6 @@
 {
   "name": "@sendbird/calls-react-native",
-  "version": "1.1.9",
+  "version": "1.1.8",
   "description": "Sendbird Calls SDK for React Native: Empower React Native apps with seamless audio, video, and group calling. Build interactive communication easily.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -102,7 +102,7 @@
     "react-native": "0.76.9",
     "react-native-builder-bob": "^0.18.2",
     "release-it": "^16.3.0",
-    "typedoc": "^0.28.13",
+    "typedoc": "^0.22.16",
     "typescript": "5.4.5"
   },
   "peerDependencies": {
