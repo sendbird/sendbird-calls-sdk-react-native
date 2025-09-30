@@ -77,7 +77,7 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
     override fun fetchRoomById(roomId: String, promise: Promise) = commonModule.fetchRoomById(roomId, promise)
     override fun getCachedRoomById(roomId: String, promise: Promise) = commonModule.getCachedRoomById(roomId, promise)
     override fun updateCustomItems(callId: String, customItems: ReadableMap, promise: Promise) = commonModule.updateCustomItems(callId, customItems, promise)
-    override fun deleteCustomItems(callId: String, customItemKeys: com.facebook.react.bridge.ReadableArray, promise: Promise) = commonModule.deleteCustomItems(callId, customItemKeys, promise)
+    override fun deleteCustomItems(callId: String, customItemKeys: ReadableArray, promise: Promise) = commonModule.deleteCustomItems(callId, customItemKeys, promise)
     override fun deleteAllCustomItems(callId: String, promise: Promise) = commonModule.deleteAllCustomItems(callId, promise)
 
     /** Media Device control interface **/
