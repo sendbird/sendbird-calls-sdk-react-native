@@ -31,7 +31,7 @@ interface CommonModule {
     fun getCachedRoomById(roomId: String, promise: Promise)
 
     fun updateCustomItems(callId: String, customItems: ReadableMap, promise: Promise)
-    fun deleteCustomItems(callId: String, customItemKeys: com.facebook.react.bridge.ReadableArray, promise: Promise)
+    fun deleteCustomItems(callId: String, customItemKeys: ReadableArray, promise: Promise)
     fun deleteAllCustomItems(callId: String, promise: Promise)
 }
 
