@@ -252,4 +252,50 @@ object CallsUtils {
         return SendBirdCall.getCachedRoomById(roomId) ?: throw RNCallsInternalError(from, RNCallsInternalError.Type.NOT_FOUND_ROOM)
     }
 
+    fun createMap(): WritableNativeMap {
+        return WritableNativeMap()
+    }
+
+    fun convertMapToHashMap(map: ReadableMap): HashMap<String, String> {
+        val hashMap = HashMap<String, String>()
+        val iterator = map.keySetIterator()
+        while (iterator.hasNextKey()) {
+            val key = iterator.nextKey()
+            hashMap[key] = map.getString(key) ?: ""
+        }
+        return hashMap
+    }
+
+    fun convertHashMapToMap(hashMap: Map<String, String>): WritableNativeMap {
+        val map = WritableNativeMap()
+        for ((key, value) in hashMap) {
+            map.putString(key, value)
+        }
+        return map
+    }
+
+    fun convertArrayToSet(array: ReadableArray): Set<String> {
+        val set = mutableSetOf<String>()
+        for (i in 0 until array.size()) {
+            set.add(array.getString(i))
+        }
+        return set
+    }
+
+    fun convertArrayToList(array: ReadableArray): List<String> {
+        val list = mutableListOf<String>()
+        for (i in 0 until array.size()) {
+            list.add(array.getString(i))
+        }
+        return list
+    }
+
+    fun convertListToArray(list: List<String>): WritableNativeArray {
+        val array = WritableNativeArray()
+        for (item in list) {
+            array.pushString(item)
+        }
+        return array
+    }
+
 }

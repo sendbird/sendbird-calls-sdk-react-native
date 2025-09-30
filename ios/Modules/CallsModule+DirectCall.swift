@@ -16,6 +16,9 @@ protocol CallsDirectCallModuleProtocol: MediaDeviceControlProtocol {
     func end(_ callId: String, _ promise: Promise)
     func updateLocalVideoView(_ callId: String, _ videoViewId: NSNumber)
     func updateRemoteVideoView(_ callId: String, _ videoViewId: NSNumber)
+    func directCallUpdateCustomItems(_ callId: String, _ customItems: [String: String], _ promise: Promise)
+    func directCallDeleteCustomItems(_ callId: String, _ customItemKeys: [String], _ promise: Promise)
+    func directCallDeleteAllCustomItems(_ callId: String, _ promise: Promise)
 }
 
 // MARK: DirectCallMethods
@@ -55,6 +58,60 @@ class CallsDirectCallModule: CallsBaseModule, CallsDirectCallModuleProtocol {
             let directCall = try CallsUtils.findDirectCallBy(callId)
             let videoView = try CallsUtils.findViewBy(CallsEvents.shared.bridge, videoViewId)
             directCall.updateRemoteVideoView(videoView.surface)
+        }
+    }
+
+    func directCallUpdateCustomItems(_ callId: String, _ customItems: [String: String], _ promise: Promise) {
+        if let directCall = try? CallsUtils.findDirectCallBy(callId) {
+            directCall.updateCustomItems(customItems: customItems) { updatedItems, affectedKeys, error in
+                if let error = error {
+                    promise.reject(error)
+                } else {
+                    let result: [String: Any] = [
+                        "updatedItems": updatedItems ?? [:],
+                        "affectedKeys": affectedKeys ?? []
+                    ]
+                    promise.resolve(result)
+                }
+            }
+        } else {
+            promise.reject(RNCallsInternalError.notFoundDirectCall("directCall/updateCustomItems"))
+        }
+    }
+
+    func directCallDeleteCustomItems(_ callId: String, _ customItemKeys: [String], _ promise: Promise) {
+        if let directCall = try? CallsUtils.findDirectCallBy(callId) {
+            directCall.deleteCustomItems(customItemKeys: customItemKeys) { updatedItems, affectedKeys, error in
+                if let error = error {
+                    promise.reject(error)
+                } else {
+                    let result: [String: Any] = [
+                        "updatedItems": updatedItems ?? [:],
+                        "affectedKeys": affectedKeys ?? []
+                    ]
+                    promise.resolve(result)
+                }
+            }
+        } else {
+            promise.reject(RNCallsInternalError.notFoundDirectCall("directCall/deleteCustomItems"))
+        }
+    }
+
+    func directCallDeleteAllCustomItems(_ callId: String, _ promise: Promise) {
+        if let directCall = try? CallsUtils.findDirectCallBy(callId) {
+            directCall.deleteAllCustomItems { updatedItems, affectedKeys, error in
+                if let error = error {
+                    promise.reject(error)
+                } else {
+                    let result: [String: Any] = [
+                        "updatedItems": updatedItems ?? [:],
+                        "affectedKeys": affectedKeys ?? []
+                    ]
+                    promise.resolve(result)
+                }
+            }
+        } else {
+            promise.reject(RNCallsInternalError.notFoundDirectCall("directCall/deleteAllCustomItems"))
         }
     }
 }

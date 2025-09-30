@@ -1,7 +1,13 @@
 import type { NativeModule, TurboModule } from 'react-native';
 
 import { BridgedQuery } from '../libs/BridgedQuery';
-import type { CallOptions, DirectCallLog, DirectCallProperties, SendbirdCallListener } from './Call';
+import type {
+  CallOptions,
+  CustomItemUpdateResult,
+  DirectCallLog,
+  DirectCallProperties,
+  SendbirdCallListener,
+} from './Call';
 import type { AudioDevice, VideoDevice } from './Media';
 import { SoundType } from './Media';
 import {
@@ -48,6 +54,10 @@ export interface NativeCommonModule {
   fetchRoomById(roomId: string): Promise<RoomProperties>;
   getCachedRoomById(roomId: string): Promise<RoomProperties | null>;
 
+  updateCustomItems(callId: string, customItems: Record<string, string>): Promise<CustomItemUpdateResult>;
+  deleteCustomItems(callId: string, customItemKeys: string[]): Promise<CustomItemUpdateResult>;
+  deleteAllCustomItems(callId: string): Promise<CustomItemUpdateResult>;
+
   /** @platform Android **/
   handleFirebaseMessageData(data: Record<string, string>): void;
 
@@ -93,15 +103,16 @@ export interface NativeDirectCallModule {
   updateLocalVideoView(callId: string, videoViewId: number): void;
   updateRemoteVideoView(callId: string, videoViewId: number): void;
 
+  directCallUpdateCustomItems(callId: string, customItems: Record<string, string>): Promise<CustomItemUpdateResult>;
+  directCallDeleteCustomItems(callId: string, customItemKeys: string[]): Promise<CustomItemUpdateResult>;
+  directCallDeleteAllCustomItems(callId: string): Promise<CustomItemUpdateResult>;
+
   /** Not implemented yet belows **/
   // hold(callId:string): Promise<void>;
   // unhold(callId:string, force: boolean): Promise<void>;
   //
   // captureLocalVideoView(callId:string): Promise<string>; // capture -> tmp file path
   // captureRemoteVideoView(callId:string): Promise<string>;
-  // updateCustomItems(callId:string, items: Record<string, string>): Promise<CustomItemUpdateResult>;
-  // deleteAllCustomItems(callId:string): Promise<void>;
-  // deleteCustomItems(callId:string, key: string[]): Promise<CustomItemUpdateResult>;
   //
   // startRecording(callId:string, options: RecordingOptions): Promise<{ recordingId: string }>;
   // stopRecording(callId:string, recordingId: string): void;
@@ -113,6 +124,10 @@ export interface NativeDirectCallModule {
 export interface NativeGroupCallModule {
   enter(roomId: string, options: EnterParams): Promise<void>;
   exit(roomId: string): void;
+
+  groupCallUpdateCustomItems(roomId: string, customItems: Record<string, string>): Promise<CustomItemUpdateResult>;
+  groupCallDeleteCustomItems(roomId: string, customItemKeys: string[]): Promise<CustomItemUpdateResult>;
+  groupCallDeleteAllCustomItems(roomId: string): Promise<CustomItemUpdateResult>;
 }
 
 export interface NativeQueries {

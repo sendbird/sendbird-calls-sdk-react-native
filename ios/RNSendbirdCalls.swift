@@ -159,6 +159,18 @@ extension RNSendbirdCalls {
     @objc func createRoom(_ params: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
         module.createRoom(params, Promise(resolve, reject))
     }
+
+    @objc func updateCustomItems(_ callId: String, _ customItems: [String: String], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.updateCustomItems(callId, customItems, Promise(resolve, reject))
+    }
+
+    @objc func deleteCustomItems(_ callId: String, _ customItemKeys: [String], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.deleteCustomItems(callId, customItemKeys, Promise(resolve, reject))
+    }
+
+    @objc func deleteAllCustomItems(_ callId: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.deleteAllCustomItems(callId, Promise(resolve, reject))
+    }
 }
 
 // MARK: DirectCall
@@ -178,6 +190,18 @@ extension RNSendbirdCalls {
     @objc func updateRemoteVideoView(_ callId: String, _ videoViewId: NSNumber) {
         module.updateRemoteVideoView(callId, videoViewId)
     }
+
+    @objc func directCallUpdateCustomItems(_ callId: String, _ customItems: [String: String], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.directCallUpdateCustomItems(callId, customItems, Promise(resolve, reject))
+    }
+
+    @objc func directCallDeleteCustomItems(_ callId: String, _ customItemKeys: [String], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.directCallDeleteCustomItems(callId, customItemKeys, Promise(resolve, reject))
+    }
+
+    @objc func directCallDeleteAllCustomItems(_ callId: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.directCallDeleteAllCustomItems(callId, Promise(resolve, reject))
+    }
 }
 
 // MARK: GroupCall
@@ -185,9 +209,21 @@ extension RNSendbirdCalls {
     @objc func enter(_ roomId: String, _ options: [String: Any], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
         module.enter(roomId, options, Promise(resolve, reject))
     }
-    
+
     @objc func exit(_ roomId: String) {
         module.exit(roomId)
+    }
+
+    @objc func groupCallUpdateCustomItems(_ roomId: String, _ customItems: [String: String], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.groupCallUpdateCustomItems(roomId, customItems, Promise(resolve, reject))
+    }
+
+    @objc func groupCallDeleteCustomItems(_ roomId: String, _ customItemKeys: [String], _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.groupCallDeleteCustomItems(roomId, customItemKeys, Promise(resolve, reject))
+    }
+
+    @objc func groupCallDeleteAllCustomItems(_ roomId: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.groupCallDeleteAllCustomItems(roomId, Promise(resolve, reject))
     }
 }
 

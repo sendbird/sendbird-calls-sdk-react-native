@@ -4,7 +4,7 @@ import type { AudioDevice, AudioDeviceChangedInfo } from './Media';
 import type { NativeGroupCallModule } from './NativeModule';
 import { JSMediaDeviceControl } from './NativeModule';
 import type { ParticipantProperties } from './Participant';
-import type { AsJSGroupCall, AsJSInterface } from './index';
+import type { AsJSGroupCall, AsJSInterface, CustomItemUpdateResult } from './index';
 
 export interface RoomListener {
   /**
@@ -185,7 +185,12 @@ export interface RoomProperties {
   createdBy: string;
 }
 
-type JSGroupCallModule = AsJSGroupCall<NativeGroupCallModule>;
+type JSGroupCallModule = AsJSGroupCall<
+  Omit<
+    NativeGroupCallModule,
+    'groupCallUpdateCustomItems' | 'groupCallDeleteCustomItems' | 'groupCallDeleteAllCustomItems'
+  >
+>;
 type JSGroupCallMediaDeviceControl = AsJSInterface<
   Pick<JSMediaDeviceControl, 'selectAudioDevice'>,
   'android',
@@ -194,6 +199,9 @@ type JSGroupCallMediaDeviceControl = AsJSInterface<
 
 export interface GroupCallMethods extends JSGroupCallModule, JSGroupCallMediaDeviceControl {
   addListener(listener: Partial<RoomListener>): () => void;
+  updateCustomItems(customItems: Record<string, string>): Promise<CustomItemUpdateResult>;
+  deleteCustomItems(customItemKeys: string[]): Promise<CustomItemUpdateResult>;
+  deleteAllCustomItems(): Promise<CustomItemUpdateResult>;
 }
 
 export type RoomParams = {

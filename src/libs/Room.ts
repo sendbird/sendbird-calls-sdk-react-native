@@ -71,7 +71,9 @@ export class Room implements RoomProperties, GroupCallMethods {
     this._props = props;
     return this;
   }
-
+  private _updateCustomItems(customItems: Record<string, string>) {
+    this._props.customItems = customItems;
+  }
   public get roomId() {
     return this._props.roomId;
   }
@@ -233,5 +235,50 @@ export class Room implements RoomProperties, GroupCallMethods {
   public android_selectAudioDevice = async (device: AudioDevice) => {
     if (Platform.OS !== 'android') return;
     await this._binder.nativeModule.selectAudioDevice(ControllableModuleType.GROUP_CALL, this.roomId, device);
+  };
+
+  /**
+   * Updates custom items for this room.
+   * Custom items are key-value pairs that can be stored with the room.
+   *
+   * @param customItems - Key-value pairs to update
+   * @returns Promise resolving to the update result with updated items and affected keys
+   * @since 1.1.9
+   */
+  public updateCustomItems = async (customItems: Record<string, string>) => {
+    const result = await this._binder.nativeModule.groupCallUpdateCustomItems(this.roomId, customItems);
+    if (result && result.updatedItems) {
+      this._updateCustomItems(result.updatedItems);
+    }
+    return result;
+  };
+
+  /**
+   * Deletes custom items from this room.
+   *
+   * @param customItemKeys - Array of keys to delete
+   * @returns Promise resolving to the update result with updated items and affected keys
+   * @since 1.1.9
+   */
+  public deleteCustomItems = async (customItemKeys: string[]) => {
+    const result = await this._binder.nativeModule.groupCallDeleteCustomItems(this.roomId, customItemKeys);
+    if (result && result.updatedItems) {
+      this._updateCustomItems(result.updatedItems);
+    }
+    return result;
+  };
+
+  /**
+   * Deletes all custom items from this room.
+   *
+   * @returns Promise resolving to the update result with updated items and affected keys
+   * @since 1.1.9
+   */
+  public deleteAllCustomItems = async () => {
+    const result = await this._binder.nativeModule.groupCallDeleteAllCustomItems(this.roomId);
+    if (result && result.updatedItems) {
+      this._updateCustomItems(result.updatedItems);
+    }
+    return result;
   };
 }

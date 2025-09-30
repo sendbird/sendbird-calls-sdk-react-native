@@ -29,6 +29,14 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
     return directCall._updateInternal(props);
   }
 
+  /** @internal **/
+  public static updateCustomItems(callId: string, customItems: Record<string, string>) {
+    const directCall = DirectCall.pool[callId];
+    if (directCall) {
+      directCall._updateCustomItems(customItems);
+    }
+  }
+
   constructor(binder: NativeBinder, props: DirectCallProperties) {
     this._binder = binder;
     this._props = props;
@@ -54,7 +62,9 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
     this._props = props;
     return this;
   }
-
+  private _updateCustomItems(customItems: Record<string, string>) {
+    this._props.customItems = customItems;
+  }
   public get ios_callUUID() {
     return this._props.ios_callUUID;
   }
@@ -400,5 +410,49 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
    */
   public updateRemoteVideoView = (videoViewId: number) => {
     this._binder.nativeModule.updateRemoteVideoView(this.callId, videoViewId);
+  };
+
+  /**
+   * Updates custom items for this call.
+   *
+   * @param customItems Custom items of [String: String] to be updated or inserted.
+   * @returns Promise that resolves with CustomItemUpdateResult containing updated items and affected keys.
+   * @since 1.1.9
+   */
+  public updateCustomItems = async (customItems: Record<string, string>) => {
+    const result = await this._binder.nativeModule.directCallUpdateCustomItems(this.callId, customItems);
+    if (result && result.updatedItems) {
+      this._updateCustomItems(result.updatedItems);
+    }
+    return result;
+  };
+
+  /**
+   * Deletes custom items for this call.
+   *
+   * @param customItemKeys Custom item keys which you want to delete.
+   * @returns Promise that resolves with CustomItemUpdateResult containing updated items and affected keys.
+   * @since 1.1.9
+   */
+  public deleteCustomItems = async (customItemKeys: string[]) => {
+    const result = await this._binder.nativeModule.directCallDeleteCustomItems(this.callId, customItemKeys);
+    if (result && result.updatedItems) {
+      this._updateCustomItems(result.updatedItems);
+    }
+    return result;
+  };
+
+  /**
+   * Deletes all custom items for this call.
+   *
+   * @returns Promise that resolves with CustomItemUpdateResult containing updated items and affected keys.
+   * @since 1.1.9
+   */
+  public deleteAllCustomItems = async () => {
+    const result = await this._binder.nativeModule.directCallDeleteAllCustomItems(this.callId);
+    if (result && result.updatedItems) {
+      this._updateCustomItems(result.updatedItems);
+    }
+    return result;
   };
 }

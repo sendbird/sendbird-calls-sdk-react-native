@@ -2,6 +2,7 @@ package com.sendbird.calls.reactnative.module
 
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
 import com.sendbird.calls.DirectCall
 import com.sendbird.calls.RoomInvitation
@@ -76,6 +77,9 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
     override fun createRoom(params: ReadableMap, promise: Promise) = commonModule.createRoom(params, promise)
     override fun fetchRoomById(roomId: String, promise: Promise) = commonModule.fetchRoomById(roomId, promise)
     override fun getCachedRoomById(roomId: String, promise: Promise) = commonModule.getCachedRoomById(roomId, promise)
+    override fun updateCustomItems(callId: String, customItems: ReadableMap, promise: Promise) = commonModule.updateCustomItems(callId, customItems, promise)
+    override fun deleteCustomItems(callId: String, customItemKeys: ReadableArray, promise: Promise) = commonModule.deleteCustomItems(callId, customItemKeys, promise)
+    override fun deleteAllCustomItems(callId: String, promise: Promise) = commonModule.deleteAllCustomItems(callId, promise)
 
     /** Media Device control interface **/
     override fun stopVideo(type: String, identifier: String) = getControllableModule(type).stopVideo(type, identifier)
@@ -93,10 +97,16 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
     override fun end(callId: String, promise: Promise)= directCallModule.end(callId, promise)
     override fun updateLocalVideoView(callId: String, videoViewId: Int)= directCallModule.updateLocalVideoView(callId, videoViewId)
     override fun updateRemoteVideoView(callId: String, videoViewId: Int)= directCallModule.updateRemoteVideoView(callId, videoViewId)
+    override fun directCallUpdateCustomItems(callId: String, customItems: ReadableMap, promise: Promise) = directCallModule.directCallUpdateCustomItems(callId, customItems, promise)
+    override fun directCallDeleteCustomItems(callId: String, customItemKeys: ReadableArray, promise: Promise) = directCallModule.directCallDeleteCustomItems(callId, customItemKeys, promise)
+    override fun directCallDeleteAllCustomItems(callId: String, promise: Promise) = directCallModule.directCallDeleteAllCustomItems(callId, promise)
 
     /** GroupCall module interface**/
     override fun enter(roomId: String, options: ReadableMap, promise: Promise) = groupCallModule.enter(roomId, options, promise)
     override fun exit(roomId: String) = groupCallModule.exit(roomId)
+    override fun groupCallUpdateCustomItems(roomId: String, customItems: ReadableMap, promise: Promise) = groupCallModule.groupCallUpdateCustomItems(roomId, customItems, promise)
+    override fun groupCallDeleteCustomItems(roomId: String, customItemKeys: ReadableArray, promise: Promise) = groupCallModule.groupCallDeleteCustomItems(roomId, customItemKeys, promise)
+    override fun groupCallDeleteAllCustomItems(roomId: String, promise: Promise) = groupCallModule.groupCallDeleteAllCustomItems(roomId, promise)
 
     /** Queries **/
     fun createDirectCallLogListQuery(params: ReadableMap, promise: Promise) = queries.createDirectCallLogListQuery(params, promise)

@@ -37,6 +37,10 @@ protocol CallsCommonModuleProtocol {
     func fetchRoomById(_ roomId: String, _ promise: Promise)
     func getCachedRoomById(_ roomId: String, _ promise: Promise)
     func createRoom(_ params: [String: Any], _ promise: Promise)
+
+    func updateCustomItems(_ callId: String, _ customItems: [String: String], _ promise: Promise)
+    func deleteCustomItems(_ callId: String, _ customItemKeys: [String], _ promise: Promise)
+    func deleteAllCustomItems(_ callId: String, _ promise: Promise)
 }
 
 class CallsCommonModule: CallsBaseModule, CallsCommonModuleProtocol {
@@ -224,6 +228,48 @@ class CallsCommonModule: CallsBaseModule, CallsCommonModuleProtocol {
             } else if let room = room {
                 room.addDelegate(GroupCallDelegate.get(room), identifier: room.roomId)
                 promise.resolve(CallsUtils.convertRoomToDict(room))
+            }
+        }
+    }
+
+    func updateCustomItems(_ callId: String, _ customItems: [String: String], _ promise: Promise) {
+        SendBirdCall.updateCustomItems(callId: callId, customItems: customItems) { result, affectedKeys, error in
+            if let error = error {
+                promise.reject(error)
+            } else {
+                let customItemsResult: [String: Any] = [
+                    "updatedItems": result ?? [:],
+                    "affectedKeys": affectedKeys ?? []
+                ]
+                promise.resolve(customItemsResult)
+            }
+        }
+    }
+
+    func deleteCustomItems(_ callId: String, _ customItemKeys: [String], _ promise: Promise) {
+        SendBirdCall.deleteCustomItems(callId: callId, customItemKeys: customItemKeys) { result, affectedKeys, error in
+            if let error = error {
+                promise.reject(error)
+            } else {
+                let customItemsResult: [String: Any] = [
+                    "updatedItems": result ?? [:],
+                    "affectedKeys": affectedKeys ?? []
+                ]
+                promise.resolve(customItemsResult)
+            }
+        }
+    }
+
+    func deleteAllCustomItems(_ callId: String, _ promise: Promise) {
+        SendBirdCall.deleteAllCustomItems(callId: callId) { result, affectedKeys, error in
+            if let error = error {
+                promise.reject(error)
+            } else {
+                let customItemsResult: [String: Any] = [
+                    "updatedItems": result ?? [:],
+                    "affectedKeys": affectedKeys ?? []
+                ]
+                promise.resolve(customItemsResult)
             }
         }
     }
