@@ -5,6 +5,7 @@ import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableNativeMap
 import com.sendbird.calls.*
+import com.sendbird.calls.internal.PushTokenType
 import com.sendbird.calls.reactnative.RNCallsInternalError
 import com.sendbird.calls.reactnative.extension.rejectCalls
 import com.sendbird.calls.reactnative.module.listener.CallsDirectCallListener
@@ -106,7 +107,7 @@ class CallsCommonModule(private val root: CallsModule): CommonModule {
 
     override fun registerPushToken(token: String, unique: Boolean, promise: Promise) {
         RNCallsLogger.d("[CommonModule] registerPushToken()")
-        SendBirdCall.registerPushToken(token, unique) { error ->
+        SendBirdCall.registerPushToken(token, PushTokenType.FCM_VOIP, unique) { error ->
             error
                 ?.let {
                     promise.rejectCalls(it)
@@ -119,7 +120,7 @@ class CallsCommonModule(private val root: CallsModule): CommonModule {
 
     override fun unregisterPushToken(token: String, promise: Promise) {
         RNCallsLogger.d("[CommonModule] unregisterPushToken()")
-        SendBirdCall.unregisterPushToken(token) { error ->
+        SendBirdCall.unregisterPushToken(token, PushTokenType.FCM_VOIP) { error ->
             error
                 ?.let {
                     promise.rejectCalls(it)
