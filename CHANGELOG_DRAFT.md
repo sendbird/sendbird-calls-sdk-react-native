@@ -1,4 +1,5 @@
-## v1.1.8
+## v1.1.9
 
-### Bug Fixes
-- update android_handleFirebaseMessageData type to Record<string, string> | object
+### Features
+* add methods to update, delete, and manage custom items in calls
+* support Android 16 KB page sizes
