@@ -49,7 +49,7 @@ interface GroupCallModule: MediaDeviceControl {
     fun enter(roomId: String, options: ReadableMap, promise: Promise)
     fun exit(roomId: String)
     fun groupCallUpdateCustomItems(roomId: String, customItems: ReadableMap, promise: Promise)
-    fun groupCallDeleteCustomItems(roomId: String, customItemKeys: com.facebook.react.bridge.ReadableArray, promise: Promise)
+    fun groupCallDeleteCustomItems(roomId: String, customItemKeys: ReadableArray, promise: Promise)
     fun groupCallDeleteAllCustomItems(roomId: String, promise: Promise)
 }
 
