@@ -199,10 +199,8 @@ class CallsGroupCallModule: GroupCallModule {
 
         CallsUtils.safeRun(promise) {
             val room = CallsUtils.findRoom(roomId, from)
-            val allKeys = room.customItems.keys
-
             // There is no deleteAllCustomItems API in Android native, so handled with deleteCustomItems.
-            room.deleteCustomItems(allKeys) { updatedItems, affectedKeys, error ->
+            room.deleteCustomItems(null) { updatedItems, affectedKeys, error ->
                 if (error != null) {
                     promise.rejectCalls(error)
                 } else {

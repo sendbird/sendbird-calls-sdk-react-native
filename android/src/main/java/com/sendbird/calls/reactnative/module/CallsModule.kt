@@ -2,6 +2,7 @@ package com.sendbird.calls.reactnative.module
 
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
 import com.sendbird.calls.DirectCall
 import com.sendbird.calls.RoomInvitation

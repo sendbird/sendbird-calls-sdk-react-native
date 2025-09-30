@@ -1,6 +1,7 @@
 package com.sendbird.calls.reactnative.module
 
 import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
 
 interface CallsModuleStruct: CommonModule, DirectCallModule, GroupCallModule { }
