@@ -41,7 +41,7 @@ interface DirectCallModule: MediaDeviceControl {
     fun updateLocalVideoView(callId: String, videoViewId: Int)
     fun updateRemoteVideoView(callId: String, videoViewId: Int)
     fun directCallUpdateCustomItems(callId: String, customItems: ReadableMap, promise: Promise)
-    fun directCallDeleteCustomItems(callId: String, customItemKeys: com.facebook.react.bridge.ReadableArray, promise: Promise)
+    fun directCallDeleteCustomItems(callId: String, customItemKeys: ReadableArray, promise: Promise)
     fun directCallDeleteAllCustomItems(callId: String, promise: Promise)
 }
 
