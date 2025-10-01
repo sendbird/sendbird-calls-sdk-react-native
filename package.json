@@ -102,7 +102,7 @@
     "react-native": "0.76.9",
     "react-native-builder-bob": "^0.18.2",
     "release-it": "^16.3.0",
-    "typedoc": "^0.22.16",
+    "typedoc": "^0.28.13",
     "typescript": "5.4.5"
   },
   "peerDependencies": {
