@@ -6,12 +6,6 @@
 * add methods to update, delete, and manage custom items in calls ([8615d30](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/8615d306a09d6597909266e3b5cb6cd854e59ec7))
 * updated WebRTC version to M134 to support Android 16 KB page sizes ([7a1eaa5](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/7a1eaa5953598c209c854aa4c75f67e5dac93984))
 
-
-### Reverts
-
-* Revert "chore: Update CHANGELOG for version 1.1.9" ([cef96ae](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/cef96aecdabb53ca663efccff8da5c9a2da58875))
-* Revert "chore: Bump version to 1.1.9 and update dependencies; add new HTML documentation files" ([8ad7549](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/8ad7549177655d901f1fa421cbc6a688858e138f))
-
 ## [1.1.8](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.1.7...v1.1.8) (2025-04-29)
 
 
