@@ -277,7 +277,7 @@ object CallsUtils {
     fun convertArrayToSet(array: ReadableArray): Set<String> {
         val set = mutableSetOf<String>()
         for (i in 0 until array.size()) {
-            set.add(array.getString(i))
+            array.getString(i)?.let { set.add(it) }
         }
         return set
     }
@@ -285,7 +285,7 @@ object CallsUtils {
     fun convertArrayToList(array: ReadableArray): List<String> {
         val list = mutableListOf<String>()
         for (i in 0 until array.size()) {
-            list.add(array.getString(i))
+            array.getString(i)?.let { list.add(it) }
         }
         return list
     }
