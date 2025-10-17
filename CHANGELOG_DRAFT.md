@@ -1,5 +1,7 @@
-## v1.1.9
+## v1.1.10
 
 ### Features
-* add methods to update, delete, and manage custom items in calls
-* support Android 16 KB page sizes
+added support for the React Native New Architecture in version 0.80 and above
+
+### Bug Fixes
+* handle null values when converting arrays to set and list
