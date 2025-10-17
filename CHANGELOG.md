@@ -1,3 +1,15 @@
+## [1.1.10](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.1.9...v1.1.10) (2025-10-17)
+
+
+### Bug Fixes
+
+* handle null values when converting arrays to set and list ([8d790aa](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/8d790aa5703b6b11d3a7be4d911da2ddde651769))
+
+
+### Features
+
+* add new HTML documentation files and hierarchy/navigation data ([e411228](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/e411228c682adeef4eda3ab0dfb643108bdd1a13))
+
 ## [1.1.9](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.1.8...v1.1.9) (2025-10-01)
 
 
