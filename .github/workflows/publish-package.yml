@@ -1,68 +1,161 @@
-name: publish package to npm
+name: Publish Package to NPM
 
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'version'
+        description: 'Version to publish (e.g., 1.2.0, 1.2.0-beta.1)'
         required: true
         type: string
+      release-type:
+        description: 'Release type'
+        required: false
+        type: choice
+        default: 'release'
+        options:
+          - release
+          - beta
+          - alpha
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
-      - name: 'validation'
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.20.5'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'yarn'
+
+      - name: Validate permissions and branch
         uses: actions/github-script@v7
         env:
           VERSION: ${{ github.event.inputs.version }}
         with:
           script: |
             const version = process.env.VERSION;
-#            const permission = await github.rest.repos.getCollaboratorPermissionLevel({
-#              owner: context.repo.owner,
-#              repo: context.repo.repo,
-#              username: context.actor
-#            });
-#            if (permission.data.permission !== 'admin' && permission.data.permission !== 'write') {
-#              core.setFailed(`User ${context.actor} does not have write or admin permissions to this repository.`);
-#            }
-#            const currentBranch = context.ref.replace('refs/heads/', '');
-#            if (currentBranch !== `release/${version}`) {
-#              core.setFailed(`Current branch ${currentBranch} does not match release/${version}`);
-#            }
-#            const pullRequests = await github.rest.pulls.list({
-#              owner: context.repo.owner,
-#              repo: context.repo.repo,
-#              state: 'open',
-#              sort: 'created',
-#              direction: 'desc',
-#            });
-#            const pr = pullRequests.data.find(pr => pr.head.ref === currentBranch && pr.base.ref === 'main');
-#            if (!pr) {
-#              core.setFailed(`No open pull request found for ${currentBranch} to main`);
-#            }
-#            core.exportVariable('PR_NUMBER', pr.number);
-      - run: yarn install --frozen-lockfile
-      - name: 'set environments'
+
+            // Validate user permissions
+            const permission = await github.rest.repos.getCollaboratorPermissionLevel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              username: context.actor
+            });
+
+            if (permission.data.permission !== 'admin' && permission.data.permission !== 'write') {
+              core.setFailed(`User ${context.actor} does not have write or admin permissions to this repository.`);
+              return;
+            }
+
+            // Validate branch name (allow main or release branches)
+            const currentBranch = context.ref.replace('refs/heads/', '');
+            const cleanVersion = version.replace(/-(beta|alpha).*/, '');
+            const expectedBranch = `release/${cleanVersion}`;
+
+            if (currentBranch !== expectedBranch && currentBranch !== 'main') {
+              core.warning(`Current branch ${currentBranch} is not ${expectedBranch} or main. Proceeding anyway.`);
+            }
+
+            // Check for open PR if on release branch
+            if (currentBranch.startsWith('release/')) {
+              const pullRequests = await github.rest.pulls.list({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                head: `${context.repo.owner}:${currentBranch}`,
+                base: 'main'
+              });
+
+              if (pullRequests.data.length > 0) {
+                core.exportVariable('PR_NUMBER', pullRequests.data[0].number);
+                core.exportVariable('HAS_PR', 'true');
+              } else {
+                core.exportVariable('HAS_PR', 'false');
+              }
+            }
+
+      - name: Install dependencies
         run: |
-#          echo "//registry.npmjs.org/:_authToken=${{ secrets.npm_token }}" >> .npmrc
-#          git config --global user.email "sha.sdk_deployment@sendbird.com"
-#          git config --global user.name "sendbird-sdk-deployment"
-      - name: 'publish to npm'
+          yarn install --frozen-lockfile
+          yarn install --cwd sample --frozen-lockfile
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "sha.sdk_deployment@sendbird.com"
+          git config --global user.name "sendbird-sdk-deployment"
+
+      - name: Configure NPM
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
+
+      - name: Build package
+        run: yarn build
+
+      - name: Run release-it
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           VERSION: ${{ github.event.inputs.version }}
+          RELEASE_TYPE: ${{ github.event.inputs.release-type }}
         run: |
-#          yarn lerna version "$VERSION" --yes
-#          yarn lerna publish from-git --yes
-      - name: 'approve a pull request'
+          # Set npm tag based on release type
+          NPM_TAG="latest"
+          if [[ "$VERSION" == *"beta"* ]] || [ "$RELEASE_TYPE" = "beta" ]; then
+            NPM_TAG="beta"
+          elif [[ "$VERSION" == *"alpha"* ]] || [ "$RELEASE_TYPE" = "alpha" ]; then
+            NPM_TAG="alpha"
+          fi
+
+          # Run release-it with the specified version
+          # --ci flag skips interactive prompts
+          # --no-git.requireCleanWorkingDir allows uncommitted changes (from build)
+          yarn release-it $VERSION \
+            --ci \
+            --no-git.requireCleanWorkingDir \
+            --npm.tag=$NPM_TAG \
+            --github.release \
+            --github.releaseName="v${VERSION}" \
+            --verbose
+
+      - name: Approve PR (if exists)
+        if: env.HAS_PR == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ env.PR_NUMBER }}
         run: |
-#          gh pr review "$PR_NUMBER" --approve --body "approved by automation"
+          # Only approve PR, do not merge automatically
+          gh pr review "$PR_NUMBER" --approve --body "✅ Package successfully published to NPM as v${{ github.event.inputs.version }}"
+
+          # Add comment with release information
+          gh pr comment "$PR_NUMBER" --body "## 🚀 Release Published!
+
+          - **Version:** v${{ github.event.inputs.version }}
+          - **NPM Package:** [@sendbird/calls-react-native](https://www.npmjs.com/package/@sendbird/calls-react-native/v/${{ github.event.inputs.version }})
+          - **GitHub Release:** [v${{ github.event.inputs.version }}](https://github.com/${{ github.repository }}/releases/tag/v${{ github.event.inputs.version }})
+
+          ⚠️ **Please manually merge this PR when ready.**"
+
+      - name: Summary
+        run: |
+          echo "## 📦 Package Published Successfully!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Release Information" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version:** v${{ github.event.inputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Release Type:** ${{ github.event.inputs.release-type }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Links" >> $GITHUB_STEP_SUMMARY
+          echo "- 📦 [NPM Package](https://www.npmjs.com/package/@sendbird/calls-react-native/v/${{ github.event.inputs.version }})" >> $GITHUB_STEP_SUMMARY
+          echo "- 🏷️ [GitHub Release](https://github.com/${{ github.repository }}/releases/tag/v${{ github.event.inputs.version }})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ env.HAS_PR }}" = "true" ]; then
+            echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+            echo "✅ PR #${{ env.PR_NUMBER }} has been approved" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ **Please manually merge the PR when ready**" >> $GITHUB_STEP_SUMMARY
+          fi
