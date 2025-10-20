@@ -92,8 +92,10 @@ jobs:
           git config --global user.name "sendbird-sdk-deployment"
 
       - name: Configure NPM
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> ~/.npmrc
 
       - name: Build package
         run: yarn build
@@ -129,33 +131,41 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ env.PR_NUMBER }}
+          VERSION: ${{ github.event.inputs.version }}
+          REPOSITORY: ${{ github.repository }}
         run: |
           # Only approve PR, do not merge automatically
-          gh pr review "$PR_NUMBER" --approve --body "✅ Package successfully published to NPM as v${{ github.event.inputs.version }}"
+          gh pr review "$PR_NUMBER" --approve --body "✅ Package successfully published to NPM as v${VERSION}"
 
           # Add comment with release information
           gh pr comment "$PR_NUMBER" --body "## 🚀 Release Published!
 
-          - **Version:** v${{ github.event.inputs.version }}
-          - **NPM Package:** [@sendbird/calls-react-native](https://www.npmjs.com/package/@sendbird/calls-react-native/v/${{ github.event.inputs.version }})
-          - **GitHub Release:** [v${{ github.event.inputs.version }}](https://github.com/${{ github.repository }}/releases/tag/v${{ github.event.inputs.version }})
+          - **Version:** v${VERSION}
+          - **NPM Package:** [@sendbird/calls-react-native](https://www.npmjs.com/package/@sendbird/calls-react-native/v/${VERSION})
+          - **GitHub Release:** [v${VERSION}](https://github.com/${REPOSITORY}/releases/tag/v${VERSION})
 
           ⚠️ **Please manually merge this PR when ready.**"
 
       - name: Summary
+        env:
+          VERSION: ${{ github.event.inputs.version }}
+          RELEASE_TYPE: ${{ github.event.inputs.release-type }}
+          REPOSITORY: ${{ github.repository }}
+          HAS_PR: ${{ env.HAS_PR }}
+          PR_NUMBER: ${{ env.PR_NUMBER }}
         run: |
           echo "## 📦 Package Published Successfully!" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Release Information" >> $GITHUB_STEP_SUMMARY
-          echo "- **Version:** v${{ github.event.inputs.version }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Release Type:** ${{ github.event.inputs.release-type }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version:** v${VERSION}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Release Type:** ${RELEASE_TYPE}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Links" >> $GITHUB_STEP_SUMMARY
-          echo "- 📦 [NPM Package](https://www.npmjs.com/package/@sendbird/calls-react-native/v/${{ github.event.inputs.version }})" >> $GITHUB_STEP_SUMMARY
-          echo "- 🏷️ [GitHub Release](https://github.com/${{ github.repository }}/releases/tag/v${{ github.event.inputs.version }})" >> $GITHUB_STEP_SUMMARY
+          echo "- 📦 [NPM Package](https://www.npmjs.com/package/@sendbird/calls-react-native/v/${VERSION})" >> $GITHUB_STEP_SUMMARY
+          echo "- 🏷️ [GitHub Release](https://github.com/${REPOSITORY}/releases/tag/v${VERSION})" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ env.HAS_PR }}" = "true" ]; then
+          if [ "${HAS_PR}" = "true" ]; then
             echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
-            echo "✅ PR #${{ env.PR_NUMBER }} has been approved" >> $GITHUB_STEP_SUMMARY
+            echo "✅ PR #${PR_NUMBER} has been approved" >> $GITHUB_STEP_SUMMARY
             echo "⚠️ **Please manually merge the PR when ready**" >> $GITHUB_STEP_SUMMARY
           fi
