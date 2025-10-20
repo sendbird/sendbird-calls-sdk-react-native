@@ -8,114 +8,52 @@ on:
     branches:
       - main
 
+# Define common setup steps template
+.common_steps: &common_steps
+  - name: Checkout code
+    uses: actions/checkout@v4
+  - name: Setup Node.js
+    uses: actions/setup-node@v4
+    with:
+      node-version: '18.20.5'
+      cache: 'yarn'
+  - name: Install dependencies
+    run: |
+      yarn install --frozen-lockfile
+      yarn install --cwd sample --frozen-lockfile
+  - name: Inject env file
+    run: |
+      echo "export const APP_ID = 'app_id';" >> sample/src/env.ts
+      echo "export const INITIAL_ROUTE = 'route';" >> sample/src/env.ts
+
 jobs:
-  install-dependencies:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18.20.5'
-          cache: 'yarn'
-
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            node_modules
-            sample/node_modules
-          key: ${{ runner.os }}-deps-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('sample/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-deps-
-
-      - name: Install dependencies
-        run: |
-          yarn install --frozen-lockfile
-          yarn install --cwd sample --frozen-lockfile
-
-      - name: Inject env file
-        run: |
-          echo "export const APP_ID = 'app_id';" >> sample/src/env.ts
-          echo "export const INITIAL_ROUTE = 'route';" >> sample/src/env.ts
-
-      - name: Upload workspace
-        uses: actions/upload-artifact@v4
-        with:
-          name: workspace
-          path: .
-          retention-days: 1
-
   lint:
-    needs: install-dependencies
     runs-on: ubuntu-latest
     steps:
-      - name: Download workspace
-        uses: actions/download-artifact@v4
-        with:
-          name: workspace
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18.20.5'
-
-      - name: Lint files
+      <<: *common_steps
+      - name: Run linting
         run: yarn lint
 
   typescript:
-    needs: install-dependencies
     runs-on: ubuntu-latest
     steps:
-      - name: Download workspace
-        uses: actions/download-artifact@v4
-        with:
-          name: workspace
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18.20.5'
-
-      - name: Typecheck files
+      <<: *common_steps
+      - name: TypeScript check
         run: yarn typescript
 
   sample-typescript:
-    needs: install-dependencies
     runs-on: ubuntu-latest
     steps:
-      - name: Download workspace
-        uses: actions/download-artifact@v4
-        with:
-          name: workspace
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18.20.5'
-
-      - name: Typecheck sample files
+      <<: *common_steps
+      - name: Sample TypeScript check
         run: yarn sample:tsc
 
   unit-tests:
-    needs: install-dependencies
     runs-on: ubuntu-latest
     steps:
-      - name: Download workspace
-        uses: actions/download-artifact@v4
-        with:
-          name: workspace
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18.20.5'
-
+      <<: *common_steps
       - name: Run unit tests
         run: yarn test --coverage
-
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4
         with:
@@ -123,18 +61,8 @@ jobs:
           path: coverage
 
   build-package:
-    needs: install-dependencies
     runs-on: ubuntu-latest
     steps:
-      - name: Download workspace
-        uses: actions/download-artifact@v4
-        with:
-          name: workspace
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18.20.5'
-
+      <<: *common_steps
       - name: Build package
         run: yarn build
