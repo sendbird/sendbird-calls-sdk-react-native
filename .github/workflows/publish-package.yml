@@ -41,44 +41,70 @@ jobs:
         with:
           script: |
             const version = process.env.VERSION;
+            let hasErrors = false;
 
             // Validate user permissions
-            const permission = await github.rest.repos.getCollaboratorPermissionLevel({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              username: context.actor
-            });
+            try {
+              const permission = await github.rest.repos.getCollaboratorPermissionLevel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                username: context.actor
+              });
 
-            if (permission.data.permission !== 'admin' && permission.data.permission !== 'write') {
-              core.setFailed(`User ${context.actor} does not have write or admin permissions to this repository.`);
-              return;
+              if (permission.data.permission !== 'admin' && permission.data.permission !== 'write') {
+                core.error(`User ${context.actor} does not have write or admin permissions to this repository.`);
+                hasErrors = true;
+              }
+            } catch (error) {
+              core.error(`Failed to check user permissions: ${error.message}`);
+              hasErrors = true;
             }
 
-            // Validate branch name (allow main or release branches)
+            // Validate branch name (only allow release branches)
             const currentBranch = context.ref.replace('refs/heads/', '');
             const cleanVersion = version.replace(/-(beta|alpha).*/, '');
             const expectedBranch = `release/${cleanVersion}`;
 
-            if (currentBranch !== expectedBranch && currentBranch !== 'main') {
-              core.warning(`Current branch ${currentBranch} is not ${expectedBranch} or main. Proceeding anyway.`);
+            if (currentBranch !== expectedBranch) {
+              core.error(`Current branch '${currentBranch}' is not '${expectedBranch}'.`);
+              core.error(`Publishing is only allowed from release branches.`);
+              core.error(`Please create a release branch and PR before running this workflow.`);
+              hasErrors = true;
             }
 
-            // Check for open PR if on release branch
+            // Check for open PR (required for all releases)
             if (currentBranch.startsWith('release/')) {
-              const pullRequests = await github.rest.pulls.list({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                state: 'open',
-                head: `${context.repo.owner}:${currentBranch}`,
-                base: 'main'
-              });
+              try {
+                const pullRequests = await github.rest.pulls.list({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  state: 'open',
+                  head: `${context.repo.owner}:${currentBranch}`,
+                  base: 'main'
+                });
 
-              if (pullRequests.data.length > 0) {
-                core.exportVariable('PR_NUMBER', pullRequests.data[0].number);
-                core.exportVariable('HAS_PR', 'true');
-              } else {
-                core.exportVariable('HAS_PR', 'false');
+                if (pullRequests.data.length > 0) {
+                  core.exportVariable('PR_NUMBER', pullRequests.data[0].number);
+                  core.exportVariable('HAS_PR', 'true');
+                  core.info(`Found open PR #${pullRequests.data[0].number} for branch ${currentBranch}`);
+                } else {
+                  core.error(`No open pull request found for branch '${currentBranch}' to main.`);
+                  core.error(`Please create a PR before running the release workflow.`);
+                  hasErrors = true;
+                }
+              } catch (error) {
+                core.error(`Failed to check for open PRs: ${error.message}`);
+                hasErrors = true;
               }
+            } else {
+              // Should not reach here due to branch validation above
+              core.exportVariable('HAS_PR', 'false');
+            }
+
+            // Exit with error if validation failed
+            if (hasErrors) {
+              core.setFailed('Validation failed. Please check the errors above.');
+              process.exit(1);
             }
 
       - name: Install dependencies

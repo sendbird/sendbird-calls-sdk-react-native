@@ -81,7 +81,7 @@
     "@babel/helper-string-parser": "7.25.9",
     "@commitlint/config-conventional": "^11.0.0",
     "@react-native-community/eslint-config": "^3.2.0",
-    "@release-it/conventional-changelog": "^2.0.0",
+    "@release-it/conventional-changelog": "^10.0.1",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/jest": "^26.0.0",
     "@types/react": "^18.0.12",
