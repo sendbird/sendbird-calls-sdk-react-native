@@ -1,0 +1,28 @@
+name: 'Setup Environment'
+description: 'Common setup steps for all jobs'
+inputs:
+  node-version:
+    description: 'Node.js version to use'
+    required: false
+    default: '18.20.5'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'yarn'
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        yarn install --frozen-lockfile
+        yarn install --cwd sample --frozen-lockfile
+
+    - name: Inject env file
+      shell: bash
+      run: |
+        echo "export const APP_ID = 'app_id';" >> sample/src/env.ts
+        echo "export const INITIAL_ROUTE = 'route';" >> sample/src/env.ts
