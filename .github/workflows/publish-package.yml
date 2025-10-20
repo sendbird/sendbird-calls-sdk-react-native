@@ -119,8 +119,6 @@ jobs:
 
       - name: Run release-it
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           VERSION: ${{ github.event.inputs.version }}
           RELEASE_TYPE: ${{ github.event.inputs.release-type }}
         run: |
@@ -146,7 +144,6 @@ jobs:
       - name: Approve PR (if exists)
         if: env.HAS_PR == 'true'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ env.PR_NUMBER }}
           VERSION: ${{ github.event.inputs.version }}
           REPOSITORY: ${{ github.repository }}
