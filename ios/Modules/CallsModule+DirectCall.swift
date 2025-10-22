@@ -207,15 +207,15 @@ extension CallsDirectCallModule: DirectCallDelegate {
         DispatchQueue.main.async {
             CallsEvents.shared.sendEvent(.directCall(.onCustomItemsDeleted),
                                          CallsUtils.convertDirectCallToDict(call),
-                                         deletedKeys)
+                                         ["deletedKeys": deletedKeys])
         }
     }
-    
+
     func didUpdateCustomItems(call: DirectCall, updatedKeys: [String]) {
         DispatchQueue.main.async {
             CallsEvents.shared.sendEvent(.directCall(.onCustomItemsUpdated),
                                          CallsUtils.convertDirectCallToDict(call),
-                                         updatedKeys)
+                                         ["updatedKeys": updatedKeys])
         }
     }
     
