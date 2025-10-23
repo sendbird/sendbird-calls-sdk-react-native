@@ -1,3 +1,12 @@
+# Changelog
+
+## [1.1.11](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.1.10...v1.1.11) (2025-10-23)
+
+
+### Bug Fixes
+
+* key values were not properly included in custom items event payload on iOS ([7a63538](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/7a63538a64c219df4bf3ee606612e5064b488515))
+
 ## [1.1.10](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.1.9...v1.1.10) (2025-10-17)
 
 
@@ -180,4 +189,3 @@
 ### Reverts
 
 * Revert "change setting" ([209396c](https://github.com/sendbird/sendbird-calls-react-native/commit/209396c70402995cf012ec3d422ae2200d507b1b))
-
