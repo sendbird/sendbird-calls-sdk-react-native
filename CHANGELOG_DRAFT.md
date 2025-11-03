@@ -1,7 +1,4 @@
-## v1.1.10
-
-### Features
-added support for the React Native New Architecture in version 0.80 and above
+## v1.1.11
 
 ### Bug Fixes
-* handle null values when converting arrays to set and list
+* resolved an issue on iOS where key values were missing from the custom items event payload
