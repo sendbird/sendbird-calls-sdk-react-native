@@ -1,4 +1,4 @@
-import messaging from '@react-native-firebase/messaging';
+import { getMessaging, getToken } from '@react-native-firebase/messaging';
 import React, { useReducer } from 'react';
 import { Platform, ScrollView } from 'react-native';
 import RNVoipPushNotification from 'react-native-voip-push-notification';
@@ -41,7 +41,8 @@ const DirectCallSignInScreen = () => {
 
   const registerToken = async () => {
     if (Platform.OS === 'android') {
-      const token = await messaging().getToken();
+      const messaging = getMessaging();
+      const token = await getToken(messaging);
       await Promise.all([
         SendbirdCalls.registerPushToken(token, true),
         TokenManager.set({ value: token, type: 'fcm' }),

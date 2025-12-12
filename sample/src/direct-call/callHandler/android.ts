@@ -1,6 +1,7 @@
 import Notifee, { AndroidImportance } from '@notifee/react-native';
 import { Event, EventType } from '@notifee/react-native/src/types/Notification';
-import messaging, { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
+import { getMessaging, onMessage } from '@react-native-firebase/messaging';
+import type { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
 
 import { DirectCallProperties, SendbirdCalls } from '@sendbird/calls-react-native';
 
@@ -13,8 +14,9 @@ export function setFirebaseMessageHandlers() {
   const firebaseListener = async (message: FirebaseMessagingTypes.RemoteMessage) => {
     SendbirdCalls.android_handleFirebaseMessageData(message.data);
   };
-  messaging().setBackgroundMessageHandler(firebaseListener);
-  messaging().onMessage(firebaseListener);
+  const messaging = getMessaging();
+  messaging.setBackgroundMessageHandler(firebaseListener);
+  onMessage(messaging, firebaseListener);
 }
 
 /** Notifee ForegroundService with Notification */
