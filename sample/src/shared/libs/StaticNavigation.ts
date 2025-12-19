@@ -14,7 +14,7 @@ export const staticNavigation: StaticNavigation<string, { route: any; params: an
       if (currentRoute?.name === name) {
         navigationRef.dispatch(StackActions.replace(name, params));
       } else {
-        navigationRef.navigate(name, params);
+        (navigationRef as any).navigate(name, params);
       }
     }
   },

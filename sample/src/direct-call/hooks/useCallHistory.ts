@@ -34,7 +34,7 @@ export const useRemoteHistory = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const query = useRef<DirectCallLogListQuery>();
+  const query = useRef<DirectCallLogListQuery | undefined>(undefined);
 
   useEffectAsync(async () => {
     await initQuery();
