@@ -28,6 +28,8 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
         SendBirdCall.Options.removeDirectCallSound(SendBirdCall.SoundType.RECONNECTED)
         SendBirdCall.Options.removeDirectCallSound(SendBirdCall.SoundType.RECONNECTING)
 
+        directCallModule.cleanup()
+
         if(initialized) {
             RNCallsLogger.d("[CallsModule] invalidate()")
             SendBirdCall.removeAllListeners()

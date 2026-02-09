@@ -10,6 +10,7 @@ import Foundation
 import SendBirdCalls
 import CallKit
 import React
+import ReplayKit
 
 class CallsBaseModule: NSObject {
     internal var root: CallsModule
@@ -48,6 +49,10 @@ class CallsModule: SendBirdCallDelegate {
         SendBirdCall.removeDirectCallSound(forType: .dialing)
         SendBirdCall.removeDirectCallSound(forType: .reconnected)
         SendBirdCall.removeDirectCallSound(forType: .reconnecting)
+
+        if RPScreenRecorder.shared().isRecording {
+            RPScreenRecorder.shared().stopCapture(handler: nil)
+        }
 
         if(initialized){
             SendBirdCall.deauthenticate(completionHandler: nil)

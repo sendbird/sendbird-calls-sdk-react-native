@@ -10,6 +10,7 @@ class RNCallsInternalError(from: String? = "unknown", private val type: Type) : 
         NOT_FOUND_VIDEO_DEVICE("Cannot found device with specific id"),
         NOT_FOUND_VIDEO_VIEW("Cannot found video view"),
         INVALID_PARAMS("Invalid parameters"),
+        SCREEN_SHARE_ALREADY_IN_PROGRESS("Screen share is already in progress"),
         // GroupCall - Room
         NOT_FOUND_ROOM("There is no Room"),
         NOT_FOUND_PARTICIPANT("There is no participant"),

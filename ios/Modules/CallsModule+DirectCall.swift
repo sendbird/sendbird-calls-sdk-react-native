@@ -122,11 +122,15 @@ class CallsDirectCallModule: CallsBaseModule, CallsDirectCallModuleProtocol {
 // MARK: DirectCall ScreenShare
 extension CallsDirectCallModule {
     func startScreenShare(_ callId: String, _ promise: Promise) {
+        if RPScreenRecorder.shared().isRecording {
+            return promise.reject(RNCallsInternalError.screenShareAlreadyInProgress("directCall/startScreenShare"))
+        }
+
         guard let directCall = try? CallsUtils.findDirectCallBy(callId) else {
             return promise.reject(RNCallsInternalError.notFoundDirectCall("directCall/startScreenShare"))
         }
 
-        directCall.startScreenShare { [weak self] bufferHandler, error in
+        directCall.startScreenShare { bufferHandler, error in
             if let error = error {
                 return promise.reject(error)
             }
