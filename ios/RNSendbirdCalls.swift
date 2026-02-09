@@ -202,6 +202,14 @@ extension RNSendbirdCalls {
     @objc func directCallDeleteAllCustomItems(_ callId: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
         module.directCallDeleteAllCustomItems(callId, Promise(resolve, reject))
     }
+
+    @objc func startScreenShare(_ callId: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.startScreenShare(callId, Promise(resolve, reject))
+    }
+
+    @objc func stopScreenShare(_ callId: String, _ resolve: @escaping RCTPromiseResolveBlock, _ reject: @escaping RCTPromiseRejectBlock) {
+        module.stopScreenShare(callId, Promise(resolve, reject))
+    }
 }
 
 // MARK: GroupCall

@@ -181,6 +181,16 @@ RCT_EXTERN_METHOD(directCallDeleteAllCustomItems
                   : (RCTPromiseResolveBlock)resolve
                   : (RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(startScreenShare
+                  : (NSString *)callId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(stopScreenShare
+                  : (NSString *)callId
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject)
+
 // MARK: - SendbirdCalls: GroupCall
 RCT_EXTERN_METHOD(enter
                   : (NSString *)roomId
