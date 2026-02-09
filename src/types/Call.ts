@@ -348,6 +348,8 @@ type JSDirectCallMediaDeviceControl = AsJSInterface<
 
 export interface DirectCallMethods extends JSDirectCallModule, JSDirectCallMediaDeviceControl {
   addListener(listener: Partial<DirectCallListener>): () => void;
+  startScreenShare(): Promise<void>;
+  stopScreenShare(): Promise<void>;
   updateCustomItems(customItems: Record<string, string>): Promise<CustomItemUpdateResult>;
   deleteCustomItems(customItemKeys: string[]): Promise<CustomItemUpdateResult>;
   deleteAllCustomItems(): Promise<CustomItemUpdateResult>;

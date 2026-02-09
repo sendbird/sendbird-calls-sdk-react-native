@@ -381,6 +381,29 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
   };
 
   /**
+   * Starts sharing the local user's screen.
+   * The local camera video will be replaced with the screen share stream.
+   *
+   * On iOS, this starts RPScreenRecorder capture internally.
+   * On Android, this triggers MediaProjection permission dialog
+   * and manages ForegroundService lifecycle internally.
+   *
+   * @since 1.2.0
+   */
+  public startScreenShare = async () => {
+    await this._binder.nativeModule.startScreenShare(this.callId);
+  };
+
+  /**
+   * Stops sharing the local user's screen and returns to the camera video.
+   *
+   * @since 1.2.0
+   */
+  public stopScreenShare = async () => {
+    await this._binder.nativeModule.stopScreenShare(this.callId);
+  };
+
+  /**
    * Toggles the selection between the front and the back camera.
    *
    * on Android, In case of more than two cameras, the next camera will be selected.
