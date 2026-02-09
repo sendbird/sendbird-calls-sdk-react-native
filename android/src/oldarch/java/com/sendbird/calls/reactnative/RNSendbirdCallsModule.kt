@@ -118,6 +118,10 @@ class RNSendbirdCallsModule(private val reactContext: ReactApplicationContext) :
     override fun directCallDeleteCustomItems(callId: String, customItemKeys: ReadableArray, promise: Promise) = module.directCallDeleteCustomItems(callId, customItemKeys, promise)
     @ReactMethod
     override fun directCallDeleteAllCustomItems(callId: String, promise: Promise) = module.directCallDeleteAllCustomItems(callId, promise)
+    @ReactMethod
+    override fun startScreenShare(callId: String, promise: Promise) = module.startScreenShare(callId, promise)
+    @ReactMethod
+    override fun stopScreenShare(callId: String, promise: Promise) = module.stopScreenShare(callId, promise)
 
     /** GroupCall - Room **/
     @ReactMethod
