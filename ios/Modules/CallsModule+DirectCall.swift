@@ -139,11 +139,7 @@ extension CallsDirectCallModule {
             }
 
             RPScreenRecorder.shared().startCapture { sampleBuffer, bufferType, captureError in
-                if let captureError = captureError {
-                    promise.reject(captureError)
-                    return
-                }
-                bufferHandler(sampleBuffer, nil)
+                bufferHandler(sampleBuffer, captureError)
             } completionHandler: { captureError in
                 if let captureError = captureError {
                     promise.reject(captureError)

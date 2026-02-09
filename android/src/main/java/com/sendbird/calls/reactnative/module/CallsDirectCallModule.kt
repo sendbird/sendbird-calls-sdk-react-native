@@ -37,6 +37,10 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
             if (callId == null || promise == null) return
 
             if (resultCode == Activity.RESULT_OK && data != null) {
+                if (!ScreenSharingService.launch(root.reactContext)) {
+                    promise.reject(RNCallsInternalError("directCall/startScreenShare", RNCallsInternalError.Type.SCREEN_SHARE_SERVICE_FAILED))
+                    return
+                }
                 CallsUtils.safeRun(promise) {
                     val call = CallsUtils.findDirectCall(callId, "directCall/startScreenShare")
                     call.startScreenShare(data) { error ->
@@ -49,7 +53,6 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
                     }
                 }
             } else {
-                ScreenSharingService.stop(root.reactContext)
                 promise.reject(
                     RNCallsInternalError("directCall/startScreenShare", RNCallsInternalError.Type.INVALID_PARAMS)
                 )
@@ -339,8 +342,6 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
 
         screenSharePromise = promise
         pendingCallId = callId
-
-        ScreenSharingService.launch(root.reactContext)
 
         val mpm = activity.getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
         activity.startActivityForResult(mpm.createScreenCaptureIntent(), SCREEN_SHARE_REQUEST_CODE)

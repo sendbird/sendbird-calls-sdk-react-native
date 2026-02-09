@@ -11,7 +11,6 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import java.util.Random
 
 /**
  * Placeholder foreground service for Android MediaProjection.
@@ -80,18 +79,20 @@ class ScreenSharingService : Service() {
     companion object {
         private const val TAG = "ScreenSharingService"
         private const val DEFAULT_CHANNEL_ID = "sendbird_calls_screen_sharing"
-        private val NOTIFICATION_ID = Random().nextInt(99999) + 10000
+        private const val NOTIFICATION_ID = 440_983_927
 
-        fun launch(context: Context) {
+        fun launch(context: Context): Boolean {
             val intent = Intent(context, ScreenSharingService::class.java)
-            try {
+            return try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     context.startForegroundService(intent)
                 } else {
                     context.startService(intent)
                 }
+                true
             } catch (e: RuntimeException) {
                 Log.w(TAG, "Service not started", e)
+                false
             }
         }
 
