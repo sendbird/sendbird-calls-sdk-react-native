@@ -392,6 +392,8 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
    */
   public startScreenShare = async () => {
     await this._binder.nativeModule.startScreenShare(this.callId);
+    this._props.isLocalScreenShareEnabled = true;
+    this._internalEvents.emit('onPropertyUpdatedManually', this);
   };
 
   /**
@@ -401,6 +403,8 @@ export class DirectCall implements DirectCallProperties, DirectCallMethods {
    */
   public stopScreenShare = async () => {
     await this._binder.nativeModule.stopScreenShare(this.callId);
+    this._props.isLocalScreenShareEnabled = false;
+    this._internalEvents.emit('onPropertyUpdatedManually', this);
   };
 
   /**

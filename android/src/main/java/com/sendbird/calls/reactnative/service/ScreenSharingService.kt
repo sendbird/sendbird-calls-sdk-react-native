@@ -39,8 +39,17 @@ class ScreenSharingService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val notification = ScreenSharingServiceConfig.notificationBuilder?.invoke(this)
-            ?: buildDefaultNotification()
+        if (intent == null) {
+            stopSelf()
+            return START_NOT_STICKY
+        }
+
+        val notification = try {
+            ScreenSharingServiceConfig.notificationBuilder?.invoke(this)
+        } catch (e: Exception) {
+            Log.w(TAG, "Custom notification builder failed, using default", e)
+            null
+        } ?: buildDefaultNotification()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION)

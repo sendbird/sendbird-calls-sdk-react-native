@@ -22,6 +22,7 @@ class ScreenShareManager(private val reactContext: ReactApplicationContext) {
         private const val SCREEN_SHARE_REQUEST_CODE = 79264
 
         // Error codes from SendbirdError.ts not defined in SendBirdError
+        private const val ERR_SCREEN_SHARE_FAILED_DUE_TO_UNKNOWN_REASON = 1800626
         private const val ERR_NOT_SUPPORTED_APP_STATE_FOR_SCREEN_SHARE = 1800627
         private const val ERR_PERMISSION_DENIED_FOR_SCREEN_SHARE = 1800628
     }
@@ -35,7 +36,10 @@ class ScreenShareManager(private val reactContext: ReactApplicationContext) {
             pendingPromise = null
             pendingConnect = null
 
-            if (promise == null || connect == null) return
+            if (promise == null || connect == null) {
+                cleanup()
+                return
+            }
 
             if (resultCode == Activity.RESULT_OK && data != null) {
                 connect(data)
@@ -78,7 +82,8 @@ class ScreenShareManager(private val reactContext: ReactApplicationContext) {
         this.pendingConnect = onPermissionGranted
 
         if (!ScreenSharingService.launch(reactContext)) {
-            cleanup()
+            pendingPromise = null
+            pendingConnect = null
             promise.reject(RNCallsInternalError(from, RNCallsInternalError.Type.SCREEN_SHARE_SERVICE_FAILED))
             return
         }
@@ -88,6 +93,10 @@ class ScreenShareManager(private val reactContext: ReactApplicationContext) {
     }
 
     fun cleanup() {
+        pendingPromise?.rejectCalls(SendBirdException(
+            "Screen share was cancelled",
+            ERR_SCREEN_SHARE_FAILED_DUE_TO_UNKNOWN_REASON
+        ))
         pendingPromise = null
         pendingConnect = null
         ScreenSharingService.stop(reactContext)

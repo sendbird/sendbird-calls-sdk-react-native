@@ -145,14 +145,13 @@ extension CallsDirectCallModule {
             return promise.reject(RNCallsInternalError.notFoundDirectCall(from))
         }
 
-        screenShareManager.stopCapture {
-            directCall.stopScreenShare { [weak self] error in
-                self?.screenShareManager.cleanup()
-                if let error = error {
-                    promise.reject(error)
-                } else {
-                    promise.resolve()
-                }
+        screenShareManager.stopCapture()
+        directCall.stopScreenShare { [weak self] error in
+            self?.screenShareManager.cleanup()
+            if let error = error {
+                promise.reject(error)
+            } else {
+                promise.resolve()
             }
         }
     }

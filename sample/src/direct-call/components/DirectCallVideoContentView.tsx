@@ -33,11 +33,13 @@ const DirectCallVideoContentView: FC<CallStatusProps> = ({ call, status }) => {
 
   // In Android, if you have granted permission after accepting the call,
   // you have to call `call.android_resumeVideoCapturer()`.
+  // NOTE: Only call this after the call is connected to avoid a race condition
+  // where resumeVideoCapturer disposes the capturer while accept() is still initializing it.
   useEffect(() => {
-    if (Platform.OS === 'android') {
+    if (Platform.OS === 'android' && status === 'connected') {
       call.android_resumeVideoCapturer();
     }
-  }, []);
+  }, [status]);
 
   return (
     <View style={{ flex: 1 }}>
