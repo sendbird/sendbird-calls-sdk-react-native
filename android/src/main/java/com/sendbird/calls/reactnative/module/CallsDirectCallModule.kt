@@ -1,74 +1,22 @@
 package com.sendbird.calls.reactnative.module
 
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
-import android.media.projection.MediaProjectionManager
-import com.facebook.react.bridge.BaseActivityEventListener
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
 import com.sendbird.calls.AcceptParams
 import com.sendbird.calls.AudioDevice
 import com.sendbird.calls.CallOptions
+import com.sendbird.calls.SendBirdException
 import com.sendbird.calls.reactnative.RNCallsInternalError
 import com.sendbird.calls.reactnative.extension.rejectCalls
-import com.sendbird.calls.reactnative.service.ScreenSharingService
 import com.sendbird.calls.reactnative.utils.CallsUtils
 import com.sendbird.calls.reactnative.utils.RNCallsLogger
 
 class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
-    private var screenSharePromise: Promise? = null
-    private var pendingCallId: String? = null
-
-    companion object {
-        private const val SCREEN_SHARE_REQUEST_CODE = 79264
-    }
-
-    private val activityEventListener = object : BaseActivityEventListener() {
-        override fun onActivityResult(activity: Activity, requestCode: Int, resultCode: Int, data: Intent?) {
-            if (requestCode != SCREEN_SHARE_REQUEST_CODE) return
-
-            val callId = pendingCallId
-            val promise = screenSharePromise
-            screenSharePromise = null
-            pendingCallId = null
-
-            if (callId == null || promise == null) return
-
-            if (resultCode == Activity.RESULT_OK && data != null) {
-                if (!ScreenSharingService.launch(root.reactContext)) {
-                    promise.reject(RNCallsInternalError("directCall/startScreenShare", RNCallsInternalError.Type.SCREEN_SHARE_SERVICE_FAILED))
-                    return
-                }
-                CallsUtils.safeRun(promise) {
-                    val call = CallsUtils.findDirectCall(callId, "directCall/startScreenShare")
-                    call.startScreenShare(data) { error ->
-                        if (error != null) {
-                            ScreenSharingService.stop(root.reactContext)
-                            promise.rejectCalls(error)
-                        } else {
-                            promise.resolve(null)
-                        }
-                    }
-                }
-            } else {
-                promise.reject(
-                    RNCallsInternalError("directCall/startScreenShare", RNCallsInternalError.Type.INVALID_PARAMS)
-                )
-            }
-        }
-    }
-
-    init {
-        root.reactContext.addActivityEventListener(activityEventListener)
-    }
+    val screenShareManager = ScreenShareManager(root.reactContext)
 
     fun cleanup() {
-        root.reactContext.removeActivityEventListener(activityEventListener)
-        screenSharePromise = null
-        pendingCallId = null
-        ScreenSharingService.stop(root.reactContext)
+        screenShareManager.dispose()
     }
     override fun accept(callId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise) {
         RNCallsLogger.d("[DirectCallModule] accept() -> $callId")
@@ -329,37 +277,41 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
         val from = "directCall/startScreenShare"
         RNCallsLogger.d("[DirectCallModule] $from ($callId)")
 
-        if (screenSharePromise != null) {
-            promise.reject(RNCallsInternalError(from, RNCallsInternalError.Type.SCREEN_SHARE_ALREADY_IN_PROGRESS))
-            return
+        CallsUtils.safeRun(promise) {
+            val call = CallsUtils.findDirectCall(callId, from)
+            screenShareManager.start(promise) { data ->
+                call.startScreenShare(data) { error ->
+                    if (error != null) {
+                        screenShareManager.cleanup()
+                        promise.rejectCalls(error)
+                    } else {
+                        promise.resolve(null)
+                    }
+                }
+            }
         }
-
-        val activity = root.reactContext.currentActivity
-        if (activity == null) {
-            promise.reject(RNCallsInternalError(from, RNCallsInternalError.Type.INVALID_PARAMS))
-            return
-        }
-
-        screenSharePromise = promise
-        pendingCallId = callId
-
-        val mpm = activity.getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
-        activity.startActivityForResult(mpm.createScreenCaptureIntent(), SCREEN_SHARE_REQUEST_CODE)
     }
 
     override fun stopScreenShare(callId: String, promise: Promise) {
         val from = "directCall/stopScreenShare"
         RNCallsLogger.d("[DirectCallModule] $from ($callId)")
 
-        CallsUtils.safeRun(promise) {
+        try {
             val call = CallsUtils.findDirectCall(callId, from)
             call.stopScreenShare { error ->
-                ScreenSharingService.stop(root.reactContext)
+                screenShareManager.cleanup()
                 if (error != null) {
                     promise.rejectCalls(error)
                 } else {
                     promise.resolve(null)
                 }
+            }
+        } catch (e: Throwable) {
+            screenShareManager.cleanup()
+            when (e) {
+                is SendBirdException -> promise.rejectCalls(e)
+                is RNCallsInternalError -> promise.rejectCalls(e)
+                else -> promise.reject(e)
             }
         }
     }

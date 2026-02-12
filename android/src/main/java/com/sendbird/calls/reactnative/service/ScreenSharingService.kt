@@ -51,10 +51,18 @@ class ScreenSharingService : Service() {
         return START_NOT_STICKY
     }
 
+    private fun getNotificationIcon(): Int {
+        // Try ic_notification first, then fall back to app's default icon
+        val custom = resources.getIdentifier("ic_notification", "drawable", packageName)
+        if (custom != 0) return custom
+        return applicationInfo.icon.takeIf { it != 0 }
+            ?: android.R.drawable.ic_menu_camera
+    }
+
     private fun buildDefaultNotification(): Notification {
         ensureChannel()
         return NotificationCompat.Builder(this, DEFAULT_CHANNEL_ID)
-            .setSmallIcon(resources.getIdentifier("ic_notification", "drawable", packageName))
+            .setSmallIcon(getNotificationIcon())
             .setContentTitle("Screen sharing")
             .setContentText("You are sharing your screen.")
             .setCategory(NotificationCompat.CATEGORY_SERVICE)

@@ -10,7 +10,6 @@ import Foundation
 import SendBirdCalls
 import CallKit
 import AVFoundation
-import ReplayKit
 
 protocol CallsDirectCallModuleProtocol: MediaDeviceControlProtocol {
     func accept(_ callId: String, _ options: [String: Any?], _ holdActiveCall: Bool, _ promise: Promise)
@@ -26,6 +25,8 @@ protocol CallsDirectCallModuleProtocol: MediaDeviceControlProtocol {
 
 // MARK: DirectCallMethods
 class CallsDirectCallModule: CallsBaseModule, CallsDirectCallModuleProtocol {
+    let screenShareManager = ScreenShareManager()
+
     func accept(_ callId: String, _ options: [String : Any?], _ holdActiveCall: Bool, _ promise: Promise) {
         if let directCall = try? CallsUtils.findDirectCallBy(callId) {
             let callOptions = CallsUtils.convertDictToCallOptions(options)
@@ -122,41 +123,31 @@ class CallsDirectCallModule: CallsBaseModule, CallsDirectCallModuleProtocol {
 // MARK: DirectCall ScreenShare
 extension CallsDirectCallModule {
     func startScreenShare(_ callId: String, _ promise: Promise) {
-        if RPScreenRecorder.shared().isRecording {
-            return promise.reject(RNCallsInternalError.screenShareAlreadyInProgress("directCall/startScreenShare"))
-        }
-
+        let from = "directCall/startScreenShare"
         guard let directCall = try? CallsUtils.findDirectCallBy(callId) else {
-            return promise.reject(RNCallsInternalError.notFoundDirectCall("directCall/startScreenShare"))
+            return promise.reject(RNCallsInternalError.notFoundDirectCall(from))
         }
 
-        directCall.startScreenShare { bufferHandler, error in
-            if let error = error {
-                return promise.reject(error)
+        screenShareManager.start(promise,
+            connect: { completion in
+                directCall.startScreenShare(completionHandler: completion)
+            },
+            disconnect: {
+                directCall.stopScreenShare(completionHandler: nil)
             }
-            guard let bufferHandler = bufferHandler else {
-                return promise.reject(RNCallsInternalError.noResponse("directCall/startScreenShare"))
-            }
-
-            RPScreenRecorder.shared().startCapture { sampleBuffer, bufferType, captureError in
-                bufferHandler(sampleBuffer, captureError)
-            } completionHandler: { captureError in
-                if let captureError = captureError {
-                    promise.reject(captureError)
-                } else {
-                    promise.resolve()
-                }
-            }
-        }
+        )
     }
 
     func stopScreenShare(_ callId: String, _ promise: Promise) {
+        let from = "directCall/stopScreenShare"
         guard let directCall = try? CallsUtils.findDirectCallBy(callId) else {
-            return promise.reject(RNCallsInternalError.notFoundDirectCall("directCall/stopScreenShare"))
+            screenShareManager.cleanup()
+            return promise.reject(RNCallsInternalError.notFoundDirectCall(from))
         }
 
-        RPScreenRecorder.shared().stopCapture { captureError in
-            directCall.stopScreenShare { error in
+        screenShareManager.stopCapture {
+            directCall.stopScreenShare { [weak self] error in
+                self?.screenShareManager.cleanup()
                 if let error = error {
                     promise.reject(error)
                 } else {
@@ -271,6 +262,8 @@ extension CallsDirectCallModule: DirectCallDelegate {
     }
     
     func didEnd(_ call: DirectCall) {
+        screenShareManager.cleanup()
+
         DispatchQueue.main.async {
             CallsEvents.shared.sendEvent(.directCall(.onEnded),
                                          CallsUtils.convertDirectCallToDict(call))
