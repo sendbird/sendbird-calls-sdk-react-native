@@ -1,4 +1,4 @@
-import Notifee, { AndroidImportance } from '@notifee/react-native';
+import Notifee, { AndroidForegroundServiceType, AndroidImportance } from '@notifee/react-native';
 import { Event, EventType } from '@notifee/react-native/src/types/Notification';
 import { getMessaging, onMessage } from '@react-native-firebase/messaging';
 import type { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
@@ -79,6 +79,7 @@ export async function startRingingWithNotification(call: DirectCallProperties) {
     data: { call: JSON.stringify(call) },
     android: {
       asForegroundService: true,
+      foregroundServiceTypes: [AndroidForegroundServiceType.FOREGROUND_SERVICE_TYPE_MICROPHONE],
       channelId: NOTIFICATION_CHANNEL_ID,
       actions: [
         { title: 'Accept', pressAction: { id: 'accept', launchActivity: 'default' } },
@@ -97,6 +98,7 @@ export async function startRingingWithNotification(call: DirectCallProperties) {
         data: { call: JSON.stringify(call) },
         android: {
           asForegroundService: true,
+          foregroundServiceTypes: [AndroidForegroundServiceType.FOREGROUND_SERVICE_TYPE_MICROPHONE],
           channelId: NOTIFICATION_CHANNEL_ID,
           actions: [{ title: 'End', pressAction: { id: 'decline' } }],
           timestamp: Date.now(),
