@@ -119,16 +119,11 @@ const DirectCallControllerView: FC<ControllerViewProps> = ({ status, call, ios_a
                     call.isLocalScreenShareEnabled && styles.screenShareButtonActive,
                   ]}
                   onPress={() => {
-                    console.log('screen share button pressed', call.isLocalScreenShareEnabled);
-
-                    if (call.isLocalScreenShareEnabled)
-                      call.stopScreenShare().catch((err) => {
-                        console.log('stop screen share failed', err);
-                      });
-                    else
-                      call.startScreenShare().catch((err) => {
-                        console.log('start screen share failed', err);
-                      });
+                    if (call.isLocalScreenShareEnabled) {
+                      call.stopScreenShare();
+                    } else {
+                      call.startScreenShare();
+                    }
                   }}
                 >
                   <SBText

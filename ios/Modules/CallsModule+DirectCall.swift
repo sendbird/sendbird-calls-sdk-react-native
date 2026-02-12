@@ -128,13 +128,10 @@ extension CallsDirectCallModule {
             return promise.reject(RNCallsInternalError.notFoundDirectCall(from))
         }
 
-        screenShareManager.start(promise,
-            connect: { completion in
-                directCall.startScreenShare(completionHandler: completion)
-            },
-            disconnect: {
-                directCall.stopScreenShare(completionHandler: nil)
-            }
+        screenShareManager.start(
+            promise,
+            connect: { completion in directCall.startScreenShare(completionHandler: completion) },
+            disconnect: { directCall.stopScreenShare(completionHandler: nil) }
         )
     }
 

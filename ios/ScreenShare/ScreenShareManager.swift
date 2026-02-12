@@ -11,14 +11,22 @@ import ReplayKit
 
 class ScreenShareManager {
     private var promise: Promise?
+    private var broadcastCapturer: BroadcastScreenCapturer?
 
     // Error codes from SendbirdError.ts not available in SBCError.ErrorCode
     private static let errScreenShareFailedDueToUnknownReason = 1800626
     private static let errPermissionDeniedForScreenShare = 1800628
 
+    typealias BufferHandler = (CMSampleBuffer, Error?) -> Void
+    typealias ConnectHandler = (@escaping (BufferHandler?, SBCError?) -> Void) -> Void
+
+    private var isBroadcastMode: Bool {
+        RNSBScreenSharingServiceConfig.appGroupIdentifier != nil
+    }
+
     func start(
         _ promise: Promise,
-        connect: @escaping (@escaping (((CMSampleBuffer, Error?) -> Void)?, SBCError?) -> Void) -> Void,
+        connect: @escaping ConnectHandler,
         disconnect: @escaping () -> Void
     ) {
         let from = "directCall/startScreenShare"
@@ -63,12 +71,17 @@ class ScreenShareManager {
     }
 
     func stopCapture(completion: (() -> Void)? = nil) {
-        guard RPScreenRecorder.shared().isRecording else {
-            completion?()
-            return
-        }
-        RPScreenRecorder.shared().stopCapture { _ in
-            completion?()
+        if isBroadcastMode {
+            broadcastCapturer?.stop(completion: completion)
+            broadcastCapturer = nil
+        } else {
+            guard RPScreenRecorder.shared().isRecording else {
+                completion?()
+                return
+            }
+            RPScreenRecorder.shared().stopCapture { _ in
+                completion?()
+            }
         }
     }
 
@@ -92,6 +105,20 @@ class ScreenShareManager {
     ) {
         let from = "directCall/startScreenShare"
 
+        if isBroadcastMode {
+            startBroadcastCapture(bufferHandler: bufferHandler, completion: completion)
+        } else {
+            startInAppCapture(from: from, bufferHandler: bufferHandler, completion: completion)
+        }
+    }
+
+    // MARK: - In-App Capture (RPScreenRecorder)
+
+    private func startInAppCapture(
+        from: String,
+        bufferHandler: @escaping (CMSampleBuffer, Error?) -> Void,
+        completion: @escaping (CaptureError?) -> Void
+    ) {
         RPScreenRecorder.shared().startCapture { sampleBuffer, bufferType, captureError in
             if bufferType == .video {
                 bufferHandler(sampleBuffer, captureError)
@@ -109,6 +136,37 @@ class ScreenShareManager {
             } else {
                 completion(CaptureError(code: Self.errScreenShareFailedDueToUnknownReason,
                                         message: "[\(from)] Failed to start screen share"))
+            }
+        }
+    }
+
+    // MARK: - Broadcast Extension Capture
+
+    private func startBroadcastCapture(
+        bufferHandler: @escaping (CMSampleBuffer, Error?) -> Void,
+        completion: @escaping (CaptureError?) -> Void
+    ) {
+        guard let appGroup = RNSBScreenSharingServiceConfig.appGroupIdentifier else {
+            completion(CaptureError(code: Self.errScreenShareFailedDueToUnknownReason,
+                                    message: "appGroupIdentifier is not configured"))
+            return
+        }
+
+        // Stop previous capturer if any (e.g. extension crashed without client disconnect)
+        broadcastCapturer?.stop()
+        let capturer = BroadcastScreenCapturer()
+        broadcastCapturer = capturer
+
+        capturer.start(
+            appGroupIdentifier: appGroup,
+            extensionBundleIdentifier: RNSBScreenSharingServiceConfig.extensionBundleIdentifier,
+            bufferHandler: bufferHandler
+        ) { error in
+            if let error = error {
+                completion(CaptureError(code: Self.errScreenShareFailedDueToUnknownReason,
+                                        message: error.localizedDescription))
+            } else {
+                completion(nil)
             }
         }
     }
