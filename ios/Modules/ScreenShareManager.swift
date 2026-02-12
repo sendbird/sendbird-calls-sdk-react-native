@@ -36,14 +36,16 @@ class ScreenShareManager {
             if let error = error {
                 self.promise = nil
                 self.stopCapture()
-                return promise.reject(error)
+                promise.reject(error)
+                return
             }
 
             guard let bufferHandler = bufferHandler else {
                 self.promise = nil
                 self.stopCapture()
-                return promise.reject(code: Self.errScreenShareFailedDueToUnknownReason,
-                                      message: "[\(from)] Failed to start screen share")
+                promise.reject(code: Self.errScreenShareFailedDueToUnknownReason,
+                               message: "[\(from)] Failed to start screen share")
+                return
             }
 
             self.startCapture(bufferHandler: bufferHandler) { captureError in
@@ -61,11 +63,11 @@ class ScreenShareManager {
     }
 
     func stopCapture(completion: (() -> Void)? = nil) {
-        if RPScreenRecorder.shared().isRecording {
-            RPScreenRecorder.shared().stopCapture { _ in
-                completion?()
-            }
-        } else {
+        guard RPScreenRecorder.shared().isRecording else {
+            completion?()
+            return
+        }
+        RPScreenRecorder.shared().stopCapture { _ in
             completion?()
         }
     }
@@ -95,17 +97,18 @@ class ScreenShareManager {
                 bufferHandler(sampleBuffer, captureError)
             }
         } completionHandler: { captureError in
-            if let captureError = captureError {
-                let nsError = captureError as NSError
-                if nsError.domain == RPRecordingErrorDomain && nsError.code == RPRecordingErrorCode.userDeclined.rawValue {
-                    completion(CaptureError(code: Self.errPermissionDeniedForScreenShare,
-                                            message: "[\(from)] User denied screen share permission"))
-                } else {
-                    completion(CaptureError(code: Self.errScreenShareFailedDueToUnknownReason,
-                                            message: "[\(from)] Failed to start screen share"))
-                }
-            } else {
+            guard let captureError = captureError else {
                 completion(nil)
+                return
+            }
+
+            let nsError = captureError as NSError
+            if nsError.domain == RPRecordingErrorDomain && nsError.code == RPRecordingErrorCode.userDeclined.rawValue {
+                completion(CaptureError(code: Self.errPermissionDeniedForScreenShare,
+                                        message: "[\(from)] User denied screen share permission"))
+            } else {
+                completion(CaptureError(code: Self.errScreenShareFailedDueToUnknownReason,
+                                        message: "[\(from)] Failed to start screen share"))
             }
         }
     }

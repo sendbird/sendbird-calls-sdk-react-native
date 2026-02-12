@@ -69,8 +69,7 @@ class ScreenShareManager(private val reactContext: ReactApplicationContext) {
             return
         }
 
-        val activity = reactContext.currentActivity
-        if (activity == null) {
+        val activity = reactContext.currentActivity ?: run {
             promise.rejectCalls(SendBirdException(
                 "[$from] No activity available for screen share",
                 ERR_NOT_SUPPORTED_APP_STATE_FOR_SCREEN_SHARE
@@ -78,8 +77,8 @@ class ScreenShareManager(private val reactContext: ReactApplicationContext) {
             return
         }
 
-        this.pendingPromise = promise
-        this.pendingConnect = onPermissionGranted
+        pendingPromise = promise
+        pendingConnect = onPermissionGranted
 
         if (!ScreenSharingService.launch(reactContext)) {
             pendingPromise = null
