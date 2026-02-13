@@ -49,9 +49,9 @@ class ScreenShareManager {
         }
     }
 
-    func cleanup() {
+    func cleanup(reason: String = "Screen sharing has ended") {
         if isBroadcastMode {
-            cleanupBroadcast()
+            cleanupBroadcast(reason: reason)
         } else {
             cleanupInApp()
         }

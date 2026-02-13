@@ -77,19 +77,15 @@ open class RNSBScreenShareBroadcastHandler: RPBroadcastSampleHandler {
         guard let bgraBuffer = convertToBGRA(pixelBuffer) else { return }
 
         if !sendPixelBuffer(bgraBuffer, via: client) {
-            let graceful = client.isGracefulShutdown()
-            NSLog("%@ Send failed (graceful=%d), finishing broadcast", Self.tag, graceful)
+            let reason = client.shutdownReason()
+            NSLog("%@ Send failed (reason=%@), finishing broadcast", Self.tag, reason ?? "unexpected")
             socketClient = nil
 
-            if graceful {
-                let error = NSError(domain: "com.sendbird.calls.broadcast", code: 0,
-                                    userInfo: [NSLocalizedDescriptionKey: "Screen sharing has ended"])
-                finishBroadcastWithError(error)
+            if let reason = reason {
+                finishBroadcastWithError(makeError(code: 0, message: reason))
             } else {
                 // Unexpected disconnect (e.g. app crashed)
-                let error = NSError(domain: "com.sendbird.calls.broadcast", code: -4,
-                                    userInfo: [NSLocalizedDescriptionKey: "Connection to main app lost"])
-                finishBroadcastWithError(error)
+                finishBroadcastWithError(makeError(code: -4, message: "Connection to main app lost"))
             }
         }
     }

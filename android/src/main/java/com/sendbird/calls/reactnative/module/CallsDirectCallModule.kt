@@ -319,6 +319,8 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
         }
     }
 
+    // The native SDK's onLocalVideoSettingsChanged listener does not fire for screen share state changes.
+    // We manually fire this event so the JS layer can update isLocalScreenShareEnabled via the listener.
     private fun notifyLocalVideoSettingsChanged(call: com.sendbird.calls.DirectCall) {
         CallsEvents.sendEvent(
             root.reactContext,

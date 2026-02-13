@@ -99,10 +99,10 @@ class BroadcastScreenCapturer {
         }
     }
 
-    func stop(completion: (() -> Void)? = nil) {
+    func stop(reason: String = "Screen sharing has ended", completion: (() -> Void)? = nil) {
         state = .stopped
         // Signal graceful shutdown so the extension knows it was intentional
-        socketServer?.signalShutdownAndStop()
+        socketServer?.signalShutdownAndStop(reason: reason)
         socketServer = nil
         pixelBufferPool = nil
         poolWidth = 0

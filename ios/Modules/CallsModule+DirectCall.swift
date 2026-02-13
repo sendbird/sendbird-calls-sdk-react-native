@@ -158,6 +158,9 @@ extension CallsDirectCallModule {
         )
     }
 
+    /// iOS SDK does not have a `didLocalVideoSettingsChange` delegate at all (see DirectCallDelegate).
+    /// We manually fire this event so the JS layer can update `isLocalScreenShareEnabled` via the listener.
+    /// This is NOT a native callback — it is a synthetic event fired directly from our code.
     private func notifyLocalVideoSettingsChanged(_ call: DirectCall) {
         DispatchQueue.main.async {
             CallsEvents.shared.sendEvent(.directCall(.onLocalVideoSettingsChanged),
@@ -270,7 +273,7 @@ extension CallsDirectCallModule: DirectCallDelegate {
     }
 
     func didEnd(_ call: DirectCall) {
-        screenShareManager.cleanup()
+        screenShareManager.cleanup(reason: "The call has ended")
 
         DispatchQueue.main.async {
             CallsEvents.shared.sendEvent(.directCall(.onEnded),

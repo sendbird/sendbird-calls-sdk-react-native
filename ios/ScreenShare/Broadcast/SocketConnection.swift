@@ -145,9 +145,9 @@ class SocketServer {
     }
 
     /// Signal the extension that this is a graceful shutdown, then close.
-    func signalShutdownAndStop() {
-        NSLog("%@ SocketServer: signaling graceful shutdown", Self.tag)
-        FileManager.default.createFile(atPath: shutdownSignalPath, contents: nil)
+    func signalShutdownAndStop(reason: String = "Screen sharing has ended") {
+        NSLog("%@ SocketServer: signaling graceful shutdown (reason: %@)", Self.tag, reason)
+        FileManager.default.createFile(atPath: shutdownSignalPath, contents: reason.data(using: .utf8))
         stop()
     }
 
@@ -273,14 +273,11 @@ class SocketClient {
         NSLog("%@ SocketClient init: socketPath=%@", Self.tag, socketPath)
     }
 
-    /// Returns true if the server left a graceful shutdown signal.
-    func isGracefulShutdown() -> Bool {
-        let exists = FileManager.default.fileExists(atPath: shutdownSignalPath)
-        if exists {
-            // Clean up the signal file
-            try? FileManager.default.removeItem(atPath: shutdownSignalPath)
-        }
-        return exists
+    /// Returns the shutdown reason if the server left a graceful shutdown signal, nil otherwise.
+    func shutdownReason() -> String? {
+        guard let data = FileManager.default.contents(atPath: shutdownSignalPath) else { return nil }
+        try? FileManager.default.removeItem(atPath: shutdownSignalPath)
+        return String(data: data, encoding: .utf8) ?? "Screen sharing has ended"
     }
 
     func connect() -> Bool {

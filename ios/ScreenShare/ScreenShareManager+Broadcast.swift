@@ -63,10 +63,10 @@ extension ScreenShareManager {
         promise.resolve()
     }
 
-    func cleanupBroadcast() {
+    func cleanupBroadcast(reason: String = "Screen sharing has ended") {
         broadcastCtx.state = .stopping
         broadcastCtx.releaseHandler?()
-        broadcastCtx.capturer?.stop()
+        broadcastCtx.capturer?.stop(reason: reason)
         broadcastCtx.capturer = nil
         broadcastCtx.resetCallbacks()
         broadcastCtx.state = .idle
