@@ -7,6 +7,7 @@ import com.sendbird.calls.AcceptParams
 import com.sendbird.calls.AudioDevice
 import com.sendbird.calls.CallOptions
 import com.sendbird.calls.SendBirdException
+import com.sendbird.calls.reactnative.CallsEvents
 import com.sendbird.calls.reactnative.RNCallsInternalError
 import com.sendbird.calls.reactnative.extension.rejectCalls
 import com.sendbird.calls.reactnative.utils.CallsUtils
@@ -286,6 +287,7 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
                         promise.rejectCalls(error)
                     } else {
                         promise.resolve(null)
+                        notifyLocalVideoSettingsChanged(call)
                     }
                 }
             }
@@ -304,6 +306,7 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
                     promise.rejectCalls(error)
                 } else {
                     promise.resolve(null)
+                    notifyLocalVideoSettingsChanged(call)
                 }
             }
         } catch (e: Throwable) {
@@ -314,5 +317,14 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
                 else -> promise.reject(e)
             }
         }
+    }
+
+    private fun notifyLocalVideoSettingsChanged(call: com.sendbird.calls.DirectCall) {
+        CallsEvents.sendEvent(
+            root.reactContext,
+            CallsEvents.EVENT_DIRECT_CALL,
+            CallsEvents.TYPE_DIRECT_CALL_ON_LOCAL_VIDEO_SETTINGS_CHANGED,
+            CallsUtils.convertDirectCallToJsMap(call)
+        )
     }
 }

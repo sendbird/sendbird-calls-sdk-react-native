@@ -42,6 +42,8 @@ struct FrameHeader {
 // MARK: - Socket Server (Main App)
 
 class SocketServer {
+    private static let tag = "[SBCBroadcast]"
+
     private var serverSocket: Int32 = -1
     private var clientSocket: Int32 = -1
     private let socketPath: String
@@ -53,11 +55,15 @@ class SocketServer {
     var onClientConnected: (() -> Void)?
     var onClientDisconnected: (() -> Void)?
 
+    private var shutdownSignalPath: String { socketPath + ".shutdown" }
+
     init?(appGroupIdentifier: String) {
         guard let containerURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier) else {
+            NSLog("%@ SocketServer init failed: containerURL is nil for appGroup=%@", Self.tag, appGroupIdentifier)
             return nil
         }
         self.socketPath = containerURL.appendingPathComponent("sb_ss.sock").path
+        NSLog("%@ SocketServer init: socketPath=%@", Self.tag, socketPath)
     }
 
     deinit {
@@ -66,6 +72,8 @@ class SocketServer {
 
     func start() -> Bool {
         stop()
+
+        NSLog("%@ SocketServer.start: preparing at path=%@", Self.tag, socketPath)
 
         // Remove stale socket file
         unlink(socketPath)
@@ -132,7 +140,15 @@ class SocketServer {
         source.resume()
         acceptSource = source
 
+        NSLog("%@ SocketServer.start: listening on path=%@", Self.tag, socketPath)
         return true
+    }
+
+    /// Signal the extension that this is a graceful shutdown, then close.
+    func signalShutdownAndStop() {
+        NSLog("%@ SocketServer: signaling graceful shutdown", Self.tag)
+        FileManager.default.createFile(atPath: shutdownSignalPath, contents: nil)
+        stop()
     }
 
     func stop() {
@@ -152,6 +168,11 @@ class SocketServer {
         unlink(socketPath)
     }
 
+    /// Remove stale shutdown signal (called on server start).
+    func clearShutdownSignal() {
+        try? FileManager.default.removeItem(atPath: shutdownSignalPath)
+    }
+
     private func acceptClient() {
         var clientAddr = sockaddr_un()
         var clientAddrLen = socklen_t(MemoryLayout<sockaddr_un>.size)
@@ -163,6 +184,12 @@ class SocketServer {
         }
 
         guard newSocket >= 0 else { return }
+
+        // Clear O_NONBLOCK inherited from the listening socket (BSD/iOS behavior)
+        let clientFlags = fcntl(newSocket, F_GETFL)
+        _ = fcntl(newSocket, F_SETFL, clientFlags & ~O_NONBLOCK)
+
+        NSLog("%@ SocketServer: client connected", Self.tag)
 
         // Close previous client if any
         if clientSocket >= 0 {
@@ -229,20 +256,48 @@ class SocketServer {
 // MARK: - Socket Client (Extension)
 
 class SocketClient {
+    private static let tag = "[SBCBroadcast]"
+
     private var socket_fd: Int32 = -1
     private let socketPath: String
     private let queue = DispatchQueue(label: "com.sendbird.calls.socket.client", qos: .userInteractive)
 
+    private var shutdownSignalPath: String { socketPath + ".shutdown" }
+
     init?(appGroupIdentifier: String) {
         guard let containerURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier) else {
+            NSLog("%@ SocketClient init failed: containerURL is nil for appGroup=%@", Self.tag, appGroupIdentifier)
             return nil
         }
         self.socketPath = containerURL.appendingPathComponent("sb_ss.sock").path
+        NSLog("%@ SocketClient init: socketPath=%@", Self.tag, socketPath)
+    }
+
+    /// Returns true if the server left a graceful shutdown signal.
+    func isGracefulShutdown() -> Bool {
+        let exists = FileManager.default.fileExists(atPath: shutdownSignalPath)
+        if exists {
+            // Clean up the signal file
+            try? FileManager.default.removeItem(atPath: shutdownSignalPath)
+        }
+        return exists
     }
 
     func connect() -> Bool {
+        // Check if socket file exists before attempting connection
+        let socketExists = FileManager.default.fileExists(atPath: socketPath)
+        NSLog("%@ SocketClient.connect: socketPath=%@, exists=%d", Self.tag, socketPath, socketExists)
+
         socket_fd = socket(AF_UNIX, SOCK_STREAM, 0)
-        guard socket_fd >= 0 else { return false }
+        guard socket_fd >= 0 else {
+            NSLog("%@ SocketClient.connect: socket() failed, errno=%d", Self.tag, errno)
+            return false
+        }
+
+        // Prevent SIGPIPE (default: kills the process) when writing to a closed socket.
+        // Instead, send() returns -1 with errno=EPIPE which we handle gracefully.
+        var noSigPipe: Int32 = 1
+        setsockopt(socket_fd, SOL_SOCKET, SO_NOSIGPIPE, &noSigPipe, socklen_t(MemoryLayout<Int32>.size))
 
         var addr = sockaddr_un()
         addr.sun_family = sa_family_t(AF_UNIX)
@@ -263,24 +318,33 @@ class SocketClient {
         }
 
         guard result == 0 else {
+            NSLog("%@ SocketClient.connect: connect() failed, errno=%d (%s)", Self.tag, errno, strerror(errno))
             close(socket_fd)
             socket_fd = -1
             return false
         }
 
+        NSLog("%@ SocketClient.connect: connected successfully", Self.tag)
         return true
     }
 
-    func sendFrame(pixelData: Data, width: UInt32, height: UInt32) {
+    /// Returns false if the connection is known to be broken.
+    /// Actual send is async; failure is detected on the next call.
+    @discardableResult
+    func sendFrame(pixelData: Data, width: UInt32, height: UInt32) -> Bool {
+        guard socket_fd >= 0 else { return false }
+
+        let header = FrameHeader(width: width, height: height, dataSize: UInt32(pixelData.count))
+        let headerData = header.serialize()
+
         queue.async { [weak self] in
             guard let self = self, self.socket_fd >= 0 else { return }
-
-            let header = FrameHeader(width: width, height: height, dataSize: UInt32(pixelData.count))
-            let headerData = header.serialize()
-
-            self.sendAll(headerData)
-            self.sendAll(pixelData)
+            if !self.sendAll(headerData) || !self.sendAll(pixelData) {
+                NSLog("%@ SocketClient: send failed, closing connection", Self.tag)
+                self.disconnect()
+            }
         }
+        return true
     }
 
     func disconnect() {
@@ -290,15 +354,17 @@ class SocketClient {
         }
     }
 
-    private func sendAll(_ data: Data) {
+    @discardableResult
+    private func sendAll(_ data: Data) -> Bool {
         var totalSent = 0
         let count = data.count
         while totalSent < count {
             let bytesSent = data.withUnsafeBytes { buffer in
                 send(socket_fd, buffer.baseAddress!.advanced(by: totalSent), count - totalSent, 0)
             }
-            if bytesSent <= 0 { return }
+            if bytesSent <= 0 { return false }
             totalSent += bytesSent
         }
+        return true
     }
 }

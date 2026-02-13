@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
   s.subspec 'Broadcast' do |broadcast|
     broadcast.source_files = "ios/ScreenShare/Broadcast/RNSBScreenShareBroadcastHandler.swift",
                              "ios/ScreenShare/Broadcast/SocketConnection.swift"
-    broadcast.frameworks = "ReplayKit", "Accelerate"
+    broadcast.frameworks = "ReplayKit"
   end
 
 #   if ENV['RCT_NEW_ARCH_ENABLED'] == '1' then

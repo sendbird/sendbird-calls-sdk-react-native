@@ -11,45 +11,46 @@ import CoreVideo
 import CoreMedia
 
 class BroadcastScreenCapturer {
+    private static let tag = "[SBCBroadcast]"
+
+    weak var delegate: BroadcastScreenCapturerDelegate?
+
     private var socketServer: SocketServer?
-    private var bufferHandler: ((CMSampleBuffer, Error?) -> Void)?
-    private var isCapturing = false
     private var pixelBufferPool: CVPixelBufferPool?
     private var poolWidth: Int = 0
     private var poolHeight: Int = 0
-    private var connectionTimeoutWork: DispatchWorkItem?
-    private var startCompletion: ((Error?) -> Void)?
 
-    /// Timeout waiting for the broadcast extension to connect after picker is shown.
-    /// The user must select the extension in the picker within this duration.
-    private static let connectionTimeoutSeconds: TimeInterval = 30
+    private enum State {
+        case idle
+        case awaitingExtension
+        case active
+        case stopped
+    }
+    private var state: State = .idle
 
-    func start(
-        appGroupIdentifier: String,
-        extensionBundleIdentifier: String?,
-        bufferHandler: @escaping (CMSampleBuffer, Error?) -> Void,
-        completion: @escaping (Error?) -> Void
-    ) {
-        guard !isCapturing else {
-            completion(nil)
+    private var extensionBundleIdentifier: String?
+
+    func start(appGroupIdentifier: String, extensionBundleIdentifier: String?) {
+        guard case .idle = state else {
+            NSLog("%@ start() called in non-idle state, ignoring", Self.tag)
             return
         }
 
-        self.bufferHandler = bufferHandler
-        self.startCompletion = completion
-        isCapturing = true
+        self.extensionBundleIdentifier = extensionBundleIdentifier
 
         guard let server = SocketServer(appGroupIdentifier: appGroupIdentifier) else {
-            isCapturing = false
-            startCompletion = nil
             let error = NSError(
                 domain: "com.sendbird.calls.broadcast",
                 code: -3,
                 userInfo: [NSLocalizedDescriptionKey: "Invalid App Group identifier. Cannot access shared container."]
             )
-            completion(error)
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.delegate?.capturer(self, didFailWithError: error)
+            }
             return
         }
+
         server.onClientConnected = { [weak self] in
             self?.handleClientConnected()
         }
@@ -60,89 +61,35 @@ class BroadcastScreenCapturer {
             self?.handleClientDisconnected()
         }
 
+        server.clearShutdownSignal()
+
         guard server.start() else {
-            isCapturing = false
-            startCompletion = nil
             let error = NSError(
                 domain: "com.sendbird.calls.broadcast",
                 code: -1,
                 userInfo: [NSLocalizedDescriptionKey: "Failed to start socket server"]
             )
-            completion(error)
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.delegate?.capturer(self, didFailWithError: error)
+            }
             return
         }
 
         socketServer = server
-
-        // Start timeout — if the extension doesn't connect within the timeout,
-        // assume the user dismissed the picker without selecting.
-        let timeoutWork = DispatchWorkItem { [weak self] in
-            self?.handleConnectionTimeout()
-        }
-        connectionTimeoutWork = timeoutWork
-        DispatchQueue.main.asyncAfter(
-            deadline: .now() + Self.connectionTimeoutSeconds,
-            execute: timeoutWork
-        )
-
-        // Trigger the system broadcast picker
-        showBroadcastPicker(extensionBundleIdentifier: extensionBundleIdentifier)
+        state = .awaitingExtension
+        NSLog("%@ Server started, awaiting extension connection", Self.tag)
     }
 
-    func stop(completion: (() -> Void)? = nil) {
-        isCapturing = false
-        bufferHandler = nil
-        connectionTimeoutWork?.cancel()
-        connectionTimeoutWork = nil
-        socketServer?.stop()
-        socketServer = nil
-        pixelBufferPool = nil
-        poolWidth = 0
-        poolHeight = 0
-
-        // If stop is called before the extension connected, reject the pending start
-        if let pending = startCompletion {
-            startCompletion = nil
-            let error = NSError(
-                domain: "com.sendbird.calls.broadcast",
-                code: -4,
-                userInfo: [NSLocalizedDescriptionKey: "Screen share was cancelled"]
-            )
-            pending(error)
-        }
-
-        completion?()
-    }
-
-    // MARK: - Private
-
-    private func handleClientConnected() {
-        connectionTimeoutWork?.cancel()
-        connectionTimeoutWork = nil
-
-        let pending = startCompletion
-        startCompletion = nil
-        pending?(nil)
-    }
-
-    private func handleConnectionTimeout() {
-        connectionTimeoutWork = nil
-
-        guard startCompletion != nil else { return }
-
-        // Extension never connected — user dismissed the picker without selecting
-        stop()
-    }
-
-    private func showBroadcastPicker(extensionBundleIdentifier: String?) {
-        DispatchQueue.main.async {
+    func showBroadcastPicker() {
+        NSLog("%@ Showing broadcast picker (extensionBundleId: %@)", Self.tag, extensionBundleIdentifier ?? "nil")
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
             let pickerView = RPSystemBroadcastPickerView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
             pickerView.showsMicrophoneButton = false
-            if let extensionId = extensionBundleIdentifier {
+            if let extensionId = self.extensionBundleIdentifier {
                 pickerView.preferredExtension = extensionId
             }
-
-            // Find and trigger the button inside the picker
             for subview in pickerView.subviews {
                 if let button = subview as? UIButton {
                     button.sendActions(for: .touchUpInside)
@@ -152,20 +99,54 @@ class BroadcastScreenCapturer {
         }
     }
 
+    func stop(completion: (() -> Void)? = nil) {
+        state = .stopped
+        // Signal graceful shutdown so the extension knows it was intentional
+        socketServer?.signalShutdownAndStop()
+        socketServer = nil
+        pixelBufferPool = nil
+        poolWidth = 0
+        poolHeight = 0
+        completion?()
+    }
+
+    // MARK: - Private: Socket Event Handlers
+
+    private func handleClientConnected() {
+        // Already on main queue (SocketServer dispatches to main)
+        NSLog("%@ Extension connected to server", Self.tag)
+        guard case .awaitingExtension = state else { return }
+        state = .active
+        delegate?.capturerDidStart(self)
+    }
+
     private func handleReceivedFrame(pixelData: Data, width: UInt32, height: UInt32) {
-        guard isCapturing, let handler = bufferHandler else { return }
+        guard case .active = state else { return }
 
         guard let sampleBuffer = createSampleBuffer(from: pixelData, width: Int(width), height: Int(height)) else {
             return
         }
 
-        handler(sampleBuffer, nil)
+        // Dispatch to main for delegate call
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.delegate?.capturer(self, didReceiveVideoFrame: sampleBuffer)
+        }
     }
 
     private func handleClientDisconnected() {
-        guard isCapturing else { return }
-        stop()
+        // Already on main queue (SocketServer dispatches to main)
+        NSLog("%@ Extension disconnected", Self.tag)
+        guard state != .stopped else { return }
+
+        state = .idle
+        socketServer?.stop()
+        socketServer = nil
+
+        delegate?.capturerDidFinish(self)
     }
+
+    // MARK: - Private: Pixel Buffer / Sample Buffer
 
     private func getOrCreatePool(width: Int, height: Int) -> CVPixelBufferPool? {
         if let pool = pixelBufferPool, poolWidth == width, poolHeight == height {
