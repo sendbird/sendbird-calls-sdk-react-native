@@ -121,8 +121,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         // Configure Broadcast Extension for screen sharing
-        RNSBScreenSharingServiceConfig.appGroupIdentifier = "group.com.yourapp.screenshare"
-        RNSBScreenSharingServiceConfig.extensionBundleIdentifier = "com.yourapp.broadcast-extension"
+        RNSBScreenShareServiceConfig.appGroupIdentifier = "group.com.yourapp.screenshare"
+        RNSBScreenShareServiceConfig.extensionBundleIdentifier = "com.yourapp.broadcast-extension"
 
         // ...
     }

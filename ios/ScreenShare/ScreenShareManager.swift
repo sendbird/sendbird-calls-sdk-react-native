@@ -17,7 +17,7 @@ class ScreenShareManager {
     typealias ReadyHandler = (@escaping (BufferHandler?, SBCError?) -> Void) -> Void
 
     var isBroadcastMode: Bool {
-        RNSBScreenSharingServiceConfig.appGroupIdentifier != nil
+        RNSBScreenShareServiceConfig.appGroupIdentifier != nil
     }
 
     var broadcastCtx = BroadcastContext()

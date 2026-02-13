@@ -25,8 +25,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Screen share mode: toggle between in-app capture and broadcast extension
     let useBroadcastExtension = true
     if useBroadcastExtension {
-      RNSBScreenSharingServiceConfig.appGroupIdentifier = "group.com.sendbird.calls.reactnative.sample.app"
-      RNSBScreenSharingServiceConfig.extensionBundleIdentifier = "com.sendbird.calls.reactnative.sample.app.BroadcastExtension"
+      RNSBScreenShareServiceConfig.appGroupIdentifier = "group.com.sendbird.calls.reactnative.sample.app"
+      RNSBScreenShareServiceConfig.extensionBundleIdentifier = "com.sendbird.calls.reactnative.sample.app.BroadcastExtension"
     }
 
     let delegate = ReactNativeDelegate()

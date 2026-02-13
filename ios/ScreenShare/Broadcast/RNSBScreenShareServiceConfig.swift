@@ -1,5 +1,5 @@
 //
-//  RNSBScreenSharingServiceConfig.swift
+//  RNSBScreenShareServiceConfig.swift
 //  sendbird-calls-react-native
 //
 //  Copyright © 2026 Sendbird. All rights reserved.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-@objc public class RNSBScreenSharingServiceConfig: NSObject {
+@objc public class RNSBScreenShareServiceConfig: NSObject {
     /// Set to enable Broadcast Extension mode.
     /// If nil, uses in-app RPScreenRecorder capture.
     @objc public static var appGroupIdentifier: String?

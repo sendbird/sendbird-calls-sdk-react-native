@@ -50,7 +50,7 @@ extension ScreenShareManager {
         broadcastCtx.releaseHandler = release
         broadcastCtx.notifyStateChange = notifyStateChange
 
-        guard let appGroup = RNSBScreenSharingServiceConfig.appGroupIdentifier else {
+        guard let appGroup = RNSBScreenShareServiceConfig.appGroupIdentifier else {
             promise.reject(code: Self.errScreenShareFailedDueToUnknownReason,
                            message: "appGroupIdentifier is not configured")
             return
@@ -59,7 +59,7 @@ extension ScreenShareManager {
         let capturer = BroadcastScreenCapturer()
         capturer.delegate = self
         capturer.start(appGroupIdentifier: appGroup,
-                       extensionBundleIdentifier: RNSBScreenSharingServiceConfig.extensionBundleIdentifier)
+                       extensionBundleIdentifier: RNSBScreenShareServiceConfig.extensionBundleIdentifier)
         broadcastCtx.capturer = capturer
         broadcastCtx.state = .awaitingExtension
 

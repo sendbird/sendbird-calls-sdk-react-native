@@ -53,7 +53,7 @@
 		4489CA14287EA3B600E66D81 /* RNSBGroupCallVideoViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNSBGroupCallVideoViewManager.m; sourceTree = "<group>"; };
 		44BE5F932873A5C30072E874 /* CallsModule+GroupCall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CallsModule+GroupCall.swift"; sourceTree = "<group>"; };
 		54150181C3684E21EFD3C4BB /* BroadcastScreenCapturer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BroadcastScreenCapturer.swift; sourceTree = "<group>"; };
-		541504D404E3AC6A5A94CCF5 /* RNSBScreenSharingServiceConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNSBScreenSharingServiceConfig.swift; sourceTree = "<group>"; };
+		541504D404E3AC6A5A94CCF5 /* RNSBScreenShareServiceConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNSBScreenShareServiceConfig.swift; sourceTree = "<group>"; };
 		541506A40E035CEB1BF612DF /* SocketConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketConnection.swift; sourceTree = "<group>"; };
 		5415090F46B04BBC0A238D4B /* BroadcastScreenShareDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BroadcastScreenShareDelegate.swift; sourceTree = "<group>"; };
 		5415094366DD5E475A912005 /* ScreenShareManager+InApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScreenShareManager+InApp.swift"; sourceTree = "<group>"; };
@@ -120,7 +120,7 @@
 				541506A40E035CEB1BF612DF /* SocketConnection.swift */,
 				54150181C3684E21EFD3C4BB /* BroadcastScreenCapturer.swift */,
 				5415090F46B04BBC0A238D4B /* BroadcastScreenShareDelegate.swift */,
-				541504D404E3AC6A5A94CCF5 /* RNSBScreenSharingServiceConfig.swift */,
+				541504D404E3AC6A5A94CCF5 /* RNSBScreenShareServiceConfig.swift */,
 				54150EC350D5FED5E14CF5DC /* RNSBScreenShareBroadcastHandler.swift */,
 			);
 			path = Broadcast;
