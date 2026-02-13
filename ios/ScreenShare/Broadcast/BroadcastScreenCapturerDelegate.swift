@@ -1,5 +1,5 @@
 //
-//  BroadcastScreenShareDelegate.swift
+//  BroadcastScreenCapturerDelegate.swift
 //  RNSendbirdCalls
 //
 //  Copyright © 2026 Sendbird. All rights reserved.
@@ -7,15 +7,6 @@
 
 import Foundation
 import CoreMedia
-
-/// State machine for broadcast screen sharing.
-enum BroadcastScreenShareState {
-    case idle
-    case awaitingExtension
-    case connectingSDK
-    case active(bufferHandler: (CMSampleBuffer, Error?) -> Void)
-    case stopping
-}
 
 /// Delegate protocol for BroadcastScreenCapturer lifecycle events.
 /// All methods are called on the main queue.

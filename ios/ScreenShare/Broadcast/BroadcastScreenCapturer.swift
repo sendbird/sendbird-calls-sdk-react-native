@@ -121,15 +121,13 @@ class BroadcastScreenCapturer {
     }
 
     private func handleReceivedFrame(pixelData: Data, width: UInt32, height: UInt32) {
-        guard case .active = state else { return }
-
         guard let sampleBuffer = createSampleBuffer(from: pixelData, width: Int(width), height: Int(height)) else {
             return
         }
 
-        // Dispatch to main for delegate call
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
+            guard case .active = self.state else { return }
             self.delegate?.capturer(self, didReceiveVideoFrame: sampleBuffer)
         }
     }

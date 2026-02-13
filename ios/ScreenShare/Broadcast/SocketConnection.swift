@@ -258,7 +258,7 @@ class SocketServer {
 class SocketClient {
     private static let tag = "[SBCBroadcast]"
 
-    private var socket_fd: Int32 = -1
+    private var clientSocket: Int32 = -1
     private let socketPath: String
     private let queue = DispatchQueue(label: "com.sendbird.calls.socket.client", qos: .userInteractive)
 
@@ -285,8 +285,8 @@ class SocketClient {
         let socketExists = FileManager.default.fileExists(atPath: socketPath)
         NSLog("%@ SocketClient.connect: socketPath=%@, exists=%d", Self.tag, socketPath, socketExists)
 
-        socket_fd = socket(AF_UNIX, SOCK_STREAM, 0)
-        guard socket_fd >= 0 else {
+        clientSocket = socket(AF_UNIX, SOCK_STREAM, 0)
+        guard clientSocket >= 0 else {
             NSLog("%@ SocketClient.connect: socket() failed, errno=%d", Self.tag, errno)
             return false
         }
@@ -294,7 +294,7 @@ class SocketClient {
         // Prevent SIGPIPE (default: kills the process) when writing to a closed socket.
         // Instead, send() returns -1 with errno=EPIPE which we handle gracefully.
         var noSigPipe: Int32 = 1
-        setsockopt(socket_fd, SOL_SOCKET, SO_NOSIGPIPE, &noSigPipe, socklen_t(MemoryLayout<Int32>.size))
+        setsockopt(clientSocket, SOL_SOCKET, SO_NOSIGPIPE, &noSigPipe, socklen_t(MemoryLayout<Int32>.size))
 
         var addr = sockaddr_un()
         addr.sun_family = sa_family_t(AF_UNIX)
@@ -310,14 +310,14 @@ class SocketClient {
         let addrLen = socklen_t(MemoryLayout<sa_family_t>.size + socketPath.utf8.count + 1)
         let result = withUnsafePointer(to: &addr) {
             $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
-                Darwin.connect(socket_fd, $0, addrLen)
+                Darwin.connect(clientSocket, $0, addrLen)
             }
         }
 
         guard result == 0 else {
             NSLog("%@ SocketClient.connect: connect() failed, errno=%d (%s)", Self.tag, errno, strerror(errno))
-            close(socket_fd)
-            socket_fd = -1
+            close(clientSocket)
+            clientSocket = -1
             return false
         }
 
@@ -329,13 +329,13 @@ class SocketClient {
     /// Actual send is async; failure is detected on the next call.
     @discardableResult
     func sendFrame(pixelData: Data, width: UInt32, height: UInt32) -> Bool {
-        guard socket_fd >= 0 else { return false }
+        guard clientSocket >= 0 else { return false }
 
         let header = FrameHeader(width: width, height: height, dataSize: UInt32(pixelData.count))
         let headerData = header.serialize()
 
         queue.async { [weak self] in
-            guard let self = self, self.socket_fd >= 0 else { return }
+            guard let self = self, self.clientSocket >= 0 else { return }
             if !self.sendAll(headerData) || !self.sendAll(pixelData) {
                 NSLog("%@ SocketClient: send failed, closing connection", Self.tag)
                 self.disconnect()
@@ -345,9 +345,9 @@ class SocketClient {
     }
 
     func disconnect() {
-        if socket_fd >= 0 {
-            close(socket_fd)
-            socket_fd = -1
+        if clientSocket >= 0 {
+            close(clientSocket)
+            clientSocket = -1
         }
     }
 
@@ -357,7 +357,7 @@ class SocketClient {
         let count = data.count
         while totalSent < count {
             let bytesSent = data.withUnsafeBytes { buffer in
-                send(socket_fd, buffer.baseAddress!.advanced(by: totalSent), count - totalSent, 0)
+                send(clientSocket, buffer.baseAddress!.advanced(by: totalSent), count - totalSent, 0)
             }
             if bytesSent <= 0 { return false }
             totalSent += bytesSent

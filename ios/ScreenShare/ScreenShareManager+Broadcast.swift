@@ -9,6 +9,15 @@ import Foundation
 import SendBirdCalls
 import CoreMedia
 
+/// State machine for broadcast screen sharing.
+enum BroadcastScreenShareState {
+    case idle
+    case awaitingExtension
+    case connectingSDK
+    case active(bufferHandler: (CMSampleBuffer, Error?) -> Void)
+    case stopping
+}
+
 // MARK: - Broadcast Mode
 extension ScreenShareManager {
     struct BroadcastContext {
