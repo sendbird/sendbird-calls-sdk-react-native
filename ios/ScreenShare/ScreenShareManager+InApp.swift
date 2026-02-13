@@ -2,7 +2,7 @@
 //  ScreenShareManager+InApp.swift
 //  RNSendbirdCalls
 //
-//  Copyright © 2024 Sendbird. All rights reserved.
+//  Copyright © 2026 Sendbird. All rights reserved.
 //
 
 import Foundation

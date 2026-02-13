@@ -22,9 +22,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   ) -> Bool {
     FirebaseApp.configure()
 
-    // Configure Broadcast Extension for screen sharing
-    RNSBScreenSharingServiceConfig.appGroupIdentifier = "group.com.sendbird.calls.reactnative.sample.app"
-    RNSBScreenSharingServiceConfig.extensionBundleIdentifier = "com.sendbird.calls.reactnative.sample.app.BroadcastExtension"
+    // Screen share mode: toggle between in-app capture and broadcast extension
+    let useBroadcastExtension = true
+    if useBroadcastExtension {
+      RNSBScreenSharingServiceConfig.appGroupIdentifier = "group.com.sendbird.calls.reactnative.sample.app"
+      RNSBScreenSharingServiceConfig.extensionBundleIdentifier = "com.sendbird.calls.reactnative.sample.app.BroadcastExtension"
+    }
 
     let delegate = ReactNativeDelegate()
     let factory = RCTReactNativeFactory(delegate: delegate)
