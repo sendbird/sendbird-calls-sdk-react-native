@@ -7,6 +7,7 @@ import FirebaseCore
 import SendBirdCalls
 import RNVoipPushNotification
 import RNCallKeep
+import sendbird_calls_react_native
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -20,6 +21,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
   ) -> Bool {
     FirebaseApp.configure()
+
+    // Screen share mode: toggle between in-app capture and broadcast extension
+    let useBroadcastExtension = true
+    if useBroadcastExtension {
+      RNSBScreenShareServiceConfig.appGroupIdentifier = "group.com.sendbird.calls.reactnative.sample.app"
+      RNSBScreenShareServiceConfig.extensionBundleIdentifier = "com.sendbird.calls.reactnative.sample.app.BroadcastExtension"
+    }
 
     let delegate = ReactNativeDelegate()
     let factory = RCTReactNativeFactory(delegate: delegate)

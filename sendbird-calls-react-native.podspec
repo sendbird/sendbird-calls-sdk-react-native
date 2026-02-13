@@ -15,10 +15,21 @@ Pod::Spec.new do |s|
 
   s.platforms    = { :ios => "12.0" }
   s.source       = { :git => "https://github.com/sendbird/sendbird-calls-react-native.git", :tag => "#{s.version}" }
-  s.source_files = "ios/**/*.{h,m,mm,swift}"
 
-  s.dependency "React-Core"
-  s.dependency "SendBirdCalls", "1.10.18"
+  s.default_subspecs = 'Core'
+
+  s.subspec 'Core' do |core|
+    core.source_files = "ios/**/*.{h,m,mm,swift}"
+    core.exclude_files = "ios/ScreenShare/Broadcast/RNSBScreenShareBroadcastHandler.swift"
+    core.dependency "React-Core"
+    core.dependency "SendBirdCalls", "1.10.18"
+  end
+
+  s.subspec 'Broadcast' do |broadcast|
+    broadcast.source_files = "ios/ScreenShare/Broadcast/RNSBScreenShareBroadcastHandler.swift",
+                             "ios/ScreenShare/Broadcast/SocketConnection.swift"
+    broadcast.frameworks = "ReplayKit"
+  end
 
 #   if ENV['RCT_NEW_ARCH_ENABLED'] == '1' then
 #       s.compiler_flags = folly_compiler_flags + " -DRCT_NEW_ARCH_ENABLED=1"

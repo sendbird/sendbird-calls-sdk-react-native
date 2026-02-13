@@ -54,7 +54,16 @@ target 'SendbirdCallsRNSample' do
           config.build_settings['CODE_SIGNING_REQUIRED'] = 'NO'
           config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
         end
+
     end
 
   end
+end
+
+# Broadcast Upload Extension for screen sharing
+# NOTE: :path is only needed for local development.
+#       Published SDK users can simply use: pod 'sendbird-calls-react-native/Broadcast'
+target 'BroadcastExtension' do
+  use_frameworks! :linkage => :static
+  pod 'sendbird-calls-react-native/Broadcast', :path => '../node_modules/@sendbird/calls-react-native'
 end

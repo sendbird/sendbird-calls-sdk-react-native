@@ -282,7 +282,7 @@ export interface DirectCallProperties {
    * Indicates whether the local user's screen is being shared.
    * True if the local user's screen is being shared. Otherwise, false.
    *
-   * @since 1.0.0
+   * @since 1.2.0
    */
   isLocalScreenShareEnabled: boolean;
 

@@ -31,14 +31,14 @@ class CallsDirectCallModule: CallsBaseModule, CallsDirectCallModuleProtocol {
         if let directCall = try? CallsUtils.findDirectCallBy(callId) {
             let callOptions = CallsUtils.convertDictToCallOptions(options)
             let acceptParams = AcceptParams(callOptions: callOptions, holdActiveCall: holdActiveCall)
-            
+
             directCall.accept(with: acceptParams)
             promise.resolve()
         } else {
             promise.reject(RNCallsInternalError.notFoundDirectCall("directCall/accept"))
         }
     }
-    
+
     func end(_ callId: String, _ promise: Promise) {
         if let directCall = try? CallsUtils.findDirectCallBy(callId) {
             directCall.end {
@@ -48,7 +48,7 @@ class CallsDirectCallModule: CallsBaseModule, CallsDirectCallModuleProtocol {
             promise.reject(RNCallsInternalError.notFoundDirectCall("directCall/end"))
         }
     }
-    
+
     func updateLocalVideoView(_ callId: String, _ videoViewId: NSNumber) {
         CallsUtils.safeRun {
             let directCall = try CallsUtils.findDirectCallBy(callId)
@@ -56,7 +56,7 @@ class CallsDirectCallModule: CallsBaseModule, CallsDirectCallModuleProtocol {
             directCall.updateLocalVideoView(videoView.surface)
         }
     }
-    
+
     func updateRemoteVideoView(_ callId: String, _ videoViewId: NSNumber) {
         CallsUtils.safeRun {
             let directCall = try CallsUtils.findDirectCallBy(callId)
@@ -129,11 +129,14 @@ extension CallsDirectCallModule {
         }
 
         screenShareManager.start(promise,
-            connect: { completion in
+            ready: { completion in
                 directCall.startScreenShare(completionHandler: completion)
             },
-            disconnect: {
+            release: {
                 directCall.stopScreenShare(completionHandler: nil)
+            },
+            notifyStateChange: {
+                self.notifyLocalVideoSettingsChanged(directCall)
             }
         )
     }
@@ -145,13 +148,23 @@ extension CallsDirectCallModule {
             return promise.reject(RNCallsInternalError.notFoundDirectCall(from))
         }
 
-        directCall.stopScreenShare { [weak self] error in
-            self?.screenShareManager.cleanup()
-            if let error = error {
-                promise.reject(error)
-            } else {
-                promise.resolve()
+        screenShareManager.stop(promise,
+            release: { completion in
+                directCall.stopScreenShare(completionHandler: completion)
+            },
+            notifyStateChange: {
+                self.notifyLocalVideoSettingsChanged(directCall)
             }
+        )
+    }
+
+    /// iOS SDK does not have a `didLocalVideoSettingsChange` delegate at all (see DirectCallDelegate).
+    /// We manually fire this event so the JS layer can update `isLocalScreenShareEnabled` via the listener.
+    /// This is NOT a native callback — it is a synthetic event fired directly from our code.
+    private func notifyLocalVideoSettingsChanged(_ call: DirectCall) {
+        DispatchQueue.main.async {
+            CallsEvents.shared.sendEvent(.directCall(.onLocalVideoSettingsChanged),
+                                         CallsUtils.convertDirectCallToDict(call))
         }
     }
 }
@@ -171,28 +184,28 @@ extension CallsDirectCallModule {
             promise.reject(RNCallsInternalError.notFoundDirectCall("directCall/switchCamera"))
         }
     }
-    
+
     func startVideo(_ type: String, _ callId: String) {
         CallsUtils.safeRun {
             let directCall = try CallsUtils.findDirectCallBy(callId)
             directCall.startVideo()
         }
     }
-    
+
     func stopVideo(_ type: String, _ callId: String) {
         CallsUtils.safeRun {
             let directCall = try CallsUtils.findDirectCallBy(callId)
             directCall.stopVideo()
         }
     }
-    
+
     func muteMicrophone(_ type: String, _ callId: String) {
         CallsUtils.safeRun {
             let directCall = try CallsUtils.findDirectCallBy(callId)
             directCall.muteMicrophone()
         }
     }
-    
+
     func unmuteMicrophone(_ type: String, _ callId: String) {
         CallsUtils.safeRun {
             let directCall = try CallsUtils.findDirectCallBy(callId)
@@ -210,7 +223,7 @@ extension CallsDirectCallModule {
         guard let videoDevice = directCall.availableVideoDevices.first(where: { $0.uniqueId == deviceId }) else {
             return promise.reject(RNCallsInternalError.notFoundVideoDevice(from))
         }
-        
+
         directCall.selectVideoDevice(videoDevice) { error in
             if let error = error {
                 promise.reject(error)
@@ -219,7 +232,7 @@ extension CallsDirectCallModule {
             }
         }
     }
-    
+
 }
 
 // MARK: DirectCallDelegate
@@ -235,14 +248,14 @@ extension CallsDirectCallModule: DirectCallDelegate {
                                          ])
         }
     }
-    
+
     func didConnect(_ call: DirectCall) {
         DispatchQueue.main.async {
             CallsEvents.shared.sendEvent(.directCall(.onConnected),
                                          CallsUtils.convertDirectCallToDict(call))
         }
     }
-    
+
     func didDeleteCustomItems(call: DirectCall, deletedKeys: [String]) {
         DispatchQueue.main.async {
             CallsEvents.shared.sendEvent(.directCall(.onCustomItemsDeleted),
@@ -258,9 +271,9 @@ extension CallsDirectCallModule: DirectCallDelegate {
                                          ["updatedKeys": updatedKeys])
         }
     }
-    
+
     func didEnd(_ call: DirectCall) {
-        screenShareManager.cleanup()
+        screenShareManager.cleanup(reason: "The call has ended")
 
         DispatchQueue.main.async {
             CallsEvents.shared.sendEvent(.directCall(.onEnded),
@@ -269,50 +282,50 @@ extension CallsDirectCallModule: DirectCallDelegate {
             call.delegate = nil
         }
     }
-    
+
     func didEstablish(_ call: DirectCall) {
         DispatchQueue.main.async {
             CallsEvents.shared.sendEvent(.directCall(.onEstablished),
                                          CallsUtils.convertDirectCallToDict(call))
         }
     }
-    
+
     // func didLocalVideoSettingsChange - Not implemented in iOS
-    
+
     func didReconnect(_ call: DirectCall) {
         DispatchQueue.main.async {
             CallsEvents.shared.sendEvent(.directCall(.onReconnected),
                                          CallsUtils.convertDirectCallToDict(call))
         }
     }
-    
+
     func didStartReconnecting(_ call: DirectCall) {
         DispatchQueue.main.async {
             CallsEvents.shared.sendEvent(.directCall(.onReconnecting),
                                          CallsUtils.convertDirectCallToDict(call))
         }
     }
-    
+
     func didRemoteAudioSettingsChange(_ call: DirectCall) {
         DispatchQueue.main.async {
             CallsEvents.shared.sendEvent(.directCall(.onRemoteAudioSettingsChanged),
                                          CallsUtils.convertDirectCallToDict(call))
         }
     }
-    
+
     func didRemoteRecordingStatusChange(_ call: DirectCall) {
         DispatchQueue.main.async {
             CallsEvents.shared.sendEvent(.directCall(.onRemoteRecordingStatusChanged),
                                          CallsUtils.convertDirectCallToDict(call))}
     }
-    
+
     func didRemoteVideoSettingsChange(_ call: DirectCall) {
         DispatchQueue.main.async {
             CallsEvents.shared.sendEvent(.directCall(.onRemoteVideoSettingsChanged),
                                          CallsUtils.convertDirectCallToDict(call))
         }
     }
-    
+
     func didUserHoldStatusChange(_ call: DirectCall, isLocalUser: Bool, isUserOnHold: Bool) {
         DispatchQueue.main.async {
             CallsEvents.shared.sendEvent(.directCall(.onUserHoldStatusChanged),
