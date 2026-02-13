@@ -49,6 +49,8 @@ class CallsModule: SendBirdCallDelegate {
         SendBirdCall.removeDirectCallSound(forType: .reconnected)
         SendBirdCall.removeDirectCallSound(forType: .reconnecting)
 
+        directCallModule.screenShareManager.cleanup()
+
         if(initialized){
             SendBirdCall.deauthenticate(completionHandler: nil)
             SendBirdCall.removeAllDelegates()
@@ -219,6 +221,14 @@ extension CallsModule: CallsDirectCallModuleProtocol {
 
     func directCallDeleteAllCustomItems(_ callId: String, _ promise: Promise) {
         directCallModule.directCallDeleteAllCustomItems(callId, promise)
+    }
+
+    func startScreenShare(_ callId: String, _ promise: Promise) {
+        directCallModule.startScreenShare(callId, promise)
+    }
+
+    func stopScreenShare(_ callId: String, _ promise: Promise) {
+        directCallModule.stopScreenShare(callId, promise)
     }
 }
 

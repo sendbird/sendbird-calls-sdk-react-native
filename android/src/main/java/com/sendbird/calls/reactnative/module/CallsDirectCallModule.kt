@@ -6,12 +6,18 @@ import com.facebook.react.bridge.ReadableMap
 import com.sendbird.calls.AcceptParams
 import com.sendbird.calls.AudioDevice
 import com.sendbird.calls.CallOptions
+import com.sendbird.calls.SendBirdException
 import com.sendbird.calls.reactnative.RNCallsInternalError
 import com.sendbird.calls.reactnative.extension.rejectCalls
 import com.sendbird.calls.reactnative.utils.CallsUtils
 import com.sendbird.calls.reactnative.utils.RNCallsLogger
 
 class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
+    val screenShareManager = ScreenShareManager(root.reactContext)
+
+    fun cleanup() {
+        screenShareManager.dispose()
+    }
     override fun accept(callId: String, options: ReadableMap, holdActiveCall: Boolean, promise: Promise) {
         RNCallsLogger.d("[DirectCallModule] accept() -> $callId")
 
@@ -263,6 +269,49 @@ class CallsDirectCallModule(private val root: CallsModule): DirectCallModule {
                     }
                     promise.resolve(result)
                 }
+            }
+        }
+    }
+
+    override fun startScreenShare(callId: String, promise: Promise) {
+        val from = "directCall/startScreenShare"
+        RNCallsLogger.d("[DirectCallModule] $from ($callId)")
+
+        CallsUtils.safeRun(promise) {
+            val call = CallsUtils.findDirectCall(callId, from)
+            screenShareManager.start(promise) { data ->
+                call.startScreenShare(data) { error ->
+                    if (error != null) {
+                        screenShareManager.cleanup()
+                        promise.rejectCalls(error)
+                    } else {
+                        promise.resolve(null)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun stopScreenShare(callId: String, promise: Promise) {
+        val from = "directCall/stopScreenShare"
+        RNCallsLogger.d("[DirectCallModule] $from ($callId)")
+
+        try {
+            val call = CallsUtils.findDirectCall(callId, from)
+            call.stopScreenShare { error ->
+                screenShareManager.cleanup()
+                if (error != null) {
+                    promise.rejectCalls(error)
+                } else {
+                    promise.resolve(null)
+                }
+            }
+        } catch (e: Throwable) {
+            screenShareManager.cleanup()
+            when (e) {
+                is SendBirdException -> promise.rejectCalls(e)
+                is RNCallsInternalError -> promise.rejectCalls(e)
+                else -> promise.reject(e)
             }
         }
     }

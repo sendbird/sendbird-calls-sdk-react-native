@@ -44,6 +44,8 @@ interface DirectCallModule: MediaDeviceControl {
     fun directCallUpdateCustomItems(callId: String, customItems: ReadableMap, promise: Promise)
     fun directCallDeleteCustomItems(callId: String, customItemKeys: ReadableArray, promise: Promise)
     fun directCallDeleteAllCustomItems(callId: String, promise: Promise)
+    fun startScreenShare(callId: String, promise: Promise)
+    fun stopScreenShare(callId: String, promise: Promise)
 }
 
 interface GroupCallModule: MediaDeviceControl {

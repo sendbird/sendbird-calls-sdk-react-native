@@ -31,6 +31,7 @@
 		EDFE168F28212C2E00D3E55C /* CallsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFE168E28212C2E00D3E55C /* CallsUtils.swift */; };
 		EDFE61D32858DE420055B413 /* CallsQueries.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFE61D22858DE420055B413 /* CallsQueries.swift */; };
 		F4FF95D7245B92E800C19C63 /* RNSendbirdCalls.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /* RNSendbirdCalls.swift */; };
+		AA00000100000001000AA001 /* ScreenShareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00000200000001000AA001 /* ScreenShareManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -72,6 +73,7 @@
 		EDFE61D22858DE420055B413 /* CallsQueries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallsQueries.swift; sourceTree = "<group>"; };
 		F4FF95D5245B92E700C19C63 /* RNSendbirdCalls-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNSendbirdCalls-Bridging-Header.h"; sourceTree = "<group>"; };
 		F4FF95D6245B92E800C19C63 /* RNSendbirdCalls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNSendbirdCalls.swift; sourceTree = "<group>"; };
+		AA00000200000001000AA001 /* ScreenShareManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenShareManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +155,7 @@
 				ED5C694A2824BF3F00E9904E /* CallsModule+DirectCall.swift */,
 				44BE5F932873A5C30072E874 /* CallsModule+GroupCall.swift */,
 				ED1B580C287C0A6C00879BD3 /* GroupCallDelegate.swift */,
+				AA00000200000001000AA001 /* ScreenShareManager.swift */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -238,6 +241,7 @@
 				4489CA11287EA35000E66D81 /* RNSBGroupCallVideoView.swift in Sources */,
 				ED1849EB2854641600354FA9 /* RNSBDirectCallVideoView.swift in Sources */,
 				ED5C694B2824BF3F00E9904E /* CallsModule+DirectCall.swift in Sources */,
+				AA00000100000001000AA001 /* ScreenShareManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -111,6 +111,34 @@ const DirectCallControllerView: FC<ControllerViewProps> = ({ status, call, ios_a
                   <SBIcon icon={call.isLocalVideoEnabled ? 'btnVideoOff' : 'btnVideoOffSelected'} size={64} />
                 </Pressable>
               )}
+              {isVideoCall && statusInProgress && (
+                <Pressable
+                  style={[
+                    styles.bottomButton,
+                    styles.screenShareButton,
+                    call.isLocalScreenShareEnabled && styles.screenShareButtonActive,
+                  ]}
+                  onPress={() => {
+                    console.log('screen share button pressed', call.isLocalScreenShareEnabled);
+
+                    if (call.isLocalScreenShareEnabled)
+                      call.stopScreenShare().catch((err) => {
+                        console.log('stop screen share failed', err);
+                      });
+                    else
+                      call.startScreenShare().catch((err) => {
+                        console.log('start screen share failed', err);
+                      });
+                  }}
+                >
+                  <SBText
+                    body2
+                    color={call.isLocalScreenShareEnabled ? Palette.background700 : Palette.onBackgroundDark01}
+                  >
+                    {'Share'}
+                  </SBText>
+                </Pressable>
+              )}
               <AudioDeviceButton
                 currentAudioDeviceIOS={ios_audioDevice}
                 availableAudioDevicesAndroid={call.android_availableAudioDevices}
@@ -178,6 +206,17 @@ const styles = StyleSheet.create({
   },
   bottomButton: {
     marginRight: 24,
+  },
+  screenShareButton: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: 'rgba(255,255,255,0.38)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  screenShareButtonActive: {
+    backgroundColor: '#FFFFFF',
   },
   bottomButtonGroup: {
     flexDirection: 'row',

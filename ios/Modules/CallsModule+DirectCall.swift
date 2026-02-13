@@ -19,10 +19,14 @@ protocol CallsDirectCallModuleProtocol: MediaDeviceControlProtocol {
     func directCallUpdateCustomItems(_ callId: String, _ customItems: [String: String], _ promise: Promise)
     func directCallDeleteCustomItems(_ callId: String, _ customItemKeys: [String], _ promise: Promise)
     func directCallDeleteAllCustomItems(_ callId: String, _ promise: Promise)
+    func startScreenShare(_ callId: String, _ promise: Promise)
+    func stopScreenShare(_ callId: String, _ promise: Promise)
 }
 
 // MARK: DirectCallMethods
 class CallsDirectCallModule: CallsBaseModule, CallsDirectCallModuleProtocol {
+    let screenShareManager = ScreenShareManager()
+
     func accept(_ callId: String, _ options: [String : Any?], _ holdActiveCall: Bool, _ promise: Promise) {
         if let directCall = try? CallsUtils.findDirectCallBy(callId) {
             let callOptions = CallsUtils.convertDictToCallOptions(options)
@@ -112,6 +116,42 @@ class CallsDirectCallModule: CallsBaseModule, CallsDirectCallModuleProtocol {
             }
         } else {
             promise.reject(RNCallsInternalError.notFoundDirectCall("directCall/deleteAllCustomItems"))
+        }
+    }
+}
+
+// MARK: DirectCall ScreenShare
+extension CallsDirectCallModule {
+    func startScreenShare(_ callId: String, _ promise: Promise) {
+        let from = "directCall/startScreenShare"
+        guard let directCall = try? CallsUtils.findDirectCallBy(callId) else {
+            return promise.reject(RNCallsInternalError.notFoundDirectCall(from))
+        }
+
+        screenShareManager.start(promise,
+            connect: { completion in
+                directCall.startScreenShare(completionHandler: completion)
+            },
+            disconnect: {
+                directCall.stopScreenShare(completionHandler: nil)
+            }
+        )
+    }
+
+    func stopScreenShare(_ callId: String, _ promise: Promise) {
+        let from = "directCall/stopScreenShare"
+        guard let directCall = try? CallsUtils.findDirectCallBy(callId) else {
+            screenShareManager.cleanup()
+            return promise.reject(RNCallsInternalError.notFoundDirectCall(from))
+        }
+
+        directCall.stopScreenShare { [weak self] error in
+            self?.screenShareManager.cleanup()
+            if let error = error {
+                promise.reject(error)
+            } else {
+                promise.resolve()
+            }
         }
     }
 }
@@ -220,6 +260,8 @@ extension CallsDirectCallModule: DirectCallDelegate {
     }
     
     func didEnd(_ call: DirectCall) {
+        screenShareManager.cleanup()
+
         DispatchQueue.main.async {
             CallsEvents.shared.sendEvent(.directCall(.onEnded),
                                          CallsUtils.convertDirectCallToDict(call))

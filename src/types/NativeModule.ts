@@ -107,6 +107,9 @@ export interface NativeDirectCallModule {
   directCallDeleteCustomItems(callId: string, customItemKeys: string[]): Promise<CustomItemUpdateResult>;
   directCallDeleteAllCustomItems(callId: string): Promise<CustomItemUpdateResult>;
 
+  startScreenShare(callId: string): Promise<void>;
+  stopScreenShare(callId: string): Promise<void>;
+
   /** Not implemented yet belows **/
   // hold(callId:string): Promise<void>;
   // unhold(callId:string, force: boolean): Promise<void>;
@@ -116,9 +119,6 @@ export interface NativeDirectCallModule {
   //
   // startRecording(callId:string, options: RecordingOptions): Promise<{ recordingId: string }>;
   // stopRecording(callId:string, recordingId: string): void;
-  //
-  // startScreenShare(callId:string): Promise<void>;
-  // stopScreenShare(callId:string): Promise<void>;
 }
 
 export interface NativeGroupCallModule {

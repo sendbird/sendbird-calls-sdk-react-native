@@ -28,6 +28,8 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
         SendBirdCall.Options.removeDirectCallSound(SendBirdCall.SoundType.RECONNECTED)
         SendBirdCall.Options.removeDirectCallSound(SendBirdCall.SoundType.RECONNECTING)
 
+        directCallModule.cleanup()
+
         if(initialized) {
             RNCallsLogger.d("[CallsModule] invalidate()")
             SendBirdCall.removeAllListeners()
@@ -100,6 +102,8 @@ class CallsModule(val reactContext: ReactApplicationContext) : CallsModuleStruct
     override fun directCallUpdateCustomItems(callId: String, customItems: ReadableMap, promise: Promise) = directCallModule.directCallUpdateCustomItems(callId, customItems, promise)
     override fun directCallDeleteCustomItems(callId: String, customItemKeys: ReadableArray, promise: Promise) = directCallModule.directCallDeleteCustomItems(callId, customItemKeys, promise)
     override fun directCallDeleteAllCustomItems(callId: String, promise: Promise) = directCallModule.directCallDeleteAllCustomItems(callId, promise)
+    override fun startScreenShare(callId: String, promise: Promise) = directCallModule.startScreenShare(callId, promise)
+    override fun stopScreenShare(callId: String, promise: Promise) = directCallModule.stopScreenShare(callId, promise)
 
     /** GroupCall module interface**/
     override fun enter(roomId: String, options: ReadableMap, promise: Promise) = groupCallModule.enter(roomId, options, promise)

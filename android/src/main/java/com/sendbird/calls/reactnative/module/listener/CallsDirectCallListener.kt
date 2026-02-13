@@ -61,6 +61,8 @@ class CallsDirectCallListener(private val root: CallsModule): DirectCallListener
     }
 
     override fun onEnded(call: DirectCall) {
+        root.directCallModule.screenShareManager.cleanup()
+
         CallsEvents.sendEvent(
             root.reactContext,
             CallsEvents.EVENT_DIRECT_CALL,
