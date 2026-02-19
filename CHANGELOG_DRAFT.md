@@ -1,4 +1,6 @@
-## v1.1.11
+## v1.2.0
 
-### Bug Fixes
-* resolved an issue on iOS where key values were missing from the custom items event payload
+### Features
+* added screen share support for DirectCall on iOS and Android
+* added iOS Broadcast Upload Extension support for background screen sharing
+* supported React Native 0.82.1

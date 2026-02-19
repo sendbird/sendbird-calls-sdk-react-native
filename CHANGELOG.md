@@ -1,5 +1,24 @@
 # Changelog
 
+# [1.2.0](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.1.11...v1.2.0) (2026-02-19)
+
+
+### Bug Fixes
+
+* add screen share resource cleanup on invalidate and duplicate call guard ([ecc3aff](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/ecc3aff723da633653cffb7be8cd9dcd3ea99c00))
+* improve screen share reliability and error handling ([a10d39f](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/a10d39f942a2ff984d739cbb57730a0269d0cca1))
+* **ios:** add screen share delegation to CallsModule protocol conformance ([29b0e5d](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/29b0e5dbc54b3bed7062affcf39b53f099873ba7))
+* **sample:** avoid camera capturer race condition on call accept ([70c4ee7](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/70c4ee7f492c7eb4041cabc529d1b48d8b662310))
+* **sample:** set microphone foreground service type to prevent ANR on long calls ([b709503](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/b70950395be6c27b80742c31ed322156c168e6e4))
+
+
+### Features
+
+* add screen share TypeScript interface for DirectCall ([f87e1d1](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/f87e1d13f66e941af75b47f969a753eb7b9421e1))
+* **android:** implement screen share with MediaProjection and ForegroundService ([2ea681f](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/2ea681f6860a29321cb4349c454b2498975bbccc))
+* **ios:** add Broadcast Upload Extension support for background screen sharing ([0120657](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/01206575b8635d6eb1e6cd50b1f0edbc81981cab))
+* **ios:** implement screen share with RPScreenRecorder ([494a890](https://github.com/sendbird/sendbird-calls-sdk-react-native/commit/494a8902fbe97ae204022364ba1f807474047845))
+
 ## [1.1.11](https://github.com/sendbird/sendbird-calls-sdk-react-native/compare/v1.1.10...v1.1.11) (2025-10-23)
 
 

@@ -578,6 +578,163 @@ directCall.addListener({
 });
 ```
 
+### Screen share
+
+During a video call, a user can share their screen with the remote participant using the `directCall.startScreenShare()` and `directCall.stopScreenShare()` methods. The screen share status can be monitored through the `DirectCallListener.onLocalVideoSettingsChanged()` listener, and the current state can be checked via the `directCall.isLocalScreenShareEnabled` property.
+
+```ts
+// Start screen share
+await directCall.startScreenShare();
+
+// Stop screen share
+await directCall.stopScreenShare();
+
+// Receive screen share status changes via listener
+directCall.addListener({
+  // ...
+
+  onLocalVideoSettingsChanged: (callProps: DirectCallProperties) => {
+    if (callProps.isLocalScreenShareEnabled) {
+      // Screen share started
+    } else {
+      // Screen share stopped
+    }
+  },
+});
+```
+
+> **NOTE**: On iOS with Broadcast mode, `startScreenShare()` and `stopScreenShare()` resolve the Promise immediately after showing the system broadcast picker. The actual screen share state changes when the user interacts with the picker, and is delivered through the `onLocalVideoSettingsChanged` listener. Always rely on the listener to track the current screen share status rather than assuming the state has changed immediately after the Promise resolves.
+
+#### Android setup
+
+Add the following permissions and service to your `AndroidManifest.xml`:
+
+```xml
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+
+<application>
+  <service
+    android:name="com.sendbird.calls.reactnative.service.ScreenSharingService"
+    android:enabled="true"
+    android:exported="false"
+    android:foregroundServiceType="mediaProjection" />
+</application>
+```
+
+Optionally, you can customize the foreground notification in `MainApplication.kt`. Note that on Android 8+ (API 26+), you must create a `NotificationChannel` before using a custom channel ID:
+
+```kotlin
+import com.sendbird.calls.reactnative.service.ScreenSharingServiceConfig
+
+class MainApplication : Application(), ReactApplication {
+    override fun onCreate() {
+        super.onCreate()
+
+        // Create notification channel (required for Android 8+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                "my_channel_id",
+                "Screen Sharing",
+                NotificationManager.IMPORTANCE_LOW
+            )
+            val manager = getSystemService(NotificationManager::class.java)
+            manager.createNotificationChannel(channel)
+        }
+
+        // Customize screen sharing notification
+        ScreenSharingServiceConfig.notificationBuilder = { context ->
+            NotificationCompat.Builder(context, "my_channel_id")
+                .setSmallIcon(R.drawable.my_icon)
+                .setContentTitle("Screen Sharing")
+                .setContentText("You are sharing your screen.")
+                .build()
+        }
+    }
+}
+```
+
+#### iOS setup
+
+iOS supports two screen sharing modes:
+
+| Configuration | Mode | Behavior |
+|---|---|---|
+| `appGroupIdentifier = nil` (default) | In-app | Uses `RPScreenRecorder` — no extra setup required, foreground only |
+| `appGroupIdentifier` set | Broadcast | Uses Broadcast Upload Extension — supports background screen sharing |
+
+##### In-app mode (default)
+
+No native setup required. Works out of the box. Screen share stops when the app goes to background.
+
+##### Broadcast mode (background screen sharing)
+
+To enable screen sharing while the app is in the background, set up a Broadcast Upload Extension:
+
+**1. Add Broadcast Upload Extension target**
+
+In Xcode: File → New → Target → **Broadcast Upload Extension**. Name it (e.g., `BroadcastExtension`) and uncheck "Include UI Extension".
+
+**2. Configure App Groups**
+
+Both the main app and the extension must share the same App Group:
+
+1. Select main app target → Signing & Capabilities → **+ Capability** → App Groups
+2. Add a group identifier (e.g., `group.com.yourapp.screenshare`)
+3. Select extension target → repeat the same steps with the same group identifier
+
+**3. Create SampleHandler in the extension**
+
+```swift
+// BroadcastExtension/SampleHandler.swift
+import sendbird_calls_react_native
+
+class SampleHandler: RNSBScreenShareBroadcastHandler {
+    override var appGroupIdentifier: String {
+        "group.com.yourapp.screenshare"  // Must match the App Group from step 2
+    }
+}
+```
+
+**4. Configure the main app**
+
+In `AppDelegate.swift`, set the config before any calls are made:
+
+```swift
+import sendbird_calls_react_native
+
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
+        RNSBScreenShareServiceConfig.appGroupIdentifier = "group.com.yourapp.screenshare"
+        RNSBScreenShareServiceConfig.extensionBundleIdentifier = "com.yourapp.broadcast-extension"
+
+        // ...
+    }
+}
+```
+
+**5. Update Podfile**
+
+```ruby
+target 'YourApp' do
+  pod 'sendbird-calls-react-native'  # Core (default)
+end
+
+target 'BroadcastExtension' do
+  use_frameworks! :linkage => :static
+  pod 'sendbird-calls-react-native/Broadcast'
+end
+```
+
+Then run `pod install`.
+
+> **NOTE**: The JavaScript API (`startScreenShare()` / `stopScreenShare()`) is the same for both modes. The SDK automatically selects broadcast mode when `appGroupIdentifier` is configured, otherwise falls back to in-app mode.
+
+<br />
+
 ### End a call
 
 A caller may end a call using the `directCall.end()` method. The event will then be processed through the `DirectCallListener.onEnded()` listener.
