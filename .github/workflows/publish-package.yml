@@ -20,6 +20,10 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
     steps:
       - name: Validate permissions and branch
         uses: actions/github-script@v7
@@ -102,17 +106,13 @@ jobs:
 
       - name: Setup environment
         uses: ./.github/actions/setup
+        with:
+          node-version: '24'
 
       - name: Configure Git
         run: |
           git config --global user.email "sha.sdk_deployment@sendbird.com"
           git config --global user.name "sendbird-sdk-deployment"
-
-      - name: Configure NPM
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> ~/.npmrc
 
       - name: Build package
         run: yarn build
