@@ -159,7 +159,8 @@
     ]
   },
   "resolutions": {
-    "@types/react": "^18.2.47"
+    "@types/react": "^18.2.47",
+    "handlebars": "^4.7.9"
   },
   "packageManager": "yarn@1.22.22"
 }
