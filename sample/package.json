@@ -53,5 +53,8 @@
   },
   "engines": {
     "node": ">=20"
+  },
+  "resolutions": {
+    "@babel/plugin-transform-modules-systemjs": "^7.29.4"
   }
 }

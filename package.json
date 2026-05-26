@@ -160,7 +160,8 @@
   },
   "resolutions": {
     "@types/react": "^18.2.47",
-    "handlebars": "^4.7.9"
+    "handlebars": "^4.7.9",
+    "@babel/plugin-transform-modules-systemjs": "^7.29.4"
   },
   "packageManager": "yarn@1.22.22"
 }
