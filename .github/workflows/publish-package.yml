@@ -107,7 +107,7 @@ jobs:
       - name: Setup environment
         uses: ./.github/actions/setup
         with:
-          node-version: '24'
+          node-version: '>=24.22.1 <25'
 
       - name: Configure Git
         run: |
