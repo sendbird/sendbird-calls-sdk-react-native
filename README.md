@@ -10,6 +10,7 @@
 
 1. [Introduction](#introduction)
 1. [Before getting started](#before-getting-started)
+1. [Build with Claude Code or Codex](#build-with-claude-code-or-codex)
 1. [Getting started](#getting-started)
 1. [Configuring the application for the SDK](#configuring-the-application-for-the-sdk)
 1. [Making your first call](#making-your-first-call)
@@ -56,6 +57,38 @@ This section shows the prerequisites you need to check to use Sendbird Calls SDK
 
 - [Sendbird Calls SDK for iOS](https://github.com/sendbird/sendbird-calls-ios), which can be integrated by `CocoaPods`
 - [Sendbird Calls SDK for Android](https://github.com/sendbird/sendbird-calls-android), which can be integrated by `Gradle`
+
+<br />
+
+## Build with Claude Code or Codex
+
+Use the Sendbird Client plugin to add 1-to-1 voice and video calls to your React Native app with `@sendbird/calls-react-native`. The Sendbird CLI plugin signs you in and lets you select the Sendbird app. The Client plugin can use the selected app's App ID.
+
+Before you start, make sure Calls is enabled for your Sendbird app. The Sendbird CLI requires Node.js 22.23.4 or later in the 22.x series, or 24.22.1 or later in the 24.x series. Sign in from a local session so you can complete login in your browser. [Sendbird CLI requirements](https://tools.docs.sendbird.com/plugins/cli#before-you-begin)
+
+### Claude Code
+
+```bash
+claude plugin marketplace add sendbird/sendbird-plugins
+claude plugin install sendbird-client@sendbird
+claude plugin install sendbird-cli@sendbird
+```
+
+Start a new Claude Code session in your app's project folder. Run `/sendbird-cli:sendbird-setup` to sign in and select your app, then run `/sendbird-client:setup --product calls`.
+
+### Codex
+
+```bash
+codex plugin marketplace add sendbird/sendbird-plugins
+codex plugin add sendbird-client@sendbird
+codex plugin add sendbird-cli@sendbird
+```
+
+Start a new Codex session in your app's project folder. If you see **Hooks need review**, choose **Review hooks** and check what each hook runs before you approve it. Call `$sendbird-cli:sendbird-setup` to sign in and select your app, then call `$sendbird-client:setup --product calls`.
+
+React Native requires push notifications for incoming calls, including while the app is open. Set up VoIP push for iOS and Firebase Cloud Messaging (FCM) for Android. [Set up incoming calls](https://tools.docs.sendbird.com/plugins/client/add-voice-and-video-calls#set-up-incoming-calls)
+
+The Client plugin runs local shell scripts as hooks. Review [what runs on your machine](https://github.com/sendbird/sendbird-client-plugin#what-runs-on-your-machine) before installing it.
 
 <br />
 
